@@ -1,3 +1,4 @@
-# from django.db import models
+from django.db import models
 
-# define your models here
+class LearningModule(models.Model):
+	content = models.CharField(max_length=200)
