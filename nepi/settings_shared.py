@@ -106,7 +106,6 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'tagging',
     'typogrify',
-    'munin',
     'south',
     'django_nose',
     'compressor',
@@ -177,3 +176,8 @@ SESSION_COOKIE_HTTPONLY = True
 LOGIN_REDIRECT_URL = "/"
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+}
