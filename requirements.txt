@@ -1,4 +1,4 @@
-Django==1.4.6
+Django==1.5.4
 resolver==0.2.1
 wsgiref==0.1.2
 selector==0.8.11
@@ -64,3 +64,8 @@ django-smoketest==0.1.3
 django-extensions==1.1.0
 django-stagingcontext==0.1.0
 django-impersonate==0.7.0
+django-treebeard==2.0b2
+django-pagetree==0.12.4
+django-pageblocks==0.5.11
+django-pagetree_export==0.4
+django-registration==1.0

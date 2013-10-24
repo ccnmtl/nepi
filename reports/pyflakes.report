@@ -1,2 +1,5 @@
+nepi/main/models.py:26: [E] PYFLAKES:undefined name 'simplejson'
+nepi/main/models.py:38: [E] PYFLAKES:undefined name 'simplejson'
+nepi/main/models.py:44: [E] PYFLAKES:undefined name 'simplejson'
 nepi/main/tests/__init__.py:2: [E] PYFLAKES:'from test_models import *' used; unable to detect undefined names
 nepi/main/tests/__init__.py:3: [E] PYFLAKES:'from test_views import *' used; unable to detect undefined names

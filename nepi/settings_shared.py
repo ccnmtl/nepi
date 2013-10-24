@@ -2,6 +2,9 @@
 import os.path
 import sys
 
+#requirements/src/quizblock-tobaccocessation.tar.gz
+
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -57,7 +60,7 @@ USE_TZ = True
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
-USE_I18N = False
+USE_I18N = True
 MEDIA_ROOT = "/var/www/nepi/uploads/"
 MEDIA_URL = '/uploads/'
 STATIC_URL = '/media/'
@@ -71,6 +74,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.request',
+    'django.core.context_processors.request',
     'stagingcontext.staging_processor',
 )
 
@@ -82,6 +86,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'impersonate.middleware.ImpersonateMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'waffle.middleware.WaffleMiddleware',
@@ -119,6 +124,10 @@ INSTALLED_APPS = [
     'django_extensions',
     'impersonate',
     'nepi.main',
+    'pagetree',
+    'pageblocks',
+    'registration',
+    #'quizblock',
 ]
 
 LETTUCE_APPS = (
@@ -177,3 +186,14 @@ SESSION_COOKIE_HTTPONLY = True
 LOGIN_REDIRECT_URL = "/"
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
+
+
+PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
+              'pageblocks.HTMLBlock',
+              'pageblocks.ImageBlock',
+              'quizblock.Quiz',
+              'activity_treatment_choice.Block',
+              'activity_prescription_writing.Block',
+              'main.FlashVideoBlock']
+
+AUTH_PROFILE_MODULE = 'main.UserProfile'

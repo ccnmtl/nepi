@@ -1,18 +1,29 @@
+nepi/main/models.py:7: [W0312] Found indentation with tabs instead of spaces
+nepi/main/models.py:9: [W0312] Found indentation with tabs instead of spaces
+nepi/main/models.py:10: [W0312] Found indentation with tabs instead of spaces
+nepi/main/models.py:61: [W0312] Found indentation with tabs instead of spaces
+nepi/main/models.py:20: [E1101, UserProfile.__unicode__] Instance of 'ForeignKey' has no 'username' member
+nepi/main/models.py:22: [E1002, UserProfile.__init__] Use of super on an old style class
+nepi/main/models.py:26: [E0602, UserProfile.__init__] Undefined variable 'simplejson'
+nepi/main/models.py:35: [C0103, UserProfile.set_has_visited] Invalid name "s" for type variable (should match [a-z_][a-z0-9_]{2,30}$)
+nepi/main/models.py:38: [E0602, UserProfile.set_has_visited] Undefined variable 'simplejson'
+nepi/main/models.py:44: [E0602, UserProfile.save_last_location] Undefined variable 'simplejson'
+nepi/main/models.py:48: [E1101, UserProfile.display_name] Instance of 'ForeignKey' has no 'username' member
 nepi/main/tests/test_views.py:7: [C0103, BasicTest.setUp] Invalid name "c" for type attribute (should match [a-z_][a-z0-9_]{2,30}$)
 nepi/main/tests/test_views.py:11: [E1103, BasicTest.test_root] Instance of 'WSGIRequest' has no 'status_code' member (but some types could not be inferred)
 nepi/main/tests/test_views.py:15: [E1103, BasicTest.test_smoketest] Instance of 'WSGIRequest' has no 'status_code' member (but some types could not be inferred)
 nepi/main/tests/test_views.py:16: [E1103, BasicTest.test_smoketest] Instance of 'WSGIRequest' has no 'content' member (but some types could not be inferred)
-nepi/main/tests/test_views.py:5: [R0904, BasicTest] Too many public methods (62/50)
+nepi/main/tests/test_views.py:5: [R0904, BasicTest] Too many public methods (66/50)
 nepi/main/tests/__init__.py:2: [W0403] Relative import 'test_models', should be 'nepi.main.tests.test_models'
 nepi/main/tests/__init__.py:2: [W0401] Wildcard import test_models
 nepi/main/tests/__init__.py:3: [W0403] Relative import 'test_views', should be 'nepi.main.tests.test_views'
 nepi/main/tests/__init__.py:3: [W0401] Wildcard import test_views
-nepi/main/tests/test_models.py:4: [R0904, BasicTest] Too many public methods (61/50)
+nepi/main/tests/test_models.py:4: [R0904, BasicTest] Too many public methods (65/50)
 
 
 Report
 ======
-28 statements analysed.
+67 statements analysed.
 
 Messages by category
 --------------------
@@ -20,13 +31,13 @@ Messages by category
 +-----------+-------+---------+-----------+
 |type       |number |previous |difference |
 +===========+=======+=========+===========+
-|convention |1      |NC       |NC         |
+|convention |2      |2        |=          |
 +-----------+-------+---------+-----------+
-|refactor   |2      |NC       |NC         |
+|refactor   |2      |2        |=          |
 +-----------+-------+---------+-----------+
-|warning    |4      |NC       |NC         |
+|warning    |8      |8        |=          |
 +-----------+-------+---------+-----------+
-|error      |3      |NC       |NC         |
+|error      |9      |9        |=          |
 +-----------+-------+---------+-----------+
 
 
@@ -34,13 +45,15 @@ Messages by category
 % errors / warnings by module
 -----------------------------
 
-+---------------------------+-------+--------+---------+-----------+
-|module                     |error  |warning |refactor |convention |
-+===========================+=======+========+=========+===========+
-|nepi.main.tests.test_views |100.00 |0.00    |50.00    |100.00     |
-+---------------------------+-------+--------+---------+-----------+
-|nepi.main.tests.__init__   |0.00   |100.00  |0.00     |0.00       |
-+---------------------------+-------+--------+---------+-----------+
++---------------------------+------+--------+---------+-----------+
+|module                     |error |warning |refactor |convention |
++===========================+======+========+=========+===========+
+|nepi.main.models           |66.67 |50.00   |0.00     |50.00      |
++---------------------------+------+--------+---------+-----------+
+|nepi.main.tests.test_views |33.33 |0.00    |50.00    |50.00      |
++---------------------------+------+--------+---------+-----------+
+|nepi.main.tests.__init__   |0.00  |50.00   |0.00     |0.00       |
++---------------------------+------+--------+---------+-----------+
 
 
 
@@ -50,7 +63,11 @@ Messages
 +-----------+------------+
 |message id |occurrences |
 +===========+============+
+|W0312      |4           |
++-----------+------------+
 |E1103      |3           |
++-----------+------------+
+|E0602      |3           |
 +-----------+------------+
 |W0403      |2           |
 +-----------+------------+
@@ -58,44 +75,18 @@ Messages
 +-----------+------------+
 |R0904      |2           |
 +-----------+------------+
-|C0103      |1           |
+|E1101      |2           |
++-----------+------------+
+|C0103      |2           |
++-----------+------------+
+|E1002      |1           |
 +-----------+------------+
 
 
 
 Global evaluation
 -----------------
-Your code has been rated at 2.14/10
-
-Raw metrics
------------
-
-+----------+-------+------+---------+-----------+
-|type      |number |%     |previous |difference |
-+==========+=======+======+=========+===========+
-|code      |30     |69.77 |NC       |NC         |
-+----------+-------+------+---------+-----------+
-|docstring |1      |2.33  |NC       |NC         |
-+----------+-------+------+---------+-----------+
-|comment   |3      |6.98  |NC       |NC         |
-+----------+-------+------+---------+-----------+
-|empty     |9      |20.93 |NC       |NC         |
-+----------+-------+------+---------+-----------+
-
-
-
-Duplication
------------
-
-+-------------------------+------+---------+-----------+
-|                         |now   |previous |difference |
-+=========================+======+=========+===========+
-|nb duplicated lines      |0     |NC       |NC         |
-+-------------------------+------+---------+-----------+
-|percent duplicated lines |0.000 |NC       |NC         |
-+-------------------------+------+---------+-----------+
-
-
+Your code has been rated at 1.49/10 (previous run: 1.49/10)
 
 External dependencies
 ---------------------
@@ -108,7 +99,11 @@ External dependencies
       \-contrib 
       | \-auth 
       |   \-models 
-      |     \-User (nepi.main.smoke)
+      |     \-User (nepi.main.models,nepi.main.smoke)
+      \-db 
+      | \-models (nepi.main.models)
+      |   \-signals 
+      |     \-post_save (nepi.main.models)
       \-test 
         \-TestCase (nepi.main.tests.test_views,nepi.main.tests.test_models)
         \-client 
@@ -118,19 +113,49 @@ External dependencies
 
 
 
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |71     |78.89 |71       |=          |
++----------+-------+------+---------+-----------+
+|docstring |3      |3.33  |3        |=          |
++----------+-------+------+---------+-----------+
+|comment   |1      |1.11  |1        |=          |
++----------+-------+------+---------+-----------+
+|empty     |15     |16.67 |15       |=          |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |0        |=          |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |0.000    |=          |
++-------------------------+------+---------+-----------+
+
+
+
 Statistics by type
 ------------------
 
 +---------+-------+-----------+-----------+------------+---------+
 |type     |number |old number |difference |%documented |%badname |
 +=========+=======+===========+===========+============+=========+
-|module   |7      |NC         |NC         |0.00        |0.00     |
+|module   |7      |7          |=          |0.00        |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
-|class    |3      |NC         |NC         |0.00        |0.00     |
+|class    |6      |6          |=          |16.67       |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
-|method   |5      |NC         |NC         |20.00       |0.00     |
+|method   |11     |11         |=          |27.27       |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
-|function |1      |NC         |NC         |0.00        |0.00     |
+|function |2      |2          |=          |0.00        |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
 
 
