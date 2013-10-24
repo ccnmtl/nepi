@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<testsuites><testsuite name="nepi.main.tests.test_views.BasicTest"><testcase classname="nepi.main.tests.test_views.BasicTest" name="test_root" time="0.160228"></testcase><testcase classname="nepi.main.tests.test_views.BasicTest" name="test_smoketest" time="0.012373"></testcase></testsuite></testsuites>
+<testsuites><testsuite name="nepi.main.tests.test_views.BasicTest"><testcase classname="nepi.main.tests.test_views.BasicTest" name="test_root" time="0.174414"></testcase><testcase classname="nepi.main.tests.test_views.BasicTest" name="test_smoketest" time="0.012423"></testcase></testsuite></testsuites>

@@ -111,7 +111,6 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'tagging',
     'typogrify',
-    'munin',
     'south',
     'django_nose',
     'compressor',
@@ -197,3 +196,9 @@ PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
               'main.FlashVideoBlock']
 
 AUTH_PROFILE_MODULE = 'main.UserProfile'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+}
+

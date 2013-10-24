@@ -32,6 +32,6 @@ nepi/main/models.py:48:1: E101 indentation contains mixed spaces and tabs
 nepi/main/models.py:52:1: E303 too many blank lines (3)
 nepi/main/models.py:53:1: E101 indentation contains mixed spaces and tabs
 nepi/main/models.py:54:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:60:1: E303 too many blank lines (3)
-nepi/main/models.py:61:1: W191 indentation contains tabs
-nepi/main/models.py:63:1: W391 blank line at end of file
+nepi/main/models.py:61:1: E303 too many blank lines (4)
+nepi/main/models.py:62:1: W191 indentation contains tabs
+nepi/main/models.py:65:1: W391 blank line at end of file

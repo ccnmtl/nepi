@@ -57,7 +57,9 @@ post_save.connect(create_user_profile, sender=User)
 
 
 
+
 class LearningModule(models.Model):
 	content = models.CharField(max_length=200)
+
 
 
