@@ -110,6 +110,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'django.contrib.admin',
     'tagging',
+    'munin',
     'typogrify',
     'south',
     'django_nose',
