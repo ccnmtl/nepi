@@ -85,6 +85,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'impersonate.middleware.ImpersonateMiddleware',
@@ -106,6 +107,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.markup',
+    'django.contrib.staticfiles',
     'staticmedia',
     'sorl.thumbnail',
     'django.contrib.admin',
@@ -196,7 +198,7 @@ PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
               'activity_prescription_writing.Block',
               'main.FlashVideoBlock']
 
-AUTH_PROFILE_MODULE = 'main.UserProfile'
+AUTH_PROFILE_MODULE = 'nepi.main.UserProfile'
 
 LOGGING = {
     'version': 1,

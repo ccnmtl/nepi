@@ -43,9 +43,9 @@ urlpatterns = patterns(
 ) + staticmedia.serve()
 
 
-urlpatterns += i18n_patterns(
-    '',
-    url(_(r'^home/'), 'nepi.main.views.test_view', name='home'),
-    url(_(r'^modules/'), 'nepi.main.views.moduls_en', name='modules'),
-    url(_(r'^lesson/(?P<mod_id>\d+)/'), 'nepi.main.views.index', name='lesson'),
-)
+# urlpatterns += i18n_patterns(
+#     '',
+#     url(_(r'^home/'), 'nepi.main.views.test_view', name='home'),
+#     url(_(r'^modules/'), 'nepi.main.views.moduls_en', name='modules'),
+#     url(_(r'^lesson/(?P<mod_id>\d+)/'), 'nepi.main.views.index', name='lesson'),
+# )
