@@ -6,9 +6,11 @@ from django.shortcuts import render, render_to_response
 from django.contrib.auth.models import User
 from registration.forms import RegistrationForm
 
+
 @render_to('main/index.html')
 def index(request):
     return dict()
+
 
 def home(request):
     user = request.user
@@ -21,6 +23,7 @@ def home(request):
         return HttpResponseRedirect('/admin/')
     else:
         return HttpResponseRedirect('/')
+
 
 class CreateAccountForm(RegistrationForm):
     '''This is a form class that will be used
@@ -74,17 +77,22 @@ def register(request):
         'form': form,
     })
 
+
 def confirm_student(request):
-	pass
+    pass
+
 
 def add_teacher(request):
-	pass
+    pass
+
 
 def add_school(request):
-	pass
+    pass
+
 
 def add_course(request):
-	pass
+    pass
+
 
 def contact(request):
     '''Contact someone regarding the project - WHO???'''
@@ -114,4 +122,3 @@ def about(request):
 def help_page(request):
     """Returns help page."""
     return render_to_response('help.html')
-

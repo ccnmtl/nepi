@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 
 
-'''Add change delete are by default for each django model. Need to add permissions for visibility.'''
+'''Add change delete are by default for each django model.
+   Need to add permissions for visibility.'''
+
 
 class UserProfile(models.Model):
     ICAP = 'IC'
@@ -23,10 +25,9 @@ class UserProfile(models.Model):
         return self.user.username + " " + self.profile_type
 
 
-
 class ICAPStaff(models.Model):
     '''How do we differentiate between ICAP admins
-    (those who add modules/content) and those who 
+    (those who add modules/content) and those who
     simply edit schools etc.'''
     profile = models.ForeignKey(UserProfile)
     name = models.CharField(max_length=200)
@@ -65,7 +66,6 @@ class Country(models.Model):
     # http://sustainablesources.com/resources/country-abbreviations/
     # http://www.paladinsoftware.com/Generic/countries.htm
 
-
     COUNTRY_CHOICES = (
 
         (ALGERIA, 'Algeria'),
@@ -77,7 +77,6 @@ class Country(models.Model):
         (CAMEROON, 'Cameroon'),
         (CAPEVERDE, 'Cape Verde'),
     )
-
 
 
 class School(models.Model):
@@ -96,8 +95,6 @@ class School(models.Model):
         return self.user.name + " " + self.user.country
 
 
-
-
 class Teacher(models.Model):
     '''Assuming each school has many teachers but each
     teacher works at only one school.'''
@@ -112,8 +109,6 @@ class Teacher(models.Model):
 
     def __unicode__(self):
         return self.user.name + " " + self.user.school
-
-
 
 
 class Course(models.Model):
@@ -144,8 +139,3 @@ class Student(models.Model):
 
     def __unicode__(self):
         return self.user.name + " " + self.user.country
-
-
-
-
-
