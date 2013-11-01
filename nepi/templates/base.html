@@ -32,7 +32,13 @@
       <div class="container">
         <ul class="nav">
           <li><a class="brand" href="/">nepi</a></li>
-          {% block topnavbarleftitems %}{% endblock %}
+          {% block topnavbarleftitems %}
+
+            <li class="flatpages"><a href="{% url "nepi.main.views.about" %}">About</a></li>
+            <li class="flatpages"><a href="{% url "nepi.main.views.help_page" %}">Help</a></li>
+            <li class="flatpages"><a href="{% url "nepi.main.views.contact" %}">Contact</a></li>
+
+          {% endblock %}
         </ul>
 
         <p class="navbar-text pull-right">
@@ -45,7 +51,7 @@
 {% if request.user.is_superuser %}
           <a href="{% url "impersonate-list" %}">[impersonate]</a>
 {% endif %}
-          <a href="/logout/" class="btn btn-inverse">logout</a>
+          <a href="accounts/logout/" class="btn btn-inverse">logout</a>
           {% endif %}
 {% endblock %}
        </p>

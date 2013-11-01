@@ -1,9 +1,10 @@
 from django.conf.urls.defaults import patterns, include, url
-from django.conf.urls.defaults import patterns, include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from django.conf import settings
+from nepi.main.views import CreateAccountForm
+from registration.backends.default.views import RegistrationView
 #from django.views.generic.simple import direct_to_template
 from django.views.generic import TemplateView
 
@@ -30,8 +31,16 @@ urlpatterns = patterns(
     '',
     auth_urls,
     logout_page,
+    url(r'^accounts/register/$', RegistrationView.as_view(
+    form_class=CreateAccountForm),
+    name='registration_register'),
     (r'^$', 'nepi.main.views.index'),
     (r'^admin/', include(admin.site.urls)),
+    (r'^home/$', 'nepi.main.views.home'),
+    (r'^register/$', 'nepi.main.views.register'),
+    (r'^about/$', 'nepi.main.views.about'),
+    (r'^help_page/$', 'nepi.main.views.help_page'),
+    (r'^contact/$', 'nepi.main.views.contact'),
     url(r'^_impersonate/', include('impersonate.urls')),
     (r'^munin/', include('munin.urls')),
     (r'^stats/$', TemplateView.as_view(template_name="stats.html")),

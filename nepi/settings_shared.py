@@ -12,6 +12,8 @@ ADMINS = ()
 
 MANAGERS = ADMINS
 
+ACCOUNT_ACTIVATION_DAYS = 6
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
