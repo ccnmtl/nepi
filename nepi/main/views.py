@@ -1,10 +1,10 @@
 from annoying.decorators import render_to
 from django import forms
-from nepi.main.models import Student, ICAPStaff, Teacher, Course, UserProfile
+from nepi.main.models import Student, ICAPStaff, Teacher, Course, UserProfile, School, Country
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.contrib.auth.models import User
-from registration.forms import RegistrationForm
+#from registration.forms import RegistrationForm
 
 
 @render_to('main/index.html')
@@ -25,22 +25,14 @@ def home(request):
         return HttpResponseRedirect('/')
 
 
-class CreateAccountForm(RegistrationForm):
-    '''This is a form class that will be used
-    to allow guest users to create guest accounts.'''
-    first_name = forms.CharField(
-        max_length=25, required=True, label="First Name")
-    last_name = forms.CharField(
-        max_length=25, required=True, label="Last Name")
-    username = forms.CharField(
-        max_length=25, required=True, label="Username")
-    password1 = forms.CharField(
-        max_length=25, widget=forms.PasswordInput, required=True,
-        label="Password")
-    password2 = forms.CharField(
-        max_length=25, widget=forms.PasswordInput, required=True,
-        label="Confirm Password")
-    email = forms.EmailField()
+def about(request):
+    """Returns about page."""
+    return render_to_response('about.html')
+
+
+def help_page(request):
+    """Returns help page."""
+    return render_to_response('help.html')
 
 
 def register(request):
@@ -52,7 +44,6 @@ def register(request):
             raise forms.ValidationError("this username already exists")
         except User.DoesNotExist:
             if 'password1' in request.POST and 'password2' in request.POST:
-                print "comparing passwords"
                 if request.POST['password1'] != request.POST['password2']:
                     raise forms.ValidationError(
                         "passwords dont match each other")
@@ -65,6 +56,16 @@ def register(request):
                     new_user.first_name = request.POST['first_name']
                     new_user.last_name = request.POST['last_name']
                     new_user.save()
+
+                    new_profile = UserProfile(user=new_user)
+                        # user=new_user,
+                        # country=request.POST['country'],
+                        # school=request.POST['school']
+                        # )
+                    new_profile.country = country=request.POST['country']
+                    #if request.POST['school']:
+                    #    new_profile.school = request.POST['school']
+                    new_profile.save()
                     return HttpResponseRedirect('/thanks/')
 
             else:
@@ -73,7 +74,7 @@ def register(request):
     else:
         form = CreateAccountForm()  # An unbound form
 
-    return render(request, 'create_account.html', {
+    return render(request, 'registration_form.html', {
         'form': form,
     })
 
@@ -113,12 +114,21 @@ def contact(request):
         'form': form,
     })
 
-
-def about(request):
-    """Returns about page."""
-    return render_to_response('about.html')
-
-
-def help_page(request):
-    """Returns help page."""
-    return render_to_response('help.html')
+class CreateAccountForm(forms.Form):
+    '''This is a form class that will be used
+    to allow guest users to create guest accounts.'''
+    first_name = forms.CharField(
+        max_length=25, required=True, label="First Name")
+    last_name = forms.CharField(
+        max_length=25, required=True, label="Last Name")
+    username = forms.CharField(
+        max_length=25, required=True, label="Username")
+    password1 = forms.CharField(
+        max_length=25, widget=forms.PasswordInput, required=True,
+        label="Password")
+    password2 = forms.CharField(
+        max_length=25, widget=forms.PasswordInput, required=True,
+        label="Confirm Password")
+    email = forms.EmailField()
+    country = forms.ChoiceField(widget = forms.Select(), choices=Country.COUNTRY_CHOICES, required=True)
+    school = forms.ChoiceField(widget = forms.Select(), choices=School.objects.all(), required=False)

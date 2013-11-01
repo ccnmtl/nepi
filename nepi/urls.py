@@ -5,7 +5,6 @@ from django.contrib import admin
 from django.conf import settings
 from nepi.main.views import CreateAccountForm
 from registration.backends.default.views import RegistrationView
-#from django.views.generic.simple import direct_to_template
 from django.views.generic import TemplateView
 
 import os.path
@@ -31,13 +30,14 @@ urlpatterns = patterns(
     '',
     auth_urls,
     logout_page,
-    url(r'^accounts/register/$', RegistrationView.as_view(
-    form_class=CreateAccountForm),
-    name='registration_register'),
+#    url(r'^accounts/register/$', RegistrationView.as_view(
+#    form_class=CreateAccountForm),
+#    name='registration_register'),
     (r'^$', 'nepi.main.views.index'),
     (r'^admin/', include(admin.site.urls)),
     (r'^home/$', 'nepi.main.views.home'),
     (r'^register/$', 'nepi.main.views.register'),
+    #(r'^registration_complete/$', 'nepi.main.views.registration_complete'),
     (r'^about/$', 'nepi.main.views.about'),
     (r'^help_page/$', 'nepi.main.views.help_page'),
     (r'^contact/$', 'nepi.main.views.contact'),
