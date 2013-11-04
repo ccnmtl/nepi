@@ -11,8 +11,23 @@ from django.contrib.auth.models import User
 def index(request):
     return dict()
 
+def about(request):
+    """Returns about page."""
+    return render_to_response('about.html')
+
+
+def help_page(request):
+    """Returns help page."""
+    return render_to_response('help.html')
+
+
+def thank_you(request):
+    """Returns about page."""
+    return render_to_response('thanks.html')
+
 
 def home(request):
+    '''Return homepage appropriate for user type.'''
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
     if user_profile.profile_type == 'ST':
@@ -24,16 +39,11 @@ def home(request):
     else:
         return HttpResponseRedirect('/')
 
+def show_courses_and_modules(request):
+    pass
 
-def about(request):
-    """Returns about page."""
-    return render_to_response('about.html')
-
-
-def help_page(request):
-    """Returns help page."""
-    return render_to_response('help.html')
-
+def join_course(request):
+    pass
 
 def register(request):
     '''This is based off of django-request - creates a new user account.'''
@@ -58,15 +68,13 @@ def register(request):
                     new_user.save()
 
                     new_profile = UserProfile(user=new_user)
-                        # user=new_user,
-                        # country=request.POST['country'],
-                        # school=request.POST['school']
-                        # )
-                    new_profile.country = country=request.POST['country']
-                    #if request.POST['school']:
-                    #    new_profile.school = request.POST['school']
+               
+                    new_profile.country = request.POST['country']
+                    new_profile.school = request.POST.get('school', '')
+                    #WHY DOES DEFAULT VALUE HAVE TO BE SET HERE???
+                    new_profile.profile_type = request.POST.get('is_teacher', 'ST')
                     new_profile.save()
-                    return HttpResponseRedirect('/thanks/')
+                    return HttpResponseRedirect('/thank_you/')
 
             else:
                 raise forms.ValidationError("You are missing a password.")
@@ -88,11 +96,48 @@ def add_teacher(request):
 
 
 def add_school(request):
-    pass
+    if request.method == 'POST':
+        form = AddSchoolForm(request.POST)
+        try:
+            get_country = Country.objects.get(country=request.POST['country'])
+            try:
+                School.objects.get(name=request.POST['name'], country=get_country)
+                raise forms.ValidationError("This school already exists.")
+            except School.DoesNotExist:
+                new_school = School(
+                    name=request.POST['name'],
+                    country = get_country
+                )
+                new_school.save()
+                return HttpResponseRedirect('/thank_you/')
+        except Country.DoesNotExist:
+            new_country = Country(country=request.POST['country'])
+            new_country.save()
+            new_school = School(
+                name=request.POST['name'],
+                country = new_country
+            )
+            new_school.save()
+            return HttpResponseRedirect('/thank_you/')
+
+    else:
+        form = AddSchoolForm()  # An unbound form
+
+    return render(request, 'add_school.html', {
+        'form': form,
+    })
 
 
 def add_course(request):
     pass
+
+
+def show_students(request):
+    pass
+
+def show_teachers(request):
+    pass
+
 
 
 def contact(request):
@@ -114,9 +159,19 @@ def contact(request):
         'form': form,
     })
 
+
 class CreateAccountForm(forms.Form):
     '''This is a form class that will be used
     to allow guest users to create guest accounts.'''
+    TEACHER = 'TE'
+    STUDENT = 'ST'
+
+    ACCOUNT_CHOICES = (
+        (TEACHER, 'Teacher'),
+        (STUDENT, 'Student'),
+    )
+
+
     first_name = forms.CharField(
         max_length=25, required=True, label="First Name")
     last_name = forms.CharField(
@@ -130,5 +185,24 @@ class CreateAccountForm(forms.Form):
         max_length=25, widget=forms.PasswordInput, required=True,
         label="Confirm Password")
     email = forms.EmailField()
-    country = forms.ChoiceField(widget = forms.Select(), choices=Country.COUNTRY_CHOICES, required=True)
-    school = forms.ChoiceField(widget = forms.Select(), choices=School.objects.all(), required=False)
+    country = forms.ChoiceField(widget=forms.Select(), choices=Country.COUNTRY_CHOICES, required=True)
+    school = forms.ChoiceField(widget=forms.Select(), choices=School.objects.all(), required=False)
+    is_teacher = forms.MultipleChoiceField(choices=ACCOUNT_CHOICES, initial='STUDENT') # WHY DOES INITIAL NOT WORK???
+
+
+class AddTeacher(forms.Form):
+    pass
+
+
+class AddSchoolForm(forms.Form):
+    name = forms.CharField(max_length=50, required=True, label="School Name")
+    country = forms.ChoiceField(widget=forms.Select(), choices=Country.COUNTRY_CHOICES, required=True)
+
+
+class AddCourse(forms.Form):
+    semester = models.CharField(max_length=50, required=True)
+    #teacher will be request.user
+    #teacher = models.ForeignKey(Teacher)
+    start_date = models.DateField()
+    end_date = models.DateField()
+

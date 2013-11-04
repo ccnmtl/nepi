@@ -169,7 +169,7 @@ class Country(models.Model):
     region = models.CharField(max_length=200)
 
     def __unicode__(self):
-        return self.country.choices
+        return self.country
 
 
 class School(models.Model):
@@ -212,7 +212,6 @@ class Course(models.Model):
         )
     #Should limit the choices
     semester = models.CharField(max_length=200)
-    content = models.CharField(max_length=200)
     teacher = models.ForeignKey(Teacher)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -236,6 +235,9 @@ class Student(models.Model):
         return self.user.name + " " + self.user.country
 
 
-
+class LearningModule(models.Model):
+    '''Need to store learning modules.'''
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
 
 

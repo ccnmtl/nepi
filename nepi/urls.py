@@ -37,6 +37,8 @@ urlpatterns = patterns(
     (r'^admin/', include(admin.site.urls)),
     (r'^home/$', 'nepi.main.views.home'),
     (r'^register/$', 'nepi.main.views.register'),
+    (r'^thank_you/$', 'nepi.main.views.thank_you'),
+    (r'^add_school/$', 'nepi.main.views.add_school'),
     #(r'^registration_complete/$', 'nepi.main.views.registration_complete'),
     (r'^about/$', 'nepi.main.views.about'),
     (r'^help_page/$', 'nepi.main.views.help_page'),
