@@ -1,37 +1,75 @@
-nepi/main/models.py:7:1: W191 indentation contains tabs
-nepi/main/models.py:8:1: W191 indentation contains tabs
-nepi/main/models.py:9:1: W191 indentation contains tabs
-nepi/main/models.py:10:1: W191 indentation contains tabs
-nepi/main/models.py:14:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:15:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:16:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:17:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:19:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:20:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:22:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:23:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:25:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:26:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:27:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:28:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:30:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:31:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:32:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:34:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:35:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:36:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:38:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:39:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:41:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:42:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:43:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:44:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:45:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:47:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:48:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:52:1: E303 too many blank lines (3)
-nepi/main/models.py:53:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:54:1: E101 indentation contains mixed spaces and tabs
-nepi/main/models.py:61:1: E303 too many blank lines (4)
-nepi/main/models.py:62:1: W191 indentation contains tabs
-nepi/main/models.py:65:1: W391 blank line at end of file
+nepi/main/admin.py:5:80: E501 line too long (81 > 79 characters)
+nepi/main/admin.py:7:1: E302 expected 2 blank lines, found 1
+nepi/main/admin.py:11:1: E302 expected 2 blank lines, found 1
+nepi/main/admin.py:21:29: W292 no newline at end of file
+nepi/main/models.py:14:61: W291 trailing whitespace
+nepi/main/models.py:72:80: E501 line too long (95 > 79 characters)
+nepi/main/models.py:76:5: E303 too many blank lines (2)
+nepi/main/models.py:133:1: W293 blank line contains whitespace
+nepi/main/models.py:140:1: E302 expected 2 blank lines, found 1
+nepi/main/models.py:154:1: E302 expected 2 blank lines, found 1
+nepi/main/models.py:159:1: E302 expected 2 blank lines, found 1
+nepi/main/models.py:163:80: E501 line too long (85 > 79 characters)
+nepi/main/models.py:173:1: E302 expected 2 blank lines, found 1
+nepi/main/models.py:189:5: E301 expected 1 blank line, found 0
+nepi/main/models.py:230:80: E501 line too long (100 > 79 characters)
+nepi/main/models.py:242:1: W391 blank line at end of file
+nepi/main/views.py:4:80: E501 line too long (81 > 79 characters)
+nepi/main/views.py:13:1: E303 too many blank lines (3)
+nepi/main/views.py:17:1: E302 expected 2 blank lines, found 1
+nepi/main/views.py:21:1: E302 expected 2 blank lines, found 1
+nepi/main/views.py:35:80: E501 line too long (87 > 79 characters)
+nepi/main/views.py:37:80: E501 line too long (90 > 79 characters)
+nepi/main/views.py:47:1: E302 expected 2 blank lines, found 1
+nepi/main/views.py:51:1: E302 expected 2 blank lines, found 1
+nepi/main/views.py:73:31: E203 whitespace before ':'
+nepi/main/views.py:73:52: E203 whitespace before ':'
+nepi/main/views.py:74:80: E501 line too long (94 > 79 characters)
+nepi/main/views.py:74:83: E203 whitespace before ':'
+nepi/main/views.py:86:1: E302 expected 2 blank lines, found 1
+nepi/main/views.py:89:1: E302 expected 2 blank lines, found 1
+nepi/main/views.py:93:1: E302 expected 2 blank lines, found 1
+nepi/main/views.py:119:80: E501 line too long (94 > 79 characters)
+nepi/main/views.py:123:80: E501 line too long (82 > 79 characters)
+nepi/main/views.py:128:80: E501 line too long (89 > 79 characters)
+nepi/main/views.py:132:80: E501 line too long (87 > 79 characters)
+nepi/main/views.py:149:1: E303 too many blank lines (3)
+nepi/main/views.py:164:80: E501 line too long (82 > 79 characters)
+nepi/main/views.py:169:28: E251 unexpected spaces around keyword / parameter equals
+nepi/main/views.py:169:30: E251 unexpected spaces around keyword / parameter equals
+nepi/main/views.py:178:24: E251 unexpected spaces around keyword / parameter equals
+nepi/main/views.py:178:26: E251 unexpected spaces around keyword / parameter equals
+nepi/main/views.py:198:1: E302 expected 2 blank lines, found 1
+nepi/main/views.py:203:1: E303 too many blank lines (3)
+nepi/main/views.py:225:80: E501 line too long (88 > 79 characters)
+nepi/main/views.py:227:1: E302 expected 2 blank lines, found 1
+nepi/main/views.py:240:5: E303 too many blank lines (2)
+nepi/main/views.py:253:80: E501 line too long (102 > 79 characters)
+nepi/main/views.py:255:80: E501 line too long (87 > 79 characters)
+nepi/main/views.py:256:80: E501 line too long (169 > 79 characters)
+nepi/main/views.py:256:101: E261 at least two spaces before inline comment
+nepi/main/views.py:256:101: E262 inline comment should start with '# '
+nepi/main/views.py:257:80: E501 line too long (117 > 79 characters)
+nepi/main/views.py:257:87: E261 at least two spaces before inline comment
+nepi/main/views.py:267:80: E501 line too long (102 > 79 characters)
+nepi/main/views.py:271:80: E501 line too long (81 > 79 characters)
+nepi/main/views.py:272:80: E501 line too long (85 > 79 characters)
+nepi/main/views.py:272:35: E261 at least two spaces before inline comment
+nepi/main/views.py:272:35: E262 inline comment should start with '# '
+nepi/main/views.py:273:80: E501 line too long (83 > 79 characters)
+nepi/main/views.py:273:33: E261 at least two spaces before inline comment
+nepi/main/views.py:273:33: E262 inline comment should start with '# '
+nepi/main/views.py:275:1: E302 expected 2 blank lines, found 1
+nepi/main/views.py:281:45: W292 no newline at end of file
+nepi/main/tests/test_models.py:7:1: E302 expected 2 blank lines, found 1
+nepi/main/tests/test_models.py:9:1: W391 blank line at end of file
+nepi/main/tests/test_views.py:6:1: W191 indentation contains tabs
+nepi/main/tests/test_views.py:7:1: E101 indentation contains mixed spaces and tabs
+nepi/main/tests/test_views.py:8:1: E101 indentation contains mixed spaces and tabs
+nepi/main/tests/test_views.py:10:1: E101 indentation contains mixed spaces and tabs
+nepi/main/tests/test_views.py:11:1: E101 indentation contains mixed spaces and tabs
+nepi/main/tests/test_views.py:12:1: E101 indentation contains mixed spaces and tabs
+nepi/main/tests/test_views.py:14:1: E101 indentation contains mixed spaces and tabs
+nepi/main/tests/test_views.py:15:1: E101 indentation contains mixed spaces and tabs
+nepi/main/tests/test_views.py:16:1: E101 indentation contains mixed spaces and tabs
+nepi/main/tests/test_views.py:17:1: E101 indentation contains mixed spaces and tabs

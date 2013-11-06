@@ -2,12 +2,21 @@
 
 {% block content %}
 <div class="hero-unit">
-<h1>Current Courses</h1>
-<p></p>
+<h2>Current Courses</h2>
+{% if courses%}
+<p>{% for c in courses%} <tr> <td>c.name</td> <!-- <td>c.module</td> <td>c.time_to_complete</td> <td>c.last_visited</td> --> </tr> {%endfor%}</p>
+{% else %}
+You have not joined any courses.
+
+{%endif%}
 </div>
 
 <div class="hero-unit">
-<h1>Modules</h1>
+<h2>Modules</h2>
+
+{% for m in modules%} <tr> <td>m.name</td> <td>m.sections</td> <td>m.time_to_complete</td> <td>m.last_visited</td> </tr>{%endfor%}
+
+
 <p></p>
 </div>
 {% endblock %}

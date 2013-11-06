@@ -9,40 +9,6 @@ from django import forms
    Need to add permissions for visibility.'''
 
 
-class UserProfile(models.Model):
-    ICAP = 'IC'
-    TEACHER = 'TE'
-    STUDENT = 'ST'
-
-    PROFILE_CHOICES = (
-        (ICAP, 'ICAP'),
-        (TEACHER, 'Teacher'),
-        (STUDENT, 'Student'),
-    )
-    user = models.ForeignKey(User, related_name="application_user")
-    profile_type = models.CharField(max_length=2, choices=PROFILE_CHOICES)
-
-    def __unicode__(self):
-        return self.user.username + " " + self.profile_type
-
-
-class ICAPStaff(models.Model):
-    '''How do we differentiate between ICAP admins
-    (those who add modules/content) and those who
-    simply edit schools etc.'''
-    profile = models.ForeignKey(UserProfile)
-    name = models.CharField(max_length=200)
-    #region = models.CharField(max_length=200)
-
-    def __unicode__(self):
-        return self.user.username + " " + self.user.region
-
-
-#class Region(models.Model):
-#    country = models.CharField(max_length=100)
-#    name = models.CharField(max_length=200)
-
-
 class Country(models.Model):
     #note : non soverign countries and partially recognized
     #and unrecognized states were not included in this list, 
@@ -166,11 +132,10 @@ class Country(models.Model):
     )
     
     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES)
-    region = models.CharField(max_length=200)
+    region = models.CharField(max_length=50)
 
     def __unicode__(self):
         return self.country
-
 
 class School(models.Model):
     class Meta:
@@ -184,25 +149,12 @@ class School(models.Model):
     #address?
 
     def __unicode__(self):
-        return self.user.name + " " + self.user.country
+        return self.name + " " + str(self.country)
 
-
-class Teacher(models.Model):
-    '''Assuming each school has many teachers but each
-    teacher works at only one school.'''
-    class Meta:
-        permissions = (
-            ("view_teacher", ""),
-        )
-    user = models.ForeignKey(User, related_name="teacher")
-    school = models.ForeignKey(School)
+class LearningModule(models.Model):
+    '''Need to store learning modules.'''
     name = models.CharField(max_length=200)
-    profile = models.ForeignKey(UserProfile)
-    country = models.ForeignKey(Country)
-
-    def __unicode__(self):
-        return self.user.name + " " + self.user.school
-
+    description = models.CharField(max_length=200)
 
 class Course(models.Model):
     '''Need to store learning modules.'''
@@ -211,33 +163,80 @@ class Course(models.Model):
             ("view_course", "only the teacher of course and ICAP should see course"),
         )
     #Should limit the choices
+    school = models.ForeignKey(School)
+    module = models.ForeignKey(LearningModule)
+    # is there any course that may have more than one module
     semester = models.CharField(max_length=200)
-    teacher = models.ForeignKey(Teacher)
     start_date = models.DateField()
     end_date = models.DateField()
 
+class UserProfile(models.Model):
+    ICAP = 'IC'
+    TEACHER = 'TE'
+    STUDENT = 'ST'
 
-class Student(models.Model):
-    class Meta:
-        permissions = (
-            ("view_students", "students should only be visible by their teacher and ICAP staff."),
-        )
-    '''Only designated people of the school may add teachers.'''
-    school = models.ForeignKey(School)
-    course = models.ManyToManyField(Course)
-    #country choices should be limited
+    PROFILE_CHOICES = (
+        (ICAP, 'ICAP'),
+        (TEACHER, 'Teacher'),
+        (STUDENT, 'Student'),
+    )
+    user = models.ForeignKey(User, related_name="application_user")
+    profile_type = models.CharField(max_length=2, choices=PROFILE_CHOICES)
     country = models.ForeignKey(Country)
-    name = models.CharField(max_length=200)
-    profile = models.ForeignKey(UserProfile)
-    verified = models.BooleanField(default=False)
-
+    course = models.ManyToManyField(Course, null=True, blank=True)
+    school = models.ForeignKey(School, null=True, blank=True)
+    #could have school and course here instead of actual models
     def __unicode__(self):
-        return self.user.name + " " + self.user.country
+        return self.user.username + " " + self.profile_type
 
 
-class LearningModule(models.Model):
-    '''Need to store learning modules.'''
-    name = models.CharField(max_length=200)
-    description = models.CharField(max_length=200)
+
+
+
+
+
+
+
+
+# class ICAPStaff(models.Model):
+#     '''How do we differentiate between ICAP admins
+#     (those who add modules/content) and those who
+#     simply edit schools etc.'''
+#     profile = models.ForeignKey(UserProfile)
+#     #region = models.CharField(max_length=200)
+
+#     def __unicode__(self):
+#         return self.user.username
+
+
+
+# class Teacher(models.Model):
+#     '''Assuming each school has many teachers but each
+#     teacher works at only one school.'''
+#     class Meta:
+#         permissions = (
+#             ("view_teacher", ""),
+#         )
+#     school = models.ForeignKey(School)
+#     profile = models.ForeignKey(UserProfile)
+
+#     def __unicode__(self):
+#         return self.user.name + " " + self.user.school
+
+
+# class Student(models.Model):
+#     class Meta:
+#         permissions = (
+#             ("view_students", "students should only be visible by their teacher and ICAP staff."),
+#         )
+#     '''Only designated people of the school may add teachers.'''
+#     school = models.ForeignKey(School)
+#     course = models.ManyToManyField(Course)
+#     profile = models.ForeignKey(UserProfile)
+
+#     def __unicode__(self):
+#         return self.user.name + " " + self.user.country
+
+
 
 

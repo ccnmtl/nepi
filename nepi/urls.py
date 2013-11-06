@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from django.conf import settings
 from nepi.main.views import CreateAccountForm
-from registration.backends.default.views import RegistrationView
+#from registration.backends.default.views import RegistrationView
 from django.views.generic import TemplateView
 
 import os.path
@@ -30,15 +30,17 @@ urlpatterns = patterns(
     '',
     auth_urls,
     logout_page,
-#    url(r'^accounts/register/$', RegistrationView.as_view(
-#    form_class=CreateAccountForm),
-#    name='registration_register'),
+    (r'^captcha/$', include('captcha.urls')),
     (r'^$', 'nepi.main.views.index'),
     (r'^admin/', include(admin.site.urls)),
     (r'^home/$', 'nepi.main.views.home'),
     (r'^register/$', 'nepi.main.views.register'),
     (r'^thank_you/$', 'nepi.main.views.thank_you'),
+    (r'^login/$', 'nepi.main.views.nepi_login'),
+    (r'^logout/$', 'nepi.main.views.logout'),
     (r'^add_school/$', 'nepi.main.views.add_school'),
+    (r'^contact/$', 'nepi.main.views.contact'),
+    #(r'^show_teachers/$', 'nepi.main.views.add_teachers'),
     #(r'^registration_complete/$', 'nepi.main.views.registration_complete'),
     (r'^about/$', 'nepi.main.views.about'),
     (r'^help_page/$', 'nepi.main.views.help_page'),

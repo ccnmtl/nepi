@@ -131,6 +131,7 @@ INSTALLED_APPS = [
     'pagetree',
     'pageblocks',
     'registration',
+    'captcha',
     #'quizblock',
 ]
 
