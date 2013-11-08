@@ -1,5 +1,6 @@
 {% load compress %}
 <!DOCTYPE html>
+{% load dajaxice_templatetags %}
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
@@ -16,12 +17,13 @@
 	<link rel="shortcut icon" href="/site_media/img/favicon.ico" type="image/x-icon" />
 	{% block css %}{% endblock %}
   <script src="/site_media/js/jquery-1.7.2.min.js"></script>
-
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
   <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
   <!--[if lt IE 9]>
     <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-
+  {% dajaxice_js_import %}
+{% block javascript %}{% endblock %}
 	{% block feeds %}{% endblock %}
 </head>
 <body>

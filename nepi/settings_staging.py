@@ -11,6 +11,8 @@ STATICMEDIA_MOUNTS = (
     ('/sitemedia', '/var/www/nepi/nepi/sitemedia'),
 )
 
+STATICFILES_FINDERS = ('dajaxice.finders.DajaxiceFinder',)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',

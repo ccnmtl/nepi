@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import patterns, include, url
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.i18n import i18n_patterns
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
@@ -6,7 +7,8 @@ from django.conf import settings
 from nepi.main.views import CreateAccountForm
 #from registration.backends.default.views import RegistrationView
 from django.views.generic import TemplateView
-
+from dajaxice.core import dajaxice_autodiscover, dajaxice_config
+dajaxice_autodiscover()
 import os.path
 admin.autodiscover()
 import staticmedia
@@ -30,16 +32,35 @@ urlpatterns = patterns(
     '',
     auth_urls,
     logout_page,
-    (r'^captcha/$', include('captcha.urls')),
+#    (r'^captcha/$', include('captcha.urls')),
+    url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
     (r'^$', 'nepi.main.views.index'),
     (r'^admin/', include(admin.site.urls)),
     (r'^home/$', 'nepi.main.views.home'),
     (r'^register/$', 'nepi.main.views.register'),
     (r'^thank_you/$', 'nepi.main.views.thank_you'),
+    (r'^thanks_course/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_course'),
     (r'^login/$', 'nepi.main.views.nepi_login'),
-    (r'^logout/$', 'nepi.main.views.logout'),
+    (r'^logout/$', 'nepi.main.views.logout_view'),
     (r'^add_school/$', 'nepi.main.views.add_school'),
     (r'^contact/$', 'nepi.main.views.contact'),
+
+    (r'^conf_teacher/$', 'nepi.main.views.conf_teacher'),
+    (r'^view_students/$', 'nepi.main.views.view_students'),
+    (r'^view_schools/$', 'nepi.main.views.view_schools'),
+    (r'^view_region/$', 'nepi.main.views.view_region'),
+    
+
+    (r'^table_register/$', 'nepi.main.views.table_register'),
+    (r'^confirm/$', 'nepi.main.views.confirm'),
+    (r'^confirm/(?P<prof_id>\d+)/(?P<schl_id>\d+)/$', 'nepi.main.views.confirm_teacher'),
+    (r'^deny/(?P<prof_id>\d+)/(?P<schl_id>\d+)/$', 'nepi.main.views.deny_teacher'),
+
+
+    (r'^join_course/$', 'nepi.main.views.join_course'),
+    (r'^view_courses/(?P<schl_id>\d+)/$', 'nepi.main.views.view_courses'),
+    #(r'^find_course/(?P<schl_id>\d+)/$', 'nepi.main.views.find_course'),
+    (r'^add_course/(?P<crs_id>\d+)/$', 'nepi.main.views.add_course'),
     #(r'^show_teachers/$', 'nepi.main.views.add_teachers'),
     #(r'^registration_complete/$', 'nepi.main.views.registration_complete'),
     (r'^about/$', 'nepi.main.views.about'),
@@ -54,6 +75,8 @@ urlpatterns = patterns(
     (r'^uploads/(?P<path>.*)$',
      'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 ) + staticmedia.serve()
+
+urlpatterns += staticfiles_urlpatterns()
 
 
 # urlpatterns += i18n_patterns(

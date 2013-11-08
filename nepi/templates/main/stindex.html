@@ -1,21 +1,78 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+
 <div class="hero-unit">
 <h2>Current Courses</h2>
 {% if courses%}
-<p>{% for c in courses%} <tr> <td>c.name</td> <!-- <td>c.module</td> <td>c.time_to_complete</td> <td>c.last_visited</td> --> </tr> {%endfor%}</p>
-{% else %}
-You have not joined any courses.
+<a href="/join_course/">Join Another Course</a>.
+<table cellspacing="0" class="infotable" summary="Course List">
+	<colgroup span="3" id="coursetablecols">
+	<col class="name" />
+	<col class="school" />
+	<col class="teacher" />
+	<col class="semester" />
+	</colgroup>
+					
+<thead>
+	<tr>
+		<th>	Course Name	</th>	<th>	School		</th>	<th>	Teacher	</th>   <th>	Semester	</th>
+	</tr>
+</thead>
 
+<tbody>
+	{% for c in courses%}
+	<tr>
+		<td>{{ c.name }}</td>
+		<td>{{ c.school }}</td>
+		<td>{{ c.teacher }}</td>
+		<td>{{ c.semester }}</td>
+	</tr>
+	{%endfor%}
+</tbody>
+
+</table>
+{% else %}
+You have not joined any courses. <a href="/join_course/">Join Course</a>.
 {%endif%}
+
 </div>
 
+
+
+
 <div class="hero-unit">
+
+
 <h2>Modules</h2>
+<table cellspacing="0" class="infotable" summary="Module List">
+	<colgroup span="3" id="coursetablecols">
+	<col class="name" />
+	<col class="sections" />
+	<col class="time to complete" />
+	<col class="last visited" />
+	</colgroup>
+					
+<thead>
+	<tr>
+		<th>	Module Name	</th>	<th>	Sections		</th>	<th>	Time to Complete	</th>   <th>	Last Visited	</th>
+	</tr>
+</thead>
 
-{% for m in modules%} <tr> <td>m.name</td> <td>m.sections</td> <td>m.time_to_complete</td> <td>m.last_visited</td> </tr>{%endfor%}
 
+<tbody>
+{% for m in modules%}
+<tr>
+	<td>{{ m.name }}</td>
+	<td>{{ m.sections }}</td>
+	<td>{{ m.time_to_complete }}</td>
+	<td>{{ m.last_visited }}</td>
+</tr>
+{%endfor%}
+
+</tbody>
+</table>
 
 <p></p>
 </div>

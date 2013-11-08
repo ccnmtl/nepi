@@ -137,6 +137,7 @@ class Country(models.Model):
     def __unicode__(self):
         return self.country
 
+
 class School(models.Model):
     class Meta:
         permissions = (
@@ -146,15 +147,19 @@ class School(models.Model):
     assuming the schools may also have long names.'''
     country = models.ForeignKey(Country)
     name = models.CharField(max_length=200, default='')
-    #address?
 
     def __unicode__(self):
-        return self.name + " " + str(self.country)
+        return self.name
+
 
 class LearningModule(models.Model):
     '''Need to store learning modules.'''
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
+
+    def __unicode__(self):
+        return self.name
+
 
 class Course(models.Model):
     '''Need to store learning modules.'''
@@ -162,13 +167,18 @@ class Course(models.Model):
         permissions = (
             ("view_course", "only the teacher of course and ICAP should see course"),
         )
-    #Should limit the choices
+    # Should limit the choices
     school = models.ForeignKey(School)
     module = models.ForeignKey(LearningModule)
     # is there any course that may have more than one module
     semester = models.CharField(max_length=200)
     start_date = models.DateField()
     end_date = models.DateField()
+    name = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return self.name
+
 
 class UserProfile(models.Model):
     ICAP = 'IC'
@@ -185,12 +195,17 @@ class UserProfile(models.Model):
     country = models.ForeignKey(Country)
     course = models.ManyToManyField(Course, null=True, blank=True)
     school = models.ForeignKey(School, null=True, blank=True)
-    #could have school and course here instead of actual models
+
     def __unicode__(self):
         return self.user.username + " " + self.profile_type
 
 
-
+class PendingRegister(models.Model):
+    #school = models.ForeignKey(School, null=True, blank=True)#models.CharField(max_length=50, null=True, blank=True)
+    user = models.ForeignKey(User, null=True, blank=True)
+    userprofile = models.ForeignKey(UserProfile, null=True, blank=True)
+    course = models.CharField(max_length=50, null=True, blank=True)
+    profile_type = models.CharField(max_length=2, null=True, blank=True)
 
 
 
