@@ -134,7 +134,7 @@ INSTALLED_APPS = [
     'pageblocks',
     'registration',
 #    'captcha',
-    'dajaxice',
+    #'dajaxice',
     #'quizblock',
 ]
 

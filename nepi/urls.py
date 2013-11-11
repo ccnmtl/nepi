@@ -33,7 +33,7 @@ urlpatterns = patterns(
     auth_urls,
     logout_page,
 #    (r'^captcha/$', include('captcha.urls')),
-    url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
+    #url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
     (r'^$', 'nepi.main.views.index'),
     (r'^admin/', include(admin.site.urls)),
 
