@@ -7,8 +7,8 @@ from django.conf import settings
 from nepi.main.views import CreateAccountForm
 #from registration.backends.default.views import RegistrationView
 from django.views.generic import TemplateView
-from dajaxice.core import dajaxice_autodiscover, dajaxice_config
-dajaxice_autodiscover()
+#from dajaxice.core import dajaxice_autodiscover, dajaxice_config
+#dajaxice_autodiscover()
 import os.path
 admin.autodiscover()
 import staticmedia
