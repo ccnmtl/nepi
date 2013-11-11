@@ -1,8 +1,10 @@
 from annoying.decorators import render_to
 from django import forms
 from django.contrib.auth import authenticate, login, logout
-from nepi.main.models import Course, UserProfile, School, Country, LearningModule, PendingRegister
-from nepi.main.forms import LoginForm, CreateAccountForm, AddTeacher, AddSchoolForm, CreateCourseForm, ContactForm
+from nepi.main.models import Course, UserProfile, School
+from nepi.main.models import Country, LearningModule, PendingRegister
+from nepi.main.forms import LoginForm, CreateAccountForm, AddTeacher
+from nepi.main.forms import AddSchoolForm, CreateCourseForm, ContactForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.contrib.auth.models import User
@@ -42,7 +44,7 @@ def thank_you_reg(request):
 
 def thanks_course(request, course_id):
     """Returns thanks for joining course page."""
-    return render(request, 'main/thanks_course.html', { 'form': form, })
+    return render(request, 'main/thanks_course.html', {'form': form, })
 
 
 def nepi_login(request):
@@ -76,11 +78,16 @@ def home(request):
     if user_profile.profile_type == 'ST':
         modules = LearningModule.objects.all()
         courses = user_profile.course.all()
-        return render(request, 'main/stindex.html', {'courses': courses, 'modules' : modules})
+        return render(request, 'main/stindex.html',
+                      {'courses': courses, 'modules': modules})
     elif user_profile.profile_type == 'TE':
-        pending_students = PendingRegister.objects.filter(profile_type='ST', course=user_profile.course)
+        pending_students = \
+            PendingRegister.objects.filter(profile_type='ST',
+                                           course=user_profile.course)
         courses = user_profile.course.all()
-        return render(request, 'main/teindex.html', {'courses': courses, 'pending_students' : pending_students})
+        return render(request, 'main/teindex.html',
+                      {'courses': courses,
+                          'pending_students': pending_students})
     elif user_profile.profile_type == 'IC':
         return render_to_response('main/icindex.html/')
     else:
@@ -113,11 +120,14 @@ def register(request):
                         new_user.save()
                         new_profile = UserProfile(user=new_user)
                         try:
-                            get_country = Country.objects.get(country=request.POST['country'])
+                            get_country = \
+                                Country.objects.get(
+                                    country=request.POST['country'])
                             new_profile.country = get_country
                             new_profile.save()
                         except Country.DoesNotExist:
-                            get_country = Country(country=request.POST['country'])
+                            get_country = \
+                                Country(country=request.POST['country'])
                             get_country.save()
                             new_profile.country = get_country
                             new_profile.save()
@@ -132,10 +142,14 @@ def register(request):
                             else:
                                 sender = "unknown@unknown.com"
                             subject = 'Teacher Status Requested'
-                            message = str(new_user.first_name) + " " + str(new_user.last_name) + " has requested teacher status at " #+ get_school.name + "."
+                            message = str(new_user.first_name) + " " \
+                                + str(new_user.last_name) \
+                                + " has requested teacher status at "
+                                #  + get_school.name + "."
                             from django.core.mail import send_mail
                             send_mail(subject, message, sender, recipients)
-                            return render_to_response('main/thanks_teacher.html')
+                            return render_to_response(
+                                'main/thanks_teacher.html')
                         new_profile.save()
                         return HttpResponseRedirect('/thank_you/')
 
@@ -154,14 +168,18 @@ def register(request):
 
 
 def conf_teacher(request):
-    """This is intended to be for ICAP personel to confirm teachers in the program."""
+    """This is intended to be for ICAP personel to
+    confirm teachers in the program."""
     user_info = User.objects.getprofile(is_teacher=True)
     conf_teach = UserProfile.objects.filter(is_teacher=True)
-    return render(request, 'main/show_teachers.html', {'conf_teach': conf_teach})
+    return render(request,
+                  'main/show_teachers.html',
+                  {'conf_teach': conf_teach})
 
 
 def create_course(request):
-    """This is intended to allow teachers to create courses which use the learning modules."""
+    """This is intended to allow teachers to create courses
+    which use the learning modules."""
     if request.method == 'POST':
         form = CreateCourseForm(request.POST)
         user = request.user
@@ -173,11 +191,17 @@ def create_course(request):
             name = request.POST['name']
             get_country = Country.objects.get(country=user_profile.country)
             get_school = School.objects.get(name=user_profile.school)
-            new_course = Course(semester=semester, start_date=start_date, end_date=end_date, country=get_country, school=get_school, name=name)
+            new_course = Course(semester=semester,
+                                start_date=start_date,
+                                end_date=end_date,
+                                country=get_country,
+                                school=get_school,
+                                name=name)
             new_course.save()
             return HttpResponseRedirect('/thank_you/')
         else:
-                raise forms.ValidationError("Please enter appropriate fields for the form.")
+                raise forms.ValidationError(
+                    "Please enter appropriate fields for the form.")
 
     else:
         form = CreateCourseForm()  # An unbound form
@@ -187,21 +211,22 @@ def create_course(request):
     })
 
 
-
-
 def add_school(request):
-    """This is intended to be for ICAP personel to register Schools in the program."""
+    """This is intended to be for ICAP personel to register
+    Schools in the program."""
     if request.method == 'POST':
         form = AddSchoolForm(request.POST)
         try:
             get_country = Country.objects.get(country=request.POST['country'])
             try:
-                School.objects.get(name=request.POST['name'], country=get_country)
+                School.objects.get(
+                    name=request.POST['name'],
+                    country=get_country)
                 raise forms.ValidationError("This school already exists.")
             except School.DoesNotExist:
                 new_school = School(
                     name=request.POST['name'],
-                    country = get_country
+                    country=get_country
                 )
                 new_school.save()
                 return HttpResponseRedirect('/thank_you/')
@@ -210,7 +235,7 @@ def add_school(request):
             new_country.save()
             new_school = School(
                 name=request.POST['name'],
-                country = new_country
+                country=new_country
             )
             new_school.save()
             return HttpResponseRedirect('/thank_you/')
@@ -228,7 +253,12 @@ def join_course(request):
     user_profile = UserProfile.objects.get(user=user)
     country = user_profile.country
     schools = School.objects.filter(country=country)
-    return render(request, 'main/join_course.html', {'schools' : schools, 'country' : country})
+    return render(request,
+                  'main/join_course.html',
+                  {'schools': schools,
+                   'country': country
+                   }
+                  )
 
 
 def view_courses(request, schl_id):
@@ -236,16 +266,20 @@ def view_courses(request, schl_id):
     user_profile = UserProfile.objects.get(user=user)
     school = School.objects.get(pk=schl_id)
     courses = Course.objects.filter(school=school)
-    return render(request, 'main/view_courses.html', {'courses' : courses, 'school' : school})
+    return render(request,
+                  'main/view_courses.html',
+                  {'courses': courses, 'school': school})
 
 
 def add_course(request, crs_id):
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
     course = Course.objects.get(pk=crs_id)
-    register = PendingRegister(user=user, userprofile=user_profile, course=course)
+    register = PendingRegister(user=user,
+                               userprofile=user_profile,
+                               course=course)
     register.save()
-    return render(request, 'main/thanks_course.html', {'course' : course})
+    return render(request, 'main/thanks_course.html', {'course': course})
 
 
 def contact(request):
@@ -268,7 +302,9 @@ def contact(request):
     })
 
 
-# This is an experimental view involving an external registration table - this is to temporarily store requests from Teachers and Students
+# This is an experimental view involving an external
+# registration table - this is to temporarily store
+# requests from Teachers and Students
 # to be associated with a course or school
 def table_register(request):
     '''This is based off of django-request - creates a new user account.'''
@@ -294,22 +330,32 @@ def table_register(request):
                         new_user.save()
                         new_profile = UserProfile(user=new_user)
                         try:
-                            get_country = Country.objects.get(country=request.POST['country'])
+                            get_country = \
+                                Country.objects.get(
+                                    country=request.POST['country'])
                             new_profile.country = get_country
                             new_profile.save()
                         except Country.DoesNotExist:
-                            get_country = Country(country=request.POST['country'])
+                            get_country = \
+                                Country(
+                                    country=request.POST['country'])
                             get_country.save()
                             new_profile.country = get_country
                             new_profile.save()
                         new_profile.profile_type = 'ST'
                         new_profile.save()
-                        # This should be the end of the user profile - everything else - whether
-                        # they claim to be a student in a course or a teacher at a school should be stored until it is verified
+                        # This should be the end of the user profile
+                        # - everything else - whether
+                        # they claim to be a student in a course or
+                        # a teacher at a school should be stored until
+                        # it is verified
                         is_teacher = request.POST.get('is_teacher', 'ST')
                         if is_teacher == 'TE':
-                            # verified the following lines with print statements
-                            register = PendingRegister(user=new_user, userprofile=new_profile, profile_type='TE')
+                            # verified the following lines
+                            # with print statements
+                            register = PendingRegister(user=new_user,
+                                                       userprofile=new_profile,
+                                                       profile_type='TE')
                             register.save()
                             recipients = ['cdunlop@columbia.edu']
                             if request.POST['email']:
@@ -317,11 +363,14 @@ def table_register(request):
                             else:
                                 sender = "unknown@unknown.com"
                             subject = 'Teacher Status Requested'
-                            message = str(new_user.first_name) + " " + str(new_user.last_name) + " has requested teacher status."
+                            message = str(new_user.first_name) \
+                                + " " + str(new_user.last_name) \
+                                + " has requested teacher status."
                             # + get_school.name + "."
                             from django.core.mail import send_mail
                             send_mail(subject, message, sender, recipients)
-                            return render_to_response('main/thanks_teacher.html')
+                            return render_to_response(
+                                'main/thanks_teacher.html')
                         return HttpResponseRedirect('/thank_you_reg/')
 
             else:
@@ -338,7 +387,9 @@ def table_register(request):
 def pending_teachers(request):
     # Grab all pending teacher requests
     conf_teach = PendingRegister.objects.filter(profile_type='TE')
-    return render(request, 'main/show_teachers.html', {'conf_teach':conf_teach})
+    return render(request,
+                  'main/show_teachers.html',
+                  {'conf_teach': conf_teach})
 
 
 def confirm_teacher(request, prof_id, schl_id):
@@ -373,26 +424,32 @@ def deny_student(request, prof_id, schl_id):
 
 
 def view_students(request):
-    """Allow teacher to view progress of students within a course."""
+    """Allow teacher to view progress of students within a
+    course."""
     pass
 
 
 def view_pending_students(request):
-    """Allow teacher to view students claiming they are enrolled in a course."""
+    """Allow teacher to view students claiming
+     they are enrolled in a course."""
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
     teachers_courses = user_profile.course_set.all()
     #for each in teachers_courses:
-    #    view_pending_students = PendingRegister.objects.filter(profile_type='ST', course=each)
-    return render(request, 'main/pending_students.html', { 'teachers_courses' : teachers_courses })
+    #    view_pending_students =
+    # PendingRegister.objects.filter(profile_type='ST', course=each)
+    return render(request,
+                  'main/pending_students.html',
+                  {'teachers_courses': teachers_courses})
 
 
 def view_schools(request):
     """Return all school for viewing to ICAPP personnel."""
     schools = School.objects.all()
-    return render(request, 'main/view_schools.html', { 'schools': schools })
+    return render(request, 'main/view_schools.html', {'schools': schools})
 
 
 def view_region(request):
-    """Allow ICAP personnel to view a region, will show schools, countries and teachers in region and their classes"""
+    """Allow ICAP personnel to view a region, will show schools,
+    countries and teachers in region and their classes"""
     pass

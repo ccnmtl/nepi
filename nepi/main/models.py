@@ -164,7 +164,8 @@ class Course(models.Model):
     '''Need to store learning modules.'''
     class Meta:
         permissions = (
-            ("view_course", "only the teacher of course and ICAP should see course"),
+            ("view_course",
+                "only the teacher of course and ICAP should see course"),
         )
     # Should limit the choices
     school = models.ForeignKey(School)
@@ -200,7 +201,8 @@ class UserProfile(models.Model):
 
 
 class PendingRegister(models.Model):
-    #school = models.ForeignKey(School, null=True, blank=True)#models.CharField(max_length=50, null=True, blank=True)
+    #  school = models.ForeignKey(School, null=True, blank=True)
+    #  models.CharField(max_length=50, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
     userprofile = models.ForeignKey(UserProfile, null=True, blank=True)
     course = models.CharField(max_length=50, null=True, blank=True)
@@ -241,7 +243,8 @@ class PendingRegister(models.Model):
 # class Student(models.Model):
 #     class Meta:
 #         permissions = (
-#             ("view_students", "students should only be visible by their teacher and ICAP staff."),
+#             ("view_students",
+    # "students should only be visible by their teacher and ICAP staff."),
 #         )
 #     '''Only designated people of the school may add teachers.'''
 #     school = models.ForeignKey(School)

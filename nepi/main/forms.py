@@ -5,8 +5,9 @@ from nepi.main.models import LearningModule
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50, required=True)
-    password = forms.CharField(widget=forms.PasswordInput, max_length=50, required=True)
-
+    password = forms.CharField(widget=forms.PasswordInput,
+                               max_length=50,
+                               required=True)
 
 
 class CreateAccountForm(forms.Form):
@@ -33,8 +34,11 @@ class CreateAccountForm(forms.Form):
         max_length=25, widget=forms.PasswordInput, required=True,
         label="Confirm Password")
     email = forms.EmailField()
-    country = forms.ChoiceField(widget=forms.Select(), choices=Country.COUNTRY_CHOICES, required=True)
-    is_teacher = forms.MultipleChoiceField(choices=ACCOUNT_CHOICES, initial='STUDENT')
+    country = forms.ChoiceField(widget=forms.Select(),
+                                choices=Country.COUNTRY_CHOICES,
+                                required=True)
+    is_teacher = forms.MultipleChoiceField(choices=ACCOUNT_CHOICES,
+                                           initial='STUDENT')
 
 
 class ContactForm(forms.Form):
@@ -52,7 +56,9 @@ class AddTeacher(forms.Form):
 
 class AddSchoolForm(forms.Form):
     name = forms.CharField(max_length=50, required=True, label="School Name")
-    country = forms.ChoiceField(widget=forms.Select(), choices=Country.COUNTRY_CHOICES, required=True)
+    country = forms.ChoiceField(widget=forms.Select(),
+                                choices=Country.COUNTRY_CHOICES,
+                                required=True)
 
 
 class CreateCourseForm(forms.Form):
@@ -62,6 +68,7 @@ class CreateCourseForm(forms.Form):
     end_date = forms.DateField()
 
 
-    
+
 #class JoinCourse(forms.Form):
-#    '''Allow student to join course - return page to search for school by country.'''
+#    '''Allow student to join course -
+#return page to search for school by country.'''
