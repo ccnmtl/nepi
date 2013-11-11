@@ -11,7 +11,7 @@ from django import forms
 
 class Country(models.Model):
     #note : non soverign countries and partially recognized
-    #and unrecognized states were not included in this list, 
+    #and unrecognized states were not included in this list,
     #other areas canary islands and such are also not included
     ALGERIA = 'DZ'
     ANGOLA = 'AO'
@@ -68,11 +68,10 @@ class Country(models.Model):
     ZAMBIA = 'ZM'
     ZIMBABWE = 'ZW'
 
-
-    # http://en.wikipedia.org/wiki/List_of_sovereign_states_and_dependent_territories_in_Africa
+    # http://en.wikipedia.org/wiki/
+    #List_of_sovereign_states_and_dependent_territories_in_Africa
     # http://sustainablesources.com/resources/country-abbreviations/
     # http://www.paladinsoftware.com/Generic/countries.htm
-
     COUNTRY_CHOICES = (
 
         (ALGERIA, 'Algeria'),
@@ -130,7 +129,7 @@ class Country(models.Model):
         (ZAMBIA, 'Zambia'),
         (ZIMBABWE, 'Zimbawe'),
     )
-    
+
     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES)
     region = models.CharField(max_length=50)
 
@@ -251,7 +250,3 @@ class PendingRegister(models.Model):
 
 #     def __unicode__(self):
 #         return self.user.name + " " + self.user.country
-
-
-
-

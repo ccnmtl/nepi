@@ -1,33 +1,62 @@
-nepi/main/admin.py:11: [E0102, UserAdmin] class already defined line 2
-nepi/main/admin.py:11: [R0904, UserAdmin] Too many public methods (54/50)
-nepi/main/views.py:256: [C0301] Line too long (169/160)
-nepi/main/views.py:102: [W0511] TODO: should probably check provided email as well
-nepi/main/views.py:25: [E1101, nepi_login] Instance of 'LoginForm' has no 'is_valid' member
-nepi/main/views.py:26: [E1101, nepi_login] Instance of 'LoginForm' has no 'cleaned_data' member
-nepi/main/views.py:27: [E1101, nepi_login] Instance of 'LoginForm' has no 'cleaned_data' member
-nepi/main/views.py:69: [C0103, home] Invalid name "t" for type variable (should match [a-z_][a-z0-9_]{2,30}$)
-nepi/main/views.py:73: [C0103, home] Invalid name "c" for type variable (should match [a-z_][a-z0-9_]{2,30}$)
-nepi/main/views.py:73: [W0612, home] Unused variable 'c'
-nepi/main/views.py:69: [W0612, home] Unused variable 't'
-nepi/main/views.py:97: [E1101, register] Instance of 'CreateAccountForm' has no 'is_valid' member
-nepi/main/views.py:98: [W0612, register] Unused variable 'human'
-nepi/main/views.py:207: [E1101, contact] Instance of 'ContactForm' has no 'is_valid' member
-nepi/main/views.py:208: [E1101, contact] Instance of 'ContactForm' has no 'cleaned_data' member
-nepi/main/views.py:209: [E1101, contact] Instance of 'ContactForm' has no 'cleaned_data' member
-nepi/main/views.py:210: [E1101, contact] Instance of 'ContactForm' has no 'cleaned_data' member
-nepi/main/views.py:5: [W0611] Unused import HttpResponse
-nepi/main/views.py:9: [W0611] Unused import CaptchaField
-nepi/main/views.py:4: [W0611] Unused import Course
+nepi/main/admin.py:13: [E0102, UserAdmin] class already defined line 2
+nepi/main/admin.py:13: [R0904, UserAdmin] Too many public methods (54/50)
+nepi/main/views.py:180: [W0311] Bad indentation. Found 16 spaces, expected 12
+nepi/main/views.py:99: [W0511] TODO: should probably check provided email as well
+nepi/main/views.py:45: [E0602, thanks_course] Undefined variable 'form'
+nepi/main/views.py:52: [E1101, nepi_login] Instance of 'LoginForm' has no 'is_valid' member
+nepi/main/views.py:53: [E1101, nepi_login] Instance of 'LoginForm' has no 'cleaned_data' member
+nepi/main/views.py:54: [E1101, nepi_login] Instance of 'LoginForm' has no 'cleaned_data' member
+nepi/main/views.py:94: [E1101, register] Instance of 'CreateAccountForm' has no 'is_valid' member
+nepi/main/views.py:95: [W0612, register] Unused variable 'human'
+nepi/main/views.py:158: [E1101, conf_teacher] Instance of 'UserManager' has no 'getprofile' member
+nepi/main/views.py:158: [W0612, conf_teacher] Unused variable 'user_info'
+nepi/main/views.py:169: [E1101, create_course] Instance of 'CreateCourseForm' has no 'is_valid' member
+nepi/main/views.py:236: [W0612, view_courses] Unused variable 'user_profile'
+nepi/main/views.py:246: [W0621, add_course] Redefining name 'register' from outer scope (line 90)
+nepi/main/views.py:255: [E1101, contact] Instance of 'ContactForm' has no 'is_valid' member
+nepi/main/views.py:256: [E1101, contact] Instance of 'ContactForm' has no 'cleaned_data' member
+nepi/main/views.py:257: [E1101, contact] Instance of 'ContactForm' has no 'cleaned_data' member
+nepi/main/views.py:258: [E1101, contact] Instance of 'ContactForm' has no 'cleaned_data' member
+nepi/main/views.py:312: [W0621, table_register] Redefining name 'register' from outer scope (line 90)
+nepi/main/views.py:277: [E1101, table_register] Instance of 'CreateAccountForm' has no 'is_valid' member
+nepi/main/views.py:345: [E1101, confirm_teacher] Class 'UserProfile' has no 'object' member
+nepi/main/views.py:346: [E1101, confirm_teacher] Class 'School' has no 'object' member
+nepi/main/views.py:354: [E1101, deny_teacher] Class 'PendingRegister' has no 'object' member
+nepi/main/views.py:362: [E1101, confirm_student] Class 'UserProfile' has no 'object' member
+nepi/main/views.py:362: [E0602, confirm_student] Undefined variable 'prof_id'
+nepi/main/views.py:363: [E1101, confirm_student] Class 'Course' has no 'object' member
+nepi/main/views.py:13: [W0611] Unused import BaseDetailView
+nepi/main/views.py:9: [W0611] Unused import Template
+nepi/main/views.py:6: [W0611] Unused import HttpResponse
+nepi/main/views.py:12: [W0611] Unused import simplejson
+nepi/main/views.py:13: [W0611] Unused import SingleObjectTemplateResponseMixin
+nepi/main/views.py:10: [W0611] Unused import json
+nepi/main/views.py:9: [W0611] Unused import Context
+nepi/main/views.py:5: [W0611] Unused import AddTeacher
+nepi/main/forms.py:2: [W0611] Unused import School
+nepi/main/forms.py:2: [W0611] Unused import Course
+nepi/main/forms.py:3: [W0611] Unused import LearningModule
+nepi/main/forms.py:2: [W0611] Unused import UserProfile
 nepi/main/models.py:9: [W0105] String statement has no effect
 nepi/main/models.py:146: [W0105, School] String statement has no effect
-nepi/main/models.py:190: [E1101, UserProfile.__unicode__] Instance of 'ForeignKey' has no 'username' member
+nepi/main/models.py:199: [E1101, UserProfile.__unicode__] Instance of 'ForeignKey' has no 'username' member
+nepi/main/views.py:127: [W0201, register] Attribute 'status_request' defined outside __init__
 nepi/main/models.py:3: [W0611] Unused import signals
 nepi/main/models.py:6: [W0611] Unused import forms
 nepi/main/models.py:5: [W0611] Unused import post_save
 nepi/main/models.py:2: [W0611] Unused import ModelForm
-nepi/main/tests/test_views.py:6: [W0312] Found indentation with tabs instead of spaces
-nepi/main/tests/test_views.py:5: [R0904, BasicTest] Too many public methods (64/50)
-nepi/main/tests/test_views.py:2: [W0611] Unused import Client
+nepi/main/tests/test_views.py:9: [C0103, BasicTest.setUp] Invalid name "c" for type attribute (should match [a-z_][a-z0-9_]{2,30}$)
+nepi/main/tests/test_views.py:14: [E1103, BasicTest.test_root] Instance of 'WSGIRequest' has no 'status_code' member (but some types could not be inferred)
+nepi/main/tests/test_views.py:19: [E1103, BasicTest.test_about] Instance of 'WSGIRequest' has no 'status_code' member (but some types could not be inferred)
+nepi/main/tests/test_views.py:24: [E1103, BasicTest.test_help] Instance of 'WSGIRequest' has no 'status_code' member (but some types could not be inferred)
+nepi/main/tests/test_views.py:53: [E1103, BasicTest.test_smoketest] Instance of 'WSGIRequest' has no 'status_code' member (but some types could not be inferred)
+nepi/main/tests/test_views.py:54: [E1103, BasicTest.test_smoketest] Instance of 'WSGIRequest' has no 'content' member (but some types could not be inferred)
+nepi/main/tests/test_views.py:7: [R0904, BasicTest] Too many public methods (70/50)
+nepi/main/tests/test_views.py:4: [W0611] Unused import index
+nepi/main/tests/test_views.py:4: [W0611] Unused import about
+nepi/main/tests/test_views.py:4: [W0611] Unused import help_page
+nepi/main/tests/test_views.py:3: [W0611] Unused import User
+nepi/main/tests/test_views.py:4: [W0611] Unused import thank_you_reg
 nepi/main/tests/__init__.py:2: [W0403] Relative import 'test_models', should be 'nepi.main.tests.test_models'
 nepi/main/tests/__init__.py:2: [W0401] Wildcard import test_models
 nepi/main/tests/__init__.py:3: [W0403] Relative import 'test_views', should be 'nepi.main.tests.test_views'
@@ -40,7 +69,24 @@ nepi/main/tests/test_models.py:4: [W0611] Unused import UserProfile
 
 Report
 ======
-289 statements analysed.
+454 statements analysed.
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |559    |74.14 |384      |+175.00    |
++----------+-------+------+---------+-----------+
+|docstring |42     |5.57  |23       |+19.00     |
++----------+-------+------+---------+-----------+
+|comment   |52     |6.90  |56       |-4.00      |
++----------+-------+------+---------+-----------+
+|empty     |101    |13.40 |82       |+19.00     |
++----------+-------+------+---------+-----------+
+
+
 
 External dependencies
 ---------------------
@@ -49,9 +95,6 @@ External dependencies
     annoying 
       \-decorators 
         \-render_to (nepi.main.views)
-    captcha 
-      \-fields 
-        \-CaptchaField (nepi.main.views)
     django 
       \-contrib 
       | \-admin (nepi.main.admin)
@@ -62,7 +105,7 @@ External dependencies
       |   \-login (nepi.main.views)
       |   \-logout (nepi.main.views)
       |   \-models 
-      |     \-User (nepi.main.models,nepi.main.tests.test_models,nepi.main.admin,nepi.main.views,nepi.main.smoke)
+      |     \-User (nepi.main.admin,nepi.main.views,nepi.main.tests.test_views,nepi.main.smoke,nepi.main.models,nepi.main.tests.test_models)
       \-core 
       | \-mail 
       |   \-send_mail (nepi.main.views)
@@ -70,7 +113,7 @@ External dependencies
       | \-models (nepi.main.models)
       |   \-signals (nepi.main.models)
       |     \-post_save (nepi.main.models)
-      \-forms (nepi.main.models,nepi.main.tests.test_models,nepi.main.views)
+      \-forms (nepi.main.models,nepi.main.tests.test_models,nepi.main.forms,nepi.main.views)
       | \-ModelForm (nepi.main.models)
       \-http 
       | \-HttpResponse (nepi.main.views)
@@ -82,38 +125,126 @@ External dependencies
       | \-Context (nepi.main.views)
       | \-Template (nepi.main.views)
       \-test 
-        \-TestCase (nepi.main.tests.test_views,nepi.main.tests.test_models)
-        \-client 
-          \-Client (nepi.main.tests.test_views)
+      | \-RequestFactory (nepi.main.tests.test_views)
+      | \-TestCase (nepi.main.tests.test_views,nepi.main.tests.test_models)
+      | \-client 
+      |   \-Client (nepi.main.tests.test_views)
+      \-utils 
+      | \-simplejson (nepi.main.views)
+      \-views 
+        \-generic 
+          \-detail 
+            \-BaseDetailView (nepi.main.views)
+            \-SingleObjectTemplateResponseMixin (nepi.main.views)
     nepi 
       \-main 
+        \-forms 
+        | \-AddSchoolForm (nepi.main.views)
+        | \-AddTeacher (nepi.main.views)
+        | \-ContactForm (nepi.main.views)
+        | \-CreateAccountForm (nepi.main.views)
+        | \-CreateCourseForm (nepi.main.views)
+        | \-LoginForm (nepi.main.views)
         \-models 
-          \-Country (nepi.main.admin,nepi.main.views)
-          \-Course (nepi.main.admin,nepi.main.views)
-          \-LearningModule (nepi.main.admin,nepi.main.views)
-          \-School (nepi.main.admin,nepi.main.views)
-          \-UserProfile (nepi.main.tests.test_models,nepi.main.admin,nepi.main.views)
+        | \-Country (nepi.main.admin,nepi.main.views,nepi.main.forms)
+        | \-Course (nepi.main.admin,nepi.main.views,nepi.main.forms)
+        | \-LearningModule (nepi.main.admin,nepi.main.views,nepi.main.forms)
+        | \-PendingRegister (nepi.main.views)
+        | \-School (nepi.main.admin,nepi.main.views,nepi.main.forms)
+        | \-UserProfile (nepi.main.tests.test_models,nepi.main.admin,nepi.main.views,nepi.main.forms)
+        \-views 
+          \-about (nepi.main.tests.test_views)
+          \-help_page (nepi.main.tests.test_views)
+          \-index (nepi.main.tests.test_views)
+          \-table_register (nepi.main.tests.test_views)
+          \-thank_you_reg (nepi.main.tests.test_views)
     smoketest 
       \-SmokeTest (nepi.main.smoke)
 
 
 
-Raw metrics
------------
+Messages by category
+--------------------
 
-+----------+-------+------+---------+-----------+
-|type      |number |%     |previous |difference |
-+==========+=======+======+=========+===========+
-|code      |384    |70.46 |71       |+313.00    |
-+----------+-------+------+---------+-----------+
-|docstring |23     |4.22  |3        |+20.00     |
-+----------+-------+------+---------+-----------+
-|comment   |56     |10.28 |1        |+55.00     |
-+----------+-------+------+---------+-----------+
-|empty     |82     |15.05 |17       |+65.00     |
-+----------+-------+------+---------+-----------+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |1      |3        |-2.00      |
++-----------+-------+---------+-----------+
+|refactor   |3      |3        |=          |
++-----------+-------+---------+-----------+
+|warning    |38     |22       |+16.00     |
++-----------+-------+---------+-----------+
+|error      |25     |10       |+15.00     |
++-----------+-------+---------+-----------+
 
 
+
+% errors / warnings by module
+-----------------------------
+
++----------------------------+------+--------+---------+-----------+
+|module                      |error |warning |refactor |convention |
++============================+======+========+=========+===========+
+|nepi.main.views             |72.00 |39.47   |0.00     |0.00       |
++----------------------------+------+--------+---------+-----------+
+|nepi.main.tests.test_views  |20.00 |13.16   |33.33    |100.00     |
++----------------------------+------+--------+---------+-----------+
+|nepi.main.models            |4.00  |18.42   |0.00     |0.00       |
++----------------------------+------+--------+---------+-----------+
+|nepi.main.admin             |4.00  |0.00    |33.33    |0.00       |
++----------------------------+------+--------+---------+-----------+
+|nepi.main.tests.__init__    |0.00  |10.53   |0.00     |0.00       |
++----------------------------+------+--------+---------+-----------+
+|nepi.main.forms             |0.00  |10.53   |0.00     |0.00       |
++----------------------------+------+--------+---------+-----------+
+|nepi.main.tests.test_models |0.00  |7.89    |33.33    |0.00       |
++----------------------------+------+--------+---------+-----------+
+
+
+
+Messages
+--------
+
++-----------+------------+
+|message id |occurrences |
++===========+============+
+|W0611      |24          |
++-----------+------------+
+|E1101      |17          |
++-----------+------------+
+|E1103      |5           |
++-----------+------------+
+|W0612      |3           |
++-----------+------------+
+|R0904      |3           |
++-----------+------------+
+|W0621      |2           |
++-----------+------------+
+|W0403      |2           |
++-----------+------------+
+|W0401      |2           |
++-----------+------------+
+|W0105      |2           |
++-----------+------------+
+|E0602      |2           |
++-----------+------------+
+|W0511      |1           |
++-----------+------------+
+|W0311      |1           |
++-----------+------------+
+|W0201      |1           |
++-----------+------------+
+|E0102      |1           |
++-----------+------------+
+|C0103      |1           |
++-----------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 6.32/10 (previous run: 7.30/10)
 
 Duplication
 -----------
@@ -128,94 +259,19 @@ Duplication
 
 
 
-Messages by category
---------------------
-
-+-----------+-------+---------+-----------+
-|type       |number |previous |difference |
-+===========+=======+=========+===========+
-|convention |3      |2        |+1.00      |
-+-----------+-------+---------+-----------+
-|refactor   |3      |2        |+1.00      |
-+-----------+-------+---------+-----------+
-|warning    |22     |8        |+14.00     |
-+-----------+-------+---------+-----------+
-|error      |10     |9        |+1.00      |
-+-----------+-------+---------+-----------+
-
-
-
-% errors / warnings by module
------------------------------
-
-+----------------------------+------+--------+---------+-----------+
-|module                      |error |warning |refactor |convention |
-+============================+======+========+=========+===========+
-|nepi.main.views             |80.00 |31.82   |0.00     |100.00     |
-+----------------------------+------+--------+---------+-----------+
-|nepi.main.models            |10.00 |27.27   |0.00     |0.00       |
-+----------------------------+------+--------+---------+-----------+
-|nepi.main.admin             |10.00 |0.00    |33.33    |0.00       |
-+----------------------------+------+--------+---------+-----------+
-|nepi.main.tests.__init__    |0.00  |18.18   |0.00     |0.00       |
-+----------------------------+------+--------+---------+-----------+
-|nepi.main.tests.test_models |0.00  |13.64   |33.33    |0.00       |
-+----------------------------+------+--------+---------+-----------+
-|nepi.main.tests.test_views  |0.00  |9.09    |33.33    |0.00       |
-+----------------------------+------+--------+---------+-----------+
-
-
-
-Messages
---------
-
-+-----------+------------+
-|message id |occurrences |
-+===========+============+
-|W0611      |11          |
-+-----------+------------+
-|E1101      |9           |
-+-----------+------------+
-|W0612      |3           |
-+-----------+------------+
-|R0904      |3           |
-+-----------+------------+
-|W0403      |2           |
-+-----------+------------+
-|W0401      |2           |
-+-----------+------------+
-|W0105      |2           |
-+-----------+------------+
-|C0103      |2           |
-+-----------+------------+
-|W0511      |1           |
-+-----------+------------+
-|W0312      |1           |
-+-----------+------------+
-|E0102      |1           |
-+-----------+------------+
-|C0301      |1           |
-+-----------+------------+
-
-
-
-Global evaluation
------------------
-Your code has been rated at 7.30/10 (previous run: 1.49/10)
-
 Statistics by type
 ------------------
 
 +---------+-------+-----------+-----------+------------+---------+
 |type     |number |old number |difference |%documented |%badname |
 +=========+=======+===========+===========+============+=========+
-|module   |8      |7          |+1.00      |0.00        |0.00     |
+|module   |9      |8          |+1.00      |0.00        |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
-|class    |18     |6          |+12.00     |22.22       |0.00     |
+|class    |19     |18         |+1.00      |21.05       |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
-|method   |4      |11         |-7.00      |75.00       |0.00     |
+|method   |13     |4          |+9.00      |46.15       |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
-|function |17     |2          |+15.00     |47.06       |0.00     |
+|function |26     |17         |+9.00      |73.08       |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
 
 

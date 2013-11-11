@@ -36,36 +36,57 @@ urlpatterns = patterns(
     url(dajaxice_config.dajaxice_url, include('dajaxice.urls')),
     (r'^$', 'nepi.main.views.index'),
     (r'^admin/', include(admin.site.urls)),
-    (r'^home/$', 'nepi.main.views.home'),
-    (r'^register/$', 'nepi.main.views.register'),
-    (r'^thank_you/$', 'nepi.main.views.thank_you'),
-    (r'^thanks_course/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_course'),
+
+    #login/logout
     (r'^login/$', 'nepi.main.views.nepi_login'),
     (r'^logout/$', 'nepi.main.views.logout_view'),
-    (r'^add_school/$', 'nepi.main.views.add_school'),
-    (r'^contact/$', 'nepi.main.views.contact'),
-
-    (r'^conf_teacher/$', 'nepi.main.views.conf_teacher'),
-    (r'^view_students/$', 'nepi.main.views.view_students'),
-    (r'^view_schools/$', 'nepi.main.views.view_schools'),
-    (r'^view_region/$', 'nepi.main.views.view_region'),
-    
-
-    (r'^table_register/$', 'nepi.main.views.table_register'),
-    (r'^confirm/$', 'nepi.main.views.confirm'),
-    (r'^confirm/(?P<prof_id>\d+)/(?P<schl_id>\d+)/$', 'nepi.main.views.confirm_teacher'),
-    (r'^deny/(?P<prof_id>\d+)/(?P<schl_id>\d+)/$', 'nepi.main.views.deny_teacher'),
 
 
-    (r'^join_course/$', 'nepi.main.views.join_course'),
-    (r'^view_courses/(?P<schl_id>\d+)/$', 'nepi.main.views.view_courses'),
-    #(r'^find_course/(?P<schl_id>\d+)/$', 'nepi.main.views.find_course'),
-    (r'^add_course/(?P<crs_id>\d+)/$', 'nepi.main.views.add_course'),
-    #(r'^show_teachers/$', 'nepi.main.views.add_teachers'),
-    #(r'^registration_complete/$', 'nepi.main.views.registration_complete'),
+    # flat and universally accessible pages
+    (r'^home/$', 'nepi.main.views.home'),
     (r'^about/$', 'nepi.main.views.about'),
     (r'^help_page/$', 'nepi.main.views.help_page'),
     (r'^contact/$', 'nepi.main.views.contact'),
+    (r'^register/$', 'nepi.main.views.register'),
+    (r'^thank_you_reg/$', 'nepi.main.views.thank_you_reg'),
+    (r'^table_register/$', 'nepi.main.views.table_register'),
+
+
+    # ICAP related pages
+    (r'^pending_teachers/$', 'nepi.main.views.pending_teachers'),
+    (r'^view_schools/$', 'nepi.main.views.view_schools'),
+    (r'^view_region/$', 'nepi.main.views.view_region'),
+    (r'^add_school/$', 'nepi.main.views.add_school'),
+    (r'^confirm_teacher/$', 'nepi.main.views.confirm_teacher'),
+    (r'^confirm_teacher/(?P<prof_id>\d+)/(?P<schl_id>\d+)/$', 'nepi.main.views.confirm_teacher'),
+    (r'^deny_teacher/(?P<prof_id>\d+)/(?P<schl_id>\d+)/$', 'nepi.main.views.deny_teacher'),
+
+
+
+
+    # Teacher related pages
+    (r'^view_students/$', 'nepi.main.views.view_students'),
+    (r'^create_course/$', 'nepi.main.views.create_course'),
+    (r'^create_course/(?P<crs_id>\d+)/$', 'nepi.main.views.create_course'),
+    (r'^view_pending_students/$', 'nepi.main.views.view_pending_students'),
+
+    
+    
+
+    # Student related pages
+    (r'^thanks_course/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_course'),
+    (r'^join_course/$', 'nepi.main.views.join_course'),
+    (r'^view_courses/(?P<schl_id>\d+)/$', 'nepi.main.views.view_courses'),
+    #(r'^find_course/(?P<schl_id>\d+)/$', 'nepi.main.views.find_course'),
+
+
+
+
+
+
+    #(r'^show_teachers/$', 'nepi.main.views.add_teachers'),
+    #(r'^registration_complete/$', 'nepi.main.views.registration_complete'),
+
     url(r'^_impersonate/', include('impersonate.urls')),
     (r'^munin/', include('munin.urls')),
     (r'^stats/$', TemplateView.as_view(template_name="stats.html")),

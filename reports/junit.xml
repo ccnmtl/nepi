@@ -1,2 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
-<testsuites></testsuites>
+<testsuites><testsuite name="nepi.main.tests.test_views.BasicTest"><testcase classname="nepi.main.tests.test_views.BasicTest" name="test_about" time="0.146417"></testcase><testcase classname="nepi.main.tests.test_views.BasicTest" name="test_client_registration_and_login" time="0.294624"><system-err>No handlers could be found for logger "dajaxice"
+</system-err></testcase><testcase classname="nepi.main.tests.test_views.BasicTest" name="test_help" time="0.004957"></testcase><testcase classname="nepi.main.tests.test_views.BasicTest" name="test_registration_and_login" time="0.199647"></testcase><testcase classname="nepi.main.tests.test_views.BasicTest" name="test_root" time="0.024691"></testcase><testcase classname="nepi.main.tests.test_views.BasicTest" name="test_smoketest" time="0.010656"></testcase></testsuite></testsuites>

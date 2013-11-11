@@ -4,12 +4,15 @@ from django.contrib.auth.models import User
 
 from nepi.main.models import UserProfile, Course, School, LearningModule, Country
 
+
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
     max_num = 1
 
+
 class UserAdmin(UserAdmin):
     inlines = (UserProfileInline, )
+
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

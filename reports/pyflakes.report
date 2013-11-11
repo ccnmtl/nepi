@@ -1,14 +1,29 @@
-nepi/main/views.py:4: [E] PYFLAKES:'Course' imported but unused
-nepi/main/views.py:5: [E] PYFLAKES:'HttpResponse' imported but unused
-nepi/main/views.py:9: [E] PYFLAKES:'CaptchaField' imported but unused
-nepi/main/views.py:69: [E] PYFLAKES:local variable 't' is assigned to but never used
-nepi/main/views.py:73: [E] PYFLAKES:local variable 'c' is assigned to but never used
-nepi/main/views.py:98: [E] PYFLAKES:local variable 'human' is assigned to but never used
+nepi/main/views.py:5: [E] PYFLAKES:'AddTeacher' imported but unused
+nepi/main/views.py:6: [E] PYFLAKES:'HttpResponse' imported but unused
+nepi/main/views.py:9: [E] PYFLAKES:'Template' imported but unused
+nepi/main/views.py:9: [E] PYFLAKES:'Context' imported but unused
+nepi/main/views.py:10: [E] PYFLAKES:'json' imported but unused
+nepi/main/views.py:12: [E] PYFLAKES:'simplejson' imported but unused
+nepi/main/views.py:13: [E] PYFLAKES:'BaseDetailView' imported but unused
+nepi/main/views.py:13: [E] PYFLAKES:'SingleObjectTemplateResponseMixin' imported but unused
+nepi/main/views.py:45: [E] PYFLAKES:undefined name 'form'
+nepi/main/views.py:95: [E] PYFLAKES:local variable 'human' is assigned to but never used
+nepi/main/views.py:158: [E] PYFLAKES:local variable 'user_info' is assigned to but never used
+nepi/main/views.py:236: [E] PYFLAKES:local variable 'user_profile' is assigned to but never used
+nepi/main/views.py:362: [E] PYFLAKES:undefined name 'prof_id'
+nepi/main/forms.py:2: [E] PYFLAKES:'School' imported but unused
+nepi/main/forms.py:2: [E] PYFLAKES:'Course' imported but unused
+nepi/main/forms.py:2: [E] PYFLAKES:'UserProfile' imported but unused
+nepi/main/forms.py:3: [E] PYFLAKES:'LearningModule' imported but unused
 nepi/main/models.py:2: [E] PYFLAKES:'ModelForm' imported but unused
 nepi/main/models.py:3: [E] PYFLAKES:'signals' imported but unused
 nepi/main/models.py:5: [E] PYFLAKES:'post_save' imported but unused
 nepi/main/models.py:6: [E] PYFLAKES:'forms' imported but unused
-nepi/main/tests/test_views.py:2: [E] PYFLAKES:'Client' imported but unused
+nepi/main/tests/test_views.py:3: [E] PYFLAKES:'User' imported but unused
+nepi/main/tests/test_views.py:4: [E] PYFLAKES:'index' imported but unused
+nepi/main/tests/test_views.py:4: [E] PYFLAKES:'about' imported but unused
+nepi/main/tests/test_views.py:4: [E] PYFLAKES:'help_page' imported but unused
+nepi/main/tests/test_views.py:4: [E] PYFLAKES:'thank_you_reg' imported but unused
 nepi/main/tests/__init__.py:2: [E] PYFLAKES:'from test_models import *' used; unable to detect undefined names
 nepi/main/tests/__init__.py:3: [E] PYFLAKES:'from test_views import *' used; unable to detect undefined names
 nepi/main/tests/test_models.py:2: [E] PYFLAKES:'User' imported but unused

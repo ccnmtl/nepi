@@ -2,17 +2,16 @@ from annoying.decorators import render_to
 from django import forms
 from django.contrib.auth import authenticate, login, logout
 from nepi.main.models import Course, UserProfile, School, Country, LearningModule, PendingRegister
-from nepi.main.forms import LoginForm, CreateAccountForm, AddTeacher, AddSchoolForm, AddCourse, ContactForm
+from nepi.main.forms import LoginForm, CreateAccountForm, AddTeacher, AddSchoolForm, CreateCourseForm, ContactForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.contrib.auth.models import User
 from django.template import Context, Template
 import json
-#from captcha.fields import CaptchaField
+# from captcha.fields import CaptchaField
 from django.utils import simplejson
 from django.views.generic.detail import BaseDetailView, \
     SingleObjectTemplateResponseMixin
-
 
 
 @render_to('main/index.html')
@@ -22,7 +21,7 @@ def index(request):
 
 def about(request):
     """Returns about page."""
-    return render_to_response('about.html')
+    return render_to_response('main/about.html')
 
 
 def logout_view(request):
@@ -33,10 +32,10 @@ def logout_view(request):
 
 def help_page(request):
     """Returns help page."""
-    return render_to_response('help.html')
+    return render_to_response('main/help.html')
 
 
-def thank_you(request):
+def thank_you_reg(request):
     """Returns thanks for registering page."""
     return render_to_response('main/thanks.html')
 
@@ -79,11 +78,11 @@ def home(request):
         courses = user_profile.course.all()
         return render(request, 'main/stindex.html', {'courses': courses, 'modules' : modules})
     elif user_profile.profile_type == 'TE':
-        pending_students = PendingRegister.objects.filter(profile_type='ST')
+        pending_students = PendingRegister.objects.filter(profile_type='ST', course=user_profile.course)
         courses = user_profile.course.all()
         return render(request, 'main/teindex.html', {'courses': courses, 'pending_students' : pending_students})
     elif user_profile.profile_type == 'IC':
-        return HttpResponseRedirect('main/icindex.html/')
+        return render_to_response('main/icindex.html/')
     else:
         return HttpResponseRedirect('/')
 
@@ -97,7 +96,7 @@ def register(request):
             try:
                 User.objects.get(username=request.POST['username'])
                 raise forms.ValidationError("this username already exists")
-                #TODO: should probably check provided email as well
+                # TODO: should probably check provided email as well
             except User.DoesNotExist:
                 if 'password1' in request.POST and 'password2' in request.POST:
                     if request.POST['password1'] != request.POST['password2']:
@@ -160,8 +159,35 @@ def conf_teacher(request):
     conf_teach = UserProfile.objects.filter(is_teacher=True)
     return render(request, 'main/show_teachers.html', {'conf_teach': conf_teach})
 
+
 def create_course(request):
-    pass
+    """This is intended to allow teachers to create courses which use the learning modules."""
+    if request.method == 'POST':
+        form = CreateCourseForm(request.POST)
+        user = request.user
+        user_profile = UserProfile.objects.get(user=user)
+        if form.is_valid():
+            semester = request.POST['semester']
+            start_date = request.POST['start_date']
+            end_date = request.POST['end_date']
+            name = request.POST['name']
+            get_country = Country.objects.get(country=user_profile.country)
+            get_school = School.objects.get(name=user_profile.school)
+            new_course = Course(semester=semester, start_date=start_date, end_date=end_date, country=get_country, school=get_school, name=name)
+            new_course.save()
+            return HttpResponseRedirect('/thank_you/')
+        else:
+                raise forms.ValidationError("Please enter appropriate fields for the form.")
+
+    else:
+        form = CreateCourseForm()  # An unbound form
+
+    return render(request, 'main/create_course.html', {
+        'form': form,
+    })
+
+
+
 
 def add_school(request):
     """This is intended to be for ICAP personel to register Schools in the program."""
@@ -192,7 +218,7 @@ def add_school(request):
     else:
         form = AddSchoolForm()  # An unbound form
 
-    return render(request, 'add_school.html', {
+    return render(request, '/main/add_school.html', {
         'form': form,
     })
 
@@ -204,12 +230,14 @@ def join_course(request):
     schools = School.objects.filter(country=country)
     return render(request, 'main/join_course.html', {'schools' : schools, 'country' : country})
 
+
 def view_courses(request, schl_id):
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
     school = School.objects.get(pk=schl_id)
     courses = Course.objects.filter(school=school)
     return render(request, 'main/view_courses.html', {'courses' : courses, 'school' : school})
+
 
 def add_course(request, crs_id):
     user = request.user
@@ -240,13 +268,8 @@ def contact(request):
     })
 
 
-
-
-
 # This is an experimental view involving an external registration table - this is to temporarily store requests from Teachers and Students
 # to be associated with a course or school
-
-
 def table_register(request):
     '''This is based off of django-request - creates a new user account.'''
     if request.method == 'POST':
@@ -280,8 +303,9 @@ def table_register(request):
                             new_profile.country = get_country
                             new_profile.save()
                         new_profile.profile_type = 'ST'
-                        new_profile.save() # This should be the end of the user profile - everything else - whether
-                        #they claim to be a student in a course or a teacher at a school should be stored until it is verified
+                        new_profile.save()
+                        # This should be the end of the user profile - everything else - whether
+                        # they claim to be a student in a course or a teacher at a school should be stored until it is verified
                         is_teacher = request.POST.get('is_teacher', 'ST')
                         if is_teacher == 'TE':
                             # verified the following lines with print statements
@@ -293,11 +317,12 @@ def table_register(request):
                             else:
                                 sender = "unknown@unknown.com"
                             subject = 'Teacher Status Requested'
-                            message = str(new_user.first_name) + " " + str(new_user.last_name) + " has requested teacher status." #+ get_school.name + "."
+                            message = str(new_user.first_name) + " " + str(new_user.last_name) + " has requested teacher status."
+                            # + get_school.name + "."
                             from django.core.mail import send_mail
                             send_mail(subject, message, sender, recipients)
                             return render_to_response('main/thanks_teacher.html')
-                        return HttpResponseRedirect('/thank_you/')
+                        return HttpResponseRedirect('/thank_you_reg/')
 
             else:
                 raise forms.ValidationError("You are missing a password.")
@@ -310,12 +335,10 @@ def table_register(request):
     })
 
 
-
-def confirm(request):
+def pending_teachers(request):
     # Grab all pending teacher requests
     conf_teach = PendingRegister.objects.filter(profile_type='TE')
-    return render(request, 'main/show_teachers.html', { 'conf_teach' : conf_teach })#, 'school_list' : school_list })
-
+    return render(request, 'main/show_teachers.html', {'conf_teach':conf_teach})
 
 
 def confirm_teacher(request, prof_id, schl_id):
@@ -328,10 +351,14 @@ def confirm_teacher(request, prof_id, schl_id):
 
 
 def deny_teacher(request, prof_id, schl_id):
-    pass
+    pend_reg = PendingRegister.object.get(userprofile=prof_id, school=schl_id)
+    pend_reg.delete()
+    return HttpResponseRedirect('/delete_teacher/')
 
 
+# teacher links
 def confirm_student(request, st_id, class_id):
+    """Allow teacher to confirm student is in course."""
     userprofile = UserProfile.object.get(pk=prof_id)
     course = Course.object.get(pk=st_id)
     userprofile.course = course
@@ -339,18 +366,33 @@ def confirm_student(request, st_id, class_id):
     userprofile.save()
     return HttpResponseRedirect('/confirm/')
 
+
 def deny_student(request, prof_id, schl_id):
+    """Allow teacher to deny that student is in course."""
     pass
 
 
 def view_students(request):
-    """"""
+    """Allow teacher to view progress of students within a course."""
     pass
+
+
+def view_pending_students(request):
+    """Allow teacher to view students claiming they are enrolled in a course."""
+    user = request.user
+    user_profile = UserProfile.objects.get(user=user)
+    teachers_courses = user_profile.course_set.all()
+    #for each in teachers_courses:
+    #    view_pending_students = PendingRegister.objects.filter(profile_type='ST', course=each)
+    return render(request, 'main/pending_students.html', { 'teachers_courses' : teachers_courses })
+
 
 def view_schools(request):
-    """"""
-    pass
+    """Return all school for viewing to ICAPP personnel."""
+    schools = School.objects.all()
+    return render(request, 'main/view_schools.html', { 'schools': schools })
+
 
 def view_region(request):
-    """"""
+    """Allow ICAP personnel to view a region, will show schools, countries and teachers in region and their classes"""
     pass

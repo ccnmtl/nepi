@@ -1,75 +1,96 @@
 nepi/main/admin.py:5:80: E501 line too long (81 > 79 characters)
-nepi/main/admin.py:7:1: E302 expected 2 blank lines, found 1
-nepi/main/admin.py:11:1: E302 expected 2 blank lines, found 1
-nepi/main/admin.py:21:29: W292 no newline at end of file
-nepi/main/models.py:14:61: W291 trailing whitespace
-nepi/main/models.py:72:80: E501 line too long (95 > 79 characters)
-nepi/main/models.py:76:5: E303 too many blank lines (2)
-nepi/main/models.py:133:1: W293 blank line contains whitespace
-nepi/main/models.py:140:1: E302 expected 2 blank lines, found 1
-nepi/main/models.py:154:1: E302 expected 2 blank lines, found 1
-nepi/main/models.py:159:1: E302 expected 2 blank lines, found 1
-nepi/main/models.py:163:80: E501 line too long (85 > 79 characters)
-nepi/main/models.py:173:1: E302 expected 2 blank lines, found 1
-nepi/main/models.py:189:5: E301 expected 1 blank line, found 0
-nepi/main/models.py:230:80: E501 line too long (100 > 79 characters)
-nepi/main/models.py:242:1: W391 blank line at end of file
-nepi/main/views.py:4:80: E501 line too long (81 > 79 characters)
-nepi/main/views.py:13:1: E303 too many blank lines (3)
-nepi/main/views.py:17:1: E302 expected 2 blank lines, found 1
-nepi/main/views.py:21:1: E302 expected 2 blank lines, found 1
-nepi/main/views.py:35:80: E501 line too long (87 > 79 characters)
-nepi/main/views.py:37:80: E501 line too long (90 > 79 characters)
-nepi/main/views.py:47:1: E302 expected 2 blank lines, found 1
-nepi/main/views.py:51:1: E302 expected 2 blank lines, found 1
-nepi/main/views.py:73:31: E203 whitespace before ':'
-nepi/main/views.py:73:52: E203 whitespace before ':'
-nepi/main/views.py:74:80: E501 line too long (94 > 79 characters)
-nepi/main/views.py:74:83: E203 whitespace before ':'
-nepi/main/views.py:86:1: E302 expected 2 blank lines, found 1
-nepi/main/views.py:89:1: E302 expected 2 blank lines, found 1
-nepi/main/views.py:93:1: E302 expected 2 blank lines, found 1
-nepi/main/views.py:119:80: E501 line too long (94 > 79 characters)
-nepi/main/views.py:123:80: E501 line too long (82 > 79 characters)
-nepi/main/views.py:128:80: E501 line too long (89 > 79 characters)
-nepi/main/views.py:132:80: E501 line too long (87 > 79 characters)
-nepi/main/views.py:149:1: E303 too many blank lines (3)
-nepi/main/views.py:164:80: E501 line too long (82 > 79 characters)
-nepi/main/views.py:169:28: E251 unexpected spaces around keyword / parameter equals
-nepi/main/views.py:169:30: E251 unexpected spaces around keyword / parameter equals
-nepi/main/views.py:178:24: E251 unexpected spaces around keyword / parameter equals
-nepi/main/views.py:178:26: E251 unexpected spaces around keyword / parameter equals
-nepi/main/views.py:198:1: E302 expected 2 blank lines, found 1
-nepi/main/views.py:203:1: E303 too many blank lines (3)
-nepi/main/views.py:225:80: E501 line too long (88 > 79 characters)
-nepi/main/views.py:227:1: E302 expected 2 blank lines, found 1
-nepi/main/views.py:240:5: E303 too many blank lines (2)
-nepi/main/views.py:253:80: E501 line too long (102 > 79 characters)
-nepi/main/views.py:255:80: E501 line too long (87 > 79 characters)
-nepi/main/views.py:256:80: E501 line too long (169 > 79 characters)
-nepi/main/views.py:256:101: E261 at least two spaces before inline comment
-nepi/main/views.py:256:101: E262 inline comment should start with '# '
-nepi/main/views.py:257:80: E501 line too long (117 > 79 characters)
-nepi/main/views.py:257:87: E261 at least two spaces before inline comment
-nepi/main/views.py:267:80: E501 line too long (102 > 79 characters)
-nepi/main/views.py:271:80: E501 line too long (81 > 79 characters)
-nepi/main/views.py:272:80: E501 line too long (85 > 79 characters)
-nepi/main/views.py:272:35: E261 at least two spaces before inline comment
-nepi/main/views.py:272:35: E262 inline comment should start with '# '
-nepi/main/views.py:273:80: E501 line too long (83 > 79 characters)
-nepi/main/views.py:273:33: E261 at least two spaces before inline comment
-nepi/main/views.py:273:33: E262 inline comment should start with '# '
-nepi/main/views.py:275:1: E302 expected 2 blank lines, found 1
-nepi/main/views.py:281:45: W292 no newline at end of file
+nepi/main/forms.py:8:80: E501 line too long (88 > 79 characters)
+nepi/main/forms.py:12:1: E303 too many blank lines (3)
+nepi/main/forms.py:36:80: E501 line too long (102 > 79 characters)
+nepi/main/forms.py:37:80: E501 line too long (86 > 79 characters)
+nepi/main/forms.py:55:80: E501 line too long (102 > 79 characters)
+nepi/main/forms.py:65:1: W293 blank line contains whitespace
+nepi/main/forms.py:67:80: E501 line too long (86 > 79 characters)
+nepi/main/models.py:167:80: E501 line too long (85 > 79 characters)
+nepi/main/models.py:203:80: E501 line too long (117 > 79 characters)
+nepi/main/models.py:244:80: E501 line too long (100 > 79 characters)
+nepi/main/views.py:4:80: E501 line too long (98 > 79 characters)
+nepi/main/views.py:5:80: E501 line too long (114 > 79 characters)
+nepi/main/views.py:45:56: E201 whitespace after '{'
+nepi/main/views.py:79:80: E501 line too long (94 > 79 characters)
+nepi/main/views.py:79:83: E203 whitespace before ':'
+nepi/main/views.py:81:80: E501 line too long (104 > 79 characters)
+nepi/main/views.py:83:80: E501 line too long (112 > 79 characters)
+nepi/main/views.py:83:92: E203 whitespace before ':'
+nepi/main/views.py:116:80: E501 line too long (94 > 79 characters)
+nepi/main/views.py:120:80: E501 line too long (82 > 79 characters)
+nepi/main/views.py:135:80: E501 line too long (157 > 79 characters)
+nepi/main/views.py:135:133: E261 at least two spaces before inline comment
+nepi/main/views.py:135:134: E262 inline comment should start with '# '
+nepi/main/views.py:138:80: E501 line too long (81 > 79 characters)
+nepi/main/views.py:157:80: E501 line too long (86 > 79 characters)
+nepi/main/views.py:160:80: E501 line too long (81 > 79 characters)
+nepi/main/views.py:164:80: E501 line too long (94 > 79 characters)
+nepi/main/views.py:176:80: E501 line too long (143 > 79 characters)
+nepi/main/views.py:180:80: E501 line too long (92 > 79 characters)
+nepi/main/views.py:192:1: E303 too many blank lines (4)
+nepi/main/views.py:193:80: E501 line too long (86 > 79 characters)
+nepi/main/views.py:199:80: E501 line too long (82 > 79 characters)
+nepi/main/views.py:204:28: E251 unexpected spaces around keyword / parameter equals
+nepi/main/views.py:204:30: E251 unexpected spaces around keyword / parameter equals
+nepi/main/views.py:213:24: E251 unexpected spaces around keyword / parameter equals
+nepi/main/views.py:213:26: E251 unexpected spaces around keyword / parameter equals
+nepi/main/views.py:231:80: E501 line too long (95 > 79 characters)
+nepi/main/views.py:231:63: E203 whitespace before ':'
+nepi/main/views.py:231:84: E203 whitespace before ':'
+nepi/main/views.py:239:80: E501 line too long (94 > 79 characters)
+nepi/main/views.py:239:64: E203 whitespace before ':'
+nepi/main/views.py:239:84: E203 whitespace before ':'
+nepi/main/views.py:246:80: E501 line too long (82 > 79 characters)
+nepi/main/views.py:248:64: E203 whitespace before ':'
+nepi/main/views.py:271:80: E501 line too long (138 > 79 characters)
+nepi/main/views.py:297:80: E501 line too long (94 > 79 characters)
+nepi/main/views.py:301:80: E501 line too long (82 > 79 characters)
+nepi/main/views.py:307:80: E501 line too long (96 > 79 characters)
+nepi/main/views.py:308:80: E501 line too long (127 > 79 characters)
+nepi/main/views.py:311:80: E501 line too long (80 > 79 characters)
+nepi/main/views.py:312:80: E501 line too long (113 > 79 characters)
+nepi/main/views.py:320:80: E501 line too long (129 > 79 characters)
+nepi/main/views.py:324:80: E501 line too long (81 > 79 characters)
+nepi/main/views.py:341:80: E501 line too long (80 > 79 characters)
+nepi/main/views.py:341:68: E231 missing whitespace after ':'
+nepi/main/views.py:381:80: E501 line too long (80 > 79 characters)
+nepi/main/views.py:386:80: E501 line too long (95 > 79 characters)
+nepi/main/views.py:387:80: E501 line too long (99 > 79 characters)
+nepi/main/views.py:387:59: E201 whitespace after '{'
+nepi/main/views.py:387:78: E203 whitespace before ':'
+nepi/main/views.py:387:97: E202 whitespace before '}'
+nepi/main/views.py:393:55: E201 whitespace after '{'
+nepi/main/views.py:393:74: E202 whitespace before '}'
+nepi/main/views.py:397:80: E501 line too long (118 > 79 characters)
 nepi/main/tests/test_models.py:7:1: E302 expected 2 blank lines, found 1
 nepi/main/tests/test_models.py:9:1: W391 blank line at end of file
-nepi/main/tests/test_views.py:6:1: W191 indentation contains tabs
-nepi/main/tests/test_views.py:7:1: E101 indentation contains mixed spaces and tabs
-nepi/main/tests/test_views.py:8:1: E101 indentation contains mixed spaces and tabs
-nepi/main/tests/test_views.py:10:1: E101 indentation contains mixed spaces and tabs
-nepi/main/tests/test_views.py:11:1: E101 indentation contains mixed spaces and tabs
-nepi/main/tests/test_views.py:12:1: E101 indentation contains mixed spaces and tabs
-nepi/main/tests/test_views.py:14:1: E101 indentation contains mixed spaces and tabs
-nepi/main/tests/test_views.py:15:1: E101 indentation contains mixed spaces and tabs
-nepi/main/tests/test_views.py:16:1: E101 indentation contains mixed spaces and tabs
-nepi/main/tests/test_views.py:17:1: E101 indentation contains mixed spaces and tabs
+nepi/main/tests/test_views.py:4:80: E501 line too long (82 > 79 characters)
+nepi/main/tests/test_views.py:29:80: E501 line too long (113 > 79 characters)
+nepi/main/tests/test_views.py:29:114: W291 trailing whitespace
+nepi/main/tests/test_views.py:30:80: E501 line too long (122 > 79 characters)
+nepi/main/tests/test_views.py:30:13: E128 continuation line under-indented for visual indent
+nepi/main/tests/test_views.py:29:68: E203 whitespace before ':'
+nepi/main/tests/test_views.py:29:97: E203 whitespace before ':'
+nepi/main/tests/test_views.py:30:24: E203 whitespace before ':'
+nepi/main/tests/test_views.py:31:62: E203 whitespace before ':'
+nepi/main/tests/test_views.py:30:49: E231 missing whitespace after ':'
+nepi/main/tests/test_views.py:30:81: E231 missing whitespace after ':'
+nepi/main/tests/test_views.py:30:108: E231 missing whitespace after ':'
+nepi/main/tests/test_views.py:31:22: E231 missing whitespace after ':'
+nepi/main/tests/test_views.py:31:43: E231 missing whitespace after ':'
+nepi/main/tests/test_views.py:36:80: E501 line too long (106 > 79 characters)
+nepi/main/tests/test_views.py:36:107: W291 trailing whitespace
+nepi/main/tests/test_views.py:37:80: E501 line too long (122 > 79 characters)
+nepi/main/tests/test_views.py:37:13: E128 continuation line under-indented for visual indent
+nepi/main/tests/test_views.py:36:62: E203 whitespace before ':'
+nepi/main/tests/test_views.py:36:90: E203 whitespace before ':'
+nepi/main/tests/test_views.py:37:24: E203 whitespace before ':'
+nepi/main/tests/test_views.py:38:62: E203 whitespace before ':'
+nepi/main/tests/test_views.py:37:49: E231 missing whitespace after ':'
+nepi/main/tests/test_views.py:37:81: E231 missing whitespace after ':'
+nepi/main/tests/test_views.py:37:108: E231 missing whitespace after ':'
+nepi/main/tests/test_views.py:38:22: E231 missing whitespace after ':'
+nepi/main/tests/test_views.py:38:43: E231 missing whitespace after ':'
+nepi/main/tests/test_views.py:51:5: E303 too many blank lines (5)
+nepi/main/tests/test_views.py:59:1: W391 blank line at end of file
