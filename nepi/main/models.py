@@ -197,7 +197,7 @@ class UserProfile(models.Model):
     school = models.ForeignKey(School, null=True, blank=True)
 
     def __unicode__(self):
-        return self.user.username + " " + self.profile_type
+        return self.user.username + " " + self.user.userprofile.profile_type
 
 
 class PendingRegister(models.Model):

@@ -5,7 +5,7 @@ from nepi.main.views import index, about, help_page
 from nepi.main.views import thank_you_reg, table_register
 
 
-class BasicTest(TestCase):
+class TestBasicViews(TestCase):
     def setUp(self):
         self.c = Client()
         self.factory = RequestFactory()
