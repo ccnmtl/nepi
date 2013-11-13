@@ -41,7 +41,7 @@ SOUTH_TESTS_MIGRATE = False
 
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=nepi',
+    '--cover-package=nepi,nepi.main',
 ]
 
 JENKINS_TASKS = (

@@ -197,7 +197,7 @@ class UserProfile(models.Model):
     school = models.ForeignKey(School, null=True, blank=True)
 
     def __unicode__(self):
-        return self.user.username + " " + self.user.userprofile.profile_type
+        return self.user.username
 
 
 class PendingRegister(models.Model):
@@ -209,47 +209,3 @@ class PendingRegister(models.Model):
     profile_type = models.CharField(max_length=2, null=True, blank=True)
 
 
-
-
-
-
-
-# class ICAPStaff(models.Model):
-#     '''How do we differentiate between ICAP admins
-#     (those who add modules/content) and those who
-#     simply edit schools etc.'''
-#     profile = models.ForeignKey(UserProfile)
-#     #region = models.CharField(max_length=200)
-
-#     def __unicode__(self):
-#         return self.user.username
-
-
-
-# class Teacher(models.Model):
-#     '''Assuming each school has many teachers but each
-#     teacher works at only one school.'''
-#     class Meta:
-#         permissions = (
-#             ("view_teacher", ""),
-#         )
-#     school = models.ForeignKey(School)
-#     profile = models.ForeignKey(UserProfile)
-
-#     def __unicode__(self):
-#         return self.user.name + " " + self.user.school
-
-
-# class Student(models.Model):
-#     class Meta:
-#         permissions = (
-#             ("view_students",
-    # "students should only be visible by their teacher and ICAP staff."),
-#         )
-#     '''Only designated people of the school may add teachers.'''
-#     school = models.ForeignKey(School)
-#     course = models.ManyToManyField(Course)
-#     profile = models.ForeignKey(UserProfile)
-
-#     def __unicode__(self):
-#         return self.user.name + " " + self.user.country

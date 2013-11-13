@@ -15,7 +15,7 @@ from django.utils import simplejson
 from django.views.generic.detail import BaseDetailView, \
     SingleObjectTemplateResponseMixin
 
-
+"""General Views"""
 @render_to('main/index.html')
 def index(request):
     return dict()
@@ -37,6 +37,27 @@ def help_page(request):
     return render_to_response('main/help.html')
 
 
+def contact(request):
+    '''Contact someone regarding the project - WHO???'''
+    if request.method == 'POST':  # If the form has been submitted...
+        form = ContactForm(request.POST)  # A form bound to the POST data
+        if form.is_valid():  # All validation rules pass
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            sender = form.cleaned_data['sender']
+            recipients = ['cdunlop@columbia.edu']
+            from django.core.mail import send_mail
+            send_mail(subject, message, sender, recipients)
+            return render_to_response('thanks.html')
+    else:
+        form = ContactForm()  # An unbound form
+
+    return render(request, 'main/contact.html', {
+        'form': form,
+    })
+
+
+"""Thank you views"""
 def thank_you_reg(request):
     """Returns thanks for registering page."""
     return render_to_response('main/thanks.html')
@@ -47,6 +68,7 @@ def thanks_course(request, course_id):
     return render(request, 'main/thanks_course.html', {'form': form, })
 
 
+"""More General Views"""
 def nepi_login(request):
     '''Allow user to login.'''
     if request.method == 'POST':  # If the form has been submitted...
@@ -164,144 +186,6 @@ def register(request):
     })
 
 
-############
-
-
-def conf_teacher(request):
-    """This is intended to be for ICAP personel to
-    confirm teachers in the program."""
-    user_info = User.objects.getprofile(is_teacher=True)
-    conf_teach = UserProfile.objects.filter(is_teacher=True)
-    return render(request,
-                  'main/show_teachers.html',
-                  {'conf_teach': conf_teach})
-
-
-def create_course(request):
-    """This is intended to allow teachers to create courses
-    which use the learning modules."""
-    if request.method == 'POST':
-        form = CreateCourseForm(request.POST)
-        user = request.user
-        user_profile = UserProfile.objects.get(user=user)
-        if form.is_valid():
-            semester = request.POST['semester']
-            start_date = request.POST['start_date']
-            end_date = request.POST['end_date']
-            name = request.POST['name']
-            get_country = Country.objects.get(country=user_profile.country)
-            get_school = School.objects.get(name=user_profile.school)
-            new_course = Course(semester=semester,
-                                start_date=start_date,
-                                end_date=end_date,
-                                country=get_country,
-                                school=get_school,
-                                name=name)
-            new_course.save()
-            return HttpResponseRedirect('/thank_you/')
-        else:
-                raise forms.ValidationError(
-                    "Please enter appropriate fields for the form.")
-
-    else:
-        form = CreateCourseForm()  # An unbound form
-
-    return render(request, 'main/create_course.html', {
-        'form': form,
-    })
-
-
-def add_school(request):
-    """This is intended to be for ICAP personel to register
-    Schools in the program."""
-    if request.method == 'POST':
-        form = AddSchoolForm(request.POST)
-        try:
-            get_country = Country.objects.get(country=request.POST['country'])
-            try:
-                School.objects.get(
-                    name=request.POST['name'],
-                    country=get_country)
-                raise forms.ValidationError("This school already exists.")
-            except School.DoesNotExist:
-                new_school = School(
-                    name=request.POST['name'],
-                    country=get_country
-                )
-                new_school.save()
-                return HttpResponseRedirect('/thank_you/')
-        except Country.DoesNotExist:
-            new_country = Country(country=request.POST['country'])
-            new_country.save()
-            new_school = School(
-                name=request.POST['name'],
-                country=new_country
-            )
-            new_school.save()
-            return HttpResponseRedirect('/thank_you/')
-
-    else:
-        form = AddSchoolForm()  # An unbound form
-
-    return render(request, '/main/add_school.html', {
-        'form': form,
-    })
-
-
-def join_course(request):
-    user = request.user
-    user_profile = UserProfile.objects.get(user=user)
-    country = user_profile.country
-    schools = School.objects.filter(country=country)
-    return render(request,
-                  'main/join_course.html',
-                  {'schools': schools,
-                   'country': country
-                   }
-                  )
-
-
-def view_courses(request, schl_id):
-    user = request.user
-    user_profile = UserProfile.objects.get(user=user)
-    school = School.objects.get(pk=schl_id)
-    courses = Course.objects.filter(school=school)
-    return render(request,
-                  'main/view_courses.html',
-                  {'courses': courses, 'school': school})
-
-
-def add_course(request, crs_id):
-    user = request.user
-    user_profile = UserProfile.objects.get(user=user)
-    course = Course.objects.get(pk=crs_id)
-    register = PendingRegister(user=user,
-                               userprofile=user_profile,
-                               course=course)
-    register.save()
-    return render(request, 'main/thanks_course.html', {'course': course})
-
-
-def contact(request):
-    '''Contact someone regarding the project - WHO???'''
-    if request.method == 'POST':  # If the form has been submitted...
-        form = ContactForm(request.POST)  # A form bound to the POST data
-        if form.is_valid():  # All validation rules pass
-            subject = form.cleaned_data['subject']
-            message = form.cleaned_data['message']
-            sender = form.cleaned_data['sender']
-            recipients = ['cdunlop@columbia.edu']
-            from django.core.mail import send_mail
-            send_mail(subject, message, sender, recipients)
-            return render_to_response('thanks.html')
-    else:
-        form = ContactForm()  # An unbound form
-
-    return render(request, 'main/contact.html', {
-        'form': form,
-    })
-
-
 # This is an experimental view involving an external
 # registration table - this is to temporarily store
 # requests from Teachers and Students
@@ -384,6 +268,59 @@ def table_register(request):
     })
 
 
+
+############
+
+
+"""NEPI Peoples Views"""
+
+def add_school(request):
+    """This is intended to be for ICAP personel to register
+    Schools in the program."""
+    if request.method == 'POST':
+        form = AddSchoolForm(request.POST)
+        try:
+            get_country = Country.objects.get(country=request.POST['country'])
+            try:
+                School.objects.get(
+                    name=request.POST['name'],
+                    country=get_country)
+                raise forms.ValidationError("This school already exists.")
+            except School.DoesNotExist:
+                new_school = School(
+                    name=request.POST['name'],
+                    country=get_country
+                )
+                new_school.save()
+                return HttpResponseRedirect('/thank_you_school/')
+        except Country.DoesNotExist:
+            new_country = Country(country=request.POST['country'])
+            new_country.save()
+            new_school = School(
+                name=request.POST['name'],
+                country=new_country
+            )
+            new_school.save()
+            return HttpResponseRedirect('/thank_you_school/')
+
+    else:
+        form = AddSchoolForm()  # An unbound form
+
+    return render(request, '/main/add_school.html', {
+        'form': form,
+    })
+
+
+def thank_you_school(request):
+    return render_to_response('main/school_added.html')
+
+
+def view_schools(request):
+    """Return all school for viewing to ICAPP personnel."""
+    schools = School.objects.all()
+    return render(request, 'main/view_schools.html', {'schools': schools})
+
+
 def pending_teachers(request):
     # Grab all pending teacher requests
     conf_teach = PendingRegister.objects.filter(profile_type='TE')
@@ -391,6 +328,15 @@ def pending_teachers(request):
                   'main/show_teachers.html',
                   {'conf_teach': conf_teach})
 
+
+def conf_teacher(request):
+    """This is intended to be for ICAP personel to
+    confirm teachers in the program."""
+    user_info = User.objects.getprofile(is_teacher=True)
+    conf_teach = UserProfile.objects.filter(is_teacher=True)
+    return render(request,
+                  'main/show_teachers.html',
+                  {'conf_teach': conf_teach})
 
 def confirm_teacher(request, prof_id, schl_id):
     userprofile = UserProfile.object.get(pk=prof_id)
@@ -407,7 +353,51 @@ def deny_teacher(request, prof_id, schl_id):
     return HttpResponseRedirect('/delete_teacher/')
 
 
-# teacher links
+
+
+
+def view_region(request):
+    """Allow ICAP personnel to view a region, will show schools,
+    countries and teachers in region and their classes"""
+    pass
+
+
+"""Teacher Views"""
+
+def create_course(request):
+    """This is intended to allow teachers to create courses
+    which use the learning modules."""
+    if request.method == 'POST':
+        form = CreateCourseForm(request.POST)
+        user = request.user
+        user_profile = UserProfile.objects.get(user=user)
+        if form.is_valid():
+            semester = request.POST['semester']
+            start_date = request.POST['start_date']
+            end_date = request.POST['end_date']
+            name = request.POST['name']
+            get_country = Country.objects.get(country=user_profile.country)
+            get_school = School.objects.get(name=user_profile.school)
+            new_course = Course(semester=semester,
+                                start_date=start_date,
+                                end_date=end_date,
+                                country=get_country,
+                                school=get_school,
+                                name=name)
+            new_course.save()
+            return HttpResponseRedirect('/thank_you/')
+        else:
+                raise forms.ValidationError(
+                    "Please enter appropriate fields for the form.")
+
+    else:
+        form = CreateCourseForm()  # An unbound form
+
+    return render(request, 'main/create_course.html', {
+        'form': form,
+    })
+
+
 def confirm_student(request, st_id, class_id):
     """Allow teacher to confirm student is in course."""
     userprofile = UserProfile.object.get(pk=prof_id)
@@ -442,14 +432,41 @@ def view_pending_students(request):
                   'main/pending_students.html',
                   {'teachers_courses': teachers_courses})
 
+"""Student Views"""
 
-def view_schools(request):
-    """Return all school for viewing to ICAPP personnel."""
-    schools = School.objects.all()
-    return render(request, 'main/view_schools.html', {'schools': schools})
+def join_course(request):
+    user = request.user
+    user_profile = UserProfile.objects.get(user=user)
+    country = user_profile.country
+    schools = School.objects.filter(country=country)
+    return render(request,
+                  'main/join_course.html',
+                  {'schools': schools,
+                   'country': country
+                   }
+                  )
 
 
-def view_region(request):
-    """Allow ICAP personnel to view a region, will show schools,
-    countries and teachers in region and their classes"""
-    pass
+def view_courses(request, schl_id):
+    user = request.user
+    user_profile = UserProfile.objects.get(user=user)
+    school = School.objects.get(pk=schl_id)
+    courses = Course.objects.filter(school=school)
+    return render(request,
+                  'main/view_courses.html',
+                  {'courses': courses, 'school': school})
+
+
+def add_course(request, crs_id):
+    user = request.user
+    user_profile = UserProfile.objects.get(user=user)
+    course = Course.objects.get(pk=crs_id)
+    register = PendingRegister(user=user,
+                               userprofile=user_profile,
+                               course=course)
+    register.save()
+    return render(request, 'main/thanks_course.html', {'course': course})
+
+
+
+

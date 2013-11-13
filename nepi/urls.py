@@ -60,6 +60,7 @@ urlpatterns = patterns(
     (r'^confirm_teacher/$', 'nepi.main.views.confirm_teacher'),
     (r'^confirm_teacher/(?P<prof_id>\d+)/(?P<schl_id>\d+)/$', 'nepi.main.views.confirm_teacher'),
     (r'^deny_teacher/(?P<prof_id>\d+)/(?P<schl_id>\d+)/$', 'nepi.main.views.deny_teacher'),
+    (r'^thank_you_school/$', 'nepi.main.views.thank_you_school'),
 
 
 
