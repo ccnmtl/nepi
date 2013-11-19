@@ -353,9 +353,6 @@ def deny_teacher(request, prof_id, schl_id):
     return HttpResponseRedirect('/delete_teacher/')
 
 
-
-
-
 def view_region(request):
     """Allow ICAP personnel to view a region, will show schools,
     countries and teachers in region and their classes"""
