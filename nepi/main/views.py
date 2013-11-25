@@ -3,19 +3,16 @@ from django import forms
 from django.contrib.auth import authenticate, login, logout
 from nepi.main.models import Course, UserProfile, School
 from nepi.main.models import Country, LearningModule, PendingRegister
-from nepi.main.forms import LoginForm, CreateAccountForm, AddTeacher
+from nepi.main.forms import LoginForm, CreateAccountForm
 from nepi.main.forms import AddSchoolForm, CreateCourseForm, ContactForm
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.contrib.auth.models import User
-from django.template import Context, Template
-import json
-# from captcha.fields import CaptchaField
-from django.utils import simplejson
-from django.views.generic.detail import BaseDetailView, \
-    SingleObjectTemplateResponseMixin
+
 
 """General Views"""
+
+
 @render_to('main/index.html')
 def index(request):
     return dict()
@@ -58,6 +55,8 @@ def contact(request):
 
 
 """Thank you views"""
+
+
 def thank_you_reg(request):
     """Returns thanks for registering page."""
     return render_to_response('main/thanks.html')
@@ -65,10 +64,13 @@ def thank_you_reg(request):
 
 def thanks_course(request, course_id):
     """Returns thanks for joining course page."""
+    # XXX: F821 undefined name 'form'
     return render(request, 'main/thanks_course.html', {'form': form, })
 
 
 """More General Views"""
+
+
 def nepi_login(request):
     '''Allow user to login.'''
     if request.method == 'POST':  # If the form has been submitted...
@@ -121,7 +123,6 @@ def register(request):
     if request.method == 'POST':
         form = CreateAccountForm(request.POST)
         if form.is_valid():
-            human = True
             try:
                 User.objects.get(username=request.POST['username'])
                 raise forms.ValidationError("this username already exists")
@@ -268,11 +269,9 @@ def table_register(request):
     })
 
 
-
 ############
-
-
 """NEPI Peoples Views"""
+
 
 def add_school(request):
     """This is intended to be for ICAP personel to register
@@ -332,11 +331,11 @@ def pending_teachers(request):
 def conf_teacher(request):
     """This is intended to be for ICAP personel to
     confirm teachers in the program."""
-    user_info = User.objects.getprofile(is_teacher=True)
     conf_teach = UserProfile.objects.filter(is_teacher=True)
     return render(request,
                   'main/show_teachers.html',
                   {'conf_teach': conf_teach})
+
 
 def confirm_teacher(request, prof_id, schl_id):
     userprofile = UserProfile.object.get(pk=prof_id)
@@ -360,6 +359,7 @@ def view_region(request):
 
 
 """Teacher Views"""
+
 
 def create_course(request):
     """This is intended to allow teachers to create courses
@@ -397,6 +397,7 @@ def create_course(request):
 
 def confirm_student(request, st_id, class_id):
     """Allow teacher to confirm student is in course."""
+    # XXX: F821 undefined name 'prof_id'
     userprofile = UserProfile.object.get(pk=prof_id)
     course = Course.object.get(pk=st_id)
     userprofile.course = course
@@ -431,6 +432,7 @@ def view_pending_students(request):
 
 """Student Views"""
 
+
 def join_course(request):
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
@@ -445,8 +447,6 @@ def join_course(request):
 
 
 def view_courses(request, schl_id):
-    user = request.user
-    user_profile = UserProfile.objects.get(user=user)
     school = School.objects.get(pk=schl_id)
     courses = Course.objects.filter(school=school)
     return render(request,
@@ -463,7 +463,3 @@ def add_course(request, crs_id):
                                course=course)
     register.save()
     return render(request, 'main/thanks_course.html', {'course': course})
-
-
-
-
