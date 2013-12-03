@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load compress %}
+{% load bootstrap %}
+{% load render %}
+{% block title %}Analytics{% endblock %}
+{% block js %}
+{%endblock %}
+
+{%block css %}
+<style>
+    #sidebar, #primarynav, #breadcrumbs, #header {
+        display:none;
+    }
+    #right-content {
+        width : 10000px;
+    }
+    
+    .container {
+      margin-right: 0px;
+      margin-left:  0px;
+    }
+    
+    
+</style>
+{%endblock %}
+
+{% block content %}
+    <h1>Analytics</h1>
+    <table class="table table-bordered">
+        {% for row in the_table %}
+        <tr class = "" >
+            {% for cell in row %}
+                <td>
+                    {{cell}}
+                </td>
+            {%endfor%}
+        </tr>
+        {%endfor %}
+    </table>
+{%endblock%}
