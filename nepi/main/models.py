@@ -4,15 +4,14 @@ from django.db.models import signals
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django import forms
+from pagetree.models import Section
+from nepi.main.choices import COUNTRY_CHOICES
 
 '''Add change delete are by default for each django model.
    Need to add permissions for visibility.'''
 
 
 class Country(models.Model):
-    #note : non soverign countries and partially recognized
-    #and unrecognized states were not included in this list,
-    #other areas canary islands and such are also not included
     ALGERIA = 'DZ'
     ANGOLA = 'AO'
     BENIN = 'BJ'
@@ -68,10 +67,10 @@ class Country(models.Model):
     ZAMBIA = 'ZM'
     ZIMBABWE = 'ZW'
 
-    # http://en.wikipedia.org/wiki/
-    #List_of_sovereign_states_and_dependent_territories_in_Africa
-    # http://sustainablesources.com/resources/country-abbreviations/
-    # http://www.paladinsoftware.com/Generic/countries.htm
+# http://en.wikipedia.org/wiki/
+#List_of_sovereign_states_and_dependent_territories_in_Africa
+# http://sustainablesources.com/resources/country-abbreviations/
+# http://www.paladinsoftware.com/Generic/countries.htm
     COUNTRY_CHOICES = (
 
         (ALGERIA, 'Algeria'),
@@ -129,7 +128,6 @@ class Country(models.Model):
         (ZAMBIA, 'Zambia'),
         (ZIMBABWE, 'Zimbawe'),
     )
-
     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES)
     region = models.CharField(max_length=50)
 
@@ -145,7 +143,7 @@ class School(models.Model):
     '''Some of the countries have fairly long names,
     assuming the schools may also have long names.'''
     country = models.ForeignKey(Country)
-    name = models.CharField(max_length=200, default='')
+    name = models.CharField(max_length=50, default='')
 
     def __unicode__(self):
         return self.name
@@ -153,8 +151,8 @@ class School(models.Model):
 
 class LearningModule(models.Model):
     '''Need to store learning modules.'''
-    name = models.CharField(max_length=200)
-    description = models.CharField(max_length=200)
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=50)
 
     def __unicode__(self):
         return self.name
@@ -165,13 +163,13 @@ class Course(models.Model):
     class Meta:
         permissions = (
             ("view_course",
-                "only the teacher of course and ICAP should see course"),
+                "only the teacher "),#of course and ICAP should see course"),
         )
     # Should limit the choices
     school = models.ForeignKey(School)
     module = models.ForeignKey(LearningModule)
     # is there any course that may have more than one module
-    semester = models.CharField(max_length=200)
+    semester = models.CharField(max_length=50)
     start_date = models.DateField()
     end_date = models.DateField()
     name = models.CharField(max_length=50)
@@ -198,6 +196,50 @@ class UserProfile(models.Model):
 
     def __unicode__(self):
         return self.user.username
+
+    # from tobaccocessation
+    def display_name(self):
+        return self.user.username
+
+    def save_visit(self, section):
+        self.last_location = section.get_absolute_url()
+        self.save()
+        uv, created = UserVisited.objects.get_or_create(
+            user=self, section=section)
+
+    def save_visits(self, sections):
+        for s in sections:
+            self.save_visit(s)
+
+    def has_visited(self, section):
+        return UserVisited.objects.filter(
+            user=self, section=section).count() > 0
+        return True
+
+    #from teach dentistry
+    def get_has_visited(self, section):
+        has_visited = str(section.id) in self.state_object
+        return has_visited
+
+    def set_has_visited(self, sections):
+        for s in sections:
+            self.state_object[str(s.id)] = s.label
+
+        self.visited = simplejson.dumps(self.state_object)
+        self.save()
+
+    def save_last_location(self, path, section):
+        self.state_object[str(section.id)] = section.label
+        self.last_location = path
+        self.visited = simplejson.dumps(self.state_object)
+        self.save()
+
+# Do I need this? In Pass and teachdentistry
+class UserVisited(models.Model):
+    user = models.ForeignKey(UserProfile)
+    section = models.ForeignKey(Section)
+    visited_time = models.DateTimeField(auto_now=True)
+
 
 
 class PendingRegister(models.Model):

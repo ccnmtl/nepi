@@ -9,11 +9,62 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, render_to_response
 from django.contrib.auth.models import User
 from django.template import Context, Template
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.template import RequestContext
+from pagetree.helpers import get_section_from_path, get_module
 import json
 # from captcha.fields import CaptchaField
 from django.utils import simplejson
 from django.views.generic.detail import BaseDetailView, \
     SingleObjectTemplateResponseMixin
+
+def grab_pending_students(request):
+    pending_students = \
+    PendingRegister.objects.filter(profile_type='ST',
+                                    course=user_profile.course)
+    return HttpResponse(students)
+
+
+
+def _edit_response(request, section, path):
+    first_leaf = section.hierarchy.get_first_leaf(section)
+
+    return dict(section=section,
+                module=get_module(section),
+                root=section.hierarchy.get_root(),
+                leftnav=_get_left_parent(first_leaf),
+                prev=_get_previous_leaf(first_leaf),
+                next=first_leaf.get_next())
+
+def edit_page(request, path):
+    section = get_section_from_path(path, "main")
+    return _edit_response(request, section, path)
+
+def edit_resources(request, path):
+    section = get_section_from_path(path, "resources")
+    return _edit_response(request, section, path)
+
+def resources(request, path):
+    section = get_section_from_path(path, "resources")
+    return _response(request, section, path)
+
+def page(request, path):
+    section = get_section_from_path(path, "main")
+    return _response(request, section, path)
+
+def _get_left_parent(first_leaf):
+    leftnav = first_leaf
+    if first_leaf.depth == 4:
+        leftnav = first_leaf.get_parent()
+    elif first_leaf.depth == 5:
+        leftnav = first_leaf.get_parent().get_parent()
+    return leftnav
+
+
+
+
+
+
 
 """General Views"""
 @render_to('main/index.html')
@@ -95,13 +146,15 @@ def nepi_login(request):
 
 def home(request):
     '''Return homepage appropriate for user type.'''
-    user = request.user
-    user_profile = UserProfile.objects.get(user=user)
+    print type(request.user)
+    print dir(request.user)
+    user_profile = UserProfile.objects.get(user=request.user)
     if user_profile.profile_type == 'ST':
         modules = LearningModule.objects.all()
         courses = user_profile.course.all()
         return render(request, 'main/stindex.html',
                       {'courses': courses, 'modules': modules})
+
     elif user_profile.profile_type == 'TE':
         pending_students = \
             PendingRegister.objects.filter(profile_type='ST',
@@ -111,7 +164,12 @@ def home(request):
                       {'courses': courses,
                           'pending_students': pending_students})
     elif user_profile.profile_type == 'IC':
-        return render_to_response('main/icindex.html/')
+        pending_teachers = PendingRegister.objects.filter(profile_type='TE')
+        schools = School.objects.all()
+        return render(request, 'main/icindex.html',
+                      {'schools': schools,
+                          'pending_teachers': pending_teachers})
+        #return render_to_response('main/icindex.html/')
     else:
         return HttpResponseRedirect('/')
 
@@ -306,7 +364,7 @@ def add_school(request):
     else:
         form = AddSchoolForm()  # An unbound form
 
-    return render(request, '/main/add_school.html', {
+    return render(request, 'main/add_school.html', {
         'form': form,
     })
 
@@ -326,7 +384,7 @@ def pending_teachers(request):
     conf_teach = PendingRegister.objects.filter(profile_type='TE')
     return render(request,
                   'main/show_teachers.html',
-                  {'conf_teach': conf_teach})
+                  {'students': students})
 
 
 def conf_teacher(request):
@@ -352,6 +410,26 @@ def deny_teacher(request, prof_id, schl_id):
     pend_reg.delete()
     return HttpResponseRedirect('/delete_teacher/')
 
+
+def icapp_view_students(request):
+    """Allow teacher to view progress of students within a
+    course."""
+    users = User.objects.all()#filter(user_profile.profile_type='ST')
+    #find and return users with certain kind of profile
+    students = []
+    for u in users:
+        try:
+            profile = UserProfile.objects.get(user=u)
+            if profile.profile_type =='ST':
+                print profile
+                print u
+                students.append(u)
+        except UserProfile.DoesNotExist:
+            pass
+    #students# = UserProfile.objects.filter(profile_type='ST')#Profile.objects.filter(profile_type='ST')
+    return render(request,
+                  'main/icapp_show_students.html',
+                  {'students': students})
 
 def view_region(request):
     """Allow ICAP personnel to view a region, will show schools,
@@ -410,7 +488,7 @@ def deny_student(request, prof_id, schl_id):
     pass
 
 
-def view_students(request):
+def teacher_view_students(request):
     """Allow teacher to view progress of students within a
     course."""
     pass
@@ -431,7 +509,7 @@ def view_pending_students(request):
 
 """Student Views"""
 
-def join_course(request):
+def find_course(request):
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
     country = user_profile.country
@@ -454,7 +532,7 @@ def view_courses(request, schl_id):
                   {'courses': courses, 'school': school})
 
 
-def add_course(request, crs_id):
+def join_course(request, crs_id):
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
     course = Course.objects.get(pk=crs_id)

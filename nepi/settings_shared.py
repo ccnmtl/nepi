@@ -132,6 +132,7 @@ INSTALLED_APPS = [
     'nepi.main',
     'pagetree',
     'pageblocks',
+    'quizblock',
     'registration',
 #    'captcha',
     #'dajaxice',

@@ -61,29 +61,23 @@ urlpatterns = patterns(
     (r'^confirm_teacher/(?P<prof_id>\d+)/(?P<schl_id>\d+)/$', 'nepi.main.views.confirm_teacher'),
     (r'^deny_teacher/(?P<prof_id>\d+)/(?P<schl_id>\d+)/$', 'nepi.main.views.deny_teacher'),
     (r'^thank_you_school/$', 'nepi.main.views.thank_you_school'),
+    (r'^icapp_view_students/$', 'nepi.main.views.icapp_view_students'),
 
 
 
 
     # Teacher related pages
-    (r'^view_students/$', 'nepi.main.views.view_students'),
+    (r'^teacher_view_students/$', 'nepi.main.views.teacher_view_students'),
     (r'^create_course/$', 'nepi.main.views.create_course'),
     (r'^create_course/(?P<crs_id>\d+)/$', 'nepi.main.views.create_course'),
     (r'^view_pending_students/$', 'nepi.main.views.view_pending_students'),
 
     
-    
-
     # Student related pages
     (r'^thanks_course/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_course'),
-    (r'^join_course/$', 'nepi.main.views.join_course'),
+    (r'^find_course/$', 'nepi.main.views.find_course'),
     (r'^view_courses/(?P<schl_id>\d+)/$', 'nepi.main.views.view_courses'),
-    #(r'^find_course/(?P<schl_id>\d+)/$', 'nepi.main.views.find_course'),
-
-
-
-
-
+    (r'^join_course/(?P<crs_id>\d+)/$', 'nepi.main.views.join_course'),
 
     #(r'^show_teachers/$', 'nepi.main.views.add_teachers'),
     #(r'^registration_complete/$', 'nepi.main.views.registration_complete'),
