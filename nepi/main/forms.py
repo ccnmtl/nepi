@@ -1,6 +1,5 @@
 from django import forms
-from nepi.main.models import Course, UserProfile, School, Country
-from nepi.main.models import LearningModule
+from nepi.main.models import Country
 
 
 class LoginForm(forms.Form):

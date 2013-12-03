@@ -41,7 +41,7 @@ SOUTH_TESTS_MIGRATE = False
 
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=nepi,nepi.main',
+    '--cover-package=nepi',
 ]
 
 JENKINS_TASKS = (
@@ -75,8 +75,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
-    'django.core.context_processors.media',#why this?
-    'django.core.context_processors.static',#again why?
+    'django.core.context_processors.media',  # why this?
+    'django.core.context_processors.static',  # again why?
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
     'stagingcontext.staging_processor',
@@ -134,9 +134,6 @@ INSTALLED_APPS = [
     'pageblocks',
     'quizblock',
     'registration',
-#    'captcha',
-    #'dajaxice',
-    #'quizblock',
 ]
 
 LETTUCE_APPS = (
@@ -211,4 +208,3 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
 }
-
