@@ -1,5 +1,5 @@
 from django import forms
-from nepi.main.models import Country
+from nepi.main.choices import COUNTRY_CHOICES
 
 
 class LoginForm(forms.Form):
@@ -12,12 +12,10 @@ class LoginForm(forms.Form):
 class CreateAccountForm(forms.Form):
     '''This is a form class that will be used
     to allow guest users to create guest accounts.'''
-    TEACHER = 'TE'
-    STUDENT = 'ST'
 
-    ACCOUNT_CHOICES = (
-        (TEACHER, 'Teacher'),
-        (STUDENT, 'Student'),
+    TEACHER_CHOICES = (
+        ('TE', 'Teacher'),
+        ('ST', 'Student'),
     )
 
     first_name = forms.CharField(
@@ -33,11 +31,9 @@ class CreateAccountForm(forms.Form):
         max_length=25, widget=forms.PasswordInput, required=True,
         label="Confirm Password")
     email = forms.EmailField()
-    country = forms.ChoiceField(widget=forms.Select(),
-                                choices=Country.COUNTRY_CHOICES,
-                                required=True)
-    is_teacher = forms.MultipleChoiceField(choices=ACCOUNT_CHOICES,
-                                           initial='STUDENT')
+    country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=True)
+    is_teacher = forms.ChoiceField(choices=TEACHER_CHOICES,
+                                    initial='ST')
 
 
 class ContactForm(forms.Form):
@@ -55,9 +51,7 @@ class AddTeacher(forms.Form):
 
 class AddSchoolForm(forms.Form):
     name = forms.CharField(max_length=50, required=True, label="School Name")
-    country = forms.ChoiceField(widget=forms.Select(),
-                                choices=Country.COUNTRY_CHOICES,
-                                required=True)
+    country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=True)
 
 
 class CreateCourseForm(forms.Form):
