@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero-unit">
+    <h1>Welcome {{user.name}}</h1>
+</div>
+
+
+<div class="hero-unit">
+<h2>Current Courses</h2>
+{% if courses%}
+<a href="/create_course/">Create Course</a>.
+<table cellspacing="0" class="infotable" summary="Course List">
+	<colgroup span="3" id="coursetablecols">
+	<col class="name" />
+	<col class="semester" />
+	</colgroup>
+					
+<thead>
+	<tr>
+		<th>	Course Name	</th>	<th>	Semester	</th>
+	</tr>
+</thead>
+
+<tbody>
+	{% for c in courses%}
+	<tr>
+		<td>{{ c.name }}</td>
+		<td>{{ c.semester }}</td>
+	</tr>
+	{%endfor%}
+</tbody>
+
+</table>
+{% else %}
+You currently do not have any courses. <a href="/create_course/">Create Course</a>.
+{%endif%}
+</div>
+
+
+
+
+<div class="hero-unit">
+<h2>Pending Students</h2>
+<table cellspacing="0" class="infotable" summary="Module List">
+	<colgroup span="3" id="coursetablecols">
+	<col class="first_name" />
+	<col class="last_name" />
+	<col class="course" />
+	<col class="semester" />
+	</colgroup>
+					
+<thead>
+	<tr>
+		<th>	First Name	</th>	<th>	Last Name		</th>	<th>	Course	</th>   <th>	Semester	</th>
+	</tr>
+</thead>
+
+
+<tbody>
+{% for ps in pending_students %}
+<tr>
+	<td>{{ ps.user.first_name }}</td>
+	<td>{{ ps.user.last_name }}</td>
+	<td>{{ ps.course.name }}</td>
+	<td>{{ ps.course.semester }}</td>
+</tr>
+{%endfor%}
+
+</tbody>
+</table>
+
+<p></p>
+</div>
+{% endblock %}

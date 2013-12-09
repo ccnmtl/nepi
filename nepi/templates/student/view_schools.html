@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="hero-unit">
+<h2>Schools</h2>
+{% if schools%}
+{% for s in schools%}
+<table cellspacing="0" class="infotable" summary="Course List">
+	<colgroup span="3" id="coursetablecols">
+	<col class="name" />
+	<col class="module" />
+	<col class="teacher" />
+	<col class="semester" />
+	<col class="start date" />
+	<col class="end date" />
+	</colgroup>
+					
+<thead>
+	<tr>
+		<th>	School Name	</th>	<th>	Country		</th>
+	</tr>
+</thead>
+<tbody>
+	<tr>
+		<td>{{s.name}}</td>
+		<td>{{s.country}}</td>
+	</tr>
+{%endfor%}
+</tbody>
+
+</table>
+{% else %}
+<p>There are no schools registered yet.</p>
+{% endif %}
+</div>
+
+
+
+{% endblock %}	

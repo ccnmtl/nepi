@@ -313,16 +313,12 @@ def home(request):
         courses = user_profile.course.all()
         return render(request, 'student/stindex.html',
                       {'courses': courses})
-                      #  , 'modules': modules})
 
     elif user_profile.profile_type == 'TE':
-        pending_students = \
-            PendingRegister.objects.filter(profile_type='ST',
-                                           course=user_profile.course)
-        courses = user_profile.course.all()
-        return render(request, 'teacher/teindex.html',
-                      {'courses': courses,
-                          'pending_students': pending_students})
+        pass
+        # courses = user_profile.course.all()
+        # return render(request, 'teacher/teindex.html',
+        #               {'courses': courses})
     elif user_profile.profile_type == 'IC':
         pending_teachers = PendingRegister.objects.filter(profile_type='TE')
         schools = School.objects.all()

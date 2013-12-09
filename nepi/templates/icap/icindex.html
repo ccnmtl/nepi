@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+
+{% block js %}
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" /> 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"
+        type="text/javascript" ></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/jquery-ui.min.js" type="text/javascript"></script>
+{% endblock %}
+
+
+{% block content %}
+
+<ul class="nav nav-tabs">
+	{% if pending_teachers %}
+		<li class="active"><a href="#pending-teachers" data-toggle="tab">Teachers Awaiting Confirmation</a></li>
+	{% endif %}
+
+	{% if schools %}
+		<li><a href="#schools" data-toggle="tab">Schools</a></li>
+	{% endif %}
+
+	<li><a href="#view-region" data-toggle="tab">View a Region</a></li>
+	<li><a href="#add-region" data-toggle="tab">Add a Region</a></li>
+	<li><a href="#add-school" data-toggle="tab">Add School</a></li>
+</ul>
+
+
+<div class="tab-content">
+	<div class="tab-pane" id="view-region">
+		<table width="100%" class="table table-striped">
+			<tr><th>Region</th>
+			<td></td></tr>
+		</table>
+    </div>
+</div>
+<div class="tab-content">
+	<div class="tab-pane" id="add-region">
+		<table width="100%" class="table table-striped">
+			<tr><th>Region Name</th><th>Countries</th><th>Schools</th>
+			<td></td></tr>
+		</table>
+		</div>
+</div>
+<div class="tab-content">
+	<div class="tab-pane" id="add-school">
+		<table width="100%" class="table table-striped">
+			<tr><th>School Name</th><th>Country</th><th>Address</th>
+			<td></td></tr>
+		</table>
+		</div>
+</div>
+
+
+
+
+{% endblock %}	
+

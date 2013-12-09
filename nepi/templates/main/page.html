@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load render %}
+{% block js %}
+<script type="text/javascript" src="/site_media/js/chapter_marker_player.js"></script>
+{% for block in section.pageblock_set.all %}
+{% renderjs block %}
+{% endfor %}
+{% endblock %}
+
+{% block css %}
+{% for block in section.pageblock_set.all %}
+{% rendercss block %}
+{% endfor %}
+{% endblock %}
+
+{% block module_slug %}{{module.slug}}{% endblock %}
+
+{% block title %}{{section.label}}{% endblock %}
+
+{% block pagetitle %}<h2 class="pagetitle">{{section.label}}</h2>{% endblock %}
+
+{% block sidenav %}
+        <!-- ###### Secondary Navigation ###### -->
+        {% if module.get_children %}
+        {% include "main/menu.html" %}
+        {% endif %}
+{% endblock %}
+
+{% block navrightextra %}
+    <ul class="nav">
+        {% if user.is_staff %}
+        <li><a href="/edit{{section.get_absolute_url}}">edit page</a></li>
+        {% endif %}
+    </ul>
+{% endblock %}
+
+
+
+{% block breadcrumbs %}
+  <ul>
+       {% for breadcrumb in path %}
+                <li><a href ="{{breadcrumb.get_absolute_url}}">{{breadcrumb}}</a><span class="divider">/</span></li>
+       {% endfor %}        
+            
+  </ul>
+{% endblock breadcrumbs %}
+
+
+
+{% block content %}
+<div id="content" class ="module-{{module.slug}}">
+
+
+
+{% if needs_submit %}
+{% if is_submitted %}
+{% else %}
+<form action="." method="post">
+{% endif %}
+{% endif %}
+
+
+{% for block in section.pageblock_set.all %}
+<div class="pageblock{% if block.css_extra %} {{block.css_extra}}{% endif %}">
+{% if block.label %}<h4>{{block.label}}</h4>{% endif %}
+{% render block %}
+</div>
+{% endfor %}
+
+
+{% if needs_submit %}
+{% if request.user.is_anonymous %}
+{% else %}
+
+{% if is_submitted %}
+<form action="." method="post">
+<input type="hidden" name="action" value="reset" />
+    {%comment %}
+        <input type="submit" value="clear your answers and try again" class="btn" />
+    {%endcomment %}
+</form>
+{% else %}
+<input type="submit" value="Submit" class="btn btn-primary" />
+
+</form>
+{% endif %}
+{% endif %}
+{% endif %}
+</div>
+{% endblock %}
+
+{% block content-nav %}
+    <ul class="pager main">
+    {% if not section_preferences.hide_previous_button %}
+        {% if section.prev_with_content %}
+         <li class="previous">
+		        <a href="{{section.prev_with_content.get_absolute_url}}">&larr; {{section.prev_with_content.label}}  </a>
+          </li>
+        {% endif %}
+    {% endif %}
+    {%comment %}These alternate nav buttons are editable in /admin/main/sectionalternatenavigation/ {%endcomment %}
+    {% with alternate_nav=section.sectionalternatenavigation_set.get %}
+        {% if alternate_nav.alternate_back %}
+             <!-- Alternate back button -->
+             <li class="previous">
+	            <a href="{{alternate_nav.alternate_back}}">&larr; {{alternate_nav.alternate_back_label}}</a>
+          </li>
+        {%endif %}
+    {%endwith %}
+    
+    
+    
+    
+    {%comment %}These alternate nav buttons are editable in /admin/main/sectionalternatenavigation/ {%endcomment %}
+    {% with alternate_nav=section.sectionalternatenavigation_set.get %}
+        {% if alternate_nav.alternate_next %}
+             <!-- Alternate "next" button -->
+             <li class="next">
+	            <a href="{{alternate_nav.alternate_next}}">{{alternate_nav.alternate_next_label}} &rarr;</a>
+            </li>
+        {%endif %}
+    {%endwith %}
+    {% if not section_preferences.hide_next_button %}
+        {% if section.next_with_content %}
+        {% with section.next_with_content as next_section %}
+        <li class="next"><a href="{{section.next_with_content.get_absolute_url}}">{{section.next_with_content.label}}&rarr;</a></li>
+        {% endwith %}
+        {% endif %}
+        
+    {% endif %}
+    </ul>
+
+    <p class ="debug_info">Section is <strong>{{section}}</strong></p>
+    <p class ="debug_info">Path is  <strong>{{path}}</strong></p>
+    <p class ="debug_info">Module is <strong>{{module}}</strong></p>
+    <p class ="debug_info">Top level is:  <strong>{{path.0}}</strong></p>
+    <p class ="debug_info">Middle level is:  <strong>{{path.1}}</strong></p>
+    <p class ="debug_info">Bottom level is:  <strong>{{path.2}}</strong></p>
+    <p class ="debug_info">Depth is  <strong>{{depth}}</strong></p>
+    <p class ="debug_info">in_quiz_sequence is  <strong>{{in_quiz_sequence}}</strong></p>
+    <p class ="debug_info">already_visited is  <strong>{{already_visited}}</strong></p>
+    <p class ="debug_info">already_answered is  <strong>{{already_answered}}</strong></p>
+{% endblock %}

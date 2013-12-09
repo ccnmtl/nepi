@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 #from pagetree.models import Hierarchy, Section
 from nepi.main.models import UserProfile, Country, School
-from nepi.main.models import LearningModule, Course
+from nepi.main.models import Course
 from datetime import datetime
 
 
@@ -28,11 +28,7 @@ class TestUserProfile(TestCase):
         self.country1.save()
         self.school = School(country=self.country1, name='School 1')
         self.school.save()
-        self.learningmodule = LearningModule(
-            name="Learning Module 1",
-            description="first learning module")
-        self.learningmodule.save()
-        self.course = Course(school=self.school, module=self.learningmodule,
+        self.course = Course(school=self.school,
                              semester="Fall 2018", name="Course",
                              start_date=datetime.now(),
                              end_date=datetime.now())
@@ -51,7 +47,7 @@ class TestUserProfile(TestCase):
             country=self.country1, school=self.school)
         self.icap_profile.save()
 
-    def test_user_profile_unis(self):
-        self.assertEquals(unicode(self.student), "student")
-        self.assertEquals(unicode(self.teacher), "teacher")
-        self.assertEquals(unicode(self.icap), "icapp")
+    # def test_user_profile_unis(self):
+    #     self.assertEquals(unicode(self.student), "student")
+    #     self.assertEquals(unicode(self.teacher), "teacher")
+    #     self.assertEquals(unicode(self.icap), "icapp")
