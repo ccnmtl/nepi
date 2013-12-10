@@ -53,7 +53,7 @@ urlpatterns += patterns(
     #(r'^select_language/$', 'nepi.main.views.select_language'),
 
     # ICAP related pages
-    (r'^pending_teachers/$', 'nepi.main.views.pending_teachers'),
+    #(r'^pending_teachers/$', 'nepi.main.views.pending_teachers'),
     (r'^view_schools/$', 'nepi.main.views.view_schools'),
     (r'^view_region/$', 'nepi.main.views.view_region'),
     (r'^add_school/$', 'nepi.main.views.add_school'),
@@ -70,7 +70,7 @@ urlpatterns += patterns(
     (r'^course_created/$', 'nepi.main.views.course_created'),
     (r'^edit_course//(?P<crs_id>\d+)/$', 'nepi.main.views.edit_course'),
     (r'^course_students/$', 'nepi.main.views.course_students'),
-    (r'^courses/$', 'nepi.main.views.courses'),
+    #(r'^courses/$', 'nepi.main.views.courses'),
     #(r'^current_courses/$', 'nepi.main.views.current_courses'),
     (r'^remove_student/$', 'nepi.main.views.remove_student'),
     (r'^course_results/$', 'nepi.main.views.course_results'),
