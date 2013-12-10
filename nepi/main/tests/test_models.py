@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 #from pagetree.models import Hierarchy, Section
 from nepi.main.models import UserProfile, Country, School
-from nepi.main.models import Course
+from nepi.main.models import Course, School, PendingRegister
 from datetime import datetime
 
 
@@ -20,11 +20,11 @@ class TestUserProfile(TestCase):
                          username="icapp", email="icapp@email.com",
                          password="icapp")
         self.icap.save()
-        self.country1 = Country(country='LS', region='Region 1')
+        self.country1 = Country(name='LS', region='Region 1')
         self.country1.save()
-        self.country2 = Country(country='GM', region='Region 1')
+        self.country2 = Country(name='GM', region='Region 1')
         self.country1.save()
-        self.country3 = Country(country='TG', region='Region 1')
+        self.country3 = Country(name='TG', region='Region 1')
         self.country1.save()
         self.school = School(country=self.country1, name='School 1')
         self.school.save()
@@ -47,7 +47,7 @@ class TestUserProfile(TestCase):
             country=self.country1, school=self.school)
         self.icap_profile.save()
 
-    # def test_user_profile_unis(self):
-    #     self.assertEquals(unicode(self.student), "student")
-    #     self.assertEquals(unicode(self.teacher), "teacher")
-    #     self.assertEquals(unicode(self.icap), "icapp")
+    def test_user_profile_unis(self):
+        self.assertEquals(unicode(self.student), "student")
+        self.assertEquals(unicode(self.teacher), "teacher")
+        self.assertEquals(unicode(self.icap), "icapp")

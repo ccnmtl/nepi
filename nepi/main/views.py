@@ -52,7 +52,7 @@ def _edit_response(request, section, path):
 
 @user_passes_test(lambda u: u.is_superuser)
 @rendered_with('main/edit_page.html')
-def edit_page(request, path):
+def edit_page(request, hierarchy, path):
     section = get_section_from_path(path, hierarchy)
     return _edit_response(request, section, path)
 
@@ -69,7 +69,7 @@ def resources(request, path):
 
 @login_required
 @rendered_with('main/page.html')
-def page(request, path):
+def page(request, hierarchy, path):
     section = get_section_from_path(path, hierarchy)
     return _response(request, section, path)
 

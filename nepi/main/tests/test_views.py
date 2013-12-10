@@ -1,11 +1,13 @@
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
 from django.contrib.auth.models import User
-from nepi.main.views import register
+from nepi.main.views import register, contact
 from nepi.main.models import UserProfile, Country
 
 
 class TestBasicViews(TestCase):
+
+
     def setUp(self):
         self.c = Client()
         self.factory = RequestFactory()
@@ -19,23 +21,36 @@ class TestBasicViews(TestCase):
             user=self.icap_user, profile_type='IC', country=self.country)
         self.user_profile.save()
 
+
     def test_root(self):
         response = self.c.get("/")
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed('flatpages/index.html')
+
 
     def test_about(self):
         response = self.c.get("/about/")
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed('flatpages/about.html')
 
+
     def test_help(self):
         response = self.c.get("/help/")
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed('flatpages/help.html')
 
+
+    def test_contact(self):
+        request = self.factory.post('/contact/',
+                                    {   "subject": "new_student",
+                                        "message": "new_student",
+                                        "sender": "new_student",
+                                        "recipients": "email@email.com"})
+        response = contact(request)
+        self.assertEqual(response.status_code, 200)
+
     # Now create account and login - will default to student
-    # def test_registration_and_login(self):
+    def test_registration_and_login(self):
         request = self.factory.post('/register/',
                                     {"username": "new_student",
                                         "password1": "new_student",
@@ -48,6 +63,7 @@ class TestBasicViews(TestCase):
                                         "is_teacher": "ST"})
         response = register(request)
         self.assertEqual(response.status_code, 302)
+
 
     def test_client_registration_and_login(self):
         request = self.c.post('/register/',
@@ -71,10 +87,12 @@ class TestBasicViews(TestCase):
         self.assertRedirects(request, redirect)
         self.assertTemplateUsed('flatpages/stindex.html')
 
+
     def test_smoketest(self):
         response = self.c.get("/smoketest/")
         self.assertEquals(response.status_code, 200)
         assert "PASS" in response.content
+
 
     # # Test ICAP User Experience
     def test_icap_login_and_links(self):
