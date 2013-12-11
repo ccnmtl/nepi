@@ -184,9 +184,6 @@ def is_accessible(request, section_slug):
 #     return render_to_response('template.html',locals())
 
 
-
-
-
 # class AjaxExampleForm(CreateView):
 #     template_name = ''
 #     form_class = AjaxForm
@@ -214,14 +211,8 @@ def is_accessible(request, section_slug):
 #             return HttpResponse(json.dumps(to_json_responce), content_type='application/json')
 
 
-
-
 # def captchatest(request):
 #     return render_to_response("main/catchatest.html")
-
-
-
-
 
 
 # def clear_state(request):
@@ -386,11 +377,6 @@ def home(request):
         #return render_to_response('main/icindex.html/')
     else:
         return HttpResponseRedirect('/')
-
-# This is an experimental view involving an external
-# registration table - this is to temporarily store
-# requests from Teachers and Students
-# to be associated with a course or school
 
 
 def register(request):
