@@ -1,6 +1,6 @@
 from django import forms
 from nepi.main.choices import COUNTRY_CHOICES
-
+#from captcha.fields import CaptchaField
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50, required=True)
@@ -60,6 +60,10 @@ class CreateCourseForm(forms.Form):
     start_date = forms.DateField()
     end_date = forms.DateField()
 
+
+# class CaptchaTestForm(forms.Form):
+#     myfield = AnyOtherField()
+#     captcha = CaptchaField()
 
 
 #class JoinCourse(forms.Form):

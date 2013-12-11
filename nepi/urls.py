@@ -75,6 +75,8 @@ urlpatterns += patterns(
     (r'^remove_student/$', 'nepi.main.views.remove_student'),
     (r'^course_results/$', 'nepi.main.views.course_results'),
 
+    #(r'^captchatest/$', 'nepi.main.views.captchatest'),
+
 
 
     # Student related pages
@@ -111,8 +113,7 @@ urlpatterns += patterns(
      'nepi.main.views.edit_page'),
     (r'^pages/(?P<hierarchy>\w+)/(?P<path>.*)$',
      'nepi.main.views.page'),
-
-
+    #url(r'^captcha/', include('captcha.urls')),
 
 ) + staticmedia.serve()
 

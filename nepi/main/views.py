@@ -16,7 +16,11 @@ from pagetree.helpers import get_section_from_path, get_module
 from pagetree.models import Section
 # from captcha.fields import CaptchaField
 # from django.utils import simplejson
-
+# from django.views.generic.edit import CreateView
+# from captcha.models import CaptchaStore
+# from captcha.helpers import captcha_image_url
+# from django.http import HttpResponse
+# import json
 
 UNLOCKED = ['resources']  # special cases
 
@@ -164,6 +168,60 @@ def is_accessible(request, section_slug):
 
     json = simplejson.dumps(response)
     return HttpResponse(json, 'application/json')
+
+
+# def test_view(request):
+#     if request.POST:
+#         form = CaptchaTestForm(request.POST)
+
+#         # Validate the form: the captcha field will automatically
+#         # check the input
+#         if form.is_valid():
+#             human = True
+#     else:
+#         form = CaptchaTestForm()
+
+#     return render_to_response('template.html',locals())
+
+
+
+
+
+# class AjaxExampleForm(CreateView):
+#     template_name = ''
+#     form_class = AjaxForm
+
+#     def form_invalid(self, form):
+#         if self.request.is_ajax():
+#             to_json_responce = dict()
+#             to_json_responce['status'] = 0
+#             to_json_responce['form_errors'] = form.errors
+
+#             to_json_responce['new_cptch_key'] = CaptchaStore.generate_key()
+#             to_json_responce['new_cptch_image'] = captcha_image_url(to_json_responce['new_cptch_key'])
+
+#             return HttpResponse(json.dumps(to_json_responce), content_type='application/json')
+
+#     def form_valid(self, form):
+#         form.save()
+#         if self.request.is_ajax():
+#             to_json_responce = dict()
+#             to_json_responce['status'] = 1
+
+#             to_json_responce['new_cptch_key'] = CaptchaStore.generate_key()
+#             to_json_responce['new_cptch_image'] = captcha_image_url(to_json_responce['new_cptch_key'])
+
+#             return HttpResponse(json.dumps(to_json_responce), content_type='application/json')
+
+
+
+
+# def captchatest(request):
+#     return render_to_response("main/catchatest.html")
+
+
+
+
 
 
 # def clear_state(request):
