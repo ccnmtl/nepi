@@ -354,28 +354,30 @@ def nepi_login(request):
 
 def home(request):
     '''Return homepage appropriate for user type.'''
-    # user = User.objects.get(pk=request.user.pk)
-    user_profile = UserProfile.objects.get(user=request.user)
-    print user_profile.profile_type
-    if user_profile.profile_type == 'ST':
-        #  modules = LearningModule.objects.all()
-        courses = user_profile.course.all()
-        return render(request, 'student/stindex.html',
-                      {'courses': courses})
+    try:
+        # user = User.objects.get(pk=request.user.pk)
+        user_profile = UserProfile.objects.get(user=request.user)
+        if user_profile.profile_type == 'ST':
+            #  modules = LearningModule.objects.all()
+            courses = user_profile.course.all()
+            return render(request, 'student/stindex.html',
+                          {'courses': courses})
 
-    elif user_profile.profile_type == 'TE':
-        pass
+        elif user_profile.profile_type == 'TE':
+            pass
         # courses = user_profile.course.all()
         # return render(request, 'teacher/teindex.html',
         #               {'courses': courses})
-    elif user_profile.profile_type == 'IC':
-        pending_teachers = PendingRegister.objects.filter(profile_type='TE')
-        schools = School.objects.all()
-        return render(request, 'icap/icindex.html',
-                      {'schools': schools,
-                          'pending_teachers': pending_teachers})
+        elif user_profile.profile_type == 'IC':
+            pending_teachers = PendingRegister.objects.filter(profile_type='TE')
+            schools = School.objects.all()
+            return render(request, 'icap/icindex.html',
+                          {'schools': schools,
+                              'pending_teachers': pending_teachers})
         #return render_to_response('main/icindex.html/')
-    else:
+        else:
+            return HttpResponseRedirect('/')
+    except User.DoesNotExist:
         return HttpResponseRedirect('/')
 
 
