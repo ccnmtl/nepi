@@ -15,57 +15,18 @@
                 <fieldset>
 				<legend>Account Information</legend>
 
-                    <div class="fieldWrapper">
-                    {{ form.username.errors }}
-					<label for="username">	Username:</label>
-					{{ form.username}}
-					<br/><br/>
-					</div>
-
-                    <div class="fieldWrapper">
-                    {{ form.email.errors }}
-					<label for="email">	Email:</label>
-					{{ form.email}}
-					<br/><br/>
-					</div>
-
-                    <div class="fieldWrapper">
-                    {{ form.first_name.errors }}
-					<label for="first_name">	First Name:</label>
-					{{ form.first_name}}
-					<br/><br/>
-                    </div>
-
-                    <div class="fieldWrapper">
-                    {{ form.last_name.errors }}
-					<label for="last_name">	Last Name:</label>
-					{{ form.last_name}}
-					<br/><br/>
-					</div>
-
-                    <div class="fieldWrapper">
-                    {{ form.password1.errors }}
-					<label for="password1">	Password:</label>
-					{{ form.password1}}
-					<br/><br/>
-                    {{ form.password2.errors }}
-					<label for="password2">	Password:</label>
-					{{ form.password2}}
-					<br/><br/>
-					</div>
-
-                    <div class="fieldWrapper">
-                    {{ form.country.errors }}
-					<label for="country">	Country:</label>
-					{{ form.country}}
-					<br/><br/>
-					</div>
+				{% for field in form %}
+     		    <div class="fieldWrapper">
+      		    {{ field.errors }}
+        	    {{ field.label_tag }} {{ field }}
+     		    </div>
+   				{% endfor %}
 
 					<br/><br/>
 					<label for="createaccount">	</label>
 					<input id="createaccount" type="submit" value="Create Account" />
 				</fieldset>
-				<button class='js-captcha-refresh'></button>
+				
 			</form>
 			
 		</div>

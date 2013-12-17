@@ -3,6 +3,7 @@
 
 
 {% block content %}
+<script type="text/javascript">
 $('.js-captcha-refresh').click(function(){
     $form = $(this).parents('form');
 
@@ -12,7 +13,7 @@ $('.js-captcha-refresh').click(function(){
 
     return false;
 });
-
+</script>
 <form action='.' method='POST'>
     {{ form }}
     <input type="submit" />

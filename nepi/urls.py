@@ -67,7 +67,9 @@ urlpatterns += patterns(
     (r'^remove_student/$', 'nepi.main.views.remove_student'),
     (r'^course_results/$', 'nepi.main.views.course_results'),
 
-    #(r'^captchatest/$', 'nepi.main.views.captchatest'),
+    url(r'^captcha/', include('captcha.urls')),
+    (r'^captchatest/$', 'nepi.main.views.captchatest'),
+    (r'^test_view/$', 'nepi.main.views.test_view'),
 
     # Student related pages
     (r'^thanks_course/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_course'),
@@ -75,10 +77,6 @@ urlpatterns += patterns(
     (r'^join_course/$', 'nepi.main.views.join_course'),
     (r'^view_courses/(?P<schl_id>\d+)/$', 'nepi.main.views.view_courses'),
 
-
-
-    #(r'^show_teachers/$', 'nepi.main.views.add_teachers'),
-    #(r'^registration_complete/$', 'nepi.main.views.registration_complete'),
 
     url(r'^_impersonate/', include('impersonate.urls')),
     (r'^munin/', include('munin.urls')),

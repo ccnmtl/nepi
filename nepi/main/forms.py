@@ -1,6 +1,6 @@
 from django import forms
 from nepi.main.choices import COUNTRY_CHOICES
-#from captcha.fields import CaptchaField
+from captcha.fields import CaptchaField
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50, required=True)
@@ -32,9 +32,7 @@ class CreateAccountForm(forms.Form):
         label="Confirm Password")
     email = forms.EmailField()
     country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=True)
-    # it was decided that nepi icap personel will enter the teachers mannually
-    #is_teacher = forms.ChoiceField(choices=TEACHER_CHOICES,
-    #                                initial='ST')
+    captcha = CaptchaField()
 
 
 class ContactForm(forms.Form):
@@ -62,11 +60,10 @@ class CreateCourseForm(forms.Form):
     end_date = forms.DateField()
 
 
-# class CaptchaTestForm(forms.Form):
-#     myfield = AnyOtherField()
-#     captcha = CaptchaField()
+class CaptchaTestForm(forms.Form):
+    #myfield = AnyOtherField()
+    captcha = CaptchaField()
 
-
-#class JoinCourse(forms.Form):
-#    '''Allow student to join course -
-#return page to search for school by country.'''
+class AjaxForm(forms.Form):
+    #myfield = AnyOtherField()
+    captcha = CaptchaField()

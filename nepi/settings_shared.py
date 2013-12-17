@@ -134,6 +134,7 @@ INSTALLED_APPS = [
     'pageblocks',
     'quizblock',
     'registration',
+    'captcha',
 ]
 
 LETTUCE_APPS = (
