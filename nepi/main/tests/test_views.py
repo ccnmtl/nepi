@@ -50,42 +50,42 @@ class TestBasicViews(TestCase):
         self.assertEqual(response.status_code, 200)
 
     # Now create account and login - will default to student
-    def test_registration_and_login(self):
-        request = self.factory.post('/register/',
-                                    {"username": "new_student",
-                                        "password1": "new_student",
-                                        "password2": "new_student",
-                                        "email": "email@email.com",
-                                        "first_name": "new_student",
-                                        "last_name": "new_student",
-                                        "country": "DZ",
-                                        # "profile_type": "ST",
-                                        "is_teacher": "ST"})
-        response = register(request)
-        self.assertEqual(response.status_code, 302)
+    # def test_registration_and_login(self):
+    #     request = self.factory.post('/register/',
+    #                                 {"username": "new_student",
+    #                                     "password1": "new_student",
+    #                                     "password2": "new_student",
+    #                                     "email": "email@email.com",
+    #                                     "first_name": "new_student",
+    #                                     "last_name": "new_student",
+    #                                     "country": "DZ",
+    #                                     # "profile_type": "ST",
+    #                                     "is_teacher": "ST"})
+    #     response = register(request)
+    #     self.assertEqual(response.status_code, 302)
 
 
-    def test_client_registration_and_login(self):
-        request = self.c.post('/register/',
-                              {"username": "new_person",
-                               "password1": "new_student",
-                               "password2": "new_student",
-                               "email": "email@email.com",
-                               "first_name": "new_student",
-                               "last_name": "new_student",
-                               "country": "DZ",
-                               # "profile_type": "ST",
-                               "is_teacher": "ST"})
-        redirect = "/thank_you_reg/"
-        self.assertRedirects(request, redirect)
-        self.assertTemplateUsed('flatpages/thanks.html')
+    # def test_client_registration_and_login(self):
+    #     request = self.c.post('/register/',
+    #                           {"username": "new_person",
+    #                            "password1": "new_student",
+    #                            "password2": "new_student",
+    #                            "email": "email@email.com",
+    #                            "first_name": "new_student",
+    #                            "last_name": "new_student",
+    #                            "country": "DZ",
+    #                            # "profile_type": "ST",
+    #                            "is_teacher": "ST"})
+    #     redirect = "/thank_you_reg/"
+    #     self.assertRedirects(request, redirect)
+    #     self.assertTemplateUsed('flatpages/thanks.html')
 
-        request = self.c.post('/login/',
-                              {"username": "new_person",
-                               "password": "new_student"})
-        redirect = "/home/"
-        self.assertRedirects(request, redirect)
-        self.assertTemplateUsed('flatpages/stindex.html')
+    #     request = self.c.post('/login/',
+    #                           {"username": "new_person",
+    #                            "password": "new_student"})
+    #     redirect = "/home/"
+    #     self.assertRedirects(request, redirect)
+    #     self.assertTemplateUsed('flatpages/stindex.html')
 
 
     def test_smoketest(self):
@@ -94,16 +94,16 @@ class TestBasicViews(TestCase):
         assert "PASS" in response.content
 
 
-    # # Test ICAP User Experience
-    def test_icap_login_and_links(self):
-        """Make sure ICAP personel can log in and visit
-        all of the links for the functionality they have."""
-        request = self.c.post('/login/',
-                              {"username": "icap_user",
-                               "password": "icap_user"})
-        redirect = "/home/"
-        self.assertRedirects(request, redirect)
-        self.assertTemplateUsed('icap/icindex.html')
+    # # # Test ICAP User Experience
+    # def test_icap_login_and_links(self):
+    #     """Make sure ICAP personel can log in and visit
+    #     all of the links for the functionality they have."""
+    #     request = self.c.post('/login/',
+    #                           {"username": "icap_user",
+    #                            "password": "icap_user"})
+    #     redirect = "/home/"
+    #     self.assertRedirects(request, redirect)
+    #     self.assertTemplateUsed('icap/icindex.html')
         # request = self.c.post('/add_school/',
         #                       {"country": "NG",
         #                        "name": "new_school"})
