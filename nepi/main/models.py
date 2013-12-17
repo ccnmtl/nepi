@@ -112,10 +112,3 @@ class UserProfile(models.Model):
         sections = Section.objects.filter(hierarchy=hierarchy)
         return int(len(profile.visits.all()) / float(len(sections)) * 100)
 
-
-class PendingRegister(models.Model):
-    school = models.ForeignKey(School, null=True, blank=True)
-    user = models.ForeignKey(User, null=True, blank=True)
-    userprofile = models.ForeignKey(UserProfile, null=True, blank=True)
-    course = models.CharField(max_length=50, null=True)
-    profile_type = models.CharField(max_length=2, null=True)

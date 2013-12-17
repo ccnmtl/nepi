@@ -2,10 +2,10 @@ from annoying.decorators import render_to
 from django import forms
 from django.contrib.auth import authenticate, login, logout
 from nepi.main.models import Course, UserProfile, School
-from nepi.main.models import Country, PendingRegister
+from nepi.main.models import Country
 from nepi.main.forms import LoginForm, CreateAccountForm
 from nepi.main.forms import AddSchoolForm, CreateCourseForm, ContactForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 from django.contrib.auth.models import User
 # from django.template import Context, Template
@@ -19,7 +19,6 @@ from pagetree.models import Section
 # from django.views.generic.edit import CreateView
 # from captcha.models import CaptchaStore
 # from captcha.helpers import captcha_image_url
-# from django.http import HttpResponse
 # import json
 
 UNLOCKED = ['resources']  # special cases
@@ -419,26 +418,6 @@ def register(request):
                             new_profile.save()
                         new_profile.profile_type = 'ST'
                         new_profile.save()
-                        is_teacher = request.POST.get('is_teacher', 'ST')
-                        if is_teacher == 'TE':
-                            register = PendingRegister(user=new_user,
-                                                       userprofile=new_profile,
-                                                       profile_type='TE')
-                            register.save()
-                            recipients = ['cdunlop@columbia.edu']
-                            if request.POST['email']:
-                                sender = request.POST['email']
-                            else:
-                                sender = "unknown@unknown.com"
-                            subject = 'Teacher Status Requested'
-                            message = str(new_user.first_name) \
-                                + " " + str(new_user.last_name) \
-                                + " has requested teacher status."
-                            # + get_school.name + "."
-                            from django.core.mail import send_mail
-                            send_mail(subject, message, sender, recipients)
-                            return render_to_response(
-                                'main/thanks_teacher.html')
                         return HttpResponseRedirect('/thank_you_reg/')
 
             else:
@@ -499,30 +478,6 @@ def view_schools(request):
     return render(request, 'icap/view_schools.html', {'schools': schools})
 
 
-def conf_teacher(request):
-    """This is intended to be for ICAP personel to
-    confirm teachers in the program."""
-    conf_teach = UserProfile.objects.filter(is_teacher=True)
-    return render(request,
-                  'icap/show_teachers.html',
-                  {'conf_teach': conf_teach})
-
-
-def confirm_teacher(request, prof_id, schl_id):
-    userprofile = UserProfile.object.get(pk=prof_id)
-    school = School.object.get(pk=schl_id)
-    userprofile.profile_type = 'TE'
-    userprofile.school = school
-    userprofile.save()
-    return HttpResponseRedirect('/confirm/')
-
-
-def deny_teacher(request, prof_id, schl_id):
-    pend_reg = PendingRegister.object.get(userprofile=prof_id, school=schl_id)
-    pend_reg.delete()
-    return HttpResponseRedirect('/delete_teacher/')
-
-
 def icapp_view_students(request):
     """Allow teacher to view progress of students within a
     course."""
@@ -544,12 +499,6 @@ def icapp_view_students(request):
     return render(request,
                   'icap/icapp_show_students.html',
                   {'students': students})
-
-
-def view_region(request):
-    """Allow ICAP personnel to view a region, will show schools,
-    countries and teachers in region and their classes"""
-    pass
 
 
 """Teacher Views"""
@@ -660,30 +609,6 @@ def course_results(request):
 
 def course_created(request):
     pass
-
-
-def confirm_student(request, st_id, class_id):
-    """Allow teacher to confirm student is in course."""
-    userprofile = UserProfile.object.get(pk=request.user.pk)
-    course = Course.object.get(pk=st_id)
-    userprofile.course = course
-    userprofile.school = course.school
-    userprofile.save()
-    return HttpResponseRedirect('/confirm/')
-
-
-def view_pending_students(request):
-    """Allow teacher to view students claiming
-     they are enrolled in a course."""
-    user = request.user
-    user_profile = UserProfile.objects.get(user=user)
-    teachers_courses = user_profile.course_set.all()
-    #for each in teachers_courses:
-    #    view_pending_students =
-    # PendingRegister.objects.filter(profile_type='ST', course=each)
-    return render(request,
-                  'main/pending_students.html',
-                  {'teachers_courses': teachers_courses})
 
 
 """Student Views"""

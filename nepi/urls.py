@@ -50,18 +50,10 @@ urlpatterns += patterns(
     (r'^home/$', 'nepi.main.views.home'),
     (r'^contact/$', 'nepi.main.views.contact'),
     (r'^register/$', 'nepi.main.views.register'),
-    #(r'^select_language/$', 'nepi.main.views.select_language'),
 
     # ICAP related pages
-    #(r'^pending_teachers/$', 'nepi.main.views.pending_teachers'),
     (r'^view_schools/$', 'nepi.main.views.view_schools'),
-    (r'^view_region/$', 'nepi.main.views.view_region'),
     (r'^add_school/$', 'nepi.main.views.add_school'),
-    (r'^confirm_teacher/$', 'nepi.main.views.confirm_teacher'),
-    (r'^confirm_teacher/(?P<prof_id>\d+)/(?P<schl_id>\d+)/$',
-     'nepi.main.views.confirm_teacher'),
-    (r'^deny_teacher/(?P<prof_id>\d+)/(?P<schl_id>\d+)/$',
-     'nepi.main.views.deny_teacher'),
     (r'^icapp_view_students/$', 'nepi.main.views.icapp_view_students'),
 
     # Teacher related pages
@@ -76,8 +68,6 @@ urlpatterns += patterns(
     (r'^course_results/$', 'nepi.main.views.course_results'),
 
     #(r'^captchatest/$', 'nepi.main.views.captchatest'),
-
-
 
     # Student related pages
     (r'^thanks_course/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_course'),

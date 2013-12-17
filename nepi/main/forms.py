@@ -32,8 +32,9 @@ class CreateAccountForm(forms.Form):
         label="Confirm Password")
     email = forms.EmailField()
     country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=True)
-    is_teacher = forms.ChoiceField(choices=TEACHER_CHOICES,
-                                    initial='ST')
+    # it was decided that nepi icap personel will enter the teachers mannually
+    #is_teacher = forms.ChoiceField(choices=TEACHER_CHOICES,
+    #                                initial='ST')
 
 
 class ContactForm(forms.Form):
