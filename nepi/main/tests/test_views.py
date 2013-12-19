@@ -62,7 +62,6 @@ class TestBasicViews(TestCase):
         self.assertEqual(r.status_code, 200)
 
 
-
 class TestLoggedInViews(TestCase):
     def setUp(self):
         self.h = HierarchyFactory()

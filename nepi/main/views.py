@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth import authenticate, login, logout
 from nepi.main.models import Course, UserProfile, School
 from nepi.main.models import Country
-from nepi.main.forms import LoginForm, CreateAccountForm, AjaxForm
+from nepi.main.forms import LoginForm, CreateAccountForm
 from nepi.main.forms import AddSchoolForm, CreateCourseForm, ContactForm
 from nepi.main.forms import CaptchaTestForm
 from django.http import HttpResponseRedirect, HttpResponse
@@ -12,10 +12,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from pagetree.helpers import get_section_from_path, get_module
 
-from pagetree.models import Section
-from django.views.generic.edit import CreateView
-from captcha.models import CaptchaStore
-from captcha.helpers import captcha_image_url
 import json
 
 
@@ -141,37 +137,6 @@ def test_view(request):
         form = CaptchaTestForm()
 
     return render_to_response("main/test_view.html", locals())
-
-
-class AjaxExampleForm(CreateView):
-    template_name = ''
-    form_class = AjaxForm()
-
-    def form_invalid(self, form):
-        if self.request.is_ajax():
-            to_json_responce = dict()
-            to_json_responce['status'] = 0
-            to_json_responce['form_errors'] = form.errors
-
-            to_json_responce['new_cptch_key'] = CaptchaStore.generate_key()
-            to_json_responce['new_cptch_image'] = captcha_image_url(
-                to_json_responce['new_cptch_key'])
-
-            return HttpResponse(json.dumps(to_json_responce),
-                                content_type='application/json')
-
-    def form_valid(self, form):
-        form.save()
-        if self.request.is_ajax():
-            to_json_responce = dict()
-            to_json_responce['status'] = 1
-
-            to_json_responce['new_cptch_key'] = CaptchaStore.generate_key()
-            to_json_responce['new_cptch_image'] = captcha_image_url(
-                to_json_responce['new_cptch_key'])
-
-            return HttpResponse(json.dumps(to_json_responce),
-                                content_type='application/json')
 
 
 def captchatest(request):
