@@ -49,6 +49,19 @@ class TestBasicViews(TestCase):
         response = self.c.get("/smoketest/")
         self.assertEquals(response.status_code, 200)
 
+    def test_test_view(self):
+        r = self.c.get("/test_view/")
+        self.assertEqual(r.status_code, 200)
+
+    def test_captcha(self):
+        r = self.c.get("/captchatest/")
+        self.assertEqual(r.status_code, 200)
+
+    def test_captcha_submit(self):
+        r = self.c.post("/captchatest/", dict())
+        self.assertEqual(r.status_code, 200)
+
+
 
 class TestLoggedInViews(TestCase):
     def setUp(self):
