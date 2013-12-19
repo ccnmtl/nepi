@@ -129,26 +129,6 @@ def _response(request, section, path):
                     leftnav=leftnav)
 
 
-def accessible(section, user):
-    try:
-        previous = section.get_previous()
-        return _unlocked(section, user, previous, user.get_profile())
-    except AttributeError:
-        return False
-
-
-def is_accessible(request, section_slug):
-    section = Section.objects.get(slug=section_slug)
-    previous = section.get_previous()
-    response = {}
-
-    if _unlocked(section, request.user, previous, request.user.get_profile()):
-        response[section_slug] = "True"
-
-    j = json.dumps(response)
-    return HttpResponse(j, 'application/json')
-
-
 def test_view(request):
     form = CaptchaTestForm()
     if request.POST:
