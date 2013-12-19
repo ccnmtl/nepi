@@ -151,13 +151,10 @@ def is_accessible(request, section_slug):
 
 def test_view(request):
     form = CaptchaTestForm()
-    print form['captcha']
     if request.POST:
         form = CaptchaTestForm(request.POST)
         # Validate the form: the captcha field will automatically
         # check the input
-        print form['captcha']
-        print form.is_valid()
         if form.is_valid():
             human = True
     else:
@@ -202,8 +199,6 @@ def captchatest(request):
         form = CaptchaTestForm(request.POST)
         # Validate the form: the captcha field will automatically
         # check the input
-        print form['captcha']
-        print form.is_valid()
         if form.is_valid():
             human = True
     else:
@@ -411,8 +406,6 @@ def icapp_view_students(request):
         try:
             profile = UserProfile.objects.get(user=u)
             if profile.profile_type == 'ST':
-                print profile
-                print u
                 students.append(u)
         except UserProfile.DoesNotExist:
             pass
