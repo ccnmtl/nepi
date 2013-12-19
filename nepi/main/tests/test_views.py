@@ -61,6 +61,14 @@ class TestBasicViews(TestCase):
         r = self.c.post("/captchatest/", dict())
         self.assertEqual(r.status_code, 200)
 
+    def test_register_form(self):
+        r = self.c.get("/register/")
+        self.assertEqual(r.status_code, 200)
+
+    def test_register_form_invalid_submission(self):
+        r = self.c.post("/register/", dict())
+        self.assertEqual(r.status_code, 200)
+
 
 class TestLoggedInViews(TestCase):
     def setUp(self):
