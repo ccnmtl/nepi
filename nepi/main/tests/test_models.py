@@ -5,6 +5,12 @@ from nepi.main.models import Course
 from datetime import datetime
 
 
+class TestCountry(TestCase):
+    def test_unicode(self):
+        c = Country.objects.create(name='LS', region='Region 1')
+        self.assertEqual(str(c), "LS")
+
+
 class TestUserProfile(TestCase):
     def setUp(self):
         self.student = User(first_name="student", last_name="student",
