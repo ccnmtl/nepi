@@ -65,3 +65,4 @@ django-pagetree_export==0.4
 django-registration==1.0
 django-quizblock==0.6.13
 django-simple-captcha==0.4.0
+factory_boy==2.1.1

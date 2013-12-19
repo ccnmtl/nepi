@@ -3,11 +3,12 @@ from django.contrib.auth.models import User
 from nepi.main.models import UserProfile, Country, School
 from nepi.main.models import Course
 from datetime import datetime
+from .factories import CountryFactory
 
 
 class TestCountry(TestCase):
     def test_unicode(self):
-        c = Country.objects.create(name='LS', region='Region 1')
+        c = CountryFactory()
         self.assertEqual(str(c), "LS")
 
 
