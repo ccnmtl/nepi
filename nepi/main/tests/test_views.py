@@ -47,4 +47,3 @@ class TestBasicViews(TestCase):
     def test_smoketest(self):
         response = self.c.get("/smoketest/")
         self.assertEquals(response.status_code, 200)
-        assert "PASS" in response.content
