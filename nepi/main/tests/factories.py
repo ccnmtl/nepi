@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.contrib.auth.models import User
-from nepi.main.models import Country, School, Course
+from nepi.main.models import Country, School, Course, UserProfile
 import factory
 
 
@@ -28,3 +28,23 @@ class CourseFactory(factory.DjangoModelFactory):
     name = "A Course"
     start_date = datetime.now()
     end_date = datetime.now()
+
+
+class UserProfileFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = UserProfile
+    user = factory.SubFactory(UserFactory)
+    profile_type = 'ST'
+    country = factory.SubFactory(CountryFactory)
+    school = factory.SubFactory(SchoolFactory)
+
+
+class StudentProfileFactory(UserProfileFactory):
+    profile_type = 'ST'
+
+
+class TeacherProfileFactory(UserProfileFactory):
+    profile_type = 'TE'
+
+
+class ICAPProfileFactory(UserProfileFactory):
+    profile_type = 'IC'

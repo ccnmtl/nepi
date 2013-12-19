@@ -4,6 +4,8 @@ from nepi.main.models import UserProfile, Country, School
 from nepi.main.models import Course
 from datetime import datetime
 from .factories import CountryFactory, SchoolFactory, CourseFactory
+from .factories import UserProfileFactory, TeacherProfileFactory
+from .factories import ICAPProfileFactory
 
 
 class TestCountry(TestCase):
@@ -21,7 +23,7 @@ class TestSchool(TestCase):
 class TestCourse(TestCase):
     def test_unicode(self):
         c = CourseFactory()
-        self.assertEqual(str(s), "Test Course")
+        self.assertEqual(str(c), "A Course")
 
 
 class TestUserProfile(TestCase):
@@ -69,3 +71,33 @@ class TestUserProfile(TestCase):
         self.assertEquals(unicode(self.student), "student")
         self.assertEquals(unicode(self.teacher), "teacher")
         self.assertEquals(unicode(self.icap), "icapp")
+
+    def test_unicode(self):
+        up = UserProfileFactory()
+        self.assertEqual(str(up), up.user.username)
+
+    def test_display_name(self):
+        up = UserProfileFactory()
+        self.assertEqual(up.display_name(), up.user.username)
+
+    def test_is_student(self):
+        up = UserProfileFactory()
+        self.assertTrue(up.is_student())
+
+    def test_is_teacher(self):
+        up = UserProfileFactory()
+        self.assertFalse(up.is_teacher())
+
+    def test_is_icap(self):
+        up = UserProfileFactory()
+        self.assertFalse(up.is_icap())
+
+    def test_role(self):
+        up = UserProfileFactory()
+        self.assertEqual(up.role(), "student")
+
+        teacher = TeacherProfileFactory()
+        self.assertEqual(teacher.role(), "teacher")
+
+        icap = ICAPProfileFactory()
+        self.assertEqual(icap.role(), "icap")
