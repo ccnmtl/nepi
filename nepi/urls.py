@@ -79,7 +79,6 @@ urlpatterns += patterns(
 
 
     url(r'^_impersonate/', include('impersonate.urls')),
-    (r'^munin/', include('munin.urls')),
     (r'^stats/$', TemplateView.as_view(template_name="stats.html")),
     (r'smoketest/', include('smoketest.urls')),
     (r'^site_media/(?P<path>.*)$',
