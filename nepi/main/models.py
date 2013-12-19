@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from nepi.main.choices import COUNTRY_CHOICES, PROFILE_CHOICES
-from pagetree.models import PageBlock, Section, Hierarchy
+from pagetree.models import Section, Hierarchy
 
 
 '''Add change delete are by default for each django model.
@@ -111,4 +111,3 @@ class UserProfile(models.Model):
         profile = UserProfile.objects.get(user=self.user)
         sections = Section.objects.filter(hierarchy=hierarchy)
         return int(len(profile.visits.all()) / float(len(sections)) * 100)
-

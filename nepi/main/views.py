@@ -4,11 +4,11 @@ from django.contrib.auth import authenticate, login, logout
 from nepi.main.models import Course, UserProfile, School
 from nepi.main.models import Country
 from nepi.main.forms import LoginForm, CreateAccountForm, AjaxForm
-from nepi.main.forms import AddSchoolForm, CreateCourseForm, ContactForm, CaptchaTestForm
+from nepi.main.forms import AddSchoolForm, CreateCourseForm, ContactForm
+from nepi.main.forms import CaptchaTestForm
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 from django.contrib.auth.models import User
-# from django.template import Context, Template
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
 from pagetree.helpers import get_section_from_path, get_module
@@ -18,9 +18,6 @@ from django.views.generic.edit import CreateView
 from captcha.models import CaptchaStore
 from captcha.helpers import captcha_image_url
 import json
-
-# from captcha.fields import CaptchaField
-# from django.utils import simplejson
 
 
 UNLOCKED = ['resources']  # special cases
@@ -106,8 +103,8 @@ def _response(request, section, path):
                         proceed = not p.block().redirect_to_self_on_submit()
 
         if request.is_ajax():
-            json = simplejson.dumps({'submitted': 'True'})
-            return HttpResponse(json, 'application/json')
+            j = json.dumps({'submitted': 'True'})
+            return HttpResponse(j, 'application/json')
         elif proceed:
             return HttpResponseRedirect(section.get_next().get_absolute_url())
         else:
@@ -167,8 +164,8 @@ def is_accessible(request, section_slug):
     if _unlocked(section, request.user, previous, request.user.get_profile()):
         response[section_slug] = "True"
 
-    json = simplejson.dumps(response)
-    return HttpResponse(json, 'application/json')
+    j = json.dumps(response)
+    return HttpResponse(j, 'application/json')
 
 
 def test_view(request):
@@ -185,7 +182,7 @@ def test_view(request):
     else:
         form = CaptchaTestForm()
 
-    return render_to_response("main/test_view.html",locals())
+    return render_to_response("main/test_view.html", locals())
 
 
 class AjaxExampleForm(CreateView):
@@ -199,9 +196,11 @@ class AjaxExampleForm(CreateView):
             to_json_responce['form_errors'] = form.errors
 
             to_json_responce['new_cptch_key'] = CaptchaStore.generate_key()
-            to_json_responce['new_cptch_image'] = captcha_image_url(to_json_responce['new_cptch_key'])
+            to_json_responce['new_cptch_image'] = captcha_image_url(
+                to_json_responce['new_cptch_key'])
 
-            return HttpResponse(json.dumps(to_json_responce), content_type='application/json')
+            return HttpResponse(json.dumps(to_json_responce),
+                                content_type='application/json')
 
     def form_valid(self, form):
         form.save()
@@ -210,14 +209,14 @@ class AjaxExampleForm(CreateView):
             to_json_responce['status'] = 1
 
             to_json_responce['new_cptch_key'] = CaptchaStore.generate_key()
-            to_json_responce['new_cptch_image'] = captcha_image_url(to_json_responce['new_cptch_key'])
+            to_json_responce['new_cptch_image'] = captcha_image_url(
+                to_json_responce['new_cptch_key'])
 
-            return HttpResponse(json.dumps(to_json_responce), content_type='application/json')
+            return HttpResponse(json.dumps(to_json_responce),
+                                content_type='application/json')
 
 
 def captchatest(request):
-    #form = CaptchaTestForm()
-    #print form['captcha']
     if request.POST:
         form = CaptchaTestForm(request.POST)
         # Validate the form: the captcha field will automatically
@@ -229,79 +228,7 @@ def captchatest(request):
     else:
         form = CaptchaTestForm()
 
-    #return render_to_response("main/test_view.html",locals())
-    return render_to_response("main/captchatest.html",locals())
-
-
-# def clear_state(request):
-#     try:
-#         request.user.get_profile().delete()
-#     except UserProfile.DoesNotExist:
-#         pass
-
-#     # clear quiz
-#     import quizblock
-#     quizblock.models.Submission.objects.filter(user=request.user).delete()
-
-#     # clear prescription writing
-#     PrescriptionWritingActivityState.objects.filter(
-#     \ user=request.user).delete()
-
-#     # clear treatment choices
-#     TreatmentChoiceActivityState.objects.filter(user=request.user).delete()
-
-#     # clear virtual patient
-#     VirtualPatientActivityState.objects.filter(user=request.user).delete()
-
-#     return HttpResponseRedirect(reverse("index"))
-
-# def _get_previous_leaf(section):
-#     depth_first_traversal = section.get_root().get_annotated_list()
-#     for (i, (s, ai)) in enumerate(depth_first_traversal):
-#         if s.id == section.id:
-#             # first element is the root, so we don't want to return that
-#             prev = None
-#             while i > 1 and not prev:
-#                 (node, x) = depth_first_traversal[i - 1]
-#                 if node and len(node.get_children()) > 0:
-#                     i -= 1
-#                 else:
-#                     prev = node
-#             return prev
-#     # made it through without finding ourselves? weird.
-#     return None
-
-# #UNLOCKED = ['welcome', 'resources']  # special cases
-
-
-# def _unlocked(section, user, previous, profile):
-#     """ if the user can proceed past this section """
-#     if (not section or
-#         section.is_root() or
-#         profile.get_has_visited(section) or
-#         section.slug in UNLOCKED or
-#             section.hierarchy.name in UNLOCKED):
-#         return True
-
-#     if not previous or previous.is_root():
-#         return True
-
-#     for p in previous.pageblock_set.all():
-#         if hasattr(p.block(), 'unlocked'):
-#             if p.block().unlocked(user) is False:
-#                 return False
-
-#     if previous.slug in UNLOCKED:
-#         return True
-
-#     # Special case for virtual patient as this activity was too big to fit
-#     # into a "block"
-#     if (previous.label == "Virtual Patient" and
-#             not VirtualPatientActivityState.is_complete(user)):
-#         return False
-
-#     return profile.get_has_visited(previous)
-
+    return render_to_response("main/captchatest.html", locals())
 
 """General Views"""
 
@@ -373,26 +300,21 @@ def nepi_login(request):
 def home(request):
     '''Return homepage appropriate for user type.'''
     try:
-        # user = User.objects.get(pk=request.user.pk)
         user_profile = UserProfile.objects.get(user=request.user)
         if user_profile.profile_type == 'ST':
-            #  modules = LearningModule.objects.all()
             courses = user_profile.course.all()
             return render(request, 'student/stindex.html',
                           {'courses': courses})
 
         elif user_profile.profile_type == 'TE':
             pass
-        # courses = user_profile.course.all()
-        # return render(request, 'teacher/teindex.html',
-        #               {'courses': courses})
         elif user_profile.profile_type == 'IC':
-            pending_teachers = PendingRegister.objects.filter(profile_type='TE')
+            pending_teachers = PendingRegister.objects.filter(
+                profile_type='TE')
             schools = School.objects.all()
             return render(request, 'icap/icindex.html',
                           {'schools': schools,
                               'pending_teachers': pending_teachers})
-        #return render_to_response('main/icindex.html/')
         else:
             return HttpResponseRedirect('/')
     except User.DoesNotExist:

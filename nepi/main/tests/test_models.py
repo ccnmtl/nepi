@@ -1,8 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-#from pagetree.models import Hierarchy, Section
 from nepi.main.models import UserProfile, Country, School
-from nepi.main.models import Course, School
+from nepi.main.models import Course
 from datetime import datetime
 
 

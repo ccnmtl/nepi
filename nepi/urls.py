@@ -29,10 +29,10 @@ urlpatterns = patterns(
      TemplateView.as_view(template_name="flatpages/about.html")),
     (r'^help/',
      TemplateView.as_view(template_name="flatpages/help.html")),
-    #(r'^contact/',
-    # TemplateView.as_view(template_name="flatpages/contact.html")),
-    (r'^thank_you_reg/', TemplateView.as_view(template_name="flatpages/registration_thanks.html")), #template is thanks html
-    (r'^thank_you_school/', TemplateView.as_view(template_name="flatpages/school_added.html")), # template is school_added
+    (r'^thank_you_reg/',
+     TemplateView.as_view(template_name="flatpages/registration_thanks.html")),
+    (r'^thank_you_school/',
+     TemplateView.as_view(template_name="flatpages/school_added.html")),
 )
 
 urlpatterns += patterns(
