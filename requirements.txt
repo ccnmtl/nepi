@@ -1,11 +1,4 @@
 Django==1.5.5
-resolver==0.2.1
-wsgiref==0.1.2
-selector==0.8.11
-Paste==1.7.5.1
-PasteDeploy==1.5.0
-PasteScript==1.7.5
-cdap==1.0
 httplib2==0.8
 restclient==0.11.0
 feedparser==5.1.3
