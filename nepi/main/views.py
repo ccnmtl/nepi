@@ -10,7 +10,6 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.template import RequestContext
 from pagetree.helpers import get_section_from_path, get_module
 
 from pagetree.models import Section
@@ -21,24 +20,6 @@ import json
 
 
 UNLOCKED = ['resources']  # special cases
-
-
-class rendered_with(object):
-    def __init__(self, template_name):
-        self.template_name = template_name
-
-    def __call__(self, func):
-        def rendered_func(request, *args, **kwargs):
-            items = func(request, *args, **kwargs)
-            if isinstance(items, type({})):
-                ctx = RequestContext(request)
-                return render_to_response(self.template_name,
-                                          items,
-                                          context_instance=ctx)
-            else:
-                return items
-
-        return rendered_func
 
 
 def _edit_response(request, section, path):
@@ -53,7 +34,7 @@ def _edit_response(request, section, path):
 
 
 @user_passes_test(lambda u: u.is_superuser)
-@rendered_with('main/edit_page.html')
+@render_to('main/edit_page.html')
 def edit_page(request, hierarchy, path):
     section = get_section_from_path(path, hierarchy)
     return _edit_response(request, section, path)
@@ -70,7 +51,7 @@ def resources(request, path):
 
 
 @login_required
-@rendered_with('main/page.html')
+@render_to('main/page.html')
 def page(request, hierarchy, path):
     section = get_section_from_path(path, hierarchy)
     return _response(request, section, path)
