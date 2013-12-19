@@ -1,11 +1,19 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from nepi.main.models import UserProfile, Country, School
+from nepi.main.models import UserProfile, Country, School, UserVisit
 from nepi.main.models import Course
 from datetime import datetime
 from .factories import CountryFactory, SchoolFactory, CourseFactory
 from .factories import UserProfileFactory, TeacherProfileFactory
-from .factories import ICAPProfileFactory
+from .factories import ICAPProfileFactory, HierarchyFactory
+
+
+class TestUserVisit(TestCase):
+    def test_unicode(self):
+        h = HierarchyFactory()
+        s = h.get_root().get_first_leaf()
+        uv = UserVisit.objects.create(section=s)
+        self.assertTrue(str(uv).startswith("Welcome 1"))
 
 
 class TestCountry(TestCase):
@@ -101,3 +109,34 @@ class TestUserProfile(TestCase):
 
         icap = ICAPProfileFactory()
         self.assertEqual(icap.role(), "icap")
+
+    def test_get_has_visited(self):
+        up = UserProfileFactory()
+        h = HierarchyFactory()
+        s = h.get_root().get_first_leaf()
+        self.assertFalse(up.get_has_visited(s))
+
+    def test_set_has_visited(self):
+        up = UserProfileFactory()
+        h = HierarchyFactory()
+        s = h.get_root().get_first_leaf()
+        up.set_has_visited([s])
+        self.assertTrue(up.get_has_visited(s))
+        up.set_has_visited([s])
+
+    def test_last_location_default(self):
+        up = UserProfileFactory()
+        h = HierarchyFactory()
+        self.assertEqual(up.last_location().slug, h.get_root().slug)
+
+    def test_last_location(self):
+        up = UserProfileFactory()
+        h = HierarchyFactory()
+        s = h.get_root().get_first_leaf()
+        up.set_has_visited([s])
+        self.assertEqual(up.last_location(), s)
+
+    def test_percent_complete(self):
+        up = UserProfileFactory()
+        HierarchyFactory(name=up.role())
+        self.assertEqual(up.percent_complete(), 0)

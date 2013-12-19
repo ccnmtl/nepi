@@ -16,7 +16,7 @@ class UserVisit(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return "%s %s" % (self.section, self.count, self.created)
+        return "%s %d %s" % (self.section, self.count, self.created)
 
 
 class Country(models.Model):
