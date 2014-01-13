@@ -6,3 +6,4 @@ ve
 .coverage
 media/CACHE
 reports
+local_settings.py
