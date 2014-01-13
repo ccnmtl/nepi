@@ -7,3 +7,5 @@ ve
 media/CACHE
 reports
 local_settings.py
+.project
+.pydevproject

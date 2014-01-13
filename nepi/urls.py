@@ -96,7 +96,7 @@ urlpatterns += patterns(
      'nepi.main.views.resources'),
 
     # very important that this stays last and in this order
-    (r'^pages/edit/(?P<hierarchy>\w+)/(?P<path>.*)$',
+    (r'^pages/(?P<hierarchy>\w+)/edit/(?P<path>.*)$',
      'nepi.main.views.edit_page'),
     (r'^pages/(?P<hierarchy>\w+)/(?P<path>.*)$',
      'nepi.main.views.page'),
