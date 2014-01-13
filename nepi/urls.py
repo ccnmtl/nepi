@@ -89,12 +89,6 @@ urlpatterns += patterns(
     # from tobacco
     (r'^pagetree/', include('pagetree.urls')),
 
-    # resources path -- content that's open by default
-    (r'^edit/resources/(?P<path>.*)$',
-     'nepi.main.views.edit_resources'),
-    (r'^resources/(?P<path>.*)$',
-     'nepi.main.views.resources'),
-
     # very important that this stays last and in this order
     (r'^pages/(?P<hierarchy>\w+)/edit/(?P<path>.*)$',
      'nepi.main.views.edit_page'),

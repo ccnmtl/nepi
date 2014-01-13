@@ -1,49 +1,29 @@
 from annoying.decorators import render_to
 from django import forms
 from django.contrib.auth import authenticate, login, logout
-from nepi.main.models import Course, UserProfile, School
-from nepi.main.models import Country
-from nepi.main.forms import LoginForm, CreateAccountForm
-from nepi.main.forms import AddSchoolForm, CreateCourseForm, ContactForm
-from nepi.main.forms import CaptchaTestForm
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required, user_passes_test
+from nepi.main.forms import AddSchoolForm, CreateCourseForm, ContactForm, \
+    CaptchaTestForm, LoginForm, CreateAccountForm
+from nepi.main.models import Country, Course, UserProfile, School
 from pagetree.helpers import get_section_from_path, get_module
-
 import json
-
-
-UNLOCKED = ['resources']  # special cases
-
-
-def _edit_response(request, section, path):
-    first_leaf = section.hierarchy.get_first_leaf(section)
-
-    return dict(section=section,
-                module=get_module(section),
-                root=section.hierarchy.get_root(),
-                leftnav=_get_left_parent(first_leaf),
-                prev=_get_previous_leaf(first_leaf),
-                next=first_leaf.get_next())
 
 
 @user_passes_test(lambda u: u.is_superuser)
 @render_to('main/edit_page.html')
 def edit_page(request, hierarchy, path):
     section = get_section_from_path(path, hierarchy)
-    return _edit_response(request, section, path)
+    first_leaf = section.hierarchy.get_first_leaf(section)
 
-
-def edit_resources(request, path):
-    section = get_section_from_path(path, "resources")
-    return _edit_response(request, section, path)
-
-
-def resources(request, path):
-    section = get_section_from_path(path, "resources")
-    return _response(request, section, path)
+    return dict(section=section,
+                module=get_module(section),
+                root=section.hierarchy.get_root(),
+                leftnav=_get_left_parent(first_leaf),
+                prev=first_leaf.get_previous(),
+                next=first_leaf.get_next())
 
 
 @login_required
@@ -88,41 +68,31 @@ def _response(request, section, path):
             # giving them feedback before they proceed
             return HttpResponseRedirect(section.get_absolute_url())
     else:
-        first_leaf = h.get_first_leaf(section)
-        ancestors = first_leaf.get_ancestors()
-        profile = UserProfile.objects.filter(user=request.user)[0]
-
-        # Skip to the first leaf, make sure to mark these sections as visited
-        if (section != first_leaf):
-            profile.set_has_visited(ancestors)
-            url = "/%s%s" % ("pages", first_leaf.get_absolute_url())
-            return HttpResponseRedirect(url)
+        try:
+            profile = UserProfile.objects.get(user=request.user)
+        except UserProfile.DoesNotExist:
+            profile = UserProfile(user=request.user,
+                                  profile_type='ST')
+            profile.save()
 
         # the previous node is the last leaf, if one exists.
-        prev = _get_previous_leaf(first_leaf)
-        next_page = first_leaf.get_next()
+        prev = section.get_previous()
+        next_page = section.get_next()
 
         # Is this section unlocked now?
-        can_access = _unlocked(first_leaf, request.user, prev, profile)
+        can_access = section.gate_check(request.user)
         if can_access:
             profile.set_has_visited([section])
 
-        module = None
-        if not first_leaf.is_root() and len(ancestors) > 1:
-            module = ancestors[1]
-
-        # specify the leftnav parent up here.
-        leftnav = _get_left_parent(first_leaf)
-
-        return dict(section=first_leaf,
+        return dict(section=section,
                     accessible=can_access,
-                    module=module,
-                    root=ancestors[0],
+                    root=h.get_root(),
                     previous=prev,
                     next=next_page,
-                    depth=first_leaf.depth,
+                    depth=section.depth,
                     request=request,
-                    leftnav=leftnav)
+                    next_unlocked=(next_page is not None and
+                                   next_page.gate_check(request.user)))
 
 
 def test_view(request):
@@ -154,6 +124,7 @@ def captchatest(request):
 """General Views"""
 
 
+@login_required
 @render_to('main/index.html')
 def index(request):
     return dict()
@@ -489,30 +460,3 @@ def view_courses(request, schl_id):
     return render(request,
                   'student/view_courses.html',
                   {'courses': courses, 'school': school})
-
-
-def _get_previous_leaf(section):
-    depth_first_traversal = section.get_root().get_annotated_list()
-    for (i, (s, ai)) in enumerate(depth_first_traversal):
-        if s.id == section.id:
-            # first element is the root, so we don't want to return that
-            prev = None
-            while i > 1 and not prev:
-                (node, x) = depth_first_traversal[i - 1]
-                if node and len(node.get_children()) > 0:
-                    i -= 1
-                else:
-                    prev = node
-            return prev
-    # made it through without finding ourselves? weird.
-    return None
-
-
-def _unlocked(section, user, previous, profile):
-    """ if the user can proceed past this section """
-    if (not section or
-        section.is_root() or
-        profile.get_has_visited(section) or
-        section.slug in UNLOCKED or
-            section.hierarchy.name in UNLOCKED):
-        return True
