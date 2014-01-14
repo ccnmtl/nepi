@@ -1,0 +1,54 @@
+{% load getroot %}
+{% block primarynavtabs %}
+    <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </a>
+     
+    <!-- Everything you want hidden at 940px or less, place within here -->
+    <div class="nav-collapse collapse">
+        {% getroot main as root %}
+        <ul class="nav">
+            {% for s in root.get_descendants %}<li class="dropdown-submenu">
+                {% if s.depth == 2 %}
+                    <li class="dropdown"><a data-toggle="dropdown" class="dropdown-toggle" href="{{menu_prefix}}{{s.get_absolute_url}}">{{s.label}}<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        {% for n in s.get_children %}    
+                            {% if n.get_children %}
+                                <li class="dropdown-submenu"><a href="{{menu_prefix}}{{n.get_absolute_url}}">{{n.label}}</a>
+                                    <ul class="dropdown-menu">
+                                    {% for x in n.get_children %}
+                                        {% if x.get_children %}
+                                        <li class="divider"></li>
+                                        <li class="nav-header"><a href="{{menu_prefix}}{{x.get_absolute_url}}">{{x.label}}</a></li>
+                                            {% for y in x.get_children %}
+                                            <li><a href="{{menu_prefix}}{{y.get_absolute_url}}">{{y.label}}</a><li>
+                                            {% endfor %}
+
+                                        {% else %}
+                                            <li><a href="{{menu_prefix}}{{x.get_absolute_url}}">{{x.label}}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </ul>
+                            {% else %}
+                            <li><a href="{{menu_prefix}}{{n.get_absolute_url}}">{{n.label}}</a>
+                            {% endif %}
+                            {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                    </li>
+          {% endfor %} 
+          <li><a href="{{section.get_edit_url}}">Edit Page</a></li>        
+        </ul>                  <ul class="nav pull-right">
+            <li><a href="{{section.get_edit_url}}">Edit Page</a></li>        
+  </ul>
+    </div>        
+
+
+
+    
+{% endblock %}
