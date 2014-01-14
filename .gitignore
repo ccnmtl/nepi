@@ -6,3 +6,7 @@ ve
 .coverage
 media/CACHE
 reports
+local_settings.py
+.project
+.pydevproject
+.settings

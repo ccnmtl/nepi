@@ -204,10 +204,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
               'pageblocks.HTMLBlock',
               'pageblocks.ImageBlock',
-              'quizblock.Quiz',
-              'activity_treatment_choice.Block',
-              'activity_prescription_writing.Block',
-              'main.FlashVideoBlock']
+              'quizblock.Quiz']
 
 AUTH_PROFILE_MODULE = 'nepi.main.UserProfile'
 

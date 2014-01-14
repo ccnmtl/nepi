@@ -53,9 +53,9 @@ class UserProfile(models.Model):
     user = models.ForeignKey(User, related_name="application_user")
     visits = models.ManyToManyField(UserVisit, null=True, blank=True)
     profile_type = models.CharField(max_length=2, choices=PROFILE_CHOICES)
-    country = models.ForeignKey(Country, blank=True)
-    course = models.ManyToManyField(Course, null=True, blank=True)
+    country = models.ForeignKey(Country, null=True, blank=True)
     school = models.ForeignKey(School, null=True, default=None)
+    course = models.ManyToManyField(Course, null=True, blank=True)
 
     def __unicode__(self):
         return self.user.username

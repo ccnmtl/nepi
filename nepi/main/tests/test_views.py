@@ -23,7 +23,7 @@ class TestBasicViews(TestCase):
 
     def test_root(self):
         response = self.c.get("/")
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.status_code, 302)
         self.assertTemplateUsed('flatpages/index.html')
 
     def test_about(self):
@@ -82,7 +82,7 @@ class TestLoggedInViews(TestCase):
         self.c.login(username=self.u.username, password="test")
 
     def test_edit_page_form(self):
-        r = self.c.get("/pages/edit/%s/%s/" % (self.h.name, self.s.slug))
+        r = self.c.get("/pages/%s/edit/%s/" % (self.h.name, self.s.slug))
         self.assertEqual(r.status_code, 200)
 
     def test_page(self):
@@ -91,7 +91,7 @@ class TestLoggedInViews(TestCase):
 
     def test_root(self):
         r = self.c.get("/pages/%s/" % (self.h.name))
-        self.assertEqual(r.status_code, 302)
+        self.assertEqual(r.status_code, 200)
 
     def test_home(self):
         r = self.c.get("/home/")
