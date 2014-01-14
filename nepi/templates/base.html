@@ -9,16 +9,14 @@
     <meta name="author" content="CCNMTL">
 	<link rel="shortcut icon" href="/site_media/img/favicon.ico" type="image/x-icon" />
         
-    {% block extracss %}
-    {% endblock %}
-    
     {% compress css %}
-    	{% block css %}
-            <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
-            <link href="/site_media/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-            <link href="/site_media/css/main.css" rel="stylesheet">
-        {% endblock %}
+        <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="/site_media/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="/site_media/css/main.css" rel="stylesheet">
     {% endcompress %}
+        
+    {% block css %}
+    {% endblock %}    
   
     <script src="/site_media/js/jquery-1.10.1.min.js"></script>
     <script src="/site_media/js/jquery-ui-1.10.3.min.js"></script>

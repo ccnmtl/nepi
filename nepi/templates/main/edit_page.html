@@ -7,13 +7,9 @@
     {{section.label}} (edit)
 {% endblock %}
 
-{% block extracss %}
-    {{ block.super }}
-    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css" type="text/css" media="all" /> 
-{% endblock %}
-
 {% block css %}
     {{ block.super }}
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css" type="text/css" media="all" /> 
     <style type="text/css">
     	.draghandle {float: left;}
     	#children-order-list {list-style-type: none; margin: 0; padding: 0;}
@@ -214,7 +210,7 @@
 {% endif %}
 
 <form action="{% url 'edit-pageblock' block.id %}" method="post"
-class=""
+    class=""
 {% if block.edit_form.is_multipart %}enctype="multipart/form-data"{% endif %}>
 
 {{ block.default_edit_form|bootstrap }}
@@ -379,21 +375,24 @@ method="post">
 {% endif %}
 </div>
 </div>
+
+
+    <ul class="pager">
+        {% with section.get_previous as previous_section %}
+        {% if previous_section %}
+          <li class="previous">
+        		<a href="{{previous_section.get_edit_url}}">&larr; {{previous_section.label}}</a>
+          </li>
+        {% endif %}
+        {% endwith %}
+    
+        {% with section.get_next as next_section %}
+            {% if next_section %}            
+                <li class="next"><a href="{{next_section.get_edit_url}}">{{next_section.label}} &rarr;</a></li>            
+            {% endif %}
+        {% endwith %}
+    </ul>
+
 {% endblock %}
 
-{% block content-nav %}
-<ul class="pager">
-{% if section.get_previous %}
-  <li class="previous">
-		<a href="{% url 'edit-page' section.get_previous.get_path %}">&larr; {{section.get_previous.label}}</a>
-  </li>
-{% endif %}
 
-{% if section.get_next %}
-{% with section.get_next as next_section %}
-<li class="next"><a href="{% url 'edit-page' section.get_next.get_path %}">{{section.get_next.label}} &rarr;</a></li>
-{% endwith %}
-{% endif %}
-</ul>
-
-{% endblock %}

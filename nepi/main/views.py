@@ -8,7 +8,7 @@ from django.shortcuts import render, render_to_response
 from nepi.main.forms import AddSchoolForm, CreateCourseForm, ContactForm, \
     CaptchaTestForm, LoginForm, CreateAccountForm
 from nepi.main.models import Country, Course, UserProfile, School
-from pagetree.helpers import get_section_from_path, get_module
+from pagetree.helpers import get_section_from_path, get_module, needs_submit
 import json
 
 
@@ -85,6 +85,7 @@ def _response(request, section, path):
             profile.set_has_visited([section])
 
         return dict(section=section,
+                    needs_submit=needs_submit(section),
                     accessible=can_access,
                     root=h.get_root(),
                     previous=prev,
