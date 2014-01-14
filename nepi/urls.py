@@ -1,8 +1,11 @@
-from django.conf.urls.defaults import patterns, include, url
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.contrib import admin
 from django.conf import settings
+from django.conf.urls import patterns, include, url
+from django.contrib import admin
 from django.views.generic import TemplateView
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+
+
 #from pagetree.generic.views import PageView, EditView, InstructorView
 import os.path
 admin.autodiscover()
@@ -95,12 +98,14 @@ urlpatterns += patterns(
     (r'^resources/(?P<path>.*)$',
      'nepi.main.views.resources'),
 
+
     # very important that this stays last and in this order
     (r'^pages/edit/(?P<hierarchy>\w+)/(?P<path>.*)$',
      'nepi.main.views.edit_page'),
     (r'^pages/(?P<hierarchy>\w+)/(?P<path>.*)$',
      'nepi.main.views.page'),
     #url(r'^captcha/', include('captcha.urls')),
+
 
 ) + staticmedia.serve()
 

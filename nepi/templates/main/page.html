@@ -1,5 +1,15 @@
 {% extends 'base.html' %}
 {% load render %}
+
+{% block extrahead %}
+  {{ block.super }}
+  {% for block in section.pageblock_set.all %}
+  {% rendercss block %}
+  {% endfor %}
+{% endblock %}
+
+
+
 {% block js %}
 <script type="text/javascript" src="/site_media/js/chapter_marker_player.js"></script>
 {% for block in section.pageblock_set.all %}
@@ -18,6 +28,14 @@
 {% block title %}{{section.label}}{% endblock %}
 
 {% block pagetitle %}<h2 class="pagetitle">{{section.label}}</h2>{% endblock %}
+
+{% block extraprimarynav %}
+   {% comment %}{% if user.is_staff %}{% endcomment %}
+  <ul class="nav pull-right">
+      <li><a href="{{section.get_edit_url}}">Edit Page</a></li>        
+  </ul>
+   {% comment %}{% endif %}{% endcomment %}
+{% endblock %}
 
 {% block sidenav %}
         <!-- ###### Secondary Navigation ###### -->

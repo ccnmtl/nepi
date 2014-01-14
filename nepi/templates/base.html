@@ -25,44 +25,44 @@
  {% endblock %}
 	{% block feeds %}{% endblock %}
 </head>
-<body>
 
+
+
+<body>
 {% block topnavbar %}
   <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
       <div class="container">
         <ul class="nav">
-          <li><a class="brand" href="/">nepi</a></li>
+            <li><a class="brand" href="/">nepi</a></li>
           {% block topnavbarleftitems %}
-
             <li class="flatpages"><a href="/about/">About</a></li>
             <li class="flatpages"><a href="/help/">Help</a></li>
             <li class="flatpages"><a href="{% url "nepi.main.views.contact" %}">Contact</a></li>
-
           {% endblock %}
         </ul>
 
-        <p class="navbar-text pull-right">
-          {% block topnavbarrightitems %}{% endblock %}
-{% block usernav %}
-          {% if request.user.is_anonymous %}
-          <a href="/login/" class="btn btn-success">login</a>
-          {% else %}
-          logged in as {{request.user.first_name}} {{request.user.last_name}}
-{% if request.user.is_superuser %}
-          <a href="{% url "impersonate-list" %}">[impersonate]</a>
-{% endif %}
-          <a href="/logout/" class="btn btn-inverse">logout</a>
-          {% endif %}
-{% endblock %}
-       </p>
+          <p class="navbar-text pull-right">
+          {% block usernav %}
+              {% if request.user.is_anonymous %}
+                  <a href="/login/" class="btn btn-success">login</a>
+              {% else %}
+                  logged in as {{request.user.first_name}} {{request.user.last_name}}
+                      {% if request.user.is_superuser %}
+                      <a href="{% url "impersonate-list" %}">[impersonate]</a>
+                      {% endif %}
+                  <a href="/logout/" class="btn btn-inverse">logout</a>
+              {% endif %}
+          {% endblock %}
+          </p>
 
        </div>
      </div>
   </div>
 {% endblock %}
 
-  <div class="container" id="outer-container">
+
+<div class="container" id="outer-container">
 {% block masthead %}
     <header class="subhead hidden-phone" id="masthead">
       <h1><a href="./" title="nepi">nepi</a></h1>
@@ -75,42 +75,38 @@
       </h4>
     </header>
 
-{% block primarynav %}
-    <div class="navbar" id="primarynav">
-      <div class="navbar-inner">
-        <div class="container">
-          <ul class="nav">
-          {% block primarynavtabs %}
-            <li class="active"><a href="/one/">One</a></li>
-						<li><a href="/two/">Two</a></li>
-          {% endblock %}
-					{% block primarynavtabsextra %}{% endblock %}
-          </ul>
-
-          <ul class="nav pull-right">
-            {% block primarynavrightextra %}{% endblock %}
-						<li><a href="/three/">Three</a></li>
-						<li><a href="/four/">Four</a></li>
-          </ul>
+    {% block primarynav %}
+        <div class="navbar" id="primarynav">
+            <div class="navbar-inner">
+                <div class="container">
+                    <ul class="nav">
+                    {% block extraprimarynav %}
+                    {% endblock %}
+                    {% block primarynavtabs %}
+                    {% include "project_primary_nav.html" %}
+                    {% endblock %}
+					          {% block primarynavtabsextra %}
+                    {% endblock %}
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
+    {% endblock %}
+
+{% endblock %}
+
+<div class="container-fluid" id="content">
+  <div class="row-fluid">
+    <div class="span2" id="sidebar">
+      {% block sidebar %}{% endblock %}
     </div>
-{% endblock %}
-
-{% endblock %}
-
-    <div class="container-fluid" id="content">
-      <div class="row-fluid">
-        <div class="span2" id="sidebar">
-{% block sidebar %}{% endblock %}
-        </div>
-        <div class="span10" id="right-content">
-{% block pagetitle %}{% endblock %}
-{% block content %}{% endblock %}
-        </div>
-      </div>
+    <div class="span10" id="right-content">
+      {% block pagetitle %}{% endblock %}
+      {% block content %}{% endblock %}
+    </div>
     </div>
   </div>
+</div>
 </div>
 
 {% block footer %}
