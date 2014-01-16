@@ -17,7 +17,6 @@ class UserAdmin(UserAdmin):
 
 # taken from tobacco
 class UserProfileAdmin(admin.ModelAdmin):
-    readonly_fields = ["visits"]
     search_fields = ['user__username']
     list_display = ['user', 'role']
 

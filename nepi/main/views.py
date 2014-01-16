@@ -68,6 +68,8 @@ def _response(request, section, path):
             # giving them feedback before they proceed
             return HttpResponseRedirect(section.get_absolute_url())
     else:
+        first_leaf = h.get_first_leaf(section)
+        ancestors = first_leaf.get_ancestors()
         try:
             profile = UserProfile.objects.get(user=request.user)
         except UserProfile.DoesNotExist:
@@ -75,9 +77,14 @@ def _response(request, section, path):
                                   profile_type='ST')
             profile.save()
 
+        # Skip to the first leaf, make sure to mark these sections as visited
+        if (section != first_leaf):
+            profile.set_has_visited(ancestors)
+            return HttpResponseRedirect(first_leaf.get_absolute_url())
+
         # the previous node is the last leaf, if one exists.
-        prev = section.get_previous()
-        next_page = section.get_next()
+        prev_page = _get_previous_leaf(first_leaf)
+        next_page = first_leaf.get_next()
 
         # Is this section unlocked now?
         can_access = section.gate_check(request.user)
@@ -88,7 +95,7 @@ def _response(request, section, path):
                     needs_submit=needs_submit(section),
                     accessible=can_access,
                     root=h.get_root(),
-                    previous=prev,
+                    previous=prev_page,
                     next=next_page,
                     depth=section.depth,
                     request=request,
@@ -461,3 +468,20 @@ def view_courses(request, schl_id):
     return render(request,
                   'student/view_courses.html',
                   {'courses': courses, 'school': school})
+
+
+def _get_previous_leaf(section):
+    depth_first_traversal = section.get_root().get_annotated_list()
+    for (i, (s, ai)) in enumerate(depth_first_traversal):
+        if s.id == section.id:
+            # first element is the root, so we don't want to return that
+            prev = None
+            while i > 1 and not prev:
+                (node, x) = depth_first_traversal[i - 1]
+                if node and len(node.get_children()) > 0:
+                    i -= 1
+                else:
+                    prev = node
+            return prev
+    # made it through without finding ourselves? weird.
+    return None

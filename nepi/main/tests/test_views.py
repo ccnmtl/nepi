@@ -91,7 +91,7 @@ class TestLoggedInViews(TestCase):
 
     def test_root(self):
         r = self.c.get("/pages/%s/" % (self.h.name))
-        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.status_code, 302)
 
     def test_home(self):
         r = self.c.get("/home/")

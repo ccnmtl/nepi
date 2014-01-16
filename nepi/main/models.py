@@ -1,22 +1,11 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 from nepi.main.choices import COUNTRY_CHOICES, PROFILE_CHOICES
-from pagetree.models import Section, Hierarchy
+from pagetree.models import Section, Hierarchy, UserLocation, UserPageVisit
 
 
 '''Add change delete are by default for each django model.
    Need to add permissions for visibility.'''
-
-
-# from tobacco
-class UserVisit(models.Model):
-    section = models.ForeignKey(Section)
-    count = models.IntegerField(default=1)
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    def __unicode__(self):
-        return "%s %d %s" % (self.section, self.count, self.created)
 
 
 class Country(models.Model):
@@ -51,7 +40,6 @@ class Course(models.Model):
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, related_name="application_user")
-    visits = models.ManyToManyField(UserVisit, null=True, blank=True)
     profile_type = models.CharField(max_length=2, choices=PROFILE_CHOICES)
     country = models.ForeignKey(Country, null=True, blank=True)
     school = models.ForeignKey(School, null=True, default=None)
@@ -63,28 +51,33 @@ class UserProfile(models.Model):
     class Meta:
         ordering = ["user"]
 
-# All of the following taken from Tobacco
     def get_has_visited(self, section):
-        return len(self.visits.filter(section=section)) > 0
+        return section.get_uservisit(self.user) is not None
 
     def set_has_visited(self, sections):
         for sect in sections:
-            visits = self.visits.filter(section=sect)
-            if len(visits) > 0:
-                visits[0].count = visits[0].count + 1
-                visits[0].save()
-            else:
-                visit = UserVisit(section=sect)
-                visit.save()
-                self.visits.add(visit)
+            sect.user_pagevisit(self.user, "complete")
+            sect.user_visit(self.user)
 
-    def last_location(self):
-        visits = self.visits.order_by('-modified')
-        if len(visits) > 0:
-            return visits[0].section
-        else:
-            hierarchy = Hierarchy.get_hierarchy(self.role())
+    def last_location(self, hierarchy_name=None):
+        if hierarchy_name is None:
+            hierarchy_name = self.role()
+        hierarchy = Hierarchy.get_hierarchy(hierarchy_name)
+        try:
+            UserLocation.objects.get(user=self.user,
+                                     hierarchy=hierarchy)
+            return hierarchy.get_user_section(self.user)
+        except UserLocation.DoesNotExist:
             return hierarchy.get_first_leaf(hierarchy.get_root())
+
+    def percent_complete(self):
+        hierarchy = Hierarchy.get_hierarchy(self.role())
+        visits = UserPageVisit.objects.filter(section__hierarchy=hierarchy)
+        sections = Section.objects.filter(hierarchy=hierarchy)
+        if len(sections) > 0:
+            return int(len(visits) / float(len(sections)) * 100)
+        else:
+            return 0
 
     def display_name(self):
         return self.user.username
@@ -105,9 +98,3 @@ class UserProfile(models.Model):
             return "teacher"
         elif self.is_icap():
             return "icap"
-
-    def percent_complete(self):
-        hierarchy = Hierarchy.get_hierarchy(self.role())
-        profile = UserProfile.objects.get(user=self.user)
-        sections = Section.objects.filter(hierarchy=hierarchy)
-        return int(len(profile.visits.all()) / float(len(sections)) * 100)

@@ -93,26 +93,22 @@
 
     <div class="content-nav">
         <ul class="pager">
-        {% with section.get_previous as previous %}
-            {% if previous %}
-                <li class="previous">
-                    <a href="{{previous.get_absolute_url}}" id="previous" class="pager_button"><b>&larr;</b> {{previous.label}}</a>
-                </li>
-            {% endif %}
-        {% endwith %}
-        {% with section.get_next as next %}
-            {% if next %}
-                <li class="next">
-                {% if not next.is_root %}
-                    {% if next_unlocked %}
-                        <a href="{{next.get_absolute_url}}" id="next" class="pager_button">{{next.label}} <b>&rarr;</b></a>
-                    {% else %}
-                        <div id="next" class="pager_button">{{next.label}} <b>&rarr;</b></div>
-                    {% endif %}
+        {% if previous %}
+            <li class="previous">
+                <a href="{{previous.get_absolute_url}}" id="previous" class="pager_button"><b>&larr;</b> {{previous.label}}</a>
+            </li>
+        {% endif %}
+        {% if next %}
+            <li class="next">
+            {% if not next.is_root %}
+                {% if next_unlocked %}
+                    <a href="{{next.get_absolute_url}}" id="next" class="pager_button">{{next.label}} <b>&rarr;</b></a>
+                {% else %}
+                    <div id="next" class="pager_button">{{next.label}} <b>&rarr;</b></div>
                 {% endif %}
-                </li>
             {% endif %}
-        {% endwith %}
+            </li>
+        {% endif %}
         </ul>
     </div><!-- div id="content-nav" -->
 {% endblock %}

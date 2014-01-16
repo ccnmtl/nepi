@@ -1,19 +1,11 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from nepi.main.models import UserProfile, Country, School, UserVisit
+from nepi.main.models import UserProfile, Country, School
 from nepi.main.models import Course
 from datetime import datetime
 from .factories import CountryFactory, SchoolFactory, CourseFactory
 from .factories import UserProfileFactory, TeacherProfileFactory
 from .factories import ICAPProfileFactory, HierarchyFactory
-
-
-class TestUserVisit(TestCase):
-    def test_unicode(self):
-        h = HierarchyFactory()
-        s = h.get_root().get_first_leaf()
-        uv = UserVisit.objects.create(section=s)
-        self.assertTrue(str(uv).startswith("Welcome 1"))
 
 
 class TestCountry(TestCase):
@@ -134,7 +126,7 @@ class TestUserProfile(TestCase):
         h = HierarchyFactory()
         s = h.get_root().get_first_leaf()
         up.set_has_visited([s])
-        self.assertEqual(up.last_location(), s)
+        self.assertEqual(up.last_location("main"), s)
 
     def test_percent_complete(self):
         up = UserProfileFactory()
