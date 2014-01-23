@@ -3,7 +3,7 @@
 
 <h2>Choose a Login Option...</h2>
 
-
+{% comment %}
 <div>
     <div style="padding-bottom: 5px">
         <h6>Columbia Users:</h6>
@@ -19,10 +19,11 @@
         <input type="hidden" name="service" value="{{ wind_service }}" />
         <input type="hidden" name="destination" value="http://{{ request.get_host }}/accounts/windlogin/?next={{ next }}" />
         <h2>For Columbia University users:</h2>
-        <div class="uni-login"><input class="regbutton" type="submit" value="UNI LOG IN" /></div>
+        <div class="uni-login"><input class="regbutton" type="submit" value="UNI LOG IN" />
+        </div>
         </form>
  </div>   
-
+{% endcomment %}
 
 <form method="get" action="{{ wind_base }}login" class="well">
 <input type="hidden" name="service" value="{{ wind_service }}" />

@@ -10,26 +10,78 @@ from nepi.main.forms import AddSchoolForm, CreateCourseForm, ContactForm, \
 from nepi.main.models import Country, Course, UserProfile, School
 from pagetree.helpers import get_section_from_path, get_module, needs_submit
 import json
+from django.template import RequestContext
+from pagetree.models import Section
+from django.core.urlresolvers import reverse
+from django.utils import simplejson
+
+class rendered_with(object):
+    def __init__(self, template_name):
+        self.template_name = template_name
+
+    def __call__(self, func):
+        def rendered_func(request, *args, **kwargs):
+            items = func(request, *args, **kwargs)
+            if isinstance(items, type({})):
+                ctx = RequestContext(request)
+                return render_to_response(self.template_name,
+                                          items,
+                                          context_instance=ctx)
+            else:
+                return items
+
+        return rendered_func
+
+@login_required
+@rendered_with('main/index.html')
+def index(request):
+    """Need to determine here whether to redirect
+    to profile creation or registraion and profile creation"""
+    profiles = UserProfile.objects.filter(user=request.user)
+    if len(profiles) > 0 :
+        return {'user': request.user,
+                'profile': profiles[0]}
+    else:
+        return HttpResponseRedirect(reverse('create_profile'))
 
 
-@user_passes_test(lambda u: u.is_superuser)
-@render_to('main/edit_page.html')
-def edit_page(request, hierarchy, path):
-    section = get_section_from_path(path, hierarchy)
+
+def _edit_response(request, section, path):
     first_leaf = section.hierarchy.get_first_leaf(section)
 
     return dict(section=section,
                 module=get_module(section),
                 root=section.hierarchy.get_root(),
                 leftnav=_get_left_parent(first_leaf),
-                prev=first_leaf.get_previous(),
+                prev=_get_previous_leaf(first_leaf),
                 next=first_leaf.get_next())
 
 
+@user_passes_test(lambda u: u.is_staff)
+@rendered_with('main/edit_page.html')
+def edit_page(request, hierarchy, path):
+    section = get_section_from_path(path, hierarchy)
+    return _edit_response(request, section, path)
+
+
 @login_required
-@render_to('main/page.html')
+@rendered_with('main/page.html')
 def page(request, hierarchy, path):
     section = get_section_from_path(path, hierarchy)
+    return _response(request, section, path)
+
+
+@user_passes_test(lambda u: u.is_staff)
+@rendered_with('main/edit_page.html')
+def edit_resources(request, path):
+    section = get_section_from_path(path, "resources")
+    return _edit_response(request, section, path)
+
+
+@login_required
+@rendered_with('main/page.html')
+def resources(request, path):
+    section = get_section_from_path(path, "resources")
     return _response(request, section, path)
 
 
@@ -42,6 +94,7 @@ def _get_left_parent(first_leaf):
     return leftnav
 
 
+@rendered_with('main/page.html')
 def _response(request, section, path):
     h = section.hierarchy
     if request.method == "POST":
@@ -60,8 +113,8 @@ def _response(request, section, path):
                         proceed = not p.block().redirect_to_self_on_submit()
 
         if request.is_ajax():
-            j = json.dumps({'submitted': 'True'})
-            return HttpResponse(j, 'application/json')
+            json = simplejson.dumps({'submitted': 'True'})
+            return HttpResponse(json, 'application/json')
         elif proceed:
             return HttpResponseRedirect(section.get_next().get_absolute_url())
         else:
@@ -70,12 +123,7 @@ def _response(request, section, path):
     else:
         first_leaf = h.get_first_leaf(section)
         ancestors = first_leaf.get_ancestors()
-        try:
-            profile = UserProfile.objects.get(user=request.user)
-        except UserProfile.DoesNotExist:
-            profile = UserProfile(user=request.user,
-                                  profile_type='ST')
-            profile.save()
+        profile = UserProfile.objects.filter(user=request.user)[0]
 
         # Skip to the first leaf, make sure to mark these sections as visited
         if (section != first_leaf):
@@ -83,24 +131,102 @@ def _response(request, section, path):
             return HttpResponseRedirect(first_leaf.get_absolute_url())
 
         # the previous node is the last leaf, if one exists.
-        prev_page = _get_previous_leaf(first_leaf)
+        prev = _get_previous_leaf(first_leaf)
         next_page = first_leaf.get_next()
 
         # Is this section unlocked now?
-        can_access = section.gate_check(request.user)
+        can_access = _unlocked(first_leaf, request.user, prev, profile)
         if can_access:
             profile.set_has_visited([section])
 
-        return dict(section=section,
-                    needs_submit=needs_submit(section),
+        module = None
+        if not first_leaf.is_root() and len(ancestors) > 1:
+            module = ancestors[1]
+
+        # specify the leftnav parent up here.
+        leftnav = _get_left_parent(first_leaf)
+
+        return dict(section=first_leaf,
                     accessible=can_access,
-                    root=h.get_root(),
-                    previous=prev_page,
+                    module=module,
+                    root=ancestors[0],
+                    previous=prev,
                     next=next_page,
-                    depth=section.depth,
+                    depth=first_leaf.depth,
                     request=request,
-                    next_unlocked=(next_page is not None and
-                                   next_page.gate_check(request.user)))
+                    leftnav=leftnav)
+
+
+
+
+def accessible(section, user):
+    try:
+        previous = section.get_previous()
+        return _unlocked(section, user, previous, user.get_profile())
+    except AttributeError:
+        return False
+
+
+@login_required
+def is_accessible(request, section_slug):
+    section = Section.objects.get(slug=section_slug)
+    previous = section.get_previous()
+    response = {}
+
+    if _unlocked(section, request.user, previous, request.user.get_profile()):
+        response[section_slug] = "True"
+
+    json = simplejson.dumps(response)
+    return HttpResponse(json, 'application/json')
+
+def _get_previous_leaf(section):
+    depth_first_traversal = section.get_root().get_annotated_list()
+    for (i, (s, ai)) in enumerate(depth_first_traversal):
+        if s.id == section.id:
+            # first element is the root, so we don't want to return that
+            prev = None
+            while i > 1 and not prev:
+                (node, x) = depth_first_traversal[i - 1]
+                if node and len(node.get_children()) > 0:
+                    i -= 1
+                else:
+                    prev = node
+            return prev
+    # made it through without finding ourselves? weird.
+    return None
+
+UNLOCKED = ['resources']  # special cases
+
+
+def _unlocked(section, user, previous, profile):
+    """ if the user can proceed past this section """
+    if (not section or
+        section.is_root() or
+        profile.get_has_visited(section) or
+        section.slug in UNLOCKED or
+            section.hierarchy.name in UNLOCKED):
+        return True
+
+    if not previous or previous.is_root():
+        return True
+
+    for p in previous.pageblock_set.all():
+        if hasattr(p.block(), 'unlocked'):
+            if p.block().unlocked(user) is False:
+                return False
+
+    if previous.slug in UNLOCKED:
+        return True
+
+    # Special case for virtual patient as this activity was too big to fit
+    # into a "block"
+    if (previous.label == "Virtual Patient" and
+            not VirtualPatientActivityState.is_complete(user)):
+        return False
+
+    return profile.get_has_visited(previous)
+
+
 
 
 def test_view(request):
@@ -130,13 +256,6 @@ def captchatest(request):
     return render_to_response("main/captchatest.html", locals())
 
 """General Views"""
-
-
-@login_required
-@render_to('main/index.html')
-def index(request):
-    return dict()
-
 
 def logout_view(request):
     """When user logs out redirect to home page."""

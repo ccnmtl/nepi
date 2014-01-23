@@ -3,7 +3,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.conf import settings
 from django.views.generic import TemplateView
-#from pagetree.generic.views import PageView, EditView, InstructorView
 import os.path
 admin.autodiscover()
 import staticmedia
@@ -89,12 +88,18 @@ urlpatterns += patterns(
     (r'^quizblock/', include('quizblock.urls')),
     (r'^pagetree/', include('pagetree.urls')),
 
+    # (r'^edit/(?P<hierarchy>.*)/(?P<path>.*)$', 'nepi.main.views.edit_page',
+    #  {}, 'edit-page'),
+    # (r'^pages/', include('django.contrib.flatpages.urls')),
+
     # very important that this stays last and in this order
+    #(r'^pages/(?P<hierarchy>\w+)/edit/(?P<section_id>\d+)/$',
+    # 'nepi.main.views.edit_page_by_id'),
     (r'^pages/(?P<hierarchy>\w+)/edit/(?P<path>.*)$',
      'nepi.main.views.edit_page'),
     (r'^pages/(?P<hierarchy>\w+)/(?P<path>.*)$',
      'nepi.main.views.page'),
-    #url(r'^captcha/', include('captcha.urls')),
+    url(r'^captcha/', include('captcha.urls')),
 
 ) + staticmedia.serve()
 
