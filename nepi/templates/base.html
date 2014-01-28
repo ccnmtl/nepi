@@ -81,18 +81,9 @@
             <div class="navbar" id="primarynav">
               <div class="navbar-inner">
                 <div class="container">
-                  <ul class="nav">
-                  {% block primarynavtabs %}
-                    <li class="active"><a href="/">Example</a></li>
-                  {% endblock %}
-              {% block primarynavtabsextra %}{% endblock %}
-                  </ul>
-        
-                  <ul class="nav pull-right">
-                   
-                    {% block primarynavrightextra %}{% endblock %}
-                    <li class="active"><a href="/">Example</a></li>
-                  </ul>
+
+                  {% block extraprimarynav %}{% endblock %}
+                  {% block primarynavtabs %}{% endblock %}
         
                 </div>
               </div>

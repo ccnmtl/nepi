@@ -4,6 +4,7 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="/site_media/js/chapter_marker_player.js"></script>
+    <script type="text/javascript" src="/site_media/js/json2.js"></script>
     {% for block in section.pageblock_set.all %}
         {% renderjs block %}
     {% endfor %}
@@ -19,12 +20,35 @@
 {% block module_slug %}{{module.slug}}{% endblock %}
 
 {% block title %}{{section.label}}{% endblock %}
+{% block extrahead %}
+    {{ block.super }}
+    {% for block in section.pageblock_set.all %}
+        {% rendercss block %}
+    {% endfor %}
+{% endblock %}
 
+{% block extrajs %}
+    {{ block.super }}
+    {% for block in section.pageblock_set.all %}
+        {% renderjs block %}
+    {% endfor %}
+{% endblock %}
 {% block pagetitle %}<h2 class="pagetitle">{{section.label}}</h2>{% endblock %}
 
-      {% block primarynavtabs %}
-        <li class="active"><a href="/">Example</a></li>
-      {% endblock %}
+
+    {% block primarynavtabs %}
+        {% if user.is_authenticated %}
+            {% include "project_primary_nav.html" %}
+        {% endif %}
+    {% endblock %}
+
+      {% block extraprimarynav %}
+    {% if user.is_staff %}
+    <ul class="nav pull-right">
+        <li><a href="{{section.get_edit_url}}">Edit Page</a></li>        
+    </ul>
+    {% endif %}
+{% endblock %}
 
 {% block sidenav %}
         <!-- ###### Secondary Navigation ###### -->
@@ -101,11 +125,11 @@
         {% if next %}
             <li class="next">
             {% if not next.is_root %}
-                {% if next_unlocked %}
+                {% comment %}{% if next_unlocked %}{% endcomment %}
                     <a href="{{next.get_absolute_url}}" id="next" class="pager_button">{{next.label}} <b>&rarr;</b></a>
-                {% else %}
+                {% comment %}{% else %}
                     <div id="next" class="pager_button">{{next.label}} <b>&rarr;</b></div>
-                {% endif %}
+                {% endif %}{% endcomment %}
             {% endif %}
             </li>
         {% endif %}
