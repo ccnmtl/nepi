@@ -88,10 +88,6 @@ urlpatterns += patterns(
     (r'^quizblock/', include('quizblock.urls')),
     (r'^pagetree/', include('pagetree.urls')),
 
-    # (r'^edit/(?P<hierarchy>.*)/(?P<path>.*)$', 'nepi.main.views.edit_page',
-    #  {}, 'edit-page'),
-    # (r'^pages/', include('django.contrib.flatpages.urls')),
-
     # very important that this stays last and in this order
     #(r'^pages/(?P<hierarchy>\w+)/edit/(?P<section_id>\d+)/$',
     # 'nepi.main.views.edit_page_by_id'),
