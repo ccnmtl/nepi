@@ -141,35 +141,32 @@
            </div>
            {% endwith %}
      </div>        
- 
+
+
+
  <div id="edit-blocks-tab" class="tab-pane {% if not section.is_root %}active{% endif%}"/>
   {% if section.pageblock_set.count %}
-
- <p>Drag the <i class="icon-resize-vertical"></i> arrows to reorder pageblocks:</p>
- 
- {% for block in section.pageblock_set.all %}
+  <p>Drag the <i class="icon-resize-vertical"></i> arrows to reorder pageblocks:</p>
+  {% for block in section.pageblock_set.all %}
      <div class="row-fluid block-dragger {% cycle 'odd' 'even' %}" id="pageblock-{{block.id}}">    
         <div class="span1 draghandle">
              <i class="icon-resize-vertical"></i>
-         </div>
-     
+        </div>
         <div class="span3">
              <b><a data-toggle="modal" href="#edit-pageblock-{{block.id}}">{{block.block.display_name}}</a></b>
-         </div>
-     
-          <div class="span5">
+        </div>
+        <div class="span5">
               <a data-toggle="modal" href="#edit-pageblock-{{block.id}}">{{block.label}}</a>
               {% rendersummary block %}
         </div>
-      
-         <div class="span3">
+        <div class="span3">
             <div class="btn-group" style="float: right">
                   <a data-toggle="modal" class="btn btn-mini"
                   href="#edit-pageblock-{{block.id}}">
                   <i class="icon-edit"></i>
                  edit</a>
-      
-             <a href="{% url 'delete-pageblock' block.id %}" class="btn
+
+                <a href="{% url 'delete-pageblock' block.id %}" class="btn
              btn-danger btn-mini"><i class="icon-trash icon-white"></i> delete</a>
       
              {% if block.block.exportable %}
@@ -179,7 +176,7 @@
                    href="{% url 'export-pageblock-json' block.id %}"><i class="icon-download"></i> export</a>
       
             {% endif %}
-             </div>
+            </div>
         </div>
     </div>
   {% endfor %}
@@ -231,16 +228,27 @@
   
   </div>
  
+
+
+
  <div id="children-tab" class="tab-pane">
   <h2>Reorder Children</h2>
   <div class="well">
   <p>Drag and drop arrows to reorder children</p>
   <ul id="children-order-list">
      {% for child in section.get_children %}
+      <div class="row-fluid block-dragger {% cycle 'odd' 'even' %}" id="child-{{child.id}}">  
           <li class="draggable" id="child-{{child.id}}">
-            <span title="drag to reorder pageblocks" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span>
+          <div class="span1 draghandle">
+             <i class="icon-resize-vertical"></i>
+         </div>
+            {% comment %} <span title="drag to reorder pageblocks" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span>{% endcomment %}
              <a href="{{child.get_edit_url}}">{{child.label}}</a>
-        </li>
+<div class="span3">
+             <b><a href="{{child.get_edit_url}}">{{child.label}}</a></b>
+        </div>
+
+        </li></div>
      {% endfor %}
   </ul>
  </div>
