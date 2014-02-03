@@ -71,18 +71,18 @@ def page(request, hierarchy, path):
     return _response(request, section, path)
 
 
-@user_passes_test(lambda u: u.is_staff)
-@rendered_with('main/edit_page.html')
-def edit_resources(request, path):
-    section = get_section_from_path(path, "resources")
-    return _edit_response(request, section, path)
+# @user_passes_test(lambda u: u.is_staff)
+# @rendered_with('main/edit_page.html')
+# def edit_resources(request, path):
+#     section = get_section_from_path(path, "resources")
+#     return _edit_response(request, section, path)
 
 
-@login_required
-@rendered_with('main/page.html')
-def resources(request, path):
-    section = get_section_from_path(path, "resources")
-    return _response(request, section, path)
+# @login_required
+# @rendered_with('main/page.html')
+# def resources(request, path):
+#     section = get_section_from_path(path, "resources")
+#     return _response(request, section, path)
 
 
 def _get_left_parent(first_leaf):
