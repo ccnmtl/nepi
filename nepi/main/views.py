@@ -1,4 +1,3 @@
-from annoying.decorators import render_to
 from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -8,12 +7,12 @@ from django.shortcuts import render, render_to_response
 from nepi.main.forms import AddSchoolForm, CreateCourseForm, ContactForm, \
     CaptchaTestForm, LoginForm, CreateAccountForm
 from nepi.main.models import Country, Course, UserProfile, School
-from pagetree.helpers import get_section_from_path, get_module, needs_submit
-import json
+from pagetree.helpers import get_section_from_path, get_module
 from django.template import RequestContext
 from pagetree.models import Section
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
+
 
 class rendered_with(object):
     def __init__(self, template_name):
@@ -32,18 +31,18 @@ class rendered_with(object):
 
         return rendered_func
 
+
 @login_required
 @rendered_with('main/index.html')
 def index(request):
     """Need to determine here whether to redirect
     to profile creation or registraion and profile creation"""
     profiles = UserProfile.objects.filter(user=request.user)
-    if len(profiles) > 0 :
+    if len(profiles) > 0:
         return {'user': request.user,
                 'profile': profiles[0]}
     else:
         return HttpResponseRedirect(reverse('create_profile'))
-
 
 
 def _edit_response(request, section, path):
@@ -157,8 +156,6 @@ def _response(request, section, path):
                     leftnav=leftnav)
 
 
-
-
 def accessible(section, user):
     try:
         previous = section.get_previous()
@@ -179,21 +176,6 @@ def is_accessible(request, section_slug):
     json = simplejson.dumps(response)
     return HttpResponse(json, 'application/json')
 
-def _get_previous_leaf(section):
-    depth_first_traversal = section.get_root().get_annotated_list()
-    for (i, (s, ai)) in enumerate(depth_first_traversal):
-        if s.id == section.id:
-            # first element is the root, so we don't want to return that
-            prev = None
-            while i > 1 and not prev:
-                (node, x) = depth_first_traversal[i - 1]
-                if node and len(node.get_children()) > 0:
-                    i -= 1
-                else:
-                    prev = node
-            return prev
-    # made it through without finding ourselves? weird.
-    return None
 
 UNLOCKED = ['resources']  # special cases
 
@@ -220,13 +202,10 @@ def _unlocked(section, user, previous, profile):
 
     # Special case for virtual patient as this activity was too big to fit
     # into a "block"
-    if (previous.label == "Virtual Patient" and
-            not VirtualPatientActivityState.is_complete(user)):
+    if (previous.label == "Virtual Patient"):
         return False
 
     return profile.get_has_visited(previous)
-
-
 
 
 def test_view(request):
@@ -256,6 +235,7 @@ def captchatest(request):
     return render_to_response("main/captchatest.html", locals())
 
 """General Views"""
+
 
 def logout_view(request):
     """When user logs out redirect to home page."""
