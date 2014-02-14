@@ -5,14 +5,14 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
-from nepi.main.forms import AddSchoolForm, CreateCourseForm, ContactForm, \
+from nepi.main.forms import AddSchoolForm, ContactForm, \
     CaptchaTestForm, LoginForm, CreateAccountForm
 from nepi.main.models import Country, Course, UserProfile, School
 from pagetree.helpers import get_section_from_path, get_module, needs_submit
 import json
 from django.core.urlresolvers import reverse
 from django.views.generic.base import View
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 
 
 
@@ -341,12 +341,15 @@ def icapp_view_students(request):
 
 """Teacher Views"""
 # django site says to do this way but throws errors...
-#def CreateCourseView(CreateView):
-#    model = Course
-#    template_name = 'teacher/create_course.html'
-#    success_url = '/thank_you/'
+class CreateCourseView(CreateView):
+    model = Course
+    template_name = 'teacher/create_course.html'
+    success_url = '/thank_you/'
 
-
+class UpdateCourseView(UpdateView):
+    model = Course
+    template_name = 'teacher/create_course.html'
+    success_url = '/thank_you/'
 
 
 def course_students(request, crs_id):

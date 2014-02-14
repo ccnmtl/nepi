@@ -55,13 +55,6 @@ class AddSchoolForm(forms.Form):
     country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=True)
 
 
-class CreateCourseForm(forms.Form):
-    name = forms.CharField(max_length=50, required=True, label="Course Name")
-    semester = forms.CharField(max_length=50, required=True, label="Semester")
-    start_date = forms.DateField()
-    end_date = forms.DateField()
-
-
 class CaptchaTestForm(forms.Form):
     captcha = CaptchaField()
 
