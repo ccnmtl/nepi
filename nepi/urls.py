@@ -6,6 +6,11 @@ from django.views.generic import TemplateView
 import os.path
 admin.autodiscover()
 import staticmedia
+from nepi.main.views import CreateCourseView
+from nepi.main.models import Course
+from django.views.generic import CreateView
+
+
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
@@ -56,9 +61,9 @@ urlpatterns += patterns(
     (r'^icapp_view_students/$', 'nepi.main.views.icapp_view_students'),
 
     # Teacher related pages
-    #(r'^view_students/$', 'nepi.main.views.view_students'),
-    (r'^create_course/$', 'nepi.main.views.create_course'),
-    (r'^course_created/$', 'nepi.main.views.course_created'),
+    #(r'^view_students/$', 'nepi.main.views.view_students'), #'nepi.main.views.create_course'),
+    url(r'^create_course/$', CreateView.as_view(model=Course, template_name='teacher/create_course.html', success_url='/thank_you/')),
+    #(r'^course_created/$', 'nepi.main.views.course_created'),
     (r'^edit_course//(?P<crs_id>\d+)/$', 'nepi.main.views.edit_course'),
     (r'^course_students/$', 'nepi.main.views.course_students'),
     #(r'^courses/$', 'nepi.main.views.courses'),
@@ -90,7 +95,7 @@ urlpatterns += patterns(
 
 
 
-    (r'^activity_test/', 'nepi.main.views.activity_test'),
+    #(r'^activity_test/', 'nepi.main.views.activity_test'),
     # very important that this stays last and in this order
     #(r'^pages/(?P<hierarchy>\w+)/edit/(?P<section_id>\d+)/$',
     # 'nepi.main.views.edit_page_by_id'),
@@ -98,7 +103,6 @@ urlpatterns += patterns(
      'nepi.main.views.edit_page'),
     (r'^pages/(?P<hierarchy>\w+)/(?P<path>.*)$',
      'nepi.main.views.page'),
-    url(r'^captcha/', include('captcha.urls')),
 
 ) + staticmedia.serve()
 

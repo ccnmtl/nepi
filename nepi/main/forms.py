@@ -1,7 +1,8 @@
 from django import forms
 from nepi.main.choices import COUNTRY_CHOICES
 from captcha.fields import CaptchaField
-
+from captcha.models import CaptchaStore
+from captcha.helpers import captcha_image_url
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50, required=True)

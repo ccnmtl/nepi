@@ -10,6 +10,10 @@ from nepi.main.forms import AddSchoolForm, CreateCourseForm, ContactForm, \
 from nepi.main.models import Country, Course, UserProfile, School
 from pagetree.helpers import get_section_from_path, get_module, needs_submit
 import json
+from django.core.urlresolvers import reverse
+from django.views.generic.base import View
+from django.views.generic.edit import CreateView
+
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -189,7 +193,9 @@ def nepi_login(request):
         'form': form,
     })
 
-
+# when to use class based views vs generic class based views?
+# can you just have classes inherit generic based views
+# do mixin for being logged in?
 def home(request):
     '''Return homepage appropriate for user type.'''
     try:
@@ -334,39 +340,10 @@ def icapp_view_students(request):
 
 
 """Teacher Views"""
-
-
-def create_course(request):
-    """This is intended to allow teachers to create courses
-    which use the learning modules."""
-    if request.method == 'POST':
-        form = CreateCourseForm(request.POST)
-        user = request.user
-        user_profile = UserProfile.objects.get(user=user)
-        if form.is_valid():
-            semester = request.POST['semester']
-            start_date = request.POST['start_date']
-            end_date = request.POST['end_date']
-            name = request.POST['name']
-            get_school = School.objects.get(name=user_profile.school)
-            #  need to associate with hierarchy
-            new_course = Course(semester=semester,
-                                start_date=start_date,
-                                end_date=end_date,
-                                school=get_school,
-                                name=name)
-            new_course.save()
-            return HttpResponseRedirect('/thank_you/')
-        else:
-                raise forms.ValidationError(
-                    "Please enter appropriate fields for the form.")
-
-    else:
-        form = CreateCourseForm()  # An unbound form
-
-    return render(request, 'main/create_course.html', {
-        'form': form,
-    })
+def CreateCourseView(CreateView):
+    model = Course
+    template_name = 'teacher/create_course.html'
+    success_url = '/thank_you/'
 
 
 def edit_course(request, crs_id):
