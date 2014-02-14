@@ -88,6 +88,9 @@ urlpatterns += patterns(
     (r'^quizblock/', include('quizblock.urls')),
     (r'^pagetree/', include('pagetree.urls')),
 
+
+
+    (r'^activity_test/', 'nepi.main.views.activity_test'),
     # very important that this stays last and in this order
     #(r'^pages/(?P<hierarchy>\w+)/edit/(?P<section_id>\d+)/$',
     # 'nepi.main.views.edit_page_by_id'),
