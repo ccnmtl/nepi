@@ -340,44 +340,13 @@ def icapp_view_students(request):
 
 
 """Teacher Views"""
-def CreateCourseView(CreateView):
-    model = Course
-    template_name = 'teacher/create_course.html'
-    success_url = '/thank_you/'
+# django site says to do this way but throws errors...
+#def CreateCourseView(CreateView):
+#    model = Course
+#    template_name = 'teacher/create_course.html'
+#    success_url = '/thank_you/'
 
 
-def edit_course(request, crs_id):
-    """This is intended to allow teachers to create courses
-    which use the learning modules."""
-    if request.method == 'POST':
-        form = CreateCourseForm(request.POST)
-        user = request.user
-        user_profile = UserProfile.objects.get(user=user)
-        if form.is_valid():
-            semester = request.POST['semester']
-            start_date = request.POST['start_date']
-            end_date = request.POST['end_date']
-            name = request.POST['name']
-            get_country = Country.objects.get(country=user_profile.country)
-            get_school = School.objects.get(name=user_profile.school)
-            new_course = Course(semester=semester,
-                                start_date=start_date,
-                                end_date=end_date,
-                                country=get_country,
-                                school=get_school,
-                                name=name)
-            new_course.save()
-            return HttpResponseRedirect('/thank_you/')
-        else:
-                raise forms.ValidationError(
-                    "Please enter appropriate fields for the form.")
-
-    else:
-        form = CreateCourseForm()  # An unbound form
-
-    return render(request, 'teacher/create_course.html', {
-        'form': form,
-    })
 
 
 def course_students(request, crs_id):

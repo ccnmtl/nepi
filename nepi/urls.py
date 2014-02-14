@@ -6,10 +6,10 @@ from django.views.generic import TemplateView
 import os.path
 admin.autodiscover()
 import staticmedia
-from nepi.main.views import CreateCourseView
+#from nepi.main.views import CreateCourseView
 from nepi.main.models import Course
-from django.views.generic import CreateView
-
+from django.views.generic import CreateView, UpdateView
+from nepi.main.forms import CreateCourseForm
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -63,8 +63,7 @@ urlpatterns += patterns(
     # Teacher related pages
     #(r'^view_students/$', 'nepi.main.views.view_students'), #'nepi.main.views.create_course'),
     url(r'^create_course/$', CreateView.as_view(model=Course, template_name='teacher/create_course.html', success_url='/thank_you/')),
-    #(r'^course_created/$', 'nepi.main.views.course_created'),
-    (r'^edit_course//(?P<crs_id>\d+)/$', 'nepi.main.views.edit_course'),
+    (r'^edit_course/(?P<pk>\d+)/$', UpdateView.as_view(model=Course, template_name='teacher/create_course.html', success_url='/thank_you/')),#'nepi.main.views.edit_course'),
     (r'^course_students/$', 'nepi.main.views.course_students'),
     #(r'^courses/$', 'nepi.main.views.courses'),
     #(r'^current_courses/$', 'nepi.main.views.current_courses'),
