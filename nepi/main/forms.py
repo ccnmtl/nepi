@@ -1,7 +1,8 @@
 from django import forms
 from nepi.main.choices import COUNTRY_CHOICES
 from captcha.fields import CaptchaField
-
+from captcha.models import CaptchaStore
+from captcha.helpers import captcha_image_url
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50, required=True)
@@ -52,13 +53,6 @@ class AddTeacher(forms.Form):
 class AddSchoolForm(forms.Form):
     name = forms.CharField(max_length=50, required=True, label="School Name")
     country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=True)
-
-
-class CreateCourseForm(forms.Form):
-    name = forms.CharField(max_length=50, required=True, label="Course Name")
-    semester = forms.CharField(max_length=50, required=True, label="Semester")
-    start_date = forms.DateField()
-    end_date = forms.DateField()
 
 
 class CaptchaTestForm(forms.Form):

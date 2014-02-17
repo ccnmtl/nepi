@@ -98,3 +98,4 @@ class UserProfile(models.Model):
             return "teacher"
         elif self.is_icap():
             return "icap"
+

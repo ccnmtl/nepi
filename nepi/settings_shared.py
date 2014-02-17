@@ -134,6 +134,7 @@ INSTALLED_APPS = [
     'quizblock',
     'registration',
     'captcha',
+    'activities',
 ]
 
 LETTUCE_APPS = (

@@ -6,6 +6,10 @@ from django.views.generic import TemplateView
 import os.path
 admin.autodiscover()
 import staticmedia
+from nepi.main.views import CreateCourseView, UpdateCourseView
+from nepi.main.models import Course, School
+from django.views.generic import CreateView, UpdateView
+
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
@@ -34,6 +38,9 @@ urlpatterns = patterns(
      TemplateView.as_view(template_name="flatpages/school_added.html")),
 )
 
+
+
+
 urlpatterns += patterns(
     '',
     auth_urls,
@@ -52,17 +59,15 @@ urlpatterns += patterns(
 
     # ICAP related pages
     (r'^view_schools/$', 'nepi.main.views.view_schools'),
-    (r'^add_school/$', 'nepi.main.views.add_school'),
+    (r'^add_school/$',  CreateSchoolView.as_view()),
     (r'^icapp_view_students/$', 'nepi.main.views.icapp_view_students'),
 
     # Teacher related pages
-    #(r'^view_students/$', 'nepi.main.views.view_students'),
-    (r'^create_course/$', 'nepi.main.views.create_course'),
-    (r'^course_created/$', 'nepi.main.views.course_created'),
-    (r'^edit_course//(?P<crs_id>\d+)/$', 'nepi.main.views.edit_course'),
+    #(r'^view_students/$', 'nepi.main.views.view_students'), #'nepi.main.views.create_course'),
+    url(r'^create_course/$', CreateCourseView.as_view()),
+    (r'^edit_course/(?P<pk>\d+)/$', UpdateCourseView.as_view()),
     (r'^course_students/$', 'nepi.main.views.course_students'),
-    #(r'^courses/$', 'nepi.main.views.courses'),
-    #(r'^current_courses/$', 'nepi.main.views.current_courses'),
+    #(r'^teacher_courses/$', 'nepi.main.views.current_courses'),
     (r'^remove_student/$', 'nepi.main.views.remove_student'),
     (r'^course_results/$', 'nepi.main.views.course_results'),
 
@@ -88,6 +93,9 @@ urlpatterns += patterns(
     (r'^quizblock/', include('quizblock.urls')),
     (r'^pagetree/', include('pagetree.urls')),
 
+
+
+    #(r'^activity_test/', 'nepi.main.views.activity_test'),
     # very important that this stays last and in this order
     #(r'^pages/(?P<hierarchy>\w+)/edit/(?P<section_id>\d+)/$',
     # 'nepi.main.views.edit_page_by_id'),
@@ -95,7 +103,6 @@ urlpatterns += patterns(
      'nepi.main.views.edit_page'),
     (r'^pages/(?P<hierarchy>\w+)/(?P<path>.*)$',
      'nepi.main.views.page'),
-    url(r'^captcha/', include('captcha.urls')),
 
 ) + staticmedia.serve()
 
