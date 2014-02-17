@@ -42,7 +42,7 @@ def index(request):
         return {'user': request.user,
                 'profile': profiles[0]}
     else:
-        return HttpResponseRedirect(reverse('create_profile'))
+        return HttpResponseRedirect('register/')#reverse('create_profile'))
 
 
 def _edit_response(request, section, path):
@@ -343,6 +343,7 @@ def register(request):
                         new_user.last_name = request.POST['last_name']
                         new_user.save()
                         new_profile = UserProfile(user=new_user)
+                        human = True
                         try:
                             get_country = \
                                 Country.objects.get(
