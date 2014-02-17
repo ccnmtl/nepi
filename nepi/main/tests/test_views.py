@@ -70,29 +70,29 @@ class TestBasicViews(TestCase):
         self.assertEqual(r.status_code, 200)
 
 
-# class TestLoggedInViews(TestCase):
-#     def setUp(self):
-#         self.h = HierarchyFactory()
-#         self.s = self.h.get_root().get_first_leaf()
-#         self.u = UserFactory(is_superuser=True)
-#         self.up = UserProfileFactory(user=self.u)
-#         self.u.set_password("test")
-#         self.u.save()
-#         self.c = Client()
-#         self.c.login(username=self.u.username, password="test")
+class TestLoggedInViews(TestCase):
+    def setUp(self):
+        self.h = HierarchyFactory()
+        self.s = self.h.get_root().get_first_leaf()
+        self.u = UserFactory(is_superuser=True)
+        self.up = UserProfileFactory(user=self.u)
+        self.u.set_password("test")
+        self.u.save()
+        self.c = Client()
+        self.c.login(username=self.u.username, password="test")
 
-#     def test_edit_page_form(self):
-#         r = self.c.get("/pages/%s/edit/%s/" % (self.h.name, self.s.slug))
-#         self.assertEqual(r.status_code, 200)
+    def test_edit_page_form(self):
+        r = self.c.get("/pages/%s/edit/%s/" % (self.h.name, self.s.slug))
+        self.assertEqual(r.status_code, 200)
 
-#     def test_page(self):
-#         r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
-#         self.assertEqual(r.status_code, 200)
+    def test_page(self):
+        r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
+        self.assertEqual(r.status_code, 200)
 
-#     def test_root(self):
-#         r = self.c.get("/pages/%s/" % (self.h.name))
-#         self.assertEqual(r.status_code, 302)
+    def test_root(self):
+        r = self.c.get("/pages/%s/" % (self.h.name))
+        self.assertEqual(r.status_code, 200)
 
-#     def test_home(self):
-#         r = self.c.get("/home/")
-#         self.assertEqual(r.status_code, 200)
+    def test_home(self):
+        r = self.c.get("/home/")
+        self.assertEqual(r.status_code, 200)

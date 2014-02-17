@@ -3,6 +3,27 @@ from django.contrib.auth.models import User
 from nepi.main.models import UserProfile, Country, School
 from nepi.main.models import Course
 from datetime import datetime
+from factories import CountryFactory, SchoolFactory, CourseFactory
+from factories import UserProfileFactory, TeacherProfileFactory
+from factories import ICAPProfileFactory, HierarchyFactory
+
+
+class TestCountry(TestCase):
+    def test_unicode(self):
+        c = CountryFactory()
+        self.assertEqual(str(c), "LS")
+
+
+class TestSchool(TestCase):
+    def test_unicode(self):
+        s = SchoolFactory()
+        self.assertEqual(str(s), "Test School")
+
+
+class TestCourse(TestCase):
+    def test_unicode(self):
+        c = CourseFactory()
+        self.assertEqual(str(c), "A Course")
 
 
 class TestUserProfile(TestCase):
