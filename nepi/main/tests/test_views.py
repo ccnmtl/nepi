@@ -3,7 +3,7 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 from nepi.main.views import contact
 from nepi.main.models import UserProfile, Country
-from .factories import UserFactory, HierarchyFactory, UserProfileFactory
+from factories import UserFactory, HierarchyFactory, UserProfileFactory
 
 
 class TestBasicViews(TestCase):
