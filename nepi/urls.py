@@ -6,8 +6,8 @@ from django.views.generic import TemplateView
 import os.path
 admin.autodiscover()
 import staticmedia
-from nepi.main.views import CreateCourseView, UpdateCourseView, CreateSchoolView
-
+from nepi.main.views import CreateCourseView, UpdateCourseView
+from nepi.main.views import CreateSchoolView, UpdateSchoolView
 from nepi.main.models import Course, School
 from django.views.generic import CreateView, UpdateView
 
@@ -60,6 +60,7 @@ urlpatterns += patterns(
     # ICAP related pages
     (r'^view_schools/$', 'nepi.main.views.view_schools'),
     (r'^add_school/$',  CreateSchoolView.as_view()),
+    (r'^edit_school/(?P<pk>\d+)/$', UpdateSchoolView.as_view()),
     (r'^icapp_view_students/$', 'nepi.main.views.icapp_view_students'),
 
     # Teacher related pages

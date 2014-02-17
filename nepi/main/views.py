@@ -280,6 +280,12 @@ class CreateSchoolView(CreateView):
     template_name = 'icap/create_school.html'
     success_url = '/thank_you/'
 
+class UpdateSchoolView(UpdateView):
+    model = School
+    template_name = 'icap/update_school.html'
+    success_url = '/thank_you/'
+
+
 def view_schools(request):
     """Return all school for viewing to ICAPP personnel."""
     schools = School.objects.all()
