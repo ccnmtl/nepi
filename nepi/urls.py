@@ -6,10 +6,10 @@ from django.views.generic import TemplateView
 import os.path
 admin.autodiscover()
 import staticmedia
-from nepi.main.views import CreateCourseView, UpdateCourseView
+from nepi.main.views import CreateCourseView, UpdateCourseView, CreateSchoolView
+
 from nepi.main.models import Course, School
 from django.views.generic import CreateView, UpdateView
-
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
