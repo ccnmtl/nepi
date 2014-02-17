@@ -99,3 +99,8 @@ class UserProfile(models.Model):
         elif self.is_icap():
             return "icap"
 
+
+class PendingTeachers(models.Model):
+    user_profile = models.ForeignKey(UserProfile, related_name="pending_teachers")
+    school = models.ForeignKey(School, null=True, default=None)
+
