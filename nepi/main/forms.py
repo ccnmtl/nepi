@@ -5,6 +5,7 @@ from captcha.models import CaptchaStore
 from captcha.helpers import captcha_image_url
 from django.http import HttpResponseRedirect, HttpResponse
 
+
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50, required=True)
     password = forms.CharField(widget=forms.PasswordInput,
@@ -49,9 +50,9 @@ class ContactForm(forms.Form):
     message = forms.CharField(max_length=500, required=True,
                               widget=forms.Textarea)
 
-
     def send_email(self):
         pass
+
 
 class AddTeacher(forms.Form):
     pass
@@ -68,6 +69,3 @@ class CaptchaTestForm(forms.Form):
 
 class AjaxForm(forms.Form):
     captcha = CaptchaField()
-
-
- 

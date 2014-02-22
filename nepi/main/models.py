@@ -101,6 +101,6 @@ class UserProfile(models.Model):
 
 
 class PendingTeachers(models.Model):
-    user_profile = models.ForeignKey(UserProfile, related_name="pending_teachers")
+    user_profile = models.ForeignKey(UserProfile,
+                                     related_name="pending_teachers")
     school = models.ForeignKey(School, null=True, default=None)
-
