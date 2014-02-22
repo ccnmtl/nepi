@@ -221,13 +221,9 @@ def home(request):
         return HttpResponseRedirect('/')
 
 
-# confused a bit about whether validation
-# and assigning variables is automatic...
-class RegistrationView(FormView):
-    '''changing registration view to form'''
-    template_name = 'registration_form.html'
-    form_class = CreateAccountForm
-    success_url = '/thank_you_reg/'
+
+
+
     # should there be methods for registering
     # teacher and checking country?
 
@@ -237,35 +233,44 @@ class RegistrationView(FormView):
     # online see example with
     # form = CreateAccountForm(data=request.POST)
     # under class def does this mean if method post?
+# confused a bit about whether validation
+# and assigning variables is automatic...
+
+
+class RegistrationView(FormView):
+    '''changing registration view to form'''
+    template_name = 'registration_form.html'
+    form_class = CreateAccountForm
+    success_url = '/thank_you_reg/'
 
     def form_valid(self, form):
         # this prints so it is definately valid
         # print self.request.method
-        if self.request.method == 'POST':
-            if 'password1' not in self.request.POST \
-                    or 'password2' not in self.request.POST:
-                raise forms.ValidationError("You are missing a password.")
-            if self.request.POST['password1'] \
-                    != self.request.POST['password2']:
-                raise forms.ValidationError(
-                            "passwords dont match each other")
-            try:
-                User.objects.get(username=self.request.POST['username'])
-                raise forms.ValidationError("this username already exists")
-            except User.DoesNotExist:
-                new_user = User.objects.create_user(
-                            username=self.request.POST['username'],
-                            email=self.request.POST['email'],
-                            password=self.request.POST['password1'])
-                new_user.first_name = self.request.POST['first_name']
-                new_user.last_name = self.request.POST['last_name']
-                new_user.save()
-                new_profile = UserProfile(user=new_user)
-                new_profile.profile_type = 'ST'
-                new_profile.save()
-                if self.request.POST['profile_type'] == 'TE':
-                    pending = PendingTeachers(user_profile=new_profile)
-                    pending.save()
+        form_data = form.cleaned_data
+        if 'password1' not in form_data \
+                or 'password2' not in form_data:
+            raise forms.ValidationError("You are missing a password.")
+        if form_data['password1'] \
+                != form_data['password2']:
+            raise forms.ValidationError(
+                        "passwords dont match each other")
+        try:
+            User.objects.get(username=form_data['username'])
+            raise forms.ValidationError("this username already exists")
+        except User.DoesNotExist:
+            new_user = User.objects.create_user(
+                        username=form_data['username'],
+                        email=form_data['email'],
+                        password=form_data['password1'])
+            new_user.first_name = form_data['first_name']
+            new_user.last_name = form_data['last_name']
+            new_user.save()
+            new_profile = UserProfile(user=new_user)
+            new_profile.profile_type = 'ST'
+            new_profile.save()
+            if form_data['profile_type'] == 'TE':
+                pending = PendingTeachers(user_profile=new_profile)
+                pending.save()
         return super(RegistrationView, self).form_valid(form)
 
 

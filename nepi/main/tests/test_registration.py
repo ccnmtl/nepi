@@ -1,11 +1,10 @@
 '''Creating test just for registration since it is prone to changing'''
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 from nepi.main.models import UserProfile, Country, School
 from nepi.main.models import Course, PendingTeachers
 from nepi.main.views import RegistrationView
 from datetime import datetime
-from django.test import TestCase, RequestFactory
 
 
 class TestRegistration(TestCase):
