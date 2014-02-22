@@ -29,29 +29,29 @@ class TestRegistration(TestCase):
                             username="teacher", email="teacher@email.com",
                             password="teacher")
         self.teacher.save()
-        self.registration_view = RegistrationView()
-
-#    def test_student_registration_and_login(self):
-#        '''when students are registered they should not be added to pending'''
-#        view = RegistrationView()
-#        view.kwargs = {"first_name": "firstname", "last_name": "lastname",
-#             "username": "username", "email": "test_email@email.com",
-#             "password1": "password", "password2": "password",
-#             "country" : "LS", "profile_type":"ST"}
-#        response = view.form_valid(view.kwargs)
-        #self.assertEqual(response.status_code, 302)
-        #self.assertEqual(PendingTeachers.objects.count(), 0)
 
 
-#    def test_teacher_registration_and_login(self):
-#        '''when teachers register they should be added to the pending teachers table'''
-#        request = self.factory.post(
-#            '/register/',
-#            {"first_name": "firstname", "last_name": "lastname",
-#             "username": "username", "email": "test_email@email.com",
-#             "password1": "password", "password2": "password",
-#             "country" : "LS", "profile_type":"TE"})
-#        response = self.registration_view.form_valid(form=request)
-#        self.assertEqual(response.status_code, 302)
-#        self.assertTrue(PendingTeachers.objects.count() > 0)
-#        self.assertTrue(PendingTeachers.objects.filter(fist_name="firstname"))
+    def test_student_registration_and_login(self):
+        '''when students are registered they should not be added to pending'''
+        request = self.factory.post('/register/',
+            {"first_name": "firstname", "last_name": "lastname",
+            "username": "username", "email": "test_email@email.com",
+            "password1": "password", "password2": "password",
+            "country" : "LS", "profile_type":"ST"})
+        response = RegistrationView.as_view()(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(PendingTeachers.objects.count(), 0)
+
+
+    def test_teacher_registration_and_login(self):
+        '''when teachers register they should be added to the pending teachers table'''
+        request = self.factory.post(
+            '/register/',
+            {"first_name": "firstname", "last_name": "lastname",
+             "username": "username", "email": "test_email@email.com",
+             "password1": "password", "password2": "password",
+             "country" : "LS", "profile_type":"TE"})
+        response = RegistrationView.as_view()(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(PendingTeachers.objects.count() > 0)
+        self.assertTrue(PendingTeachers.objects.filter(fist_name="firstname"))
