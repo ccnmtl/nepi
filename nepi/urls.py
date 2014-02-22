@@ -8,7 +8,7 @@ admin.autodiscover()
 import staticmedia
 from nepi.main.views import CreateCourseView, UpdateCourseView
 from nepi.main.views import CreateSchoolView, UpdateSchoolView
-from nepi.main.views import ContactView
+from nepi.main.views import ContactView, RegistrationView
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
@@ -52,7 +52,7 @@ urlpatterns += patterns(
     # flat and universally accessible pages
     (r'^home/$', 'nepi.main.views.home'),
     (r'^contact/$', ContactView.as_view()),
-    (r'^register/$', 'nepi.main.views.register'),
+    url(r'^register/$', RegistrationView.as_view(), name='register'),
 
     # ICAP related pages
     (r'^add_school/$',  CreateSchoolView.as_view()),

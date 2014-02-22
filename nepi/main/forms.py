@@ -33,9 +33,12 @@ class CreateAccountForm(forms.Form):
     password2 = forms.CharField(
         max_length=25, widget=forms.PasswordInput, required=True,
         label="Confirm Password")
-    email = forms.EmailField()
-    country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=True)
-    captcha = CaptchaField()
+    email = forms.EmailField(required=False)
+    # do I set email to optional here?
+    #country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=False)
+    profile_type = forms.ChoiceField(choices=TEACHER_CHOICES, required=True)
+    # captcha = CaptchaField()
+    # check if this needs to be explicitly required or it that is automatic
 
 
 class ContactForm(forms.Form):
@@ -65,3 +68,6 @@ class CaptchaTestForm(forms.Form):
 
 class AjaxForm(forms.Form):
     captcha = CaptchaField()
+
+
+ 
