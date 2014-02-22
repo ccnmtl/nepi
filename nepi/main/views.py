@@ -7,7 +7,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 from nepi.main.forms import CreateAccountForm, ContactForm, \
     CaptchaTestForm, LoginForm
-from nepi.main.models import Country, Course, UserProfile, School, PendingTeachers
+from nepi.main.models import Country, Course, UserProfile
+from nepi.main.models import School, PendingTeachers
 from pagetree.helpers import get_section_from_path, get_module, needs_submit
 import json
 from django.views.generic.edit import FormView
@@ -220,8 +221,6 @@ def home(request):
         return HttpResponseRedirect('/')
 
 
-
-
 # confused a bit about whether validation
 # and assigning variables is automatic...
 class RegistrationView(FormView):
@@ -240,30 +239,33 @@ class RegistrationView(FormView):
     # under class def does this mean if method post?
 
     def form_valid(self, form):
-        #print  self.request.method
+        # this prints so it is definately valid
+        # print self.request.method
         if self.request.method == 'POST':
-           if 'password1' not in self.request.POST or 'password2' not in self.request.POST:
-              raise forms.ValidationError("You are missing a password.")
-           if self.request.POST['password1'] != self.request.POST['password2']:
-              raise forms.ValidationError(
+            if 'password1' not in self.request.POST \
+                    or 'password2' not in self.request.POST:
+                raise forms.ValidationError("You are missing a password.")
+            if self.request.POST['password1'] \
+                    != self.request.POST['password2']:
+                raise forms.ValidationError(
                             "passwords dont match each other")
-           try:
-               User.objects.get(username=self.request.POST['username'])
-               raise forms.ValidationError("this username already exists")
-           except User.DoesNotExist:
-               new_user = User.objects.create_user(
+            try:
+                User.objects.get(username=self.request.POST['username'])
+                raise forms.ValidationError("this username already exists")
+            except User.DoesNotExist:
+                new_user = User.objects.create_user(
                             username=self.request.POST['username'],
                             email=self.request.POST['email'],
                             password=self.request.POST['password1'])
-               new_user.first_name = self.request.POST['first_name']
-               new_user.last_name = self.request.POST['last_name']
-               new_user.save()
-               new_profile = UserProfile(user=new_user)
-               new_profile.profile_type = 'ST'
-               new_profile.save()
-               if self.request.POST['profile_type'] == 'TE':
-                   pending = PendingTeachers(user_profile=new_profile)
-                   pending.save()
+                new_user.first_name = self.request.POST['first_name']
+                new_user.last_name = self.request.POST['last_name']
+                new_user.save()
+                new_profile = UserProfile(user=new_user)
+                new_profile.profile_type = 'ST'
+                new_profile.save()
+                if self.request.POST['profile_type'] == 'TE':
+                    pending = PendingTeachers(user_profile=new_profile)
+                    pending.save()
         return super(RegistrationView, self).form_valid(form)
 
 
@@ -285,6 +287,8 @@ class UpdateSchoolView(UpdateView):
 
 """Teacher Views"""
 # django site says to do this way but throws errors...
+
+
 class CreateCourseView(CreateView):
     model = Course
     template_name = 'teacher/create_course.html'
