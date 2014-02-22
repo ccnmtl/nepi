@@ -286,33 +286,6 @@ class UpdateSchoolView(UpdateView):
     success_url = '/thank_you/'
 
 
-def view_schools(request):
-    """Return all school for viewing to ICAPP personnel."""
-    schools = School.objects.all()
-    return render(request, 'icap/view_schools.html', {'schools': schools})
-
-
-def icapp_view_students(request):
-    """Allow teacher to view progress of students within a
-    course."""
-    users = User.objects.all()
-    # filter(user_profile.profile_type='ST')
-    # find and return users with certain kind of profile
-    students = []
-    for u in users:
-        try:
-            profile = UserProfile.objects.get(user=u)
-            if profile.profile_type == 'ST':
-                students.append(u)
-        except UserProfile.DoesNotExist:
-            pass
-    # students# = UserProfile.objects.filter(profile_type='ST')
-    # Profile.objects.filter(profile_type='ST')
-    return render(request,
-                  'icap/icapp_show_students.html',
-                  {'students': students})
-
-
 """Teacher Views"""
 # django site says to do this way but throws errors...
 class CreateCourseView(CreateView):

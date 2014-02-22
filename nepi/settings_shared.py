@@ -183,7 +183,8 @@ COMPRESS_ROOT = "media/"
 
 # WIND settings
 
-AUTHENTICATION_BACKENDS = ('djangowind.auth.WindAuthBackend',
+AUTHENTICATION_BACKENDS = (#'django_auth_ldap.backend.LDAPBackend',
+                           'djangowind.auth.WindAuthBackend',
                            'django.contrib.auth.backends.ModelBackend', )
 WIND_BASE = "https://wind.columbia.edu/"
 WIND_SERVICE = "cnmtl_full_np"

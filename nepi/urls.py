@@ -46,8 +46,6 @@ urlpatterns += patterns(
     logout_page,
     url(r'^$', 'nepi.main.views.index', name="index"),
     (r'^admin/', include(admin.site.urls)),
-
-    #login/logout
     (r'^login/$', 'nepi.main.views.nepi_login'),
     (r'^logout/$', 'nepi.main.views.logout_view'),
 
@@ -57,10 +55,8 @@ urlpatterns += patterns(
     (r'^register/$', 'nepi.main.views.register'),
 
     # ICAP related pages
-    (r'^view_schools/$', 'nepi.main.views.view_schools'),
     (r'^add_school/$',  CreateSchoolView.as_view()),
     (r'^edit_school/(?P<pk>\d+)/$', UpdateSchoolView.as_view()),
-    (r'^icapp_view_students/$', 'nepi.main.views.icapp_view_students'),
 
     # Teacher related pages
     #(r'^view_students/$', 'nepi.main.views.view_students'), #'nepi.main.views.create_course'),
