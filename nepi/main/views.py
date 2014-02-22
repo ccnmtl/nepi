@@ -218,16 +218,10 @@ def home(request):
     except User.DoesNotExist:
         return HttpResponseRedirect('/')
 
-
-
-
-
     # should there be methods for registering
     # teacher and checking country?
-
     # should form validation be done in the Form Class
     # or in the View
-
     # online see example with
     # form = CreateAccountForm(data=request.POST)
     # under class def does this mean if method post?
@@ -251,15 +245,15 @@ class RegistrationView(FormView):
         if form_data['password1'] \
                 != form_data['password2']:
             raise forms.ValidationError(
-                        "passwords dont match each other")
+                "passwords dont match each other")
         try:
             User.objects.get(username=form_data['username'])
             raise forms.ValidationError("this username already exists")
         except User.DoesNotExist:
             new_user = User.objects.create_user(
-                        username=form_data['username'],
-                        email=form_data['email'],
-                        password=form_data['password1'])
+                username=form_data['username'],
+                email=form_data['email'],
+                password=form_data['password1'])
             new_user.first_name = form_data['first_name']
             new_user.last_name = form_data['last_name']
             new_user.save()

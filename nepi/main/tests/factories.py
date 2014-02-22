@@ -4,14 +4,17 @@ from nepi.main.models import Country, School, Course, UserProfile
 from pagetree.models import Hierarchy
 import factory
 
+
 class UserFactory(factory.DjangoModelFactory):
     FACTORY_FOR = User
     username = factory.Sequence(lambda n: "user%d" % n)
+
 
 class CountryFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Country
     name = "LS"
     region = "Region 1"
+
 
 class SchoolFactory(factory.DjangoModelFactory):
     FACTORY_FOR = School
