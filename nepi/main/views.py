@@ -149,6 +149,8 @@ class ContactView(FormView):
     form_class = ContactForm
     success_url = '/thanks/'
 
+    form_data = form.cleaned_data
+
     def form_valid(self, form):
         if self.request.method == 'POST':
             sender = self.request.POST['sender'],
