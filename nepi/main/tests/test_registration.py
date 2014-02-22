@@ -54,4 +54,3 @@ class TestRegistration(TestCase):
         response = RegistrationView.as_view()(request)
         self.assertEqual(response.status_code, 302)
         self.assertTrue(PendingTeachers.objects.count() > 0)
-        self.assertTrue(PendingTeachers.objects.filter(fist_name="firstname"))
