@@ -18,9 +18,6 @@ class TestRegistration(TestCase):
                              semester="Fall 2018", name="Course",
                              start_date=datetime.now(),
                              end_date=datetime.now())
-
-
-
         self.student = User(first_name="student", last_name="student",
                             username="student", email="student@email.com",
                             password="student")
@@ -30,27 +27,26 @@ class TestRegistration(TestCase):
                             password="teacher")
         self.teacher.save()
 
-
     def test_student_registration_and_login(self):
         '''when students are registered they should not be added to pending'''
         request = self.factory.post('/register/',
             {"first_name": "firstname", "last_name": "lastname",
-            "username": "username", "email": "test_email@email.com",
-            "password1": "password", "password2": "password",
-            "country" : "LS", "profile_type":"ST"})
+             "username": "username", "email": "test_email@email.com",
+             "password1": "password", "password2": "password",
+             "country": "LS", "profile_type": "ST"})
         response = RegistrationView.as_view()(request)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(PendingTeachers.objects.count(), 0)
 
-
     def test_teacher_registration_and_login(self):
-        '''when teachers register they should be added to the pending teachers table'''
+        '''when teachers register they should
+        be added to the pending teachers table'''
         request = self.factory.post(
             '/register/',
             {"first_name": "firstname", "last_name": "lastname",
              "username": "username", "email": "test_email@email.com",
              "password1": "password", "password2": "password",
-             "country" : "LS", "profile_type":"TE"})
+             "country": "LS", "profile_type": "TE"})
         response = RegistrationView.as_view()(request)
         self.assertEqual(response.status_code, 302)
         self.assertTrue(PendingTeachers.objects.count() > 0)
