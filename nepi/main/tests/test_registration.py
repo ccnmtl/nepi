@@ -29,7 +29,8 @@ class TestRegistration(TestCase):
 
     def test_student_registration_and_login(self):
         '''when students are registered they should not be added to pending'''
-        request = self.factory.post('/register/',
+        request = self.factory.post(
+            '/register/',
             {"first_name": "firstname", "last_name": "lastname",
              "username": "username", "email": "test_email@email.com",
              "password1": "password", "password2": "password",
