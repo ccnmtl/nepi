@@ -8,7 +8,7 @@ admin.autodiscover()
 import staticmedia
 from nepi.main.views import CreateCourseView, UpdateCourseView
 from nepi.main.views import CreateSchoolView, UpdateSchoolView
-
+from nepi.main.views import ContactView
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
@@ -23,7 +23,7 @@ if hasattr(settings, 'WIND_BASE'):
     logout_page = (
         r'^accounts/logout/$',
         'djangowind.views.logout',
-        {'next_page': redirect_after_logout})
+        {'next_page': '/'})
 
 urlpatterns = patterns(
     '',
@@ -51,7 +51,7 @@ urlpatterns += patterns(
 
     # flat and universally accessible pages
     (r'^home/$', 'nepi.main.views.home'),
-    (r'^contact/$', 'nepi.main.views.contact'),
+    (r'^contact/$', ContactView.as_view()),
     (r'^register/$', 'nepi.main.views.register'),
 
     # ICAP related pages

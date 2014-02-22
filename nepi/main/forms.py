@@ -3,6 +3,7 @@ from nepi.main.choices import COUNTRY_CHOICES
 from captcha.fields import CaptchaField
 from captcha.models import CaptchaStore
 from captcha.helpers import captcha_image_url
+from django.http import HttpResponseRedirect, HttpResponse
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50, required=True)
@@ -40,11 +41,14 @@ class CreateAccountForm(forms.Form):
 class ContactForm(forms.Form):
     '''This is a form class that will be returned
     later in the contact form view.'''
+    sender = forms.EmailField(required=True)
     subject = forms.CharField(max_length=100, required=True)
     message = forms.CharField(max_length=500, required=True,
                               widget=forms.Textarea)
-    sender = forms.EmailField(required=True)
 
+
+    def send_email(self):
+        pass
 
 class AddTeacher(forms.Form):
     pass

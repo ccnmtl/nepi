@@ -5,11 +5,12 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
-from nepi.main.forms import AddSchoolForm, ContactForm, \
-    CaptchaTestForm, LoginForm, CreateAccountForm
+from nepi.main.forms import CreateAccountForm, ContactForm, \
+    CaptchaTestForm, LoginForm
 from nepi.main.models import Country, Course, UserProfile, School
 from pagetree.helpers import get_section_from_path, get_module, needs_submit
 import json
+from django.views.generic.edit import FormView
 from django.core.urlresolvers import reverse
 from django.views.generic.base import View
 from django.views.generic.edit import CreateView, UpdateView
@@ -126,6 +127,7 @@ def captchatest(request):
 
     return render_to_response("main/captchatest.html", locals())
 
+
 """General Views"""
 
 
@@ -141,30 +143,30 @@ def logout_view(request):
     return HttpResponseRedirect('/')
 
 
-def contact(request):
-    '''Contact someone regarding the project - WHO???'''
-    if request.method == 'POST':  # If the form has been submitted...
-        form = ContactForm(request.POST)  # A form bound to the POST data
-        if form.is_valid():  # All validation rules pass
-            subject = form.cleaned_data['subject']
-            message = form.cleaned_data['message']
-            sender = form.cleaned_data['sender']
-            recipients = ['cdunlop@columbia.edu']
-            from django.core.mail import send_mail
-            send_mail(subject, message, sender, recipients)
-            return render_to_response('thanks.html')
-    else:
-        form = ContactForm()  # An unbound form
+class ContactView(FormView):
+    template_name = 'main/contact.html'
+    form_class = ContactForm
+    success_url = '/thanks/'
 
-    return render(request, 'main/contact.html', {
-        'form': form,
-    })
+    def form_valid(self, form):
+        if self.request.method == 'POST':
+            sender = self.request.POST['sender'],
+            subject = self.request.POST['subject'],
+            message = self.request.POST['message'],
+            #print sender
+            from django.core.mail import send_mail
+            recipients = ['cdunlop@columbia.edu']
+            #print recipients
+            send_mail(subject, message, sender, recipients)
+        #else:
+        #    data = None
+        return super(ContactView, self).form_valid(form)
 
 
 def thanks_course(request, course_id):
     """Returns thanks for joining course page."""
     # XXX: F821 undefined name 'form'
-    return render(request, 'student/thanks_course.html', {'form': form, })
+    return render(request, 'student/thanks_course.html')
 
 
 """More General Views"""
@@ -192,6 +194,7 @@ def nepi_login(request):
     return render(request, 'main/login.html', {
         'form': form,
     })
+
 
 # when to use class based views vs generic class based views?
 # can you just have classes inherit generic based views
@@ -275,14 +278,16 @@ def register(request):
 ############
 """NEPI Peoples Views"""
 
+
 class CreateSchoolView(CreateView):
     model = School
-    template_name = 'icap/create_school.html'
+    template_name = 'icap/add_school.html'
     success_url = '/thank_you/'
+
 
 class UpdateSchoolView(UpdateView):
     model = School
-    template_name = 'icap/update_school.html'
+    template_name = 'icap/add_school.html'
     success_url = '/thank_you/'
 
 
@@ -292,6 +297,7 @@ class CreateCourseView(CreateView):
     model = Course
     template_name = 'teacher/create_course.html'
     success_url = '/thank_you/'
+
 
 class UpdateCourseView(UpdateView):
     model = Course
@@ -337,6 +343,7 @@ def course_created(request):
 
 #def find_course(request):
 #    pass
+
 
 def join_course(request):
     user = request.user
