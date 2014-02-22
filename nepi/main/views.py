@@ -149,18 +149,14 @@ class ContactView(FormView):
     form_class = ContactForm
     success_url = '/thanks/'
 
-    form_data = form.cleaned_data
-
     def form_valid(self, form):
-        if self.request.method == 'POST':
-            sender = self.request.POST['sender'],
-            subject = self.request.POST['subject'],
-            message = self.request.POST['message'],
-            from django.core.mail import send_mail
-            recipients = ['cdunlop@columbia.edu']
-            send_mail(subject, message, sender, recipients)
-        #else:
-        #    data = None
+        form_data = form.cleaned_data
+        sender = form_data['sender'],
+        subject = form_data['subject'],
+        message = form_data['message'],
+        from django.core.mail import send_mail
+        recipients = ['cdunlop@columbia.edu']
+        send_mail(subject, message, sender, recipients)
         return super(ContactView, self).form_valid(form)
 
 
