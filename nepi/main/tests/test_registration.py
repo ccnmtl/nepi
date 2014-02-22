@@ -32,6 +32,7 @@ class TestRegistration(TestCase):
 
 
     def test_student_registration_and_login(self):
+        '''when students are registered they should not be added to pending'''
         request = self.factory.post(
             '/register/',
             {"first_name": "firstname", "last_name": "lastname",
@@ -44,6 +45,7 @@ class TestRegistration(TestCase):
 
 
     def test_teacher_registration_and_login(self):
+        '''when teachers register they should be added to the pending teachers table'''
         request = self.factory.post(
             '/register/',
             {"first_name": "firstname", "last_name": "lastname",
