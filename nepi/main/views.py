@@ -153,10 +153,8 @@ class ContactView(FormView):
             sender = self.request.POST['sender'],
             subject = self.request.POST['subject'],
             message = self.request.POST['message'],
-            #print sender
             from django.core.mail import send_mail
             recipients = ['cdunlop@columbia.edu']
-            #print recipients
             send_mail(subject, message, sender, recipients)
         #else:
         #    data = None
@@ -165,7 +163,6 @@ class ContactView(FormView):
 
 def thanks_course(request, course_id):
     """Returns thanks for joining course page."""
-    # XXX: F821 undefined name 'form'
     return render(request, 'student/thanks_course.html')
 
 
@@ -262,6 +259,9 @@ def register(request):
                             new_profile.save()
                         new_profile.profile_type = 'ST'
                         new_profile.save()
+                        if request.POST['profile_type'] == 'TE':
+                            pending = PendingTeachers(user_profile=new_profile)#, shool=school)
+                            pending.save()
                         return HttpResponseRedirect('/thank_you_reg/')
 
             else:
