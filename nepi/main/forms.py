@@ -37,7 +37,7 @@ class CreateAccountForm(forms.Form):
     email = forms.EmailField(required=False)
     # do I set email to optional here?
     #country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=False)
-    profile_type = forms.ChoiceField(choices=TEACHER_CHOICES, required=True)
+    profile_type = forms.BooleanField(required=False, label="Are you a Teacher?")
     # captcha = CaptchaField()
     # check if this needs to be explicitly required or it that is automatic
 

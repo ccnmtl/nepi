@@ -260,7 +260,7 @@ class RegistrationView(FormView):
             new_profile = UserProfile(user=new_user)
             new_profile.profile_type = 'ST'
             new_profile.save()
-            if form_data['profile_type'] == 'TE':
+            if form_data['profile_type'] == True:
                 pending = PendingTeachers(user_profile=new_profile)
                 pending.save()
         return super(RegistrationView, self).form_valid(form)
