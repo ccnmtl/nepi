@@ -35,11 +35,9 @@ class CreateAccountForm(forms.Form):
         max_length=25, widget=forms.PasswordInput, required=True,
         label="Confirm Password")
     email = forms.EmailField(required=False)
-    # do I set email to optional here?
     #country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=False)
     profile_type = forms.BooleanField(required=False, label="Are you a Teacher?")
-    # captcha = CaptchaField()
-    # check if this needs to be explicitly required or it that is automatic
+    captcha = CaptchaField()
 
 
 class ContactForm(forms.Form):

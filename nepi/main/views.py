@@ -238,6 +238,7 @@ class RegistrationView(FormView):
     def form_valid(self, form):
         # this prints so it is definately valid
         # print self.request.method
+        human = True
         form_data = form.cleaned_data
         if 'password1' not in form_data \
                 or 'password2' not in form_data:
