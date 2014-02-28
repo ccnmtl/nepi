@@ -16,6 +16,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic.base import View
 from django.views.generic.edit import CreateView, UpdateView
 #from django.views.generic.edit import ListView
+from django.forms.util import ValidationError
 from django.core.mail import send_mail
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -237,15 +238,6 @@ class RegistrationView(FormView):
     def form_valid(self, form):
         #human = True
         form_data = form.cleaned_data
-        if 'password1' not in form_data \
-                or 'password2' not in form_data:
-            raise forms.ValidationError("You are missing a password.")
-        if form_data['password1'] \
-                != form_data['password2']:
-            raise forms.ValidationError(
-                "passwords dont match each other")
-        if form_data['profile_type'] and 'email' not in form_data:
-            raise forms.ValidationError("If you are registering as an instructor you must enter a valid email address")
         try:
             User.objects.get(username=form_data['username'])
             raise forms.ValidationError("this username already exists")

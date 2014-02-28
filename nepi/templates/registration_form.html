@@ -18,23 +18,23 @@ function show_teacher_form()
 		<div id="container">
 			<h2>	Create Account	</h2>
 			<form action="." method="post">{% csrf_token %}
-			    {{ form.non_field_errors}}
+			    <span style="color:red">{{ form.non_field_errors}}</span>
                 <fieldset>
-				<legend>Account Information</legend>
+		<legend>Account Information</legend>
 
-				{% for field in form %}
+		{% for field in form %}
      		    <div class="fieldWrapper">
-      		    {{ field.errors }}
+      		    <span style="color:red">{{ field.errors }}</span>
         	    {{ field.label_tag }} {{ field }}
      		    </div>
-   				{% endfor %}
+   		{% endfor %}
 
-					<br/><br/>
-					<label for="createaccount">	</label>
-					<input id="createaccount" type="submit" value="Create Account" />
-				</fieldset>
+		<br/><br/>
+		<label for="createaccount">	</label>
+		<input id="createaccount" type="submit" value="Create Account" />
+		</fieldset>
 				
-			</form>
+		</form>
 			
 		</div>
     <div class="p">
