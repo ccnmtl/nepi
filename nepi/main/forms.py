@@ -37,7 +37,7 @@ class CreateAccountForm(forms.Form):
     email = forms.EmailField(required=False)
     #country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=False)
     profile_type = forms.BooleanField(required=False, label="Are you a Teacher?")
-    captcha = CaptchaField()
+    #captcha = CaptchaField()
 
 
 class ContactForm(forms.Form):
