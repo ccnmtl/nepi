@@ -35,9 +35,9 @@ class TestRegistration(TestCase):
              "username": "username", "email": "test_email@email.com",
              "password1": "password", "password2": "password",
              "country": "LS" })
-#        response = RegistrationView.as_view()(request)
-#        self.assertEqual(response.status_code, 302)
-#        self.assertEqual(PendingTeachers.objects.count(), 0)
+        response = RegistrationView.as_view()(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(PendingTeachers.objects.count(), 0)
 
     def test_teacher_registration_and_login(self):
         '''when teachers register they should
@@ -48,6 +48,6 @@ class TestRegistration(TestCase):
              "username": "username", "email": "test_email@email.com",
              "password1": "password", "password2": "password",
              "country": "LS", "profile_type": True})
-#        response = RegistrationView.as_view()(request)
-#        self.assertEqual(response.status_code, 302)
-#        self.assertTrue(PendingTeachers.objects.count() > 0)
+        response = RegistrationView.as_view()(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(PendingTeachers.objects.count() > 0)

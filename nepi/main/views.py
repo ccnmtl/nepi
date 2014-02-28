@@ -269,12 +269,12 @@ class RegistrationView(FormView):
                           "Your user information is " + form_data['username'] + ".\n\n" + \
                           "You may now log in to your account."
                 sender = "nepi@nepi.ccnmtl.columbia.edu"
-                recipients = form_data['email']
+                recipients = [form_data['email']]
                 send_mail(subject, message, sender, recipients)
             subject = "[Student] User Account Created"
             sender = "nepi@nepi.ccnmtl.columbia.edu"
-            recipients = "nepi@nepi.ccnmtl.columbia.edu"
-            message = form_data['username'] + "Has successfully created a NEPI account.\n\n"
+            recipients = ["nepi@nepi.ccnmtl.columbia.edu"]
+            message = form_data['username'] + " has successfully created a NEPI account.\n\n"
             if form_data['profile_type']:
                 subject = "[Teacher] Account Requested"
                 message = first_name = form_data['first_name'] + " " + form_data['last_name'] + \
