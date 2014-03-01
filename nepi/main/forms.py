@@ -12,6 +12,9 @@ class LoginForm(forms.Form):
                                max_length=50,
                                required=True)
 
+    def form_valid(self, form):
+        form_data = form.cleaned_data
+
 
 class CreateAccountForm(forms.Form):
     '''This is a form class that will be used
@@ -37,7 +40,7 @@ class CreateAccountForm(forms.Form):
     email = forms.EmailField(required=False)
     #country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=False)
     profile_type = forms.BooleanField(required=False, label="Are you a Teacher?")
-    #captcha = CaptchaField()
+    captcha = CaptchaField()
 
     def clean(self):
         form = super(CreateAccountForm, self).clean()
@@ -83,6 +86,7 @@ class AddSchoolForm(forms.Form):
 
 
 class CaptchaTestForm(forms.Form):
+    subject = forms.CharField()
     captcha = CaptchaField()
 
 

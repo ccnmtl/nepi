@@ -1,3 +1,5 @@
+'''Views for NEPI, should probably break up
+into smaller pieces.'''
 from annoying.decorators import render_to
 from django import forms
 from django.contrib.auth import authenticate, login, logout
@@ -13,7 +15,6 @@ from pagetree.helpers import get_section_from_path, get_module, needs_submit
 import json
 from django.views.generic.edit import FormView
 from django.core.urlresolvers import reverse
-from django.views.generic.base import View
 from django.views.generic.edit import CreateView, UpdateView
 #from django.views.generic.edit import ListView
 from django.forms.util import ValidationError
@@ -22,6 +23,7 @@ from django.core.mail import send_mail
 @user_passes_test(lambda u: u.is_superuser)
 @render_to('main/edit_page.html')
 def edit_page(request, hierarchy, path):
+    '''default pagetree methods'''
     section = get_section_from_path(path, hierarchy)
     first_leaf = section.hierarchy.get_first_leaf(section)
 
@@ -36,11 +38,13 @@ def edit_page(request, hierarchy, path):
 @login_required
 @render_to('main/page.html')
 def page(request, hierarchy, path):
+    '''default pagetree methods'''
     section = get_section_from_path(path, hierarchy)
     return _response(request, section, path)
 
 
 def _get_left_parent(first_leaf):
+    '''default pagetree methods'''
     leftnav = first_leaf
     if first_leaf.depth == 4:
         leftnav = first_leaf.get_parent()
@@ -50,6 +54,7 @@ def _get_left_parent(first_leaf):
 
 
 def _response(request, section, path):
+    '''default pagetree methods'''
     h = section.hierarchy
     if request.method == "POST":
         # user has submitted a form. deal with it
@@ -104,11 +109,10 @@ def _response(request, section, path):
 
 
 def test_view(request):
-    form = CaptchaTestForm()
-    if request.POST:
+    '''this is a test view to see if captcha field works'''
+    print "test view"
+    if request.method == 'POST':
         form = CaptchaTestForm(request.POST)
-        # Validate the form: the captcha field will automatically
-        # check the input
         if form.is_valid():
             human = True
     else:
@@ -118,6 +122,7 @@ def test_view(request):
 
 
 def captchatest(request):
+    '''this is a test view to see if captcha field works'''
     if request.POST:
         form = CaptchaTestForm(request.POST)
         # Validate the form: the captcha field will automatically
@@ -136,6 +141,7 @@ def captchatest(request):
 @login_required
 @render_to('main/index.html')
 def index(request):
+    '''default index'''
     return dict()
 
 
@@ -146,11 +152,14 @@ def logout_view(request):
 
 
 class ContactView(FormView):
+    '''changed contact view function to
+    generic class based view'''
     template_name = 'main/contact.html'
     form_class = ContactForm
     success_url = '/thanks/'
 
     def form_valid(self, form):
+        '''should this be in the form instead?'''
         form_data = form.cleaned_data
         sender = form_data['sender'],
         subject = form_data['subject'],
@@ -257,8 +266,11 @@ class RegistrationView(FormView):
 
             if form_data['email']:
                 subject = "NEPI Registration"
-                message = "Congratulations! You've successfully registered to use NEPI.\n\n" + \
-                          "Your user information is " + form_data['username'] + ".\n\n" + \
+                message = "Congratulations! "+ \
+                          "You've successfully registered to use NEPI.\n\n" + \
+                          "Your user information is " + \
+                          form_data['username'] + \
+                          ".\n\n" + \
                           "You may now log in to your account."
                 sender = "nepi@nepi.ccnmtl.columbia.edu"
                 recipients = [form_data['email']]
@@ -266,11 +278,14 @@ class RegistrationView(FormView):
             subject = "[Student] User Account Created"
             sender = "nepi@nepi.ccnmtl.columbia.edu"
             recipients = ["nepi@nepi.ccnmtl.columbia.edu"]
-            message = form_data['username'] + " has successfully created a NEPI account.\n\n"
+            message = form_data['username'] + \
+                      " has successfully created a NEPI account.\n\n"
             if form_data['profile_type']:
                 subject = "[Teacher] Account Requested"
-                message = first_name = form_data['first_name'] + " " + form_data['last_name'] + \
-                          "has requested teacher status in " # need to add country and schools here
+                message = first_name = form_data['first_name'] + \
+                          " " + form_data['last_name'] + \
+                          "has requested teacher status in "
+                          # need to add country and schools here
                 pending = PendingTeachers(user_profile=new_profile)
                 pending.save()
             send_mail(subject, message, sender, recipients)
@@ -282,12 +297,16 @@ class RegistrationView(FormView):
 
 
 class CreateSchoolView(CreateView):
+    '''generic class based view for
+    adding a school'''
     model = School
     template_name = 'icap/add_school.html'
     success_url = '/thank_you/'
 
 
 class UpdateSchoolView(UpdateView):
+    '''generic class based view for
+    editing a school'''
     model = School
     template_name = 'icap/add_school.html'
     success_url = '/thank_you/'
@@ -298,18 +317,23 @@ class UpdateSchoolView(UpdateView):
 
 
 class CreateCourseView(CreateView):
+    '''generic class based view for
+    creating a course'''
     model = Course
     template_name = 'teacher/create_course.html'
     success_url = '/thank_you/'
 
 
 class UpdateCourseView(UpdateView):
+    '''generic class based view for
+    editing a course'''
     model = Course
     template_name = 'teacher/create_course.html'
     success_url = '/thank_you/'
 
 
 def course_students(request, crs_id):
+    '''see all students in a particular course'''
     users = User.objects.all()
     course_students = []
     for u in users:
@@ -335,18 +359,11 @@ def remove_student(request, stud_id, cors_id):
 
 
 def course_results(request):
-    pass
-
-
-def course_created(request):
+    '''see stats of course'''
     pass
 
 
 """Student Views"""
-
-
-#def find_course(request):
-#    pass
 
 
 def join_course(request):

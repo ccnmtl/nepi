@@ -38,8 +38,6 @@ urlpatterns = patterns(
 )
 
 
-
-
 urlpatterns += patterns(
     '',
     auth_urls,
@@ -51,6 +49,7 @@ urlpatterns += patterns(
 
     # flat and universally accessible pages
     (r'^home/$', 'nepi.main.views.home'),
+    #(r'^edit_profile/$', ContactView.as_view())
     (r'^contact/$', ContactView.as_view()),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
 
