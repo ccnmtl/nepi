@@ -74,21 +74,3 @@ class ContactForm(forms.Form):
     subject = forms.CharField(max_length=100, required=True)
     message = forms.CharField(max_length=500, required=True,
                               widget=forms.Textarea)
-
-
-class AddTeacher(forms.Form):
-    pass
-
-
-class AddSchoolForm(forms.Form):
-    name = forms.CharField(max_length=50, required=True, label="School Name")
-    country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=True)
-
-
-class CaptchaTestForm(forms.Form):
-    subject = forms.CharField()
-    captcha = CaptchaField()
-
-
-class AjaxForm(forms.Form):
-    captcha = CaptchaField()

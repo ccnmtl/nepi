@@ -8,17 +8,20 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 from nepi.main.forms import CreateAccountForm, ContactForm, \
-    CaptchaTestForm, LoginForm
-from nepi.main.models import Country, Course, UserProfile
+    LoginForm
+from nepi.main.models import Course, UserProfile
 from nepi.main.models import School, PendingTeachers
 from pagetree.helpers import get_section_from_path, get_module, needs_submit
 import json
 from django.views.generic.edit import FormView
-from django.core.urlresolvers import reverse
 from django.views.generic.edit import CreateView, UpdateView
-#from django.views.generic.edit import ListView
-from django.forms.util import ValidationError
 from django.core.mail import send_mail
+
+from captcha.fields import CaptchaField
+from captcha.models import CaptchaStore
+from captcha.helpers import captcha_image_url
+
+
 
 @user_passes_test(lambda u: u.is_superuser)
 @render_to('main/edit_page.html')
@@ -108,32 +111,6 @@ def _response(request, section, path):
                                    next_page.gate_check(request.user)))
 
 
-def test_view(request):
-    '''this is a test view to see if captcha field works'''
-    print "test view"
-    if request.method == 'POST':
-        form = CaptchaTestForm(request.POST)
-        if form.is_valid():
-            human = True
-    else:
-        form = CaptchaTestForm()
-
-    return render_to_response("main/test_view.html", locals())
-
-
-def captchatest(request):
-    '''this is a test view to see if captcha field works'''
-    if request.POST:
-        form = CaptchaTestForm(request.POST)
-        # Validate the form: the captcha field will automatically
-        # check the input
-        if form.is_valid():
-            human = True
-    else:
-        form = CaptchaTestForm()
-
-    return render_to_response("main/captchatest.html", locals())
-
 
 """General Views"""
 
@@ -216,7 +193,7 @@ def home(request):
         elif user_profile.profile_type == 'TE':
             pass
         elif user_profile.profile_type == 'IC':
-            pending_teachers = PendingRegister.objects.filter(
+            pending_teachers = PendingTeachers.objects.filter(
                 profile_type='TE')
             schools = School.objects.all()
             return render(request, 'icap/icindex.html',
@@ -245,7 +222,7 @@ class RegistrationView(FormView):
     success_url = '/thank_you_reg/'
 
     def form_valid(self, form):
-        #human = True
+        human = True
         form_data = form.cleaned_data
         try:
             User.objects.get(username=form_data['username'])
@@ -266,7 +243,7 @@ class RegistrationView(FormView):
 
             if form_data['email']:
                 subject = "NEPI Registration"
-                message = "Congratulations! "+ \
+                message = "Congratulations! " + \
                           "You've successfully registered to use NEPI.\n\n" + \
                           "Your user information is " + \
                           form_data['username'] + \
@@ -282,7 +259,7 @@ class RegistrationView(FormView):
                       " has successfully created a NEPI account.\n\n"
             if form_data['profile_type']:
                 subject = "[Teacher] Account Requested"
-                message = first_name = form_data['first_name'] + \
+                message = form_data['first_name'] + \
                           " " + form_data['last_name'] + \
                           "has requested teacher status in "
                           # need to add country and schools here
