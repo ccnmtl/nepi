@@ -94,6 +94,7 @@ MIDDLEWARE_CLASSES = (
     'impersonate.middleware.ImpersonateMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'waffle.middleware.WaffleMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware'
 )
 
 ROOT_URLCONF = 'nepi.urls'

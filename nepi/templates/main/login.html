@@ -33,6 +33,7 @@
 </form>
 
 <form method="post" action="." class="well">
+    {% csrf_token %}
 <p>If you have a project account...</p>
 
 <label for="id_username">Username: {{ form.username }}</label>

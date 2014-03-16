@@ -5,121 +5,83 @@ from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
+from django.utils.decorators import method_decorator
+from pagetree.generic.views import PageView, EditView, InstructorView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 from nepi.main.forms import CreateAccountForm, ContactForm, \
     LoginForm
 from nepi.main.models import Course, UserProfile
 from nepi.main.models import School, PendingTeachers
+from pagetree.generic.views import EditView
 from pagetree.helpers import get_section_from_path, get_module, needs_submit
-import json
 from django.views.generic.edit import FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.core.mail import send_mail
 
-from captcha.fields import CaptchaField
-from captcha.models import CaptchaStore
-from captcha.helpers import captcha_image_url
 
-
-
-@user_passes_test(lambda u: u.is_superuser)
-@render_to('main/edit_page.html')
-def edit_page(request, hierarchy, path):
-    '''default pagetree methods'''
-    section = get_section_from_path(path, hierarchy)
-    first_leaf = section.hierarchy.get_first_leaf(section)
-
-    return dict(section=section,
-                module=get_module(section),
-                root=section.hierarchy.get_root(),
-                leftnav=_get_left_parent(first_leaf),
-                prev=first_leaf.get_previous(),
-                next=first_leaf.get_next())
-
-
-@login_required
-@render_to('main/page.html')
-def page(request, hierarchy, path):
-    '''default pagetree methods'''
-    section = get_section_from_path(path, hierarchy)
-    return _response(request, section, path)
-
-
-def _get_left_parent(first_leaf):
-    '''default pagetree methods'''
-    leftnav = first_leaf
-    if first_leaf.depth == 4:
-        leftnav = first_leaf.get_parent()
-    elif first_leaf.depth == 5:
-        leftnav = first_leaf.get_parent().get_parent()
-    return leftnav
-
-
-def _response(request, section, path):
-    '''default pagetree methods'''
-    h = section.hierarchy
-    if request.method == "POST":
-        # user has submitted a form. deal with it
-        proceed = True
-        for p in section.pageblock_set.all():
-            if hasattr(p.block(), 'needs_submit'):
-                if p.block().needs_submit():
-                    prefix = "pageblock-%d-" % p.id
-                    data = dict()
-                    for k in request.POST.keys():
-                        if k.startswith(prefix):
-                            data[k[len(prefix):]] = request.POST[k]
-                    p.block().submit(request.user, data)
-                    if hasattr(p.block(), 'redirect_to_self_on_submit'):
-                        proceed = not p.block().redirect_to_self_on_submit()
-
-        if request.is_ajax():
-            j = json.dumps({'submitted': 'True'})
-            return HttpResponse(j, 'application/json')
-        elif proceed:
-            return HttpResponseRedirect(section.get_next().get_absolute_url())
-        else:
-            # giving them feedback before they proceed
-            return HttpResponseRedirect(section.get_absolute_url())
-    else:
-        try:
-            profile = UserProfile.objects.get(user=request.user)
-        except UserProfile.DoesNotExist:
-            profile = UserProfile(user=request.user,
-                                  profile_type='ST')
-            profile.save()
-
-        # the previous node is the last leaf, if one exists.
-        prev = section.get_previous()
-        next_page = section.get_next()
-
-        # Is this section unlocked now?
-        can_access = section.gate_check(request.user)
-        if can_access:
-            profile.set_has_visited([section])
-
-        return dict(section=section,
-                    needs_submit=needs_submit(section),
-                    accessible=can_access,
-                    root=h.get_root(),
-                    previous=prev,
-                    next=next_page,
-                    depth=section.depth,
-                    request=request,
-                    next_unlocked=(next_page is not None and
-                                   next_page.gate_check(request.user)))
-
-
-
-"""General Views"""
-
-
-@login_required
 @render_to('main/index.html')
 def index(request):
-    '''default index'''
+    # import pdb
+    # pdb.set_trace()
     return dict()
+
+
+class LoggedInMixin(object):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(LoggedInMixin, self).dispatch(*args, **kwargs)
+
+
+class LoggedInMixinStaff(object):
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def dispatch(self, *args, **kwargs):
+        return super(LoggedInMixinStaff, self).dispatch(*args, **kwargs)
+
+
+class LoggedInMixinSuperuser(object):
+    @method_decorator(user_passes_test(lambda u: u.is_superuser))
+    def dispatch(self, *args, **kwargs):
+        return super(LoggedInMixinSuperuser, self).dispatch(*args, **kwargs)
+
+
+class ViewPage(LoggedInMixin, PageView):
+    template_name = "main/page.html"
+    hierarchy_name = "main"
+    hierarchy_base = "/pages/main/"
+    gated = True
+
+
+class EditPage(LoggedInMixinSuperuser, EditView):
+    template_name = "main/edit_page.html"
+    hierarchy_name = "main"
+    hierarchy_base = "/pages/main/"
+
+
+# this is from default pagetree
+class InstructorPage(LoggedInMixinStaff, InstructorView):
+    hierarchy_name = "main"
+    hierarchy_base = "/pages/main/"
+
+
+# @render_to('main/instructor_index.html')
+# def instructor_index(request):
+#     h = get_hierarchy()
+#     root = h.get_root()
+#     all_modules = root.get_children()
+#     return dict(students=User.objects.all(),
+#                 all_modules=all_modules)
+#
+#
+# def has_lab(section):
+#     for p in section.pageblock_set.all():
+#         if p.block().display_name == "Lab":
+#             return True
+#     return False
+
+
+
+'''Below this line is old code'''
 
 
 def logout_view(request):

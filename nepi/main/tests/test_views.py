@@ -21,10 +21,10 @@ class TestBasicViews(TestCase):
             user=self.icap_user, profile_type='IC', country=self.country)
         self.user_profile.save()
 
-    def test_root(self):
-        response = self.c.get("/")
-        self.assertEquals(response.status_code, 302)
-        self.assertTemplateUsed('flatpages/index.html')
+    # def test_root(self):
+    #     response = self.c.get("/")
+    #     self.assertEquals(response.status_code, 302)
+    #     self.assertTemplateUsed('flatpages/index.html')
 
     def test_about(self):
         response = self.c.get("/about/")
@@ -77,9 +77,9 @@ class TestLoggedInViews(TestCase):
         r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
         self.assertEqual(r.status_code, 200)
 
-    def test_root(self):
-        r = self.c.get("/pages/%s/" % (self.h.name))
-        self.assertEqual(r.status_code, 200)
+    # def test_root(self):
+    #     r = self.c.get("/pages/%s/" % (self.h.name))
+    #     self.assertEqual(r.status_code, 200)
 
     def test_home(self):
         r = self.c.get("/home/")
