@@ -63,4 +63,12 @@ body > .container {
     top:0;left:0;
     margin:0; padding:3;}
 
+.wrong-selected p {
+    border:4px solid #D00000;
+    top:0;left:0;
+    margin:0; padding:3;}
 
+.wrong-select li {
+    border:4px solid #D00000;
+    top:0;left:0;
+    margin:0; padding:3;}
