@@ -20,6 +20,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.core.mail import send_mail
 
 
+
 @render_to('main/index.html')
 def index(request):
     # import pdb
@@ -297,9 +298,32 @@ def remove_student(request, stud_id, cors_id):
     pass
 
 
-def course_results(request):
-    '''see stats of course'''
+# def student_test_score(u_id, q_id):
+#     '''see student score on exam'''
+#     quizzes = Quiz.objects.all()
+#     user_s = User.objects.get(pk=u_id)
+#     profile = UserProfile.objects.get(user=user_s)
+#
+#     course_students = []
+#     for u in users:
+#         try:
+#             profile = UserProfile.objects.get(user=u)
+#             if profile.profile_type == 'ST':
+#                 courses = profile.course_set.all()
+#                 for c in courses:
+#                     if c.crs_id == crs_id:
+#                         course_students.add(profile)
+#                         # [u][profile][c])
+#         except UserProfile.DoesNotExist:
+#             pass
+#     course_students =
+#     return render(request,
+#                   'teacher/show_students.html',
+#                   {'course_students': course_students})
+
+def student_average(s_id):
     pass
+
 
 
 """Student Views"""

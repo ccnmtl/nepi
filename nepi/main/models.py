@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from nepi.main.choices import COUNTRY_CHOICES, PROFILE_CHOICES
+from choices import COUNTRY_CHOICES, PROFILE_CHOICES
 from pagetree.models import Section, Hierarchy, UserLocation, UserPageVisit
 
 

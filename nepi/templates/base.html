@@ -117,7 +117,70 @@
 <script src="/site_media/bootstrap/js/bootstrap.js"></script>
 {% endcompress %}
 
-{% block js %}{% endblock %}
+{% block js %}
+
+<script>
+
+function highlight(){
+
+jQuery(".pageblock.right-question .casequestion").addClass( "right-selected" );
+jQuery(".pageblock.right-question .casequestion").addClass( "right-select" );
+
+}
+
+jQuery(document).ready(function() {
+    //jQuery(".pageblock.right-question .casequestion").addClass( "right-selected" );
+    jQuery(".pageblock.right-question .casequestion").on("click", //highlight());
+        function(){
+
+jQuery(".pageblock.right-question .casequestion").addClass( "right-selected" );
+jQuery(".pageblock.right-question .casequestion").addClass( "right-select" );
+
+        //     jQuery(this).addClass( "right-selected" );
+             //jQuery(this).children("li").addClass( "right-select" );
+             //jQuery(this).find("li").addClass( "right-selected" );
+             //$( "ul.topnav > li" ).css( "border", "3px double red" );
+             //jQuery(".pageblock.right-question p").addClass( "right-selected" );
+             //jQuery(".pageblock.right-question li").addClass( "right-selected" );
+   });
+
+ //   jQuery(".pageblock.right-question .casequestion").on("click",
+ //        function(){
+ //            //jQuery(this).addClass( "right-selected" );
+ //            jQuery(this).children("li").addClass( "right-select" );
+ //            jQuery(this).find("li").addClass( "right-select" );
+             //$( "ul.topnav > li" ).css( "border", "3px double red" );
+             //jQuery(".pageblock.right-question p").addClass( "right-selected" );
+             //jQuery(".pageblock.right-question li").addClass( "right-selected" );
+ //   });
+
+
+
+
+//    jQuery(".pageblock.right-question .casequestion").on("click",
+//         function(){
+//             jQuery(".pageblock.right-question > ul > li").addClass( "right-selected" );
+//    });
+
+//jQuery(.pageblock.right-question>ul).addClass( "right-selected" );
+});
+
+
+//.on( "mouseover",   
+//function() {
+//    jQuery( this ).css( "color", "red" );
+//  });
+//});
+//});
+
+//if(jQuery("pageblock .right-question .div casequestion"))
+//{
+//jQuery("pageblock .right-question .div casequestion .p").css("color", "blue");
+//jQuery("pageblock .right-question .div casequestion").css("color", "blue");
+//}
+
+</script>
+{% endblock %}
 
 {% comment %}
 {% if STAGING_ENV %}

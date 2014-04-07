@@ -52,3 +52,15 @@ body > .container {
 #primarynav a:hover {
   color: blue;
 }
+
+.right-selected p {
+    border:4px solid #006699;
+    top:0;left:0;
+    margin:0; padding:3;}
+
+.right-select li {
+    border:4px solid #006699;
+    top:0;left:0;
+    margin:0; padding:3;}
+
+

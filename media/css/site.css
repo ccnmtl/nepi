@@ -91,3 +91,17 @@ ul.tabbernav li.tabberactive a:hover
  padding:0;
  border: 0;
 }
+
+.right-question {
+border-style: solid;
+border-width: 5px;
+border-style: solid;
+border-color: red;
+}
+
+.wrong-question{
+border-style: solid;
+border-width: 5px;
+border-style: solid;
+border-color: blue;
+}

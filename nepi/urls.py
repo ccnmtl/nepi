@@ -65,7 +65,7 @@ urlpatterns += patterns(
     (r'^course_students/$', 'nepi.main.views.course_students'),
     #(r'^teacher_courses/$', 'nepi.main.views.current_courses'),
     (r'^remove_student/$', 'nepi.main.views.remove_student'),
-    (r'^course_results/$', 'nepi.main.views.course_results'),
+    #(r'^course_results/$', 'nepi.main.views.course_results'),
 
     url(r'^captcha/', include('captcha.urls')),
 
