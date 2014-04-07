@@ -121,16 +121,23 @@
 
 <script>
 jQuery(document).ready(function() {
+    //answers to questions should be hidden until the user clicks on a question
+    jQuery(".pageblock.right-question .casequestion ul").hide();
+    jQuery(".pageblock.wrong-question .casequestion ul").hide();
+
     jQuery(".pageblock.right-question .casequestion").on("click",
         function(){
             jQuery(".pageblock.right-question .casequestion").addClass( "right-selected" );
+            jQuery(".pageblock.right-question .casequestion ul").show();
             jQuery(".pageblock.right-question .casequestion").addClass( "right-select" );
+            
 
    });
 
     jQuery(".pageblock.wrong-question .casequestion").on("click",
         function(){
             jQuery(".pageblock.wrong-question .casequestion").addClass( "wrong-selected" );
+            jQuery(".pageblock.wrong-question .casequestion ul").show();
             jQuery(".pageblock.wrong-question .casequestion").addClass( "wrong-select" );
 
    });
