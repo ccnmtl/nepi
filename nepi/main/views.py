@@ -27,6 +27,79 @@ def index(request):
     # pdb.set_trace()
     return dict()
 
+def _unlocked(section, user, previous, profile):
+    #if (section.hierarchy.name == 'ST'):# and (
+    #    #    not profile.is_role_faculty() and not user.is_staff)):
+    #    return False
+
+    # if the user can proceed past this section
+    if (not section or
+        section.is_root() or
+        profile.get_has_visited(section) or
+        section.slug in UNLOCKED or
+            section.hierarchy.name in UNLOCKED):
+        return True
+
+    if not previous or previous.is_root():
+        return True
+
+    for pbl in previous.pageblock_set.all():
+        if hasattr(pbl.block(), 'unlocked'):
+            if not pbl.block().unlocked(user):
+                return False
+
+    if previous.slug in UNLOCKED:
+        return True
+
+    return profile.get_has_visited(previous)
+
+
+def accessible(section, user):
+    try:
+        previous = section.get_previous()
+        return _unlocked(section, user, previous, user.get_profile())
+    except AttributeError:
+        return False
+
+
+@login_required
+def is_accessible(request, section_slug):
+    section = Section.objects.get(slug=section_slug)
+    previous = section.get_previous()
+    response = {}
+
+    if _unlocked(section, request.user, previous, request.user.get_profile()):
+        response[section_slug] = "True"
+
+    json = simplejson.dumps(response)
+    return HttpResponse(json, 'application/json')
+
+
+@login_required
+def clear_state(request):
+    try:
+        request.user.get_profile().delete()
+    except UserProfile.DoesNotExist:
+        pass
+
+    # clear visits & saved locations
+    UserLocation.objects.filter(user=request.user).delete()
+    UserPageVisit.objects.filter(user=request.user).delete()
+
+    # clear quiz
+    import quizblock
+    quizblock.models.Submission.objects.filter(user=request.user).delete()
+
+    # clear prescription writing
+    PrescriptionWritingState.objects.filter(user=request.user).delete()
+
+    # clear virtual patient
+    VirtualPatientActivityState.objects.filter(user=request.user).delete()
+
+    return HttpResponseRedirect(reverse("index"))
+
+
+
 
 class LoggedInMixin(object):
     @method_decorator(login_required)
@@ -253,7 +326,6 @@ class UpdateSchoolView(UpdateView):
 
 
 """Teacher Views"""
-# django site says to do this way but throws errors...
 
 
 class CreateCourseView(CreateView):

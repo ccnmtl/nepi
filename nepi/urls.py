@@ -53,6 +53,8 @@ urlpatterns += patterns(
     #(r'^edit_profile/$', ContactView.as_view())
     (r'^contact/$', ContactView.as_view()),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
+    (r'^accessible/(?P<section_slug>.*)/$',
+     'is_accessible', {}, 'is-accessible'),
 
     # ICAP related pages
     (r'^add_school/$',  CreateSchoolView.as_view()),

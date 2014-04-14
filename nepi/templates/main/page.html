@@ -42,7 +42,7 @@
 {% endblock %}
 
 {% block extraprimarynav %}
-    {% if user.is_staff %}
+    {% if user.is_authenticated %}
     <ul class="nav pull-right">
         <li><a href="{{section.get_edit_url}}">Edit Page</a></li>        
     </ul>
