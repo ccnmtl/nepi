@@ -121,23 +121,35 @@
 
 <script>
 jQuery(document).ready(function() {
+    // we should only be checking this is if it is the users first time to the page
+    // check if user has visited
+    good = 0;
+    bad = 0; //we need to make sure both are clicked on before allowing the user to continue
     //answers to questions should be hidden until the user clicks on a question
+    //need to check for css files and hide submit button
     jQuery(".pageblock.right-question .casequestion ul").hide();
     jQuery(".pageblock.wrong-question .casequestion ul").hide();
 
     jQuery(".pageblock.right-question .casequestion").on("click",
         function(){
+            if (good == 0 && bad == 0)
+            {
+                //send ajax call
+            }
             jQuery(".pageblock.right-question .casequestion").addClass( "right-selected" );
             jQuery(".pageblock.wrong-question .casequestion").removeClass( "wrong-selected" );
             jQuery(".pageblock.wrong-question .casequestion ul").hide();
             jQuery(".pageblock.right-question .casequestion ul").show();
             jQuery(".pageblock.right-question .casequestion").addClass( "right-select" );
             
-
    });
 
     jQuery(".pageblock.wrong-question .casequestion").on("click",
         function(){
+            if (good == 0 && bad == 0)
+            {
+                //send ajax call
+            }
             jQuery(".pageblock.wrong-question .casequestion").addClass( "wrong-selected" );
             jQuery(".pageblock.right-question .casequestion").removeClass( "right-selected" );
             jQuery(".pageblock.right-question .casequestion ul").hide();
