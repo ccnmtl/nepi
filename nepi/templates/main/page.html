@@ -35,14 +35,13 @@
 {% endblock %}
 {% block pagetitle %}<h2 class="pagetitle">{{section.label}}</h2>{% endblock %}
 
+{% block primarynavtabs %}
+    {% if user.is_authenticated %}
+        {% include "project_primary_nav.html" %}
+    {% endif %}
+{% endblock %}
 
-    {% block primarynavtabs %}
-        {% if user.is_authenticated %}
-            {% include "project_primary_nav.html" %}
-        {% endif %}
-    {% endblock %}
-
-      {% block extraprimarynav %}
+{% block extraprimarynav %}
     {% if user.is_staff %}
     <ul class="nav pull-right">
         <li><a href="{{section.get_edit_url}}">Edit Page</a></li>        
@@ -57,16 +56,6 @@
         {% endif %}
 {% endblock %}
 
-{% block primarynavrightextra %}
-    {% if user.is_staff %}
-        <ul class="nav pull-right">
-            <li><a href="{{section.get_edit_url}}">edit page</a></li>
-        </ul>
-    {% endif %}
-{% endblock %}
-
-
-
 {% block breadcrumbs %}
   <ul>
        {% for breadcrumb in path %}
@@ -75,8 +64,6 @@
             
   </ul>
 {% endblock breadcrumbs %}
-
-
 
 {% block content %}
     <div id="content" class ="module-{{module.slug}}">
