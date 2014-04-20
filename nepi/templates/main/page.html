@@ -102,8 +102,38 @@
 
 </div>
 
+{% block content-nav %}
+<ul class="pager">
+{% if not section.is_root %}
+{% if section.get_previous %}
+  <li class="previous">
+		<a href="{{ section.get_previous.get_absolute_url }}">&larr; {{section.get_previous.label}}</a>
+  </li>
+{% endif %}
+{% endif %}
+
+{% if section.get_next %}
+{% with section.get_next as next_section %}
+<li class="next"><a href="{{ section.get_next.get_absolute_url }}">{{section.get_next.label}} &rarr;</a></li>
+{% endwith %}
+{% endif %}
+</ul>
+
+
+
+{% endblock %}
+
+
+{% comment %}
+
     <div class="content-nav">
         <ul class="pager">
+        {% if section.has_next %}
+            <li class="next">
+                <a href="{{next.get_absolute_url}}" id="next" class="pager_button"><b>&larr;</b> {{next.label}}</a>
+            </li>
+        {% endif %}
+
         {% if previous %}
             <li class="previous">
                 <a href="{{previous.get_absolute_url}}" id="previous" class="pager_button"><b>&larr;</b> {{previous.label}}</a>
@@ -112,14 +142,15 @@
         {% if next %}
             <li class="next">
             {% if not next.is_root %}
-                {% comment %}{% if next_unlocked %}{% endcomment %}
+                {% if next_unlocked %}
                     <a href="{{next.get_absolute_url}}" id="next" class="pager_button">{{next.label}} <b>&rarr;</b></a>
-                {% comment %}{% else %}
+                {% else %}
                     <div id="next" class="pager_button">{{next.label}} <b>&rarr;</b></div>
-                {% endif %}{% endcomment %}
+                {% endif %}
             {% endif %}
             </li>
         {% endif %}
         </ul>
     </div><!-- div id="content-nav" -->
+{% endcomment %}
 {% endblock %}
