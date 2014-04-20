@@ -123,7 +123,7 @@ class ViewPage(LoggedInMixin, PageView):
     template_name = "main/page.html"
     hierarchy_name = "main"
     hierarchy_base = "/pages/main/"
-    gated = True
+    gated = False
 
 
 class EditPage(LoggedInMixinSuperuser, EditView):
