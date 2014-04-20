@@ -19,6 +19,11 @@ START_CONV = (
     ('N', 'Nurse'),
 )
 
+CONV_STATUS = (
+    ('R', 'Right'),
+    ('W', 'Wrong'),
+)
+
 # current plan: starting party may have one or two
 # speech elements to start with, there may be one
 # or more responses, 
@@ -30,7 +35,7 @@ class NurseConversation(models.Model):
     response_two = models.CharField(max_length=255)
 
 
-class PatientConversation(models.Model):    
+class PatientConversation(models.Model):
     starting_one = models.CharField(max_length=255)
     starting_two = models.CharField(max_length=255)
     responseg_one = models.CharField(max_length=255)
@@ -40,18 +45,49 @@ class ConversationDialog(models.Model):
     pass
 #need to make a back and forth ordered dialog
 
+#Should I have a complete conversation obect?
+
 
 class Conversation(models.Model):
     # should blank be True?
-    starting_party = models.CharField(max_length=2, choices=START_CONV, blank=True)
+    conv_status = models.CharField(max_length=1, choices=CONV_STATUS, blank=True)
+    starting_party = models.CharField(max_length=1, choices=START_CONV, blank=True)
     directions = models.TextField(blank=True)
-    explanation = models.TextField(blank=True)
+    #explanation = models.TextField(blank=True)
     first_click = models.BooleanField(default=False)
-    pageblocks = generic.GenericRelation(PageBlock)
+    second_selection = models.BooleanField(default=False)
+    nurse_bubbles = models.ForeignKey(NurseConversation)
+    patient_bubbles = models.ForeignKey(PatientConversation)
+    dialog = models.ForeignKey(ConversationDialog)
+    #pageblocks = generic.GenericRelation(PageBlock)
     # how to deal with templates?
     exportable = False
     importable = False
 
+    #def submit(self, user, data):
+    #    """ trying to gather user activity submissions,
+    #        based on pedialabs """
+    #    first_selection = dict()
+    #    for k in data.keys():
+    #        if k.startswith('first_click-'):
+    #            answer = data[k]
 
+               
+    #    ActionPlanResponse.objects.create(
+    #        lab=self, user=user,
+    #        action_plan=action_plan,
+    #        assessment=assessment,
+    #    )
+    #    # now save them
+    #    for tid in results.keys():
+    #        test = Test.objects.get(id=tid)
+    #        result = results[tid]
+    #        abnormality = abnormalities.get(tid, "none")
+    #        TestResponse.objects.create(user=user, test=test,
+    #                                    result_level=result,
+    #                                    abnormality=abnormality)
+
+    def needs_submit(self):
+        return True
 
 

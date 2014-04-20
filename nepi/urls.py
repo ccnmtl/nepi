@@ -3,6 +3,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.conf import settings
 import nepi.main.views
+import activities.views
 from django.views.generic import TemplateView
 import os.path
 admin.autodiscover()
@@ -48,6 +49,10 @@ urlpatterns += patterns(
     (r'^login/$', 'nepi.main.views.nepi_login'),
     (r'^logout/$', 'nepi.main.views.logout_view'),
 
+    # Interactive Links
+    (r'^conversation/$', 'activities.views.conversation'),
+    (r'^create_conversation/$', 'activities.views.create_conversation'),
+    (r'^edit_conversation/$', 'activities.views.update_conversation'),
     # flat and universally accessible pages
     (r'^home/$', 'nepi.main.views.home'),
     #(r'^edit_profile/$', ContactView.as_view())
