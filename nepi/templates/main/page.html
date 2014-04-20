@@ -119,38 +119,6 @@
 {% endif %}
 </ul>
 
-
-
 {% endblock %}
 
-
-{% comment %}
-
-    <div class="content-nav">
-        <ul class="pager">
-        {% if section.has_next %}
-            <li class="next">
-                <a href="{{next.get_absolute_url}}" id="next" class="pager_button"><b>&larr;</b> {{next.label}}</a>
-            </li>
-        {% endif %}
-
-        {% if previous %}
-            <li class="previous">
-                <a href="{{previous.get_absolute_url}}" id="previous" class="pager_button"><b>&larr;</b> {{previous.label}}</a>
-            </li>
-        {% endif %}
-        {% if next %}
-            <li class="next">
-            {% if not next.is_root %}
-                {% if next_unlocked %}
-                    <a href="{{next.get_absolute_url}}" id="next" class="pager_button">{{next.label}} <b>&rarr;</b></a>
-                {% else %}
-                    <div id="next" class="pager_button">{{next.label}} <b>&rarr;</b></div>
-                {% endif %}
-            {% endif %}
-            </li>
-        {% endif %}
-        </ul>
-    </div><!-- div id="content-nav" -->
-{% endcomment %}
 {% endblock %}
