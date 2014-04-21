@@ -13,6 +13,7 @@ from django.core.urlresolvers import reverse
 from datetime import datetime
 
 
+
 START_CONV = (
     ('P', 'Patient'),
     ('N', 'Nurse'),
@@ -24,15 +25,24 @@ CONV_STATUS = (
 )
 
 class NurseConversation(models.Model):
-    starting = models.CharField(max_length=255)
-    response_one = models.CharField(max_length=255)
-    response_two = models.CharField(max_length=255)
+    dialog_one = models.CharField(max_length=255, null=True)
+    dialog_two = models.CharField(max_length=255, null=True)
 
+class NurseConversationForm(forms.ModelForm):
+    class Meta:
+        model = NurseConversation
+        # exclude = ("quiz",) what is this?
+        fields = ('dialog_one', 'dialog_two')
 
 class PatientConversation(models.Model):
-    starting = models.CharField(max_length=255)
-    response_one = models.CharField(max_length=255)
-    response_two = models.CharField(max_length=255)
+    dialog_one = models.CharField(max_length=255, null=True)
+    dialog_two = models.CharField(max_length=255, null=True)
+
+class PatientConversationForm(forms.ModelForm):
+    class Meta:
+        model = PatientConversation
+        # exclude = ("quiz",) what is this?
+        fields = ('dialog_one', 'dialog_two')
 
 
 class ConversationDialog(models.Model):
@@ -40,21 +50,64 @@ class ConversationDialog(models.Model):
     content = models.CharField(max_length=255)
 
 
+class ConversationDialogForm(forms.ModelForm):
+    class Meta:
+        model = ConversationDialog
+        # exclude = ("quiz",) what is this?
+        fields = ('order', 'content')
+
+
 class ConversationScenario(models.Model):
-    starting_party = models.CharField(max_length=1, choices=START_CONV, blank=True)
+    starting_party = models.CharField(max_length=1, choices=START_CONV, null=True, blank=True)
     nurse_bubbles = models.ForeignKey(NurseConversation)
     patient_bubbles = models.ForeignKey(PatientConversation)
     dialog = models.ForeignKey(ConversationDialog)
 
 
+class ConversationScenarioForm(forms.ModelForm):
+    class Meta:
+        model = ConversationScenario
+        # exclude = ("quiz",) what is this?
+        fields = ('starting_party', 'nurse_bubbles', 'patient_bubbles', 'dialog')
+
+
 class Conversation(models.Model):
-    good_conversation = models.ForeignKey(ConversationScenario, related_name="good_conversation")
-    bad_conversation = models.ForeignKey(ConversationScenario, related_name="bad_conversation")
-    directions = models.TextField(blank=True)
+    good_conversation = models.ForeignKey(ConversationScenario, related_name="good_conversation", null=True)
+    bad_conversation = models.ForeignKey(ConversationScenario, related_name="bad_conversation", null=True)
+    description = models.TextField()
     pageblocks = generic.GenericRelation(PageBlock)
-    # how to deal with templates?
+    display_name = "Conversation"
+    template_name = ""
     exportable = False
     importable = False
+
+    def submit(self, user, data):
+        s = ConversationResponse.objects.create(conversation=self, user=user)
+        for k in data.keys():
+            if k.startswith('conversation-scenario'):
+                cid = int(k[len('conversation-scenario-'):])
+                conversation = ConversationScenario.objects.get(id=cid)
+                if s.first_click == "":
+                     s.first_click = conversation.related_name
+                     s.save()
+                elif s.first_click != "":
+                     if s.first_click == conversation.related_name:
+                         pass
+                     elif s.first_click != conversation.related_name:
+                         second_click =True
+
+    @classmethod
+    def add_form(self):
+        class AddForm(forms.Form):
+            description = forms.CharField(widget=forms.widgets.Textarea())
+        return AddForm()
+
+    @classmethod
+    def create(self, request):
+        print "inside create"
+        print request.POST.get('description', '')
+        return Conversation.objects.create(
+            description=request.POST.get('description', ''))
 
     def needs_submit(self):
         return True
@@ -71,25 +124,26 @@ class Conversation(models.Model):
 
     def unlocked(self, user):
         # next activity becomes unlocked when the user has seen both good and bad dialog
-        return ConversationSubmission.objects.filter(conversation=self, user=user).second_selection
+        return ConversationResponse.objects.filter(conversation=self, user=user).second_selection
+
+    def add_nurse_conversation(self, request=None):
+        return NurseConversationForm(request)
+
+    def add_patient_conversation(self, request=None):
+        return PatientConversationForm(request)
 
 
-class ConversationSubmission(models.Model):
+class ConversationResponse(models.Model):
     conversation = models.ForeignKey(Conversation)
     user = models.ForeignKey(User)
     submitted = models.DateTimeField(default=datetime.now)
     first_click = models.CharField(max_length=1, choices=CONV_STATUS, blank=True)
     second_selection = models.BooleanField(default=False)
 
-    def __unicode__(self):
-        return "activity %d submission by %s at %s" % (self.conversation.id,
-                                                   unicode(self.user),
-                                                   self.submitted)
-
-    def is_correct(self):
-        if self.first_click == R:
-            return True
-        if self.first_click == W:
-            return False
-
-
+    def get_second_click(self, request):
+        '''User should only be able to continue after
+        having clicked on both conversations'''
+        if request.POST.get('click') == self.first_click:
+            self.second_selection = False
+        if request.POST.get('click') != self.first_click:
+            self.second_selection = True
