@@ -51,7 +51,7 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_pyflakes',
 )
 PROJECT_APPS = [
-    'nepi.main',
+    'nepi.main','nepi.activities',
 ]
 
 ALLOWED_HOSTS = ['localhost', '.ccnmtl.columbia.edu']
@@ -134,11 +134,11 @@ INSTALLED_APPS = [
     'quizblock',
     'registration',
     'captcha',
-    'activities',
+    'nepi.activities',
 ]
 
 LETTUCE_APPS = (
-    'nepi.main',
+    'nepi.main', 'nepi.activities',
 )
 
 INTERNAL_IPS = ('127.0.0.1', )

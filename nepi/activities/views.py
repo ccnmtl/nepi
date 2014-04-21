@@ -9,9 +9,9 @@ from cStringIO import StringIO
 from django.core.urlresolvers import reverse
 from pagetree.generic.views import PageView, EditView
 from django.views.generic.edit import CreateView, UpdateView
-from activities.models import NurseConversation, PatientConversation
-from activities.models import ConversationDialog, ConversationScenario
-from activities.models import Conversation
+from nepi.activities.models import NurseConversation, PatientConversation
+from nepi.activities.models import ConversationDialog, ConversationScenario
+from nepi.activities.models import Conversation
 
 
 @render_to('activities/conversation.html')

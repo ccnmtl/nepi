@@ -31,7 +31,6 @@ class NurseConversation(models.Model):
 class NurseConversationForm(forms.ModelForm):
     class Meta:
         model = NurseConversation
-        # exclude = ("quiz",) what is this?
         fields = ('dialog_one', 'dialog_two')
 
 class PatientConversation(models.Model):
@@ -41,7 +40,6 @@ class PatientConversation(models.Model):
 class PatientConversationForm(forms.ModelForm):
     class Meta:
         model = PatientConversation
-        # exclude = ("quiz",) what is this?
         fields = ('dialog_one', 'dialog_two')
 
 
@@ -53,7 +51,6 @@ class ConversationDialog(models.Model):
 class ConversationDialogForm(forms.ModelForm):
     class Meta:
         model = ConversationDialog
-        # exclude = ("quiz",) what is this?
         fields = ('order', 'content')
 
 
@@ -67,14 +64,13 @@ class ConversationScenario(models.Model):
 class ConversationScenarioForm(forms.ModelForm):
     class Meta:
         model = ConversationScenario
-        # exclude = ("quiz",) what is this?
         fields = ('starting_party', 'nurse_bubbles', 'patient_bubbles', 'dialog')
 
 
 class Conversation(models.Model):
     good_conversation = models.ForeignKey(ConversationScenario, related_name="good_conversation", null=True)
     bad_conversation = models.ForeignKey(ConversationScenario, related_name="bad_conversation", null=True)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     pageblocks = generic.GenericRelation(PageBlock)
     display_name = "Conversation"
     template_name = ""
@@ -104,10 +100,19 @@ class Conversation(models.Model):
 
     @classmethod
     def create(self, request):
-        print "inside create"
-        print request.POST.get('description', '')
         return Conversation.objects.create(
             description=request.POST.get('description', ''))
+
+    def edit_form(self):
+        class EditForm(forms.Form):
+            description = forms.CharField(
+                widget=forms.widgets.Textarea(),
+                initial=self.description)
+        return EditForm()
+
+    def edit(self, vals):
+        self.description = vals.get('description', '')
+        self.save()
 
     def needs_submit(self):
         return True
