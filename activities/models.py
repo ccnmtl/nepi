@@ -8,8 +8,6 @@ from django.dispatch.dispatcher import receiver
 from django.utils import simplejson
 from operator import itemgetter
 from pagetree.models import PageBlock
-from quizblock.models import Quiz, Answer, Question, Submission
-from pagetree.models import PageBlock
 from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
 from datetime import datetime
@@ -74,6 +72,7 @@ class Conversation(models.Model):
         return unicode(self.pageblock())
 
     def unlocked(self, user):
+        # next activity becomes unlocked when the user has seen both good and bad dialog
         return ConversationSubmission.objects.filter(conversation=self, user=user).second_selection
 
 
