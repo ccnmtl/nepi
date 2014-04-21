@@ -9,10 +9,21 @@ from cStringIO import StringIO
 from django.core.urlresolvers import reverse
 
 
+#class ViewPage(LoggedInMixin, PageView):
+#    template_name = "activities/conversation.html"
+#    hierarchy_name = "main" # should it be in main?
+#    hierarchy_base = "/pages/main/"
+#    gated = False
+
+#class EditPage(LoggedInMixinSuperuser, EditView):
+#    template_name = "main/edit_page.html"
+#    hierarchy_name = "main"
+#    hierarchy_base = "/pages/main/"
+
 @render_to('activities/conversation.html')
 def conversation(request, id):
-    conversation = get_object_or_404(Lab, id=id)
-    section = lab.pageblock().section
+    conversation = get_object_or_404(Conversation, id=id)
+    section = conversation.pageblock().section
     h = get_hierarchy()
     return dict(conversation=conversation, section=section,
                 root=h.get_root())

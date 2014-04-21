@@ -12,7 +12,7 @@ from quizblock.models import Quiz, Answer, Question, Submission
 from pagetree.models import PageBlock
 from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
-
+from datetime import datetime
 
 START_CONV = (
     ('P', 'Patient'),
@@ -23,10 +23,6 @@ CONV_STATUS = (
     ('R', 'Right'),
     ('W', 'Wrong'),
 )
-
-# current plan: starting party may have one or two
-# speech elements to start with, there may be one
-# or more responses, 
 
 class NurseConversation(models.Model):
     starting_one = models.CharField(max_length=255)
@@ -41,53 +37,61 @@ class PatientConversation(models.Model):
     responseg_one = models.CharField(max_length=255)
     response_two = models.CharField(max_length=255)
 
+
 class ConversationDialog(models.Model):
-    pass
-#need to make a back and forth ordered dialog
-
-#Should I have a complete conversation obect?
+    order = models.PositiveIntegerField()
+    content = models.CharField(max_length=255)
 
 
-class Conversation(models.Model):
-    # should blank be True?
-    conv_status = models.CharField(max_length=1, choices=CONV_STATUS, blank=True)
+class ConversationScenario(models.Model):
     starting_party = models.CharField(max_length=1, choices=START_CONV, blank=True)
-    directions = models.TextField(blank=True)
-    #explanation = models.TextField(blank=True)
-    first_click = models.BooleanField(default=False)
-    second_selection = models.BooleanField(default=False)
     nurse_bubbles = models.ForeignKey(NurseConversation)
     patient_bubbles = models.ForeignKey(PatientConversation)
     dialog = models.ForeignKey(ConversationDialog)
-    #pageblocks = generic.GenericRelation(PageBlock)
+
+
+class Conversation(models.Model):
+    good_conversation = models.ForeignKey(ConversationScenario, related_name="good_conversation")
+    bad_conversation = models.ForeignKey(ConversationScenario, related_name="bad_conversation")
+    directions = models.TextField(blank=True)
+    pageblocks = generic.GenericRelation(PageBlock)
     # how to deal with templates?
     exportable = False
     importable = False
 
-    #def submit(self, user, data):
-    #    """ trying to gather user activity submissions,
-    #        based on pedialabs """
-    #    first_selection = dict()
-    #    for k in data.keys():
-    #        if k.startswith('first_click-'):
-    #            answer = data[k]
-
-               
-    #    ActionPlanResponse.objects.create(
-    #        lab=self, user=user,
-    #        action_plan=action_plan,
-    #        assessment=assessment,
-    #    )
-    #    # now save them
-    #    for tid in results.keys():
-    #        test = Test.objects.get(id=tid)
-    #        result = results[tid]
-    #        abnormality = abnormalities.get(tid, "none")
-    #        TestResponse.objects.create(user=user, test=test,
-    #                                    result_level=result,
-    #                                    abnormality=abnormality)
-
     def needs_submit(self):
         return True
+
+    def redirect_to_self_on_submit(self):
+        # show the student feedback before proceeding
+        return True
+
+    def pageblock(self):
+        return self.pageblocks.all()[0]
+
+    def __unicode__(self):
+        return unicode(self.pageblock())
+
+    def unlocked(self, user):
+        return ConversationSubmission.objects.filter(conversation=self, user=user).second_selection
+
+
+class ConversationSubmission(models.Model):
+    conversation = models.ForeignKey(Conversation)
+    user = models.ForeignKey(User)
+    submitted = models.DateTimeField(default=datetime.now)
+    first_click = models.CharField(max_length=1, choices=CONV_STATUS, blank=True)
+    second_selection = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return "activity %d submission by %s at %s" % (self.conversation.id,
+                                                   unicode(self.user),
+                                                   self.submitted)
+
+    def is_correct(self):
+        if self.first_click == R:
+            return True
+        if self.first_click == W:
+            return False
 
 
