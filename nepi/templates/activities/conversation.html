@@ -1,0 +1,15 @@
+{% load markup %}
+{% if block.label %}<h3>{{block.label}}</h3>{% endif %}
+{% ifsubmitted block %}
+{{block.description|markdown}}
+<table cellpadding="0" cellspacing="0" class="">
+  <tr>
+    <th>Conversation</th>
+  </tr>
+
+  <tr>
+    <th class="">Description:</th>
+  </tr>
+
+{% endifsubmitted %}
+

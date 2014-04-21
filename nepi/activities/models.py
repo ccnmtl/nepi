@@ -54,10 +54,12 @@ class ConversationScenario(models.Model):
     starting_party = models.CharField(max_length=1, choices=START_CONV, null=True, blank=True)
     nurse_bubbles = models.ForeignKey(NurseConversation)
     patient_bubbles = models.ForeignKey(PatientConversation)
+    # I think the foriegn keys probably belong in the sub models...
     dialog = models.ForeignKey(ConversationDialog)
 
 
 class ConversationScenarioForm(forms.ModelForm):
+    # is it smart enough to create the sub fields as forms?
     class Meta:
         model = ConversationScenario
         fields = ('starting_party', 'nurse_bubbles', 'patient_bubbles', 'dialog')
@@ -132,6 +134,12 @@ class Conversation(models.Model):
 
     def add_patient_conversation(self, request=None):
         return PatientConversationForm(request)
+
+    def add_conversation_dialog(self, request=None):
+        return ConversationDialogForm(request)
+
+    def add_conversation_scenario(self, request=None):
+        return ConversationScenarioForm(request)
 
 
 class ConversationResponse(models.Model):

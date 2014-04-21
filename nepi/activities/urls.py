@@ -12,7 +12,7 @@ from nepi.activities.views import CreateNurseConversationView
 #from pagetree.generic.views import PageView
 
 urlpatterns = patterns(
-    'nepi.activities.views',
+    #'nepi.activities.views',
     (r'^create_nconversation/$', 'CreateNurseConversationView.as_view()'),
 #    (r'^edit_conversation/(?P<id>\d+)/$', 'edit_conversation', {}, 'edit-conversation'),
 #    (r'^edit_lab/(?P<id>\d+)/add_test/$',
