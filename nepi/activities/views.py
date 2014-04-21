@@ -30,7 +30,6 @@ class CreateConversationScenarioView(CreateView):
     success_url = '/thank_you/'
 
 
-
 @render_to('activities/conversation.html')
 def conversation(request, id):
     conversation = get_object_or_404(Conversation, id=id)
@@ -58,7 +57,6 @@ def conversation(request, id):
 #                root=h.get_root())
 
 
-
 def delete_conversation(request, id):
     pass
 #    converstaion = get_object_or_404(Test, id=id)
@@ -71,5 +69,3 @@ def delete_conversation(request, id):
 #<html><body><form action="." method="post">Are you Sure?
 #<input type="submit" value="Yes, delete it" /></form></body></html>
 #""")
-
-

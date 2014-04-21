@@ -2,16 +2,11 @@ from django.db import models
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
-from django.db.models.query_utils import Q
-from django.db.models.signals import pre_save, post_init
-from django.dispatch.dispatcher import receiver
 from django.utils import simplejson
-from operator import itemgetter
 from pagetree.models import PageBlock
 from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
 from datetime import datetime
-
 
 
 START_CONV = (
@@ -24,14 +19,17 @@ class NurseConversation(models.Model):
     dialog_one = models.CharField(max_length=255, null=True)
     dialog_two = models.CharField(max_length=255, null=True)
 
+
 class NurseConversationForm(forms.ModelForm):
     class Meta:
         model = NurseConversation
         fields = ('dialog_one', 'dialog_two')
 
+
 class PatientConversation(models.Model):
     dialog_one = models.CharField(max_length=255, null=True)
     dialog_two = models.CharField(max_length=255, null=True)
+
 
 class PatientConversationForm(forms.ModelForm):
     class Meta:
@@ -51,7 +49,8 @@ class ConversationDialogForm(forms.ModelForm):
 
 
 class ConversationScenario(models.Model):
-    starting_party = models.CharField(max_length=1, choices=START_CONV, null=True, blank=True)
+    starting_party = models.CharField(
+        max_length=1, choices=START_CONV, null=True, blank=True)
     nurse_bubbles = models.ForeignKey(NurseConversation)
     patient_bubbles = models.ForeignKey(PatientConversation)
     # I think the foriegn keys probably belong in the sub models...
@@ -62,12 +61,17 @@ class ConversationScenarioForm(forms.ModelForm):
     # is it smart enough to create the sub fields as forms?
     class Meta:
         model = ConversationScenario
-        fields = ('starting_party', 'nurse_bubbles', 'patient_bubbles', 'dialog')
+        fields = ('starting_party',
+                  'nurse_bubbles',
+                  'patient_bubbles',
+                  'dialog')
 
 
 class Conversation(models.Model):
-    good_conversation = models.ForeignKey(ConversationScenario, related_name="good_conversation", null=True)
-    bad_conversation = models.ForeignKey(ConversationScenario, related_name="bad_conversation", null=True)
+    good_conversation = models.ForeignKey(
+        ConversationScenario, related_name="good_conversation", null=True)
+    bad_conversation = models.ForeignKey(
+        ConversationScenario, related_name="bad_conversation", null=True)
     description = models.TextField(blank=True)
     pageblocks = generic.GenericRelation(PageBlock)
     display_name = "Conversation"
@@ -82,13 +86,13 @@ class Conversation(models.Model):
                 cid = int(k[len('conversation-scenario-'):])
                 conversation = ConversationScenario.objects.get(id=cid)
                 if s.first_click == "":
-                     s.first_click = conversation.related_name
-                     s.save()
+                    s.first_click = conversation.related_name
+                    s.save()
                 elif s.first_click != "":
-                     if s.first_click == conversation.related_name:
-                         pass
-                     elif s.first_click != conversation.related_name:
-                         second_click =True
+                    if s.first_click == conversation.related_name:
+                        pass
+                    elif s.first_click != conversation.related_name:
+                        second_click = True
 
     @classmethod
     def add_form(self):
@@ -127,8 +131,10 @@ class Conversation(models.Model):
         return unicode(self.pageblock())
 
     def unlocked(self, user):
-        # next activity becomes unlocked when the user has seen both good and bad dialog
-        return ConversationResponse.objects.filter(conversation=self, user=user).second_selection
+        # next activity becomes unlocked when
+        # the user has seen both good and bad dialog
+        return ConversationResponse.objects.filter(
+            conversation=self, user=user).second_selection
 
     def add_nurse_conversation(self, request=None):
         return NurseConversationForm(request)
