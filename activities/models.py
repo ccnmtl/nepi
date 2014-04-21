@@ -24,16 +24,14 @@ CONV_STATUS = (
 )
 
 class NurseConversation(models.Model):
-    starting_one = models.CharField(max_length=255)
-    starting_two = models.CharField(max_length=255)
+    starting = models.CharField(max_length=255)
     response_one = models.CharField(max_length=255)
     response_two = models.CharField(max_length=255)
 
 
 class PatientConversation(models.Model):
-    starting_one = models.CharField(max_length=255)
-    starting_two = models.CharField(max_length=255)
-    responseg_one = models.CharField(max_length=255)
+    starting = models.CharField(max_length=255)
+    response_one = models.CharField(max_length=255)
     response_two = models.CharField(max_length=255)
 
 

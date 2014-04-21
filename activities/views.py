@@ -94,7 +94,7 @@ class UpdateConversationView(UpdateView):
     success_url = '/thank_you/'
 
 
-class Conversation(PageView):
+class ViewPage(PageView):
     template_name = "main/conversation.html"
     hierarchy_name = "main"
     hierarchy_base = "/pages/main/"
