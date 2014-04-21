@@ -1,9 +1,6 @@
 from django import forms
 from nepi.main.choices import COUNTRY_CHOICES
 from captcha.fields import CaptchaField
-from captcha.models import CaptchaStore
-from captcha.helpers import captcha_image_url
-from django.http import HttpResponseRedirect, HttpResponse
 
 
 class LoginForm(forms.Form):
@@ -24,7 +21,7 @@ class CreateAccountForm(forms.Form):
         ('TE', 'Teacher'),
         ('ST', 'Student'),
     )
-            
+
     first_name = forms.CharField(
         max_length=25, required=True, label="First Name")
     last_name = forms.CharField(
@@ -39,7 +36,8 @@ class CreateAccountForm(forms.Form):
         label="Confirm Password")
     email = forms.EmailField(required=False)
     #country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=False)
-    profile_type = forms.BooleanField(required=False, label="Are you a Teacher?")
+    profile_type = forms.BooleanField(
+        required=False, label="Are you a Teacher?")
     captcha = CaptchaField()
 
     def clean(self):
@@ -51,16 +49,23 @@ class CreateAccountForm(forms.Form):
         f_username = form.get("username")
 
         if is_teacher and (email == ""):
-            self._errors["email"] = self.error_class(["If you are registering as an instructor you must enter a valid email address"])
-            #raise forms.ValidationError("If you are registering as an instructor you must enter a valid email address")
+            self._errors["email"] = self.error_class(
+                ["If you are registering as an instructor " +
+                 "you must enter a valid email address"])
+            #raise forms.ValidationError(
+            #"If you are registering as an instructor
+            #you must enter a valid email address")
         if password1 != password2:
-            self._errors["password1"] = self.error_class(["Passwords must match each other."])
-            self._errors["password2"] = self.error_class(["Passwords must match each other."])
+            self._errors["password1"] = self.error_class(
+                ["Passwords must match each other."])
+            self._errors["password2"] = self.error_class(
+                ["Passwords must match each other."])
             #raise forms.ValidationError("passwords dont match each other")
 #        try:
 #            User.objects.get(username=f_username)
-#            self._errors["username"] = self.error_class(["This username is taken, please pick another one."])
-            #raise forms.ValidationError("this username already exists")
+#            self._errors["username"] = self.error_class(
+#                ["This username is taken, please pick another one."])
+#            raise forms.ValidationError("this username already exists")
 #        except:
 #            pass
 

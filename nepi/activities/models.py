@@ -106,6 +106,7 @@ class Conversation(models.Model):
             description = forms.CharField(
                 widget=forms.widgets.Textarea(),
                 initial=self.description)
+            good_conversation = ConversationScenarioForm()
         return EditForm()
 
     def edit(self, vals):

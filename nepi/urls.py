@@ -55,6 +55,7 @@ urlpatterns += patterns(
     (r'^activities/', include(nepi.activities.urls)),
     (r'^activities/create_nconversation/$', CreateNurseConversationView.as_view()),
     (r'^activities/create_scenario/$', CreateConversationScenarioView.as_view()),
+
     # flat and universally accessible pages
     (r'^home/$', 'nepi.main.views.home'),
     #(r'^edit_profile/$', ContactView.as_view())
@@ -98,6 +99,9 @@ urlpatterns += patterns(
     (r'^pagetree/', include('pagetree.urls')),
 
     (r'^pages/main/edit/(?P<path>.*)$',
+     nepi.main.views.EditPage.as_view(),
+     {}, 'edit-page'),
+    (r'^pages/main/activities/edit/(?P<path>.*)$',
      nepi.main.views.EditPage.as_view(),
      {}, 'edit-page'),
     (r'^pages/main/instructor/(?P<path>.*)$',

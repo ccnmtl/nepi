@@ -7,18 +7,16 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, render_to_response
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from nepi.main.forms import CreateAccountForm, ContactForm, \
     LoginForm
 from nepi.main.models import Course, UserProfile
 from nepi.main.models import School, PendingTeachers
 from pagetree.generic.views import EditView
-from pagetree.helpers import get_section_from_path, get_module, needs_submit
 from django.views.generic.edit import FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.core.mail import send_mail
-
 
 
 @render_to('main/index.html')
@@ -79,7 +77,6 @@ class InstructorPage(LoggedInMixinStaff, InstructorView):
 #         if p.block().display_name == "Lab":
 #             return True
 #     return False
-
 
 
 '''Below this line is old code'''
@@ -219,13 +216,13 @@ class RegistrationView(FormView):
             sender = "nepi@nepi.ccnmtl.columbia.edu"
             recipients = ["nepi@nepi.ccnmtl.columbia.edu"]
             message = form_data['username'] + \
-                      " has successfully created a NEPI account.\n\n"
+                " has successfully created a NEPI account.\n\n"
             if form_data['profile_type']:
                 subject = "[Teacher] Account Requested"
                 message = form_data['first_name'] + \
-                          " " + form_data['last_name'] + \
-                          "has requested teacher status in "
-                          # need to add country and schools here
+                    " " + form_data['last_name'] + \
+                    "has requested teacher status in "
+                    # need to add country and schools here
                 pending = PendingTeachers(user_profile=new_profile)
                 pending.save()
             send_mail(subject, message, sender, recipients)
@@ -322,7 +319,6 @@ def remove_student(request, stud_id, cors_id):
 
 def student_average(s_id):
     pass
-
 
 
 """Student Views"""
