@@ -49,11 +49,7 @@ urlpatterns += patterns(
     (r'^login/$', 'nepi.main.views.nepi_login'),
     (r'^logout/$', 'nepi.main.views.logout_view'),
 
-    # Interactive Links
-    (r'^conversation/(?P<id>\d+)/$', 'activities.views.conversation'),
-    (r'^create_conversation/$', 'activities.views.create_conversation'),
-    (r'^edit_conversation/$', 'activities.views.update_conversation'),
-    (r'^activities/$', include(activities.urls)),
+    (r'^activities/$', include('activities.urls')),
     # flat and universally accessible pages
     (r'^home/$', 'nepi.main.views.home'),
     #(r'^edit_profile/$', ContactView.as_view())

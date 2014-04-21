@@ -7,21 +7,11 @@ from pagetree.helpers import get_hierarchy
 import csv
 from cStringIO import StringIO
 from django.core.urlresolvers import reverse
+from pagetree.generic.views import PageView, EditView
 from django.views.generic.edit import CreateView, UpdateView
 from activities.models import NurseConversation, PatientConversation
 from activities.models import ConversationDialog, ConversationScenario
 from activities.models import Conversation
-#class ViewPage(LoggedInMixin, PageView):
-#    template_name = "activities/conversation.html"
-#    hierarchy_name = "main" # should it be in main?
-#    hierarchy_base = "/pages/main/"
-#    gated = False
-
-#class EditPage(LoggedInMixinSuperuser, EditView):
-#    template_name = "main/edit_page.html"
-#    hierarchy_name = "main"
-#    hierarchy_base = "/pages/main/"
-
 
 
 class CreateNurseConversationView(CreateView):
@@ -102,6 +92,19 @@ class UpdateConversationView(UpdateView):
     model = Conversation
     template_name = 'icap/add_school.html'
     success_url = '/thank_you/'
+
+
+class Conversation(PageView):
+    template_name = "main/conversation.html"
+    hierarchy_name = "main"
+    hierarchy_base = "/pages/main/"
+    gated = False
+
+
+class EditPage(EditView):
+    template_name = "main/edit_page.html"
+    hierarchy_name = "main"
+    hierarchy_base = "/pages/main/"
 
 
 
