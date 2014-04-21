@@ -13,27 +13,34 @@ from nepi.activities.models import NurseConversation, PatientConversation
 from nepi.activities.models import ConversationDialog, ConversationScenario
 from nepi.activities.models import Conversation
 
-
-@render_to('activities/conversation.html')
-def conversation(request, id):
-    conversation = get_object_or_404(Conversation, id=id)
-    section = conversation.pageblock().section
-    h = get_hierarchy()
-    return dict(conversation=conversation, section=section,
-                root=h.get_root())
+class CreateNurseConversationView(CreateView):
+    '''generic class based view for
+    adding a school'''
+    model = NurseConversation
+    template_name = 'icap/add_nconversation.html'
+    #success_url = '/thank_you/'
 
 
-@render_to('activities/edit_conversation.html')
-def update_conversation(request, id):
-    conversation = get_object_or_404(Lab, id=id)
-    section = lab.pageblock().section
-    h = get_hierarchy()
-    return dict(conversation=conversation, section=section,
-                root=h.get_root())
+#@render_to('activities/conversation.html')
+#def conversation(request, id):
+#    conversation = get_object_or_404(Conversation, id=id)
+#    section = conversation.pageblock().section
+#    h = get_hierarchy()
+#    return dict(conversation=conversation, section=section,
+#                root=h.get_root())
 
-@render_to('activities/create_conversation.html')
-def create_conversation(request):
-    pass
+
+#@render_to('activities/edit_conversation.html')
+#def update_conversation(request, id):
+#    conversation = get_object_or_404(Lab, id=id)
+#    section = lab.pageblock().section
+#    h = get_hierarchy()
+#    return dict(conversation=conversation, section=section,
+#                root=h.get_root())
+
+#@render_to('activities/create_conversation.html')
+#def create_conversation(request):
+#    pass
 #    conversation = get_object_or_404(Lab, id=id)
 #    section = lab.pageblock().section
 #    h = get_hierarchy()

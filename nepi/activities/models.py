@@ -19,10 +19,6 @@ START_CONV = (
     ('N', 'Nurse'),
 )
 
-CONV_STATUS = (
-    ('R', 'Right'),
-    ('W', 'Wrong'),
-)
 
 class NurseConversation(models.Model):
     dialog_one = models.CharField(max_length=255, null=True)
@@ -73,7 +69,7 @@ class Conversation(models.Model):
     description = models.TextField(blank=True)
     pageblocks = generic.GenericRelation(PageBlock)
     display_name = "Conversation"
-    template_name = ""
+    template_name = "activities/conversation.html"
     exportable = False
     importable = False
 
@@ -142,7 +138,7 @@ class ConversationResponse(models.Model):
     conversation = models.ForeignKey(Conversation)
     user = models.ForeignKey(User)
     submitted = models.DateTimeField(default=datetime.now)
-    first_click = models.CharField(max_length=1, choices=CONV_STATUS, blank=True)
+    first_click = models.CharField(max_length=255, blank=True)
     second_selection = models.BooleanField(default=False)
 
     def get_second_click(self, request):
