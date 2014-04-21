@@ -7,8 +7,10 @@ from pagetree.helpers import get_hierarchy
 import csv
 from cStringIO import StringIO
 from django.core.urlresolvers import reverse
-
-
+from django.views.generic.edit import CreateView, UpdateView
+from activities.models import NurseConversation, PatientConversation
+from activities.models import ConversationDialog, ConversationScenario
+from activities.models import Conversation
 #class ViewPage(LoggedInMixin, PageView):
 #    template_name = "activities/conversation.html"
 #    hierarchy_name = "main" # should it be in main?
@@ -19,6 +21,89 @@ from django.core.urlresolvers import reverse
 #    template_name = "main/edit_page.html"
 #    hierarchy_name = "main"
 #    hierarchy_base = "/pages/main/"
+
+
+
+class CreateNurseConversationView(CreateView):
+    '''generic class based view for
+    adding a school'''
+    model = NurseConversation
+    template_name = 'icap/add_school.html'
+    success_url = '/thank_you/'
+
+
+class UpdateNurseConversationView(UpdateView):
+    '''generic class based view for
+    editing a school'''
+    model = NurseConversation
+    template_name = 'icap/add_school.html'
+    success_url = '/thank_you/'
+
+
+class CreatePatientConversationView(CreateView):
+    '''generic class based view for
+    adding a school'''
+    model = PatientConversation
+    template_name = 'icap/add_school.html'
+    success_url = '/thank_you/'
+
+
+class UpdatePatientConversationView(UpdateView):
+    '''generic class based view for
+    editing a school'''
+    model = PatientConversation
+    template_name = 'icap/add_school.html'
+    success_url = '/thank_you/'
+
+
+class CreateConversationDialogView(CreateView):
+    '''generic class based view for
+    adding a school'''
+    model = ConversationDialog
+    template_name = 'icap/add_school.html'
+    success_url = '/thank_you/'
+
+
+class UpdateConversationDialogView(UpdateView):
+    '''generic class based view for
+    editing a school'''
+    model = ConversationDialog
+    template_name = 'icap/add_school.html'
+    success_url = '/thank_you/'
+
+
+class CreateConversationScenarioView(CreateView):
+    '''generic class based view for
+    adding a school'''
+    model = ConversationScenario
+    template_name = 'icap/add_school.html'
+    success_url = '/thank_you/'
+
+
+class UpdateConversationScenarioView(UpdateView):
+    '''generic class based view for
+    editing a school'''
+    model = ConversationScenario
+    template_name = 'icap/add_school.html'
+    success_url = '/thank_you/'
+
+
+class CreateConversationView(CreateView):
+    '''generic class based view for
+    adding a school'''
+    model = Conversation
+    template_name = 'icap/add_school.html'
+    success_url = '/thank_you/'
+
+
+class UpdateConversationView(UpdateView):
+    '''generic class based view for
+    editing a school'''
+    model = Conversation
+    template_name = 'icap/add_school.html'
+    success_url = '/thank_you/'
+
+
 
 @render_to('activities/conversation.html')
 def conversation(request, id):
