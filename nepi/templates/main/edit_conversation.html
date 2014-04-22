@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block js %}
+<script type="text/javascript" src="/site_media/js/mochikit/MochiKit/MochiKit.js"></script>
+<script type="text/javascript" src="/site_media/js/dragdropreorder.js"></script>
+
+{% endblock %}
+
+{% block sidenav %}
+	<!-- ###### Secondary Navigation ###### -->
+	<div id="secondary_navigation">
+		<div id="fadetop"></div>
+		<div class="block">
+			<h3>Sections</h3>
+{% with "/edit" as menu_base %}
+{% include "pagetree/menu.html" %}
+{% endwith %}
+		</div><!-- div id="block" -->
+		<div id="fadebottom"></div>
+	</div><!-- div id="secondary_navigation" -->
+{% endblock %}
+
+{% block content %}
+<h2><a href="{{section.get_edit_url}}">{{section.label}}</a>: {{conversation.pageblock.label}}</h2>
+<p>{{conversation.good_dialog}}</p>
+<p>{{conversation.description}}</p>
+<p>{{conversation.description}}</p>
+<p>{{conversation.description}}</p>
+
+{% comment %}
+<ul id="tests" class="dragparent">
+{% for test in lab.test_set.all %}
+<li class="draggable" id="test-{{test.id}}">[<a 
+href="{% url 'delete-test' test.id %}">delete</a>] 
+Test {{ test.ordinality }}: 
+<a href="{% url 'edit-test' test.id %}">{{test.name|truncatewords:20}}</a></li>
+{% endfor %}
+</ul>
+
+<form action="add_test/" method="post">
+<table width="100%">
+{{ lab.add_test_form.as_table}}
+</table>
+<input type="submit" value="add test" />
+</form>
+
+<form action="add_csv/" method="post"
+      enctype="multipart/form-encoded">
+<p>upload a csv file of multiple tests: </p>
+
+<ul>
+<li>one test per row.</li>
+<li>6 columns per row: name, result, normal range, unit, result level
+  ("low","normal","high"), abnormality</li>
+<li>it expects a header row (ie, the first row of the file is
+  ignored)</li>
+</ul>
+
+<table width="100%">
+<tr><th>csv file</th>
+<td><input type="file" name="csv" /></td>
+</tr>
+<tr><th>replace existing tests</th>
+<td><input type="checkbox" name="replace" />
+if unchecked, it will just add additional tests</td>
+</tr>
+</table>
+<input type="submit" value="upload"/>
+</form>
+{% endcomment %}
+{% endblock %}
+

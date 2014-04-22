@@ -9,10 +9,6 @@ from django.core.urlresolvers import reverse
 from datetime import datetime
 
 
-class InfantDosage(models.Model):
-    pass
-    
-
 START_CONV = (
     ('P', 'Patient'),
     ('N', 'Nurse'),
@@ -190,21 +186,6 @@ class ConversationResponse(models.Model):
 '''Going to try something different.'''
 
 
-class ConversationSituation:
-    conversation = models.ForeignKey(AlternativeConversation)
-    conversation_type = models.CharField(max_length=1, choices=CONV_TYPE, null=True, blank=True))
-    nurse1 = models.CharField(max_length=255, null=True)
-    nurse2 = models.CharField(max_length=255, null=True)
-    patient1 = models.CharField(max_length=255, null=True)
-    patient2 = models.CharField(max_length=255, null=True)
-    dialog1 = models.CharField(max_length=255, null=True)
-    dialog2 = models.CharField(max_length=255, null=True)
-    dialog3 = models.CharField(max_length=255, null=True)
-    dialog4 = models.CharField(max_length=255, null=True)
-    dialog5 = models.CharField(max_length=255, null=True)
-    dialog6 = models.CharField(max_length=255, null=True)
-
-
 class AlternativeConversation(models.Model):
     description = models.TextField(blank=True)
     pageblocks = generic.GenericRelation(PageBlock)
@@ -233,12 +214,6 @@ class AlternativeConversation(models.Model):
         class AddForm(forms.Form):
             description = forms.CharField(widget=forms.widgets.Textarea())
         return AddForm()
-
-# is this what its supposed to look like
-#    @classmethod
-#    def create(self, request):
-#        form = CounselingSessionForm(request.POST)
-#        return form.save()
 
     @classmethod
     def create(self, request):
@@ -280,16 +255,19 @@ class AlternativeConversation(models.Model):
         return ConversationResponse.objects.filter(
             conversation=self, user=user).second_selection
 
-    def add_nurse_conversation(self, request=None):
-        return NurseConversationForm(request)
 
-    def add_patient_conversation(self, request=None):
-        return PatientConversationForm(request)
-
-    def add_conversation_dialog(self, request=None):
-        return ConversationDialogForm(request)
-
-    def add_conversation_scenario(self, request=None):
-        return ConversationScenarioForm(request)
-
-
+class ConversationSituation:
+    conversation = models.ForeignKey(AlternativeConversation)
+    conversation_type = models.CharField(max_length=1, choices=CONV_TYPE, null=True, blank=True)
+    nurse1 = models.CharField(max_length=255, null=True)
+    nurse2 = models.CharField(max_length=255, null=True)
+    patient1 = models.CharField(max_length=255, null=True)
+    patient2 = models.CharField(max_length=255, null=True)
+    dialog1 = models.CharField(max_length=255, null=True)
+    dialog2 = models.CharField(max_length=255, null=True)
+    dialog3 = models.CharField(max_length=255, null=True)
+    dialog4 = models.CharField(max_length=255, null=True)
+    dialog5 = models.CharField(max_length=255, null=True)
+    dialog6 = models.CharField(max_length=255, null=True)
+    first_click = models.CharField(max_length=255, blank=True)
+    second_selection = models.BooleanField(default=False)
