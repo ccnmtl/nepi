@@ -2,11 +2,32 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from pagetree.models import Hierarchy
 import factory
+from nepi.activities.models import ConversationScenario, \
+    Conversation
 
 
 class UserFactory(factory.DjangoModelFactory):
     FACTORY_FOR = User
     username = factory.Sequence(lambda n: "user%d" % n)
+
+
+class ConversationScenarioFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = ConversationScenario
+    description = "Description for the Conversation Scenario"
+
+
+class ConversationFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = Conversation
+    text_one = "We assume text one is the starting text"
+    text_two = "Text 2 is the response to whatever the other party says"
+    text_three = "Text 3 is an optional response/thought to " + \
+        "whatever the other party says"
+    complete_dialog = "This is the entire Nurse/Patient exchange" + \
+        " that is displayed when the user selects the starting text"
+
+
+
+
 
 #class NurseConversationFactory(factory.DjangoModelFactory):
 #    FACTORY_FOR = NurseConversation
@@ -24,5 +45,3 @@ class UserFactory(factory.DjangoModelFactory):
 #    FACTORY_FOR = ConversationDialog
 #    order = 1
 #    content = "This is the nurse's first line"
-
-

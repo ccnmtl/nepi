@@ -1,18 +1,9 @@
 from datetime import datetime
 from django.contrib.auth.models import User
 from pagetree.models import Hierarchy
-import factory
+from .factories import UserFactory, ConversationScenarioFactory, \
+    ConversationFactory
 
-
-class UserFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = User
-    username = factory.Sequence(lambda n: "user%d" % n)
-
-#class NurseConversationFactory(factory.DjangoModelFactory):
-#    FACTORY_FOR = NurseConversation
-#    starting = "Asking patient appropriate question part one"
-#    response_one = ""
-#    response_two = ""
 
 #class PatientConversationFactory(factory.DjangoModelFactory):
 #    FACTORY_FOR = PatientConversation
