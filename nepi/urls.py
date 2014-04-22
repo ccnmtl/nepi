@@ -3,8 +3,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.conf import settings
 import nepi.main.views
-import nepi.activities.urls
-import nepi.activities.views
+#import nepi.activities.urls
+#import nepi.activities.views
 from django.views.generic import TemplateView
 import os.path
 admin.autodiscover()
@@ -12,9 +12,7 @@ import staticmedia
 from nepi.main.views import CreateCourseView, UpdateCourseView
 from nepi.main.views import CreateSchoolView, UpdateSchoolView
 from nepi.main.views import ContactView, RegistrationView
-from nepi.activities.views import CreateNurseConversationView
-from nepi.activities.views import CreateConversationScenarioView
-import nepi.activities.urls
+
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
@@ -52,10 +50,7 @@ urlpatterns += patterns(
     (r'^admin/', include(admin.site.urls)),
     (r'^login/$', 'nepi.main.views.nepi_login'),
     (r'^logout/$', 'nepi.main.views.logout_view'),
-
-    (r'^activities/', include(nepi.activities.urls)),
-    (r'^activities/create_nconversation/$', CreateNurseConversationView.as_view()),
-    (r'^activities/create_scenario/$', CreateConversationScenarioView.as_view()),
+#    (r'^activities/create_scenario/$', CreateConversationScenarioView.as_view()),
 
     # flat and universally accessible pages
     (r'^home/$', 'nepi.main.views.home'),
@@ -80,7 +75,7 @@ urlpatterns += patterns(
     #(r'^course_results/$', 'nepi.main.views.course_results'),
 
     url(r'^captcha/', include('captcha.urls')),
-
+    (r'^activities/', include('nepi.activities.urls')),
     # Student related pages
     (r'^thanks_course/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_course'),
     (r'^view_courses/(?P<schl_id>\d+)/$', 'nepi.main.views.view_courses'),
@@ -110,8 +105,8 @@ urlpatterns += patterns(
 #    (r'^pages/main/activities/edit/(?P<path>.*)$',
 #     nepi.main.views.EditPage.as_view(),
 #     {}, 'edit-page'),
-    (r'^pages/main/instructor/(?P<path>.*)$',
-     nepi.main.views.InstructorPage.as_view()),
+#    (r'^pages/main/instructor/(?P<path>.*)$',
+#     nepi.main.views.InstructorPage.as_view()),
     (r'^pages/main/(?P<path>.*)$', nepi.main.views.ViewPage.as_view()),
 
 

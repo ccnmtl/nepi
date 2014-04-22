@@ -1,6 +1,5 @@
 # Create your views here.
 from annoying.decorators import render_to
-from .models import Conversation#, Test
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 from pagetree.helpers import get_hierarchy
@@ -9,25 +8,17 @@ from cStringIO import StringIO
 from django.core.urlresolvers import reverse
 from pagetree.generic.views import PageView, EditView
 from django.views.generic.edit import CreateView, UpdateView
-from nepi.activities.models import NurseConversation, PatientConversation
-from nepi.activities.models import ConversationDialog, ConversationScenario
-from nepi.activities.models import Conversation
-
-class CreateNurseConversationView(CreateView):
-    '''generic class based view for
-    adding a school'''
-    model = NurseConversation
-    template_name = 'icap/add_nconversation.html'
-    success_url = '/thank_you/'
+from nepi.activities.models import ConversationScenario
+#from nepi.activities.models import Conversation
 
 
-class CreateConversationScenarioView(CreateView):
-    #seems to provide drop down interface to select existing fields
-    '''generic class based view for
-    adding a school'''
-    model = ConversationScenario
-    template_name = 'icap/add_nconversation.html'
-    success_url = '/thank_you/'
+#class CreateConversationScenarioView(CreateView):
+#    #seems to provide drop down interface to select existing fields
+#    '''generic class based view for
+#    adding a school'''
+#    model = ConversationScenario
+#    template_name = 'icap/add_nconversation.html'
+#    success_url = '/thank_you/'
 
 
 @render_to('activities/conversation.html')
