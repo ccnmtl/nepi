@@ -87,7 +87,17 @@ class UpdateConversationView(UpdateView):
     success_url = '/thank_you/'
 
 
+class ConvClick(models.Model):
+    time = models.DateTimeField(default=datetime.now)
+    conversation = models.ForeignKey(Conversation, null=True, blank=True)
+    
+    def get_click(self, request):
+        pass
+
+
 class ConversationResponse(models.Model):
-    conversation = models.ForeignKey(ConversationScenario)
+    conv_scen = models.ForeignKey(ConversationScenario, null=True, blank=True)
     user = models.ForeignKey(User)
-    submitted = models.DateTimeField(default=datetime.now)
+    first_click = models.ForeignKey(ConvClick, related_name="first_click", null=True, blank=True)
+    second_click = models.ForeignKey(ConvClick, related_name="second_click", null=True, blank=True)
+    last_click = models.ForeignKey(ConvClick, related_name="third_click", null=True, blank=True)

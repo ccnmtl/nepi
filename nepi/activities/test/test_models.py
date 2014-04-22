@@ -2,9 +2,22 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from pagetree.models import Hierarchy
 from .factories import UserFactory, ConversationScenarioFactory, \
-    ConversationFactory
+    ConversationFactory#, HierarchyFactory
+from django.test import TestCase
 
 
+class TestConversationScenario(TestCase):
+    def test_unicode(self):
+        #pass
+        #cs = ConversationScenarioFactory()
+        #self.assertEqual(str(cs), "Conversation Scenario")
+
+
+class TestConversation(TestCase):
+    def test_unicode(self):
+        pass
+        #c = ConversationFactory()
+        #self.assertEqual(str(c), "Conversation Scenario")
 #class PatientConversationFactory(factory.DjangoModelFactory):
 #    FACTORY_FOR = PatientConversation
 #    starting = ""
