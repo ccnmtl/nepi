@@ -27,7 +27,6 @@ class ConversationScenario(models.Model):
     def needs_submit(self):
         return True
 
-
     def submit(self, user, data):
         s = ConversationResponse.objects.create(conversation=self, user=user)
         for k in data.keys():
@@ -62,9 +61,11 @@ class ConversationScenario(models.Model):
         return ConversationResponse.objects.filter(
             conversation=self, user=user)
 
+
 class ConversationScenarioForm(forms.ModelForm):
     class Meta:
         model = ConversationScenario
+
 
 class Conversation(models.Model):
     scenario = models.ForeignKey(ConversationScenario, null=True)
@@ -74,21 +75,19 @@ class Conversation(models.Model):
     complete_dialog = models.CharField(max_length=255, null=True)
 
 
-class CreateConversationView(CreateView): 
-    model = Conversation 
-    template_name = 'main/add_conversation.html' 
-    success_url = '/thank_you/' 
+class CreateConversationView(CreateView):
+    model = Conversation
+    template_name = 'main/add_conversation.html'
+    success_url = '/thank_you/'
 
 
-class UpdateConversationView(UpdateView): 
-    model = Conversation 
-    template_name = 'main/add_conversation.html' 
-    success_url = '/thank_you/' 
+class UpdateConversationView(UpdateView):
+    model = Conversation
+    template_name = 'main/add_conversation.html'
+    success_url = '/thank_you/'
 
 
 class ConversationResponse(models.Model):
     conversation = models.ForeignKey(ConversationScenario)
     user = models.ForeignKey(User)
     submitted = models.DateTimeField(default=datetime.now)
-
-
