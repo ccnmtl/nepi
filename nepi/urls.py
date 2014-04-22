@@ -14,6 +14,7 @@ from nepi.main.views import CreateSchoolView, UpdateSchoolView
 from nepi.main.views import ContactView, RegistrationView
 from nepi.activities.views import CreateNurseConversationView
 from nepi.activities.views import CreateConversationScenarioView
+import nepi.activities.urls
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
@@ -101,9 +102,14 @@ urlpatterns += patterns(
     (r'^pages/main/edit/(?P<path>.*)$',
      nepi.main.views.EditPage.as_view(),
      {}, 'edit-page'),
-    (r'^pages/main/activities/edit/(?P<path>.*)$',
+
+    (r'^pages/activities/edit/(?P<path>.*)$',
      nepi.main.views.EditPage.as_view(),
      {}, 'edit-page'),
+
+#    (r'^pages/main/activities/edit/(?P<path>.*)$',
+#     nepi.main.views.EditPage.as_view(),
+#     {}, 'edit-page'),
     (r'^pages/main/instructor/(?P<path>.*)$',
      nepi.main.views.InstructorPage.as_view()),
     (r'^pages/main/(?P<path>.*)$', nepi.main.views.ViewPage.as_view()),

@@ -39,13 +39,13 @@ def conversation(request, id):
                 root=h.get_root())
 
 
-#@render_to('activities/edit_conversation.html')
-#def update_conversation(request, id):
-#    conversation = get_object_or_404(Lab, id=id)
-#    section = lab.pageblock().section
-#    h = get_hierarchy()
-#    return dict(conversation=conversation, section=section,
-#                root=h.get_root())
+@render_to('activities/edit_conversation.html')
+def edit_conversation(request, id):
+    conversation = get_object_or_404(Lab, id=id)
+    section = lab.pageblock().section
+    h = get_hierarchy()
+    return dict(conversation=conversation, section=section,
+                root=h.get_root())
 
 #@render_to('activities/create_conversation.html')
 #def create_conversation(request):

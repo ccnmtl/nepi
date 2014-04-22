@@ -9,9 +9,19 @@ from django.core.urlresolvers import reverse
 from datetime import datetime
 
 
+class InfantDosage(models.Model):
+    pass
+    
+
 START_CONV = (
     ('P', 'Patient'),
     ('N', 'Nurse'),
+)
+
+
+CONV_TYPE = (
+    ('G', 'Good'),
+    ('B', 'Bad'),
 )
 
 
@@ -67,6 +77,7 @@ class ConversationScenarioForm(forms.ModelForm):
                   'dialog')
 
 
+
 class Conversation(models.Model):
     good_conversation = models.ForeignKey(
         ConversationScenario, related_name="good_conversation", null=True)
@@ -100,18 +111,28 @@ class Conversation(models.Model):
             description = forms.CharField(widget=forms.widgets.Textarea())
         return AddForm()
 
+# is this what its supposed to look like
+#    @classmethod
+#    def create(self, request):
+#        form = CounselingSessionForm(request.POST)
+#        return form.save()
+
     @classmethod
     def create(self, request):
         return Conversation.objects.create(
             description=request.POST.get('description', ''))
 
     def edit_form(self):
-        class EditForm(forms.Form):
-            description = forms.CharField(
-                widget=forms.widgets.Textarea(),
-                initial=self.description)
-            good_conversation = ConversationScenarioForm()
-        return EditForm()
+        class ConversationForm(forms.ModelForm):
+            class Meta:
+                model = Conversation
+                fields = ('good_conversation', 'bad_conversation', 'description')
+        #class EditForm(forms.Form):
+        #    description = forms.CharField(
+        #        widget=forms.widgets.Textarea(),
+        #        initial=self.description)
+        #    good_conversation = ConversationScenarioForm()
+        return ConversationForm()
 
     def edit(self, vals):
         self.description = vals.get('description', '')
@@ -149,6 +170,7 @@ class Conversation(models.Model):
         return ConversationScenarioForm(request)
 
 
+
 class ConversationResponse(models.Model):
     conversation = models.ForeignKey(Conversation)
     user = models.ForeignKey(User)
@@ -163,3 +185,111 @@ class ConversationResponse(models.Model):
             self.second_selection = False
         if request.POST.get('click') != self.first_click:
             self.second_selection = True
+
+
+'''Going to try something different.'''
+
+
+class ConversationSituation:
+    conversation = models.ForeignKey(AlternativeConversation)
+    conversation_type = models.CharField(max_length=1, choices=CONV_TYPE, null=True, blank=True))
+    nurse1 = models.CharField(max_length=255, null=True)
+    nurse2 = models.CharField(max_length=255, null=True)
+    patient1 = models.CharField(max_length=255, null=True)
+    patient2 = models.CharField(max_length=255, null=True)
+    dialog1 = models.CharField(max_length=255, null=True)
+    dialog2 = models.CharField(max_length=255, null=True)
+    dialog3 = models.CharField(max_length=255, null=True)
+    dialog4 = models.CharField(max_length=255, null=True)
+    dialog5 = models.CharField(max_length=255, null=True)
+    dialog6 = models.CharField(max_length=255, null=True)
+
+
+class AlternativeConversation(models.Model):
+    description = models.TextField(blank=True)
+    pageblocks = generic.GenericRelation(PageBlock)
+    display_name = "Conversation"
+    template_name = "activities/conversation.html"
+    exportable = False
+    importable = False
+
+    def submit(self, user, data):
+        s = ConversationResponse.objects.create(conversation=self, user=user)
+        for k in data.keys():
+            if k.startswith('conversation-scenario'):
+                cid = int(k[len('conversation-scenario-'):])
+                conversation = ConversationScenario.objects.get(id=cid)
+                if s.first_click == "":
+                    s.first_click = conversation.related_name
+                    s.save()
+                elif s.first_click != "":
+                    if s.first_click == conversation.related_name:
+                        pass
+                    elif s.first_click != conversation.related_name:
+                        second_click = True
+
+    @classmethod
+    def add_form(self):
+        class AddForm(forms.Form):
+            description = forms.CharField(widget=forms.widgets.Textarea())
+        return AddForm()
+
+# is this what its supposed to look like
+#    @classmethod
+#    def create(self, request):
+#        form = CounselingSessionForm(request.POST)
+#        return form.save()
+
+    @classmethod
+    def create(self, request):
+        return Conversation.objects.create(
+            description=request.POST.get('description', ''))
+
+    def edit_form(self):
+        class ConversationForm(forms.ModelForm):
+            class Meta:
+                model = Conversation
+                fields = ('good_conversation', 'bad_conversation', 'description')
+        #class EditForm(forms.Form):
+        #    description = forms.CharField(
+        #        widget=forms.widgets.Textarea(),
+        #        initial=self.description)
+        #    good_conversation = ConversationScenarioForm()
+        return ConversationForm()
+
+    def edit(self, vals):
+        self.description = vals.get('description', '')
+        self.save()
+
+    def needs_submit(self):
+        return True
+
+    def redirect_to_self_on_submit(self):
+        # show the student feedback before proceeding
+        return True
+
+    def pageblock(self):
+        return self.pageblocks.all()[0]
+
+    def __unicode__(self):
+        return unicode(self.pageblock())
+
+    def unlocked(self, user):
+        # next activity becomes unlocked when
+        # the user has seen both good and bad dialog
+        return ConversationResponse.objects.filter(
+            conversation=self, user=user).second_selection
+
+    def add_nurse_conversation(self, request=None):
+        return NurseConversationForm(request)
+
+    def add_patient_conversation(self, request=None):
+        return PatientConversationForm(request)
+
+    def add_conversation_dialog(self, request=None):
+        return ConversationDialogForm(request)
+
+    def add_conversation_scenario(self, request=None):
+        return ConversationScenarioForm(request)
+
+
