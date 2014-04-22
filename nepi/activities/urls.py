@@ -9,7 +9,7 @@ from nepi.activities.models import UpdateConversationView
 urlpatterns = patterns(
     '',
     (r'^create_conversation/$', CreateConversationView.as_view()),
-    (r'^update_conversation/(?P<id>\d+)/$', 'UpdateConversationView.as_view()'),
+    (r'^update_conversation/(?P<id>\d+)/$', UpdateConversationView.as_view()),
 #    (r'^create_scenario/$', 'CreateConversationScenarioView.as_view()'),
 #    (r'^update_scenario/(?P<id>\d+)/$', 'UpdateConversationScenarioView.as_view()')
 )

@@ -18,6 +18,16 @@ class ConversationScenario(models.Model):
     exportable = False
     importable = False
 
+    def pageblock(self):
+        return self.pageblocks.all()[0]
+
+    def __unicode__(self):
+        return unicode(self.pageblock())
+
+    def needs_submit(self):
+        return True
+
+
     def submit(self, user, data):
         s = ConversationResponse.objects.create(conversation=self, user=user)
         for k in data.keys():
@@ -27,44 +37,24 @@ class ConversationScenario(models.Model):
 
     @classmethod
     def add_form(self):
-        class AddForm(forms.Form):
-            description = forms.CharField(widget=forms.widgets.Textarea())
-        return AddForm()
+        return ConversationScenarioForm()
 
-# is this what its supposed to look like
-#    @classmethod
-#    def create(self, request):
-#        form = CounselingSessionForm(request.POST)
-#        return form.save()
+    def edit_form(self):
+        return ConversationScenarioForm(instance=self)
 
     @classmethod
     def create(self, request):
-        return ConversationScenario.objects.create(
-            description=request.POST.get('description', ''))
+        form = ConversationScenarioForm(request.POST)
+        return form.save()
 
-    def edit_form(self):
-        class ConversationScenarioForm(forms.ModelForm):
-            class Meta:
-                model = ConversationScenario
-                fields = ('description')
-        return ConversationScenarioForm()
-
-    def edit(self, vals):
-        self.description = vals.get('description', '')
-        self.save()
-
-    def needs_submit(self):
-        return True
+    def edit(self, vals, files):
+        form = ConversationScenarioForm(data=vals, files=files, instance=self)
+        if form.is_valid():
+            form.save()
 
     def redirect_to_self_on_submit(self):
         # show the student feedback before proceeding
         return True
-
-    def pageblock(self):
-        return self.pageblocks.all()[0]
-
-    def __unicode__(self):
-        return unicode(self.pageblock())
 
     def unlocked(self, user):
         # next activity becomes unlocked when
@@ -72,21 +62,9 @@ class ConversationScenario(models.Model):
         return ConversationResponse.objects.filter(
             conversation=self, user=user)
 
-    def add_conversationo(self, request=None):
-        return ConversationScenarioForm(request)
-
-
-class CreateConversationScenarioView(CreateView): 
-    model = ConversationScenario 
-    template_name = 'main/add_conversation.html' 
-    success_url = '/thank_you/' 
-
-
-class UpdateConversationScenarioView(UpdateView): 
-    model = ConversationScenario 
-    template_name = 'main/add_conversation.html' 
-    success_url = '/thank_you/' 
-
+class ConversationScenarioForm(forms.ModelForm):
+    class Meta:
+        model = ConversationScenario
 
 class Conversation(models.Model):
     scenario = models.ForeignKey(ConversationScenario, null=True)
@@ -94,12 +72,6 @@ class Conversation(models.Model):
     text_two = models.CharField(max_length=255, null=True)
     text_three = models.CharField(max_length=255, null=True)
     complete_dialog = models.CharField(max_length=255, null=True)
-
-
-#class Conversation(forms.ModelForm):
-#    class Meta:
-#        model = Conversation
-#        fields = ('text_one', 'text_two', 'text_three', 'complete_dialog')
 
 
 class CreateConversationView(CreateView): 
