@@ -8,7 +8,7 @@ from django.test import TestCase
 
 class TestConversationScenario(TestCase):
     def test_unicode(self):
-        #pass
+        pass
         #cs = ConversationScenarioFactory()
         #self.assertEqual(str(cs), "Conversation Scenario")
 
