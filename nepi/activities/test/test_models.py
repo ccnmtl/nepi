@@ -1,8 +1,9 @@
 from datetime import datetime
 from django.contrib.auth.models import User
 from pagetree.models import Hierarchy
-from .factories import UserFactory, ConversationScenarioFactory, \
-    ConversationFactory#, HierarchyFactory
+from factories import UserFactory, ConversationScenarioFactory
+from factories import ConversationScenarioFactory
+from factories import ConversationFactory #, HierarchyFactory
 from django.test import TestCase
 
 

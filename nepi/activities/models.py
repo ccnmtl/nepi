@@ -36,15 +36,12 @@ class ConversationScenario(models.Model):
         after we know whether to create a new response object or to retrieve one
         we'll decide which of the clicks we are are saving'''
         rs = ""
-        print rs
         try:
             '''First we need to see if there is a response
             object associated with the scenario already.'''
             rs = ConversationResponse.objects.get(conv_scen=self, user=user)
-            print rs
         except:
-            print "the exception block was entered..."
-            #pass
+            pass
         if rs == "":
             rs = ConversationResponse.objects.create(conv_scen=self, user=user)
         for k in data.keys():
