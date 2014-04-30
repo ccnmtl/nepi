@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from pagetree.models import Hierarchy
 import factory
 from nepi.activities.models import ConversationScenario, \
-    Conversation
+    Conversation, ConversationResponse
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -26,6 +26,8 @@ class ConversationFactory(factory.DjangoModelFactory):
         " that is displayed when the user selects the starting text"
 
 
+class ConversationResponseFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = ConversationResponse
 
 
 

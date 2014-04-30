@@ -48,15 +48,32 @@ class ConversationScenario(models.Model):
             if k.startswith('conversation-scenario'):
                 cid = int(k[len('conversation-scenario-'):])
                 conversation = Conversation.objects.get(id=cid)
-                if s.first_click == null:
-                    pass
-                # is elif sufficient or do I have to explicitly state
-                # if first_click is not null and second_click is null
-                elif s.second_click == null:
-                    pass
-                elif s.first_click != null and s.second_click != null:
-                    pass 
-
+                if rs.first_click == null:
+                    # if there is no first click save as first click
+                    rs.first_click = conversation
+                    rs.save()
+                    # is elif sufficient or do I have to explicitly state
+                    # if first_click is not null and second_click is null
+                elif rs.second_click == null:
+                    # if there is a first click but no second click
+                    # store as second click if and only if it is not the
+                    # same one they clicked on recently
+                    # if it is different from the conversation 
+                    #they previously selected the pageblock is unlocked
+                    # otherwise page remains lock and second click is not recorded
+                    if rs.first_click == conversation:
+                        break
+                    if rs.first_click != conversation:
+                        rs.second_click = conversation
+                        rs.save()
+                        # how do you save something that has been submitted?
+                        self.needs_submit() == False
+                elif rs.first_click != null and rs.second_click != null:
+                    # we want to save the last thing the user clicked on
+                    # so when they come back to it the state is preserved
+                    rs.third_click = conversation
+                    rs.save()
+    
     @classmethod
     def add_form(self):
         return ConversationScenarioForm()
@@ -80,10 +97,16 @@ class ConversationScenario(models.Model):
 
     def unlocked(self, user):
         # next activity becomes unlocked when
-        # the user has seen both good and bad dialog
-        return ConversationResponse.objects.filter(
+        # the user has clicked both conversations
+        # it should be safe to use get - there should
+        # only be one response per user
+        response = ConversationResponse.objects.get(
             conversation=self, user=user)
-
+        if response.first_click != null \
+            and response.second_click != null :
+            return True
+        else:
+            return False
 
 class ConversationScenarioForm(forms.ModelForm):
     class Meta:
@@ -147,7 +170,7 @@ class ConvClick(models.Model):
 
 class ConversationResponse(models.Model):
     conv_scen = models.ForeignKey(ConversationScenario, null=True, blank=True)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, null=True, blank=True)
     first_click = models.ForeignKey(ConvClick, related_name="first_click", null=True, blank=True)
     second_click = models.ForeignKey(ConvClick, related_name="second_click", null=True, blank=True)
     last_click = models.ForeignKey(ConvClick, related_name="third_click", null=True, blank=True)
