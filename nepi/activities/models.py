@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from pagetree.models import PageBlock
 from datetime import datetime
+from django import forms
 
 
 class ConversationScenario(models.Model):
@@ -104,6 +105,11 @@ class ConversationScenario(models.Model):
             return True
         else:
             return False
+
+
+class ConversationScenarioForm(forms.ModelForm):
+    class Meta:
+        model = ConversationScenario
 
 
 class Conversation(models.Model):

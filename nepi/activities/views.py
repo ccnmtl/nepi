@@ -30,11 +30,6 @@ def add_conversation(request, pk):
     })
 
 
-class ConversationScenarioForm(forms.ModelForm):
-    class Meta:
-        model = ConversationScenario
-
-
 class ConversationScenarioListView(ListView):
     template_name = "activities/scenario_list.html"
     model = ConversationScenario
