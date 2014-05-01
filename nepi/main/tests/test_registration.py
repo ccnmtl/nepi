@@ -1,8 +1,8 @@
 '''Creating test just for registration since it is prone to changing'''
 from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
-from nepi.main.models import UserProfile, Country, School
-from nepi.main.models import Course, PendingTeachers
+from nepi.main.models import Country, School
+from nepi.main.models import Course
 from nepi.main.views import RegistrationView
 from datetime import datetime
 
@@ -34,10 +34,8 @@ class TestRegistration(TestCase):
             {"first_name": "firstname", "last_name": "lastname",
              "username": "username", "email": "test_email@email.com",
              "password1": "password", "password2": "password",
-             "country": "LS", "captcha": True })
+             "country": "LS", "captcha": True})
         response = RegistrationView.as_view()(request)
-        #self.assertEqual(response.status_code, 302)
-        #self.assertEqual(PendingTeachers.objects.count(), 0)
 
     def test_teacher_registration_and_login(self):
         '''when teachers register they should
@@ -49,5 +47,3 @@ class TestRegistration(TestCase):
              "password1": "password", "password2": "password",
              "country": "LS", "profile_type": True, "captcha": True})
         response = RegistrationView.as_view()(request)
-        #self.assertEqual(response.status_code, 302)
-        #self.assertTrue(PendingTeachers.objects.count() > 0)

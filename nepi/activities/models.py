@@ -1,11 +1,7 @@
 from django.db import models
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
-from django.utils import simplejson
 from pagetree.models import PageBlock
-from django.contrib.contenttypes import generic
-from django.core.urlresolvers import reverse
 from datetime import datetime
 
 
@@ -25,13 +21,17 @@ class ConversationScenario(models.Model):
 
     def needs_submit(self):
         return True
-    #is submit what happens when the form/section is "submitted"
+
+    # is submit what happens when the form/section is "submitted"
     def submit(self, user, data):
-        '''There are several scenarios which must be accounted for,
-        first we have to see if this user has a response for this particular
-        conversation scenario - we dont want to create a new one for each click,
-        after we know whether to create a new response object or to retrieve one
-        we'll decide which of the clicks we are are saving'''
+        '''There are several scenarios which must be accounted for, first we
+        have to see if this user has a response for this particular
+        conversation scenario - we dont want to create a new one for
+        each click, after we know whether to create a new response
+        object or to retrieve one we'll decide which of the clicks we
+        are are saving
+
+        '''
         rs = ""
         try:
             '''First we need to see if there is a response
@@ -55,9 +55,10 @@ class ConversationScenario(models.Model):
                     # if there is a first click but no second click
                     # store as second click if and only if it is not the
                     # same one they clicked on recently
-                    # if it is different from the conversation 
+                    # if it is different from the conversation
                     #they previously selected the pageblock is unlocked
-                    # otherwise page remains lock and second click is not recorded
+                    # otherwise page remains lock and second click is not
+                    # recorded
                     if rs.first_click == conversation:
                         break
                     if rs.first_click != conversation:
@@ -70,7 +71,7 @@ class ConversationScenario(models.Model):
                     # so when they come back to it the state is preserved
                     rs.third_click = conversation
                     rs.save()
-    
+
     @classmethod
     def add_form(self):
         return ConversationScenarioForm()
@@ -99,21 +100,21 @@ class ConversationScenario(models.Model):
         # only be one response per user
         response = ConversationResponse.objects.get(
             conversation=self, user=user)
-        if response.first_click != null \
-            and response.second_click != null :
+        if (response.first_click != null and response.second_click != null):
             return True
         else:
             return False
-    
+
 
 class Conversation(models.Model):
-    scenario = models.ForeignKey(ConversationScenario, null=True, related_name='conversations')
+    scenario = models.ForeignKey(ConversationScenario, null=True,
+                                 related_name='conversations')
     text_one = models.CharField(max_length=255, null=True)
     text_two = models.CharField(max_length=255, null=True)
     text_three = models.CharField(max_length=255, null=True)
     complete_dialog = models.CharField(max_length=255, null=True)
 
-    
+
 class ConvClick(models.Model):
     time = models.DateTimeField(default=datetime.now)
     conversation = models.ForeignKey(Conversation, null=True, blank=True)
@@ -121,18 +122,12 @@ class ConvClick(models.Model):
 
 class ConversationResponse(models.Model):
     conv_scen = models.ForeignKey(ConversationScenario, null=True, blank=True)
-    # Do I need to associate the user with the response here? Its already associated with the section
+    # Do I need to associate the user with the response here?
+    # Its already associated with the section
     user = models.ForeignKey(User, null=True, blank=True)
-    first_click = models.ForeignKey(ConvClick, related_name="first_click", null=True, blank=True)
-    second_click = models.ForeignKey(ConvClick, related_name="second_click", null=True, blank=True)
-    last_click = models.ForeignKey(ConvClick, related_name="third_click", null=True, blank=True)
-    
-#    def record_get_click(self, conversation_info):
-#        for k in data.keys():
-#            if k.startswith('conversation-id'):
-#                cid = int(k[len('conversation-id-'):])
-#                conversation = Conversation.objects.get(id=cid)
-#            if k.startswith('conversation-scenario'):
-#                sid = int(k[len('conversation-id-'):])
-#                conv_scenario = ConversationScenario.objects.get(id=sid)
-            
+    first_click = models.ForeignKey(ConvClick, related_name="first_click",
+                                    null=True, blank=True)
+    second_click = models.ForeignKey(ConvClick, related_name="second_click",
+                                     null=True, blank=True)
+    last_click = models.ForeignKey(ConvClick, related_name="third_click",
+                                   null=True, blank=True)

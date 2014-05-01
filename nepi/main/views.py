@@ -13,7 +13,6 @@ from nepi.main.forms import CreateAccountForm, ContactForm, \
     LoginForm
 from nepi.main.models import Course, UserProfile
 from nepi.main.models import School, PendingTeachers
-from pagetree.generic.views import EditView
 from django.views.generic.edit import FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.core.mail import send_mail
@@ -21,8 +20,6 @@ from django.core.mail import send_mail
 
 @render_to('main/index.html')
 def index(request):
-    # import pdb
-    # pdb.set_trace()
     return dict()
 
 
@@ -182,7 +179,6 @@ class RegistrationView(FormView):
     success_url = '/thank_you_reg/'
 
     def form_valid(self, form):
-        human = True
         form_data = form.cleaned_data
         try:
             User.objects.get(username=form_data['username'])
