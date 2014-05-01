@@ -14,19 +14,33 @@ from nepi.activities.models import Conversation
 from nepi.activities.models import ConversationForm
 from django.shortcuts import render
 
+
+def get_click(request):
+    # what sort of validation do I perform if there is no form?
+    if request.is_ajax():
+        
+            course = Course(pk=self.object.pk, name = self.object.name, startingBudget = self.object.startingBudget, enableNarrative = self.object.enableNarrative, message = self.object.message, active = self.object.active)
+            course.save()
+            return self.render_to_json_response(course)
+    else:
+            return response
+
+
+
 def add_conversation(request, pk):
     if request.method == 'POST':
         #print "pk from url is " + pk
         scenario = ConversationScenario.objects.get(pk=pk)
-        #print "scenario pk is " + str(scenario.pk)
+        print "scenario pk is " + str(scenario.pk)
         form = ConversationForm(request.POST)
         if form.is_valid():
             nc = Conversation.objects.create()
             #print "Type of scenario is " + str(type(scenario))
             nc.conv_scen=scenario
             nc.scenario=ConversationScenario.objects.get(pk=pk)
-            #print "conversation now thinks its scenorio is " + str(nc.conv_scen)
-            #print "conversation now thinks its scenorio pk is " + str(nc.conv_scen.pk)
+            print "nc.scenario is" + str(nc.scenario)
+            print "conversation now thinks its scenorio is " + str(nc.conv_scen)
+            print "conversation now thinks its scenorio pk is " + str(nc.conv_scen.pk)
             nc.text_one = form.cleaned_data['text_one']
             nc.text_two = form.cleaned_data['text_two']
             nc.text_three = form.cleaned_data['text_three']

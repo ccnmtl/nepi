@@ -13,6 +13,7 @@ urlpatterns = patterns(
     (r'^add_conversation/(?P<pk>\d+)/$', 'nepi.activities.views.add_conversation'),
     (r'^update_conversation/(?P<pk>\d+)/$', UpdateConversationView.as_view()),
     (r'^see_scenarios/$', ConversationScenarioListView.as_view()),
+    #(r'^get_click/$', 'nepi.activities.views.add_conversation'),
     #(r'^create_scenario/$', 'CreateConversationScenarioView.as_view()'),
     #(r'^update_scenario/(?P<id>\d+)/$',
     #    'UpdateConversationScenarioView.as_view()')

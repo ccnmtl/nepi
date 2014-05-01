@@ -28,7 +28,7 @@ class ConversationScenario(models.Model):
 
     def needs_submit(self):
         return True
-
+    #is submit what happens when the form/section is "submitted"
     def submit(self, user, data):
         '''There are several scenarios which must be accounted for,
         first we have to see if this user has a response for this particular
@@ -108,6 +108,7 @@ class ConversationScenario(models.Model):
         else:
             return False
 
+
 class ConversationScenarioForm(forms.ModelForm):
     class Meta:
         model = ConversationScenario
@@ -116,24 +117,7 @@ class ConversationScenarioForm(forms.ModelForm):
 class ConversationScenarioListView(ListView):
     template_name = "activities/scenario_list.html"
     model = ConversationScenario
-    #context_object_name = "conversation"
-
-
-    #def get_queryset(self):
-    #    self.conversationscenario = get_object_or_404(ConversationScenario, name=self.args[0])
-    #    return Conversation.objects.filter(conv_scen=self.conversationscenario)
-
-    #def get_context_data(self, **kwargs):
-    #    # Call the base implementation first to get a context
-    #    context = super(ConversationScenarioListView, self).get_context_data(**kwargs)
-    #    # Add in a QuerySet of all the conversations
-    #    context['conversation_list'] = Conversation.objects.all()
-    #    return context
-
-    #def get_context_data(self, **kwargs):
-    #    context = super(ConversationScenarioListView, self).get_context_data(**kwargs)
-    #    context['conversations'] = Conversation.objects.all()
-
+    
 
 class Conversation(models.Model):
     scenario = models.ForeignKey(ConversationScenario, null=True, related_name='conversations')
@@ -163,14 +147,22 @@ class UpdateConversationView(UpdateView):
 class ConvClick(models.Model):
     time = models.DateTimeField(default=datetime.now)
     conversation = models.ForeignKey(Conversation, null=True, blank=True)
-    
-    def get_click(self, request):
-        pass
 
 
 class ConversationResponse(models.Model):
     conv_scen = models.ForeignKey(ConversationScenario, null=True, blank=True)
+    # Do I need to associate the user with the response here? Its already associated with the section
     user = models.ForeignKey(User, null=True, blank=True)
     first_click = models.ForeignKey(ConvClick, related_name="first_click", null=True, blank=True)
     second_click = models.ForeignKey(ConvClick, related_name="second_click", null=True, blank=True)
     last_click = models.ForeignKey(ConvClick, related_name="third_click", null=True, blank=True)
+    
+#    def record_get_click(self, conversation_info):
+#        for k in data.keys():
+#            if k.startswith('conversation-id'):
+#                cid = int(k[len('conversation-id-'):])
+#                conversation = Conversation.objects.get(id=cid)
+#            if k.startswith('conversation-scenario'):
+#                sid = int(k[len('conversation-id-'):])
+#                conv_scenario = ConversationScenario.objects.get(id=sid)
+            
