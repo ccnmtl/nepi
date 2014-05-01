@@ -1,5 +1,4 @@
 from django.db import models
-from django import forms
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
@@ -8,8 +7,6 @@ from pagetree.models import PageBlock
 from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
 from datetime import datetime
-from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
 
 
 class ConversationScenario(models.Model):
@@ -107,16 +104,6 @@ class ConversationScenario(models.Model):
             return True
         else:
             return False
-
-
-class ConversationScenarioForm(forms.ModelForm):
-    class Meta:
-        model = ConversationScenario
-
-
-class ConversationScenarioListView(ListView):
-    template_name = "activities/scenario_list.html"
-    model = ConversationScenario
     
 
 class Conversation(models.Model):
@@ -126,24 +113,7 @@ class Conversation(models.Model):
     text_three = models.CharField(max_length=255, null=True)
     complete_dialog = models.CharField(max_length=255, null=True)
 
-
-class ConversationForm(forms.ModelForm):
-    class Meta:
-        model = Conversation
-        fields = ['text_one','text_two','text_three','complete_dialog']
-
-class CreateConversationView(CreateView):
-    model = Conversation
-    template_name = 'main/add_conversation.html'
-    success_url = '/thank_you/'
-
-
-class UpdateConversationView(UpdateView):
-    model = Conversation
-    template_name = 'main/add_conversation.html'
-    success_url = '/thank_you/'
-
-
+    
 class ConvClick(models.Model):
     time = models.DateTimeField(default=datetime.now)
     conversation = models.ForeignKey(Conversation, null=True, blank=True)

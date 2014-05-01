@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }}{% endblock %}
+
+{% block content %}
+<h1>{{ section.title }}</h1>
+
+{% for cs in object_list %}
+<h2>
+  <a href="{{ cs.get_absolute_url }}">
+    {{ cs.description }}
+  </a>
+</h2>
+{{ for con in cs.conversations.all }}
+<p>con.scenario <space><space> con.text_one <space><space> con.text_two <space><space> con.text_three <space><space> con.text_four</p>
+{% endfor %}
+{% endfor %}
+{% endblock %}

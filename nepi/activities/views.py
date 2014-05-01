@@ -8,39 +8,21 @@ from cStringIO import StringIO
 from django import forms
 from django.core.urlresolvers import reverse
 from pagetree.generic.views import PageView, EditView
-from django.views.generic.edit import CreateView, UpdateView
-from nepi.activities.models import ConversationScenario
-from nepi.activities.models import Conversation
-from nepi.activities.models import ConversationForm
+from nepi.activities.models import ConversationScenario, \
+    ConversationResponse, Conversation, ConvClick
 from django.shortcuts import render
-
-
-def get_click(request):
-    # what sort of validation do I perform if there is no form?
-    if request.is_ajax():
-        
-            course = Course(pk=self.object.pk, name = self.object.name, startingBudget = self.object.startingBudget, enableNarrative = self.object.enableNarrative, message = self.object.message, active = self.object.active)
-            course.save()
-            return self.render_to_json_response(course)
-    else:
-            return response
-
-
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, \
+   UpdateView, DeleteView
 
 def add_conversation(request, pk):
     if request.method == 'POST':
-        #print "pk from url is " + pk
         scenario = ConversationScenario.objects.get(pk=pk)
-        print "scenario pk is " + str(scenario.pk)
         form = ConversationForm(request.POST)
         if form.is_valid():
             nc = Conversation.objects.create()
-            #print "Type of scenario is " + str(type(scenario))
             nc.conv_scen=scenario
             nc.scenario=ConversationScenario.objects.get(pk=pk)
-            print "nc.scenario is" + str(nc.scenario)
-            print "conversation now thinks its scenorio is " + str(nc.conv_scen)
-            print "conversation now thinks its scenorio pk is " + str(nc.conv_scen.pk)
             nc.text_one = form.cleaned_data['text_one']
             nc.text_two = form.cleaned_data['text_two']
             nc.text_three = form.cleaned_data['text_three']
@@ -56,51 +38,47 @@ def add_conversation(request, pk):
     })
 
 
-#class CreateConversationScenarioView(CreateView):
-#    #seems to provide drop down interface to select existing fields
-#    '''generic class based view for
-#    adding a school'''
-#    model = ConversationScenario
-#    template_name = 'icap/add_nconversation.html'
-#    success_url = '/thank_you/'
+class ConversationScenarioForm(forms.ModelForm):
+    class Meta:
+        model = ConversationScenario
 
 
-@render_to('activities/conversation.html')
-def conversation(request, id):
-    conversation = get_object_or_404(Conversation, id=id)
-    section = conversation.pageblock().section
-    h = get_hierarchy()
-    return dict(conversation=conversation, section=section,
-                root=h.get_root())
+class ConversationScenarioListView(ListView):
+    template_name = "activities/scenario_list.html"
+    model = ConversationScenario
 
 
-@render_to('activities/edit_conversation.html')
-def edit_conversation(request, id):
-    conversation = get_object_or_404(Lab, id=id)
-    section = lab.pageblock().section
-    h = get_hierarchy()
-    return dict(conversation=conversation, section=section,
-                root=h.get_root())
+class ConversationForm(forms.ModelForm):
+    class Meta:
+        model = Conversation
+        fields = ['text_one','text_two','text_three','complete_dialog']
 
-#@render_to('activities/create_conversation.html')
-#def create_conversation(request):
-#    pass
-#    conversation = get_object_or_404(Lab, id=id)
-#    section = lab.pageblock().section
-#    h = get_hierarchy()
-#    return dict(conversation=conversation, section=section,
-#                root=h.get_root())
+class CreateConversationView(CreateView):
+    model = Conversation
+    template_name = 'activities/add_conversation.html'
+    success_url = '/thank_you/'
 
 
-def delete_conversation(request, id):
-    pass
-#    converstaion = get_object_or_404(Test, id=id)
-#    if request.method == "POST":
-#        lab = test.lab
-#        test.delete()
-#        return HttpResponseRedirect(
-#            reverse("edit-lab", args=[lab.id]))
-#    return HttpResponse("""
-#<html><body><form action="." method="post">Are you Sure?
-#<input type="submit" value="Yes, delete it" /></form></body></html>
-#""")
+class UpdateConversationView(UpdateView):
+    model = Conversation
+    template_name = 'activities/update_conversation.html'
+    fields = ['text_one','text_two','text_three','complete_dialog']
+    #template_name_suffix = '_update_conversation'
+    success_url = '/thank_you/'
+
+class DeleteConversationView(DeleteView):
+    model = Conversation
+    template_name = 'activities/add_conversation.html'
+    success_url = '/thank_you/'
+
+
+def get_click(request):
+    # this will hopefully become an Ajax function...
+    # what sort of validation do I perform if there is no form?
+    if request.is_ajax():
+        
+            course = Course(pk=self.object.pk, name = self.object.name, startingBudget = self.object.startingBudget, enableNarrative = self.object.enableNarrative, message = self.object.message, active = self.object.active)
+            course.save()
+            return self.render_to_json_response(course)
+    else:
+            return response
