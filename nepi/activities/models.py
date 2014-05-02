@@ -7,11 +7,11 @@ from pagetree.models import PageBlock
 from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
 from datetime import datetime
-
+from django import forms
 
 class ConversationScenario(models.Model):
-    description = models.TextField(blank=True)
     pageblocks = generic.GenericRelation(PageBlock)
+    description = models.TextField(blank=True)
     display_name = "Conversation Scenario"
     template_name = "activities/conversation.html"
     exportable = False
@@ -25,43 +25,30 @@ class ConversationScenario(models.Model):
 
     def needs_submit(self):
         return True
-    #is submit what happens when the form/section is "submitted"
+
     def submit(self, user, data):
-        '''There are several scenarios which must be accounted for,
-        first we have to see if this user has a response for this particular
-        conversation scenario - we dont want to create a new one for each click,
-        after we know whether to create a new response object or to retrieve one
-        we'll decide which of the clicks we are are saving'''
-        rs = ""
-        try:
-            '''First we need to see if there is a response
-            object associated with the scenario already.'''
-            rs = ConversationResponse.objects.get(conv_scen=self, user=user)
-        except:
-            pass
-        if rs == "":
-            rs = ConversationResponse.objects.create(conv_scen=self, user=user)
+        rs, created = ConversationResponse.objects.get_or_create(conv_scen=self, user=user)
         for k in data.keys():
             if k.startswith('conversation-scenario'):
                 cid = int(k[len('conversation-scenario-'):])
+                # for some reason had trouble getting this in view may need to query for object inside if statement
                 conversation = Conversation.objects.get(id=cid)
                 if rs.first_click == null:
-                    # if there is no first click save as first click
                     rs.first_click = conversation
                     rs.save()
-                    # is elif sufficient or do I have to explicitly state
-                    # if first_click is not null and second_click is null
+                    # Should I be returning True or False?
+                    # return True # assuming True = still needs_submit
+                    self.needs_submit() == True
                 elif rs.second_click == null:
-                    # if there is a first click but no second click
-                    # store as second click if and only if it is not the
-                    # same one they clicked on recently
-                    # if it is different from the conversation 
-                    #they previously selected the pageblock is unlocked
-                    # otherwise page remains lock and second click is not recorded
                     if rs.first_click == conversation:
-                        break
+                        # what to do if user clicks same conversation twice?
+                        # assume just return needs to be submitted without saving anything
+                        # return True # assuming True = still needs_submit
+                        self.needs_submit() == True
                     if rs.first_click != conversation:
                         rs.second_click = conversation
+                        rs.third_click = conversation
+                        # we should set third click - as of now block is "submitted and last click is second click"
                         rs.save()
                         # how do you save something that has been submitted?
                         self.needs_submit() == False
@@ -70,13 +57,14 @@ class ConversationScenario(models.Model):
                     # so when they come back to it the state is preserved
                     rs.third_click = conversation
                     rs.save()
+                    self.needs_submit() == False
     
     @classmethod
     def add_form(self):
         return ConversationScenarioForm()
 
     def edit_form(self):
-        return ConversationScenarioForm(instance=self)
+         return ConversationScenarioForm()#instance=self)
 
     @classmethod
     def create(self, request):
@@ -104,9 +92,21 @@ class ConversationScenario(models.Model):
             return True
         else:
             return False
-    
+
+
+class ConversationScenarioForm(forms.ModelForm):
+    class Meta:
+        model = ConversationScenario
+
+
 
 class Conversation(models.Model):
+    CONV_CHOICES = (
+        ('G', 'Good'),
+        ('B', 'Bad'),
+    )
+    starting_conv = models.BooleanField(default=True)
+    conversation_type = models.CharField(max_length=1, choices=CONV_CHOICES, default='G')
     scenario = models.ForeignKey(ConversationScenario, null=True, related_name='conversations')
     text_one = models.CharField(max_length=255, null=True)
     text_two = models.CharField(max_length=255, null=True)
@@ -115,13 +115,12 @@ class Conversation(models.Model):
 
     
 class ConvClick(models.Model):
-    time = models.DateTimeField(default=datetime.now)
+    created = models.DateTimeField(default=datetime.now)
     conversation = models.ForeignKey(Conversation, null=True, blank=True)
 
 
 class ConversationResponse(models.Model):
     conv_scen = models.ForeignKey(ConversationScenario, null=True, blank=True)
-    # Do I need to associate the user with the response here? Its already associated with the section
     user = models.ForeignKey(User, null=True, blank=True)
     first_click = models.ForeignKey(ConvClick, related_name="first_click", null=True, blank=True)
     second_click = models.ForeignKey(ConvClick, related_name="second_click", null=True, blank=True)

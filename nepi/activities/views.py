@@ -3,8 +3,6 @@ from annoying.decorators import render_to
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 from pagetree.helpers import get_hierarchy
-import csv
-from cStringIO import StringIO
 from django import forms
 from django.core.urlresolvers import reverse
 from pagetree.generic.views import PageView, EditView
@@ -16,6 +14,10 @@ from django.views.generic.edit import CreateView, \
    UpdateView, DeleteView
 
 def add_conversation(request, pk):
+    class ConversationForm(forms.ModelForm):
+        class Meta:
+            model = Conversation
+            fields = ['text_one','text_two','text_three','complete_dialog']
     if request.method == 'POST':
         scenario = ConversationScenario.objects.get(pk=pk)
         form = ConversationForm(request.POST)
@@ -38,20 +40,11 @@ def add_conversation(request, pk):
     })
 
 
-class ConversationScenarioForm(forms.ModelForm):
-    class Meta:
-        model = ConversationScenario
-
-
 class ConversationScenarioListView(ListView):
     template_name = "activities/scenario_list.html"
     model = ConversationScenario
 
 
-class ConversationForm(forms.ModelForm):
-    class Meta:
-        model = Conversation
-        fields = ['text_one','text_two','text_three','complete_dialog']
 
 class CreateConversationView(CreateView):
     model = Conversation
@@ -62,7 +55,6 @@ class CreateConversationView(CreateView):
 class UpdateConversationView(UpdateView):
     model = Conversation
     template_name = 'activities/update_conversation.html'
-    fields = ['text_one','text_two','text_three','complete_dialog']
     #template_name_suffix = '_update_conversation'
     success_url = '/thank_you/'
 
@@ -76,9 +68,9 @@ def get_click(request):
     # this will hopefully become an Ajax function...
     # what sort of validation do I perform if there is no form?
     if request.is_ajax():
-        
-            course = Course(pk=self.object.pk, name = self.object.name, startingBudget = self.object.startingBudget, enableNarrative = self.object.enableNarrative, message = self.object.message, active = self.object.active)
-            course.save()
-            return self.render_to_json_response(course)
+        rs, created = ConversationResponse.objects.get_or_create(conv_scen=self, user=request.user)
+        course = Course(pk=self.object.pk, name = self.object.name, startingBudget = self.object.startingBudget, enableNarrative = self.object.enableNarrative, message = self.object.message, active = self.object.active)
+        course.save()
+        return self.render_to_json_response(course)
     else:
-            return response
+        return response

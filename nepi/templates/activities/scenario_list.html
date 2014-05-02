@@ -40,10 +40,10 @@
 <h1>{{ section.title }}</h1>
 
 {% for cs in object_list %}
-    <ul>  <a href="{{ cs.get_absolute_url }}">    {{ cs.description }}  </a>
+    <ul>  <a href="{{ cs.get_absolute_url }}"> </a>  {{ cs.label }}  {{ cs.description }}  {{ cs.pk }}  <space><space>  <a href="/activities/add_conversation/{{ cs.pk }}/">Add Conversation</a> </p>
         {% for con in cs.conversations.all %}
-               <p>con.scenario <space><space> con.text_one <space><space> con.text_two <space><space>
-                con.text_three <space><space> con.text_four <space><space> <a href="/activities/update_conversation/{{ con.pk }}/">Edit Conversation</a> <space><space>  <a href="/activities/delete_conversation/{{ con.pk }}/">Delete Conversation</a></p>
+               <p> <space><space> {{con.text_one}} <space><space> {{con.text_two}} <space><space>
+                con.text_three <space><space> con.text_four <space><space> <a href="/activities/update_conversation/{{ con.pk }}/">Edit Conversation {{ con.pk }}</a> <space><space>  <a href="/activities/delete_conversation/{{ con.pk }}/">Delete Conversation</a></p>
         {% empty %}
                <p>There are no conversations for this scenario yet. <space><space>  <a href="/activities/add_conversation/{{ cs.pk }}/">Add Conversation</a> </p>
         {% endfor %}

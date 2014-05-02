@@ -37,11 +37,14 @@
 
 {% block content %}
 <form action="." method="post">{% csrf_token %}
+     {{ object.form.as_p }}
+     {{ object.form }}
+     {{ object.form.as_p }}
      {{ object.text_one }}
      {{ object.text_two }}
      {{ object.text_three }}
      {{ object.complete_dialog }}
-     {{ object.form.as_p }}
+
     <input type="submit" value="Update" />
 </form>
 
