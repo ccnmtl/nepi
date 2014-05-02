@@ -45,8 +45,9 @@ body > .container {
 }
 
 #primarynav a {
-  color: white;
+    color: white;
 	background-color: #679;
+    text-shadow: none;
 }
 
 #primarynav a:hover {

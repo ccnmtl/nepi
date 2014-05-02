@@ -359,33 +359,21 @@
  </div>
 {% endblock %}
  
- {% block contentnav %}
- <table>
- <tr>
- <td>
-   {% if previous %}
-      {% ifequal section.hierarchy.name "main" %}
-        <a href="{{previous.get_edit_url}}" id="previous">« {{previous.label}}</a>
-     {% endifequal %}
-   {% endif %}</td><td width="100%" align="center>
-   <div id="page_numbering">
-   {% ifequal depth 4 %}
-      {% with section.get_siblings as siblings %}
-         {% with section.get_parent as parent %}
-             {% for sibling in siblings %}
-                 {% ifequal sibling section %}
-                  {{parent.label}} | Page {{forloop.counter}} of {{siblings|length}}
-                 {% endifequal %}
-              {% endfor %}
-           {% endwith %}
-       {% endwith %} 
-   {% endifequal %}
-       </div></td><td>
-   {% if next %}
-     <!-- added to allow javascript access to the menu links. hack for the js activities enabling/disabling of links -->
-      <input type="hidden" id="next_section_slug" name="next_section_slug" value="{{next.slug}}"/>
-      <a href="{{next.get_edit_url}}" id="next">{{next.label}} »</a>
-     <div style="display: none;" id="next_disabled">{{next.label}} <img align="top" src="/site_media/img/lock.png"/></div>
-  {% endif %}</td></tr></table>
+{% block contentnav %}
+    <ul class="pager">
+    {% if not section.is_root %}
+        {% if section.get_previous %}
+          <li class="previous">
+                <a href="{{ section.get_previous.get_edit_url }}">&larr; {{section.get_previous.label}}</a>
+          </li>
+        {% endif %}
+    {% endif %}
+    
+    {% if section.get_next %}
+        <li class="next"><a href="{{ section.get_next.get_edit_url }}">{{section.get_next.label}} &rarr;</a></li>
+    {% endif %}
+    </ul>
 {% endblock %}
+
+{% block footer %}{% endblock %}
  
