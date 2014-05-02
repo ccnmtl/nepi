@@ -1,13 +1,10 @@
 from django.db import models
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
-from django.utils import simplejson
 from pagetree.models import PageBlock
-from django.contrib.contenttypes import generic
-from django.core.urlresolvers import reverse
 from datetime import datetime
 from django import forms
+
 
 class ConversationScenario(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
@@ -40,6 +37,14 @@ class ConversationScenario(models.Model):
                     # return True # assuming True = still needs_submit
                     self.needs_submit() == True
                 elif rs.second_click == null:
+
+                    # if there is a first click but no second click
+                    # store as second click if and only if it is not the
+                    # same one they clicked on recently
+                    # if it is different from the conversation
+                    #they previously selected the pageblock is unlocked
+                    # otherwise page remains lock and second click is not
+                    # recorded
                     if rs.first_click == conversation:
                         # what to do if user clicks same conversation twice?
                         # assume just return needs to be submitted without saving anything
@@ -59,6 +64,7 @@ class ConversationScenario(models.Model):
                     rs.save()
                     self.needs_submit() == False
     
+
     @classmethod
     def add_form(self):
         return ConversationScenarioForm()
@@ -87,8 +93,7 @@ class ConversationScenario(models.Model):
         # only be one response per user
         response = ConversationResponse.objects.get(
             conversation=self, user=user)
-        if response.first_click != null \
-            and response.second_click != null :
+        if (response.first_click != null and response.second_click != null):
             return True
         else:
             return False
@@ -97,7 +102,6 @@ class ConversationScenario(models.Model):
 class ConversationScenarioForm(forms.ModelForm):
     class Meta:
         model = ConversationScenario
-
 
 
 class Conversation(models.Model):
@@ -113,7 +117,7 @@ class Conversation(models.Model):
     text_three = models.CharField(max_length=255, null=True)
     complete_dialog = models.CharField(max_length=255, null=True)
 
-    
+
 class ConvClick(models.Model):
     created = models.DateTimeField(default=datetime.now)
     conversation = models.ForeignKey(Conversation, null=True, blank=True)
@@ -122,16 +126,9 @@ class ConvClick(models.Model):
 class ConversationResponse(models.Model):
     conv_scen = models.ForeignKey(ConversationScenario, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
-    first_click = models.ForeignKey(ConvClick, related_name="first_click", null=True, blank=True)
-    second_click = models.ForeignKey(ConvClick, related_name="second_click", null=True, blank=True)
-    last_click = models.ForeignKey(ConvClick, related_name="third_click", null=True, blank=True)
-    
-#    def record_get_click(self, conversation_info):
-#        for k in data.keys():
-#            if k.startswith('conversation-id'):
-#                cid = int(k[len('conversation-id-'):])
-#                conversation = Conversation.objects.get(id=cid)
-#            if k.startswith('conversation-scenario'):
-#                sid = int(k[len('conversation-id-'):])
-#                conv_scenario = ConversationScenario.objects.get(id=sid)
-            
+    first_click = models.ForeignKey(ConvClick, related_name="first_click",
+                                    null=True, blank=True)
+    second_click = models.ForeignKey(ConvClick, related_name="second_click",
+                                     null=True, blank=True)
+    last_click = models.ForeignKey(ConvClick, related_name="third_click",
+                                   null=True, blank=True)

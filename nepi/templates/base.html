@@ -101,6 +101,7 @@
         <div class="span10" id="right-content">
             {% block pagetitle %}{% endblock %}
             {% block content %}{% endblock %}
+            {% block contentnav %}{% endblock %}
         </div>
       </div>
     </div>
@@ -118,6 +119,8 @@
 {% compress js %}
 <script src="/site_media/bootstrap/js/bootstrap.js"></script>
 {% endcompress %}
+
+{% block js %}{% endblock %}
 
 {% comment %}
 {% if STAGING_ENV %}
