@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load i18n admin_static %}
+{% block title %}Conversation Scenario Display Test{% endblock %}
+{% block content %}
+<script type="type/javascript">
+//function show_teacher_form()
+//{
+
+
+//}
+
+
+//where should onLoad live?
+//do I have to create a new function inside the () or will simply putting just show_teacher_form() suffice
+$(document).load(
+    function()
+    {
+        alert("documetnready");
+    }
+);
+//jQuery('.id_profile_type').click(alert("yes... you clicked that checkbox!");))
+</script>
+
+
+<h1>{{ section.title }}</h1>
+
+<ul>  <a href="{{ object.get_absolute_url }}"> </a> 
+{% if object.pageblock.section %}  
+{{ object.pageblock.section.label }} 
+{% endif %}  {{ object.label }} </br> 
+{{ object.description }}</br> 
+{{ object.pk }} </br>
+    {% for x in object.conversations.all %}
+    <p> <space><space>
+    <b>Conversation:</b>
+    </br>
+    <ol>
+    {{x}}</br>
+    {{x.count}}</br>
+    <u>Text One:</u>{{x.text_one}} <space><space></br>
+    <u>Text Two:</u> {{x.text_two}} <space><space></br>
+    <u>Text Three:</u> {{x.text_three}} <space><space></br>
+    <u>Text Four:</u> {{x.text_four}} <space><space></br>
+    </ol> 
+</br></br>
+{% comment %} Need if Admin Tag {% endcomment %}
+<a href="/activities/update_conversation/{{ object.con.pk }}/">Edit Conversation {{ x.pk }}</a>
+</br>
+ <space><space>  
+<a href="/activities/delete_conversation/{{ object.x.pk }}/">Delete Conversation</a>
+</br></br>
+</p>
+        {% empty %}
+               <p>There are no conversations for this scenario yet. <space><space>  <a href="/activities/add_conversation/{{ cs.pk }}/">Add Conversation</a> </p>
+        {% endfor %}
+</ul>
+
+
+
+{% for scenario in object_list %}
+    <ul>  <a href="{{ scenario.get_absolute_url }}"> </a>  {{ scenario.label }}  {{ scenario.description }}  {{ scenario.pk }}  <space><space>  
+        {% for x in scenario.conversations.all %}
+               <p> <space><space>
+               <b>Conversation:</b>
+               <ol>{{scenario.x}}{{scenario.x.count}}
+               <u>Text One:</u>{{scenario.x.text_one}} <space><space></br>
+               <u>Text Two:</u> {{scenario.x.text_two}} <space><space></br>
+               <u>Text Three:</u> {{scenario.x.text_three}} <space><space></br>
+               <u>Text Four:</u> {{scenario.x.text_four}} <space><space></br>
+               </ol> <a href="/activities/update_conversation/{{ cs.con.pk }}/">Edit Conversation {{ con.pk }}</a> <space><space>  <a href="/activities/delete_conversation/{{ cs.x.pk }}/">Delete Conversation</a></p>
+        {% empty %}
+               <p>There are no conversations for this scenario yet. <space><space>  <a href="/activities/add_conversation/{{ cs.pk }}/">Add Conversation</a> </p>
+        {% endfor %}
+</ul>
+{% endfor %}
+
+	
+{% endblock %}
+
+
+
