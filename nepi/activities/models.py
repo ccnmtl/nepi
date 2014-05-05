@@ -28,38 +28,20 @@ class ConversationScenario(models.Model):
         for k in data.keys():
             if k.startswith('conversation-scenario'):
                 cid = int(k[len('conversation-scenario-'):])
-                # for some reason had trouble getting this in view may need to query for object inside if statement
                 conversation = Conversation.objects.get(id=cid)
                 if rs.first_click == null:
                     rs.first_click = conversation
                     rs.save()
-                    # Should I be returning True or False?
-                    # return True # assuming True = still needs_submit
                     self.needs_submit() == True
                 elif rs.second_click == null:
-
-                    # if there is a first click but no second click
-                    # store as second click if and only if it is not the
-                    # same one they clicked on recently
-                    # if it is different from the conversation
-                    #they previously selected the pageblock is unlocked
-                    # otherwise page remains lock and second click is not
-                    # recorded
                     if rs.first_click == conversation:
-                        # what to do if user clicks same conversation twice?
-                        # assume just return needs to be submitted without saving anything
-                        # return True # assuming True = still needs_submit
                         self.needs_submit() == True
                     if rs.first_click != conversation:
                         rs.second_click = conversation
                         rs.third_click = conversation
-                        # we should set third click - as of now block is "submitted and last click is second click"
                         rs.save()
-                        # how do you save something that has been submitted?
                         self.needs_submit() == False
                 elif rs.first_click != null and rs.second_click != null:
-                    # we want to save the last thing the user clicked on
-                    # so when they come back to it the state is preserved
                     rs.third_click = conversation
                     rs.save()
                     self.needs_submit() == False
@@ -87,10 +69,6 @@ class ConversationScenario(models.Model):
         return True
 
     def unlocked(self, user):
-        # next activity becomes unlocked when
-        # the user has clicked both conversations
-        # it should be safe to use get - there should
-        # only be one response per user
         response = ConversationResponse.objects.get(
             conversation=self, user=user)
         if (response.first_click != null and response.second_click != null):

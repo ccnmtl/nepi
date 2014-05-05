@@ -8,8 +8,9 @@ from nepi.activities.models import (
     ConversationScenario, Conversation)
 from django.shortcuts import render
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-
+from nepi.activities.models import Conversation, ConversationScenario
 
 def add_conversation(request, pk):
     class ConversationForm(forms.ModelForm):
@@ -36,10 +37,30 @@ def add_conversation(request, pk):
         'form': form,
     })
 
+def get_scenarios_and_conversations(request):
+    scenarios = ConversationScenario.objects.all()
+    conversations = Conversation.objects.all()
+    return render(request, 'activities/scenario_list.html', {
+        'scenarios': scenarios, 'conversations' : conversations
+    })
+#class ConversationScenarioListView(ListView):
+#    template_name = "activities/scenario_list.html"
+#    model = ConversationScenario
 
-class ConversationScenarioListView(ListView):
-    template_name = "activities/scenario_list.html"
+#    def get_queryset(self):
+#        self.ConversationScenario = get_object_or_404(ConversationScenario)
+#return Book.objects.filter(publisher=self.publisher)
+#    def get_context_data(self, **kwargs):
+#        context = super(ConversationScenarioListView, self).get_context_data(**kwargs)
+#        context['conversation'] = self.conversations
+#        return context
+
+
+
+class ConversationScenarioDetailView(DetailView):
+    template_name = "activities/scenario_display.html"
     model = ConversationScenario
+
 
 class CreateConversationView(CreateView):
     model = Conversation
