@@ -1,7 +1,19 @@
+
+
 {% load markup %}
+
+{% with block.conversationscenario as conversationscenario %}
+{% endwith %}
+
 {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
-{% ifsubmitted block %}
+
+
 {{block.description|markdown}}
+
+<input id='{{conversationscenario.pk}}' name='conversationscenario_name' type='hidden' value=''/>
+
+
+
 <table cellpadding="0" cellspacing="0" class="">
   <tr>
     <th>Conversation</th>
@@ -9,7 +21,54 @@
 
   <tr>
     <th class="">Description:</th>
+{{block.description}}
   </tr>
+</th>
 
-{% endifsubmitted %}
+</br></br>
+<p> conversationscenario.label </p>
+{{conversationscenario.label}}
+
+</br></br>
+<p> conversationscenario.good_conversation.text_one </p>
+{{conversationscenario.good_conversation.text_one}}
+
+<p> conversationscenario.good_conversation.response_one </p>
+{{conversationscenario.good_conversation.response_one}}
+
+<p> conversationscenario.good_conversation.response_two </p>
+{{conversationscenario.good_conversation.response_two}}
+
+<p> conversationscenario.good_conversation.text_one </p>
+{{conversationscenario.good_conversation.text_one}}
+
+
+</br></br>
+<p>  for conv in conversationscenario.conversations </p>
+{% for conv in conversationscenario.conversations %}
+<p>{{conv.text_one}}</p>
+<p>{{conv.text_two}}</p>
+<p>{{conv.text_three}}</p>
+{% endfor %}
+</br></br>
+<p>  for conv in conversationscenario.conversations.all </p>
+{% for conv in conversationscenario.conversations.all %}
+<p>{{conv.text_one}}</p>
+<p>{{conv.text_two}}</p>
+<p>{{conv.text_three}}</p>
+{% endfor %}
+</br></br>
+
+
+</br></br>
+<p>  for cs in conversationscenario </p><p>  for conv in conversationscenario.conversations.all </p>
+   {% for cs in conversationscenario %}
+    {% for conv in cs.conversations.all %}
+        <p>{{conv.text_one}}</p>
+        <p>{{conv.text_two}}</p>
+        <p>{{conv.text_three}}</p>starting_conv
+    {% endfor %}
+{% endfor %}
+
+
 

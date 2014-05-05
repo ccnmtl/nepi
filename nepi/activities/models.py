@@ -6,13 +6,34 @@ from datetime import datetime
 from django import forms
 
 
+CONV_CHOICES = (
+        ('G', 'Good'),
+        ('B', 'Bad'),
+    )
+
+
+class Conversation(models.Model):
+    starting = models.BooleanField(default=True)
+    scenario_type = models.CharField(max_length=1, choices=CONV_CHOICES, default='G')
+    text_one = models.CharField(max_length=255, null=True)
+    response_one = models.CharField(max_length=255, null=True)
+    response_two = models.CharField(max_length=255, null=True)
+    response_three = models.CharField(max_length=255, null=True)
+    complete_dialog = models.CharField(max_length=255, null=True)
+
+
 class ConversationScenario(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
     description = models.TextField(blank=True)
     display_name = "Conversation Scenario"
-    template_name = "activities/conversation.html"
+    template_file = "activities/conversation.html"
+    js_template_file = "activities/conversation_js.html"
+    css_template_file = "activities/conversation_css.html"
     exportable = False
     importable = False
+    
+    good_conversation = models.ForeignKey(Conversation, null=True, related_name='good_conversation')
+    bad_conversation = models.ForeignKey(Conversation, null=True, related_name='bad_conversation')
 
     def pageblock(self):
         return self.pageblocks.all()[0]
@@ -80,20 +101,6 @@ class ConversationScenario(models.Model):
 class ConversationScenarioForm(forms.ModelForm):
     class Meta:
         model = ConversationScenario
-
-
-class Conversation(models.Model):
-    CONV_CHOICES = (
-        ('G', 'Good'),
-        ('B', 'Bad'),
-    )
-    starting_conv = models.BooleanField(default=True)
-    conversation_type = models.CharField(max_length=1, choices=CONV_CHOICES, default='G')
-    scenario = models.ForeignKey(ConversationScenario, null=True, related_name='conversations')
-    text_one = models.CharField(max_length=255, null=True)
-    text_two = models.CharField(max_length=255, null=True)
-    text_three = models.CharField(max_length=255, null=True)
-    complete_dialog = models.CharField(max_length=255, null=True)
 
 
 class ConvClick(models.Model):

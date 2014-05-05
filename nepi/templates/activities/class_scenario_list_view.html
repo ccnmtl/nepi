@@ -102,7 +102,7 @@
     <ul>  <a href="{{ s.get_absolute_url }}"> </a>  {{ s.label }}  {{ s.description }}  {{ s.pk }}  <space><space>  
           <a href="/activities/add_conversation/{{ s.pk }}/">Add Conversation</a>  <space><space>  
           <a href="/activities/delete_scenario/{{ s.pk }}/">Delete Scenario</a>  <space><space>  
-          <a href="/activities/update_conversation/{{ s.pk }}/">Update Scenario</a> </p>
+          <a href="/activities/update_scenario/{{ s.pk }}/">Update Scenario</a> </p>
         {% for c in conversations %}
         {% if c.scenario == s %}
                <p> <space><space>
@@ -115,7 +115,7 @@
                </ol> <a href="/activities/update_conversation/{{ c.pk }}/">Edit Conversation {{ c.pk }}</a> <space><space>  <a href="/activities/delete_conversation/{{ c.pk }}/">Delete Conversation</a></p>
         {% endif %}
         {% empty %}
-               <p>There are no conversations for this scenario yet. <space><space>  <a href="/activities/add_conversation/{{ cs.pk }}/">Add Conversation</a> </p>
+               <p>There are no conversations for this scenario yet. <space><space>  <a href="/activities/add_conversation/{{ s.pk }}/">Add Conversation</a> </p>
         {% endfor %}
 </ul>
 {% endfor %}

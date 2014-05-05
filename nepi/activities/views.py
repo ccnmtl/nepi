@@ -98,8 +98,7 @@ class ScenarioDetailView(DetailView):
 
 class ScenarioDeleteView(DeleteView):
     model = ConversationScenario
-    #success_url = reverse_lazy('scenario-list')
-    success_url = 'activities/class_scenario_list_view.html'
+    success_url = '../../../activities/classview_scenariolist/'
 
 
 class CreateConversationView(CreateView):
@@ -117,8 +116,7 @@ class UpdateConversationView(UpdateView):
 
 class DeleteConversationView(DeleteView):
     model = Conversation
-    template_name = 'activities/add_conversation.html'
-    success_url = '/thank_you/'
+    success_url = '../../../activities/classview_scenariolist/'
 
 
 
