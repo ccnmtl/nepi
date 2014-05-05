@@ -43,18 +43,14 @@ def get_scenarios_and_conversations(request):
     return render(request, 'activities/scenario_list.html', {
         'scenarios': scenarios, 'conversations' : conversations
     })
-#class ConversationScenarioListView(ListView):
-#    template_name = "activities/scenario_list.html"
-#    model = ConversationScenario
+class ConversationScenarioListView(ListView):
+    template_name = "activities/class_scenario_list_view.html"
+    model = ConversationScenario
 
-#    def get_queryset(self):
-#        self.ConversationScenario = get_object_or_404(ConversationScenario)
-#return Book.objects.filter(publisher=self.publisher)
-#    def get_context_data(self, **kwargs):
-#        context = super(ConversationScenarioListView, self).get_context_data(**kwargs)
-#        context['conversation'] = self.conversations
-#        return context
-
+    def get_context_data(self, **kwargs):
+        context = super(ConversationScenarioListView, self).get_context_data(**kwargs)
+        context['conversations'] = Conversation.objects.all()
+        return context
 
 
 class ConversationScenarioDetailView(DetailView):
