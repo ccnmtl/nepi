@@ -61,11 +61,6 @@
  //jQuery("pageblock .right-question .div casequestion").css("color", "blue");
  //}
 
-
-
-
-
-
 //    var frm = jQuery('#create_course');
 //    var course_list = jQuery('#course_list');
 //    frm.submit(
@@ -103,29 +98,11 @@
 
 <h1>{{ section.title }}</h1>
 
-{% for s in scenarios %}
-    <ul>  <a href="{{ s.get_absolute_url }}"> </a>  {{ s.label }}  {{ s.description }}  {{ s.pk }}  <space><space>  <a href="/activities/add_conversation/{{ s.pk }}/">Add Conversation</a> </p>
-        {% for c in conversations %}
-        {% if c.scenario == s %}
-               <p> <space><space>
-               <b>Conversation:</b>
-               <ol>{{c}}
-               <u>Text One:</u>{{c.text_one}} <space><space></br>
-               <u>Text Two:</u> {{c.text_two}} <space><space></br>
-               <u>Text Three:</u> {{c.text_three}} <space><space></br>
-               <u>Text Four:</u> {{c.complete_dialog}} <space><space></br>
-               </ol> <a href="/activities/update_conversation/{{ c.pk }}/">Edit Conversation {{ c.pk }}</a> <space><space>  <a href="/activities/delete_conversation/{{ c.pk }}/">Delete Conversation</a></p>
-        {% endif %}
-        {% empty %}
-               <p>There are no conversations for this scenario yet. <space><space>  <a href="/activities/add_conversation/{{ cs.pk }}/">Add Conversation</a> </p>
-        {% endfor %}
-</ul>
-{% endfor %}
-
-
-
 {% for s in object_list %}
-    <ul>  <a href="{{ cs.get_absolute_url }}"> </a>  {{ s.label }}  {{ s.description }}  {{ s.pk }}  <space><space>  <a href="/activities/add_conversation/{{ cs.pk }}/">Add Conversation</a> </p>
+    <ul>  <a href="{{ s.get_absolute_url }}"> </a>  {{ s.label }}  {{ s.description }}  {{ s.pk }}  <space><space>  
+          <a href="/activities/add_conversation/{{ s.pk }}/">Add Conversation</a>  <space><space>  
+          <a href="/activities/delete_scenario/{{ s.pk }}/">Delete Scenario</a>  <space><space>  
+          <a href="/activities/update_conversation/{{ s.pk }}/">Update Scenario</a> </p>
         {% for c in conversations %}
         {% if c.scenario == s %}
                <p> <space><space>

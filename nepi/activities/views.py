@@ -11,6 +11,41 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from nepi.activities.models import Conversation, ConversationScenario
+from django.core.urlresolvers import reverse_lazy
+
+
+class AjaxableResponseMixin(object):
+    """
+    Taken from Django site.
+    Mixin to add AJAX support to a form.
+    Must be used with an object-based FormView (e.g. CreateView)
+    """
+    def render_to_json_response(self, context, **response_kwargs):
+        data = json.dumps(context)
+        response_kwargs['content_type'] = 'application/json'
+        return HttpResponse(data, **response_kwargs)
+
+    def form_invalid(self, form):
+        response = super(AjaxableResponseMixin, self).form_invalid(form)
+        if self.request.is_ajax():
+            return self.render_to_json_response(form.errors, status=400)
+        else:
+            return response
+
+    def form_valid(self, form):
+        # We make sure to call the parent's form_valid() method because
+        # it might do some processing (in the case of CreateView, it will
+        # call form.save() for example).
+        response = super(AjaxableResponseMixin, self).form_valid(form)
+        if self.request.is_ajax():
+            data = {
+                'pk': self.object.pk,
+            }
+            return self.render_to_json_response(data)
+        else:
+            return response
+
+
 
 def add_conversation(request, pk):
     class ConversationForm(forms.ModelForm):
@@ -43,19 +78,28 @@ def get_scenarios_and_conversations(request):
     return render(request, 'activities/scenario_list.html', {
         'scenarios': scenarios, 'conversations' : conversations
     })
-class ConversationScenarioListView(ListView):
+
+
+
+class ScenarioListView(ListView, AjaxableResponseMixin):
     template_name = "activities/class_scenario_list_view.html"
     model = ConversationScenario
 
     def get_context_data(self, **kwargs):
-        context = super(ConversationScenarioListView, self).get_context_data(**kwargs)
+        context = super(ScenarioListView, self).get_context_data(**kwargs)
         context['conversations'] = Conversation.objects.all()
         return context
 
 
-class ConversationScenarioDetailView(DetailView):
-    template_name = "activities/scenario_display.html"
+class ScenarioDetailView(DetailView):
+    template_name = "activities/class_scenario_list_view.html"
     model = ConversationScenario
+
+
+class ScenarioDeleteView(DeleteView):
+    model = ConversationScenario
+    #success_url = reverse_lazy('scenario-list')
+    success_url = 'activities/class_scenario_list_view.html'
 
 
 class CreateConversationView(CreateView):
@@ -75,6 +119,15 @@ class DeleteConversationView(DeleteView):
     model = Conversation
     template_name = 'activities/add_conversation.html'
     success_url = '/thank_you/'
+
+
+
+
+
+
+
+
+
 
 
 def get_click(request):
