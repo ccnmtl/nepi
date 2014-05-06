@@ -13,7 +13,6 @@ CONV_CHOICES = (
 
 
 class Conversation(models.Model):
-    starting = models.BooleanField(default=True)
     scenario_type = models.CharField(max_length=1, choices=CONV_CHOICES, default='G')
     text_one = models.CharField(max_length=255, null=True)
     response_one = models.CharField(max_length=255, null=True)

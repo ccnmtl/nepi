@@ -6,69 +6,115 @@
 {% endwith %}
 
 {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
-
-
 {{block.description|markdown}}
 
-<input id='{{conversationscenario.pk}}' name='conversationscenario_name' type='hidden' value=''/>
-
-
-
-<table cellpadding="0" cellspacing="0" class="">
-  <tr>
-    <th>Conversation</th>
-  </tr>
-
-  <tr>
-    <th class="">Description:</th>
-{{block.description}}
-  </tr>
-</th>
-
 </br></br>
-<p> conversationscenario.label </p>
-{{conversationscenario.label}}
+<div id="good_conversation">
+  <ul>
 
-</br></br>
-<p> conversationscenario.good_conversation.text_one </p>
-{{conversationscenario.good_conversation.text_one}}
+      <b>Conversation:</b></br>
+      <ol>{{block.good_conversation}}</br>
+        <div id="starting_good">
+          <p>{{block.good_conversation.text_one}}</p>
+        </div></br>
+        <div class="patient_good_conversation" style="display: none">
+          <p>{{block.good_conversation.response_one}}</p>
+        </div></br>
+        <div class="patient_good_conversation" style="display: none">
+          <p>{{block.good_conversation.response_two}}</p>
+        </div></br>
+        <div class="patient_good_conversation" style="display: none">
+          <p>{{block.good_conversation.response_three}}</p>
+        </div></br>
 
-<p> conversationscenario.good_conversation.response_one </p>
-{{conversationscenario.good_conversation.response_one}}
+        <div class="patient_good_conversation" style="display: none">
+          <p>{{block.good_conversation.complete_dialog}}</p>
+        </div></br>
+     </ol>
+</div>
 
-<p> conversationscenario.good_conversation.response_two </p>
-{{conversationscenario.good_conversation.response_two}}
+<div id="bad_conversation">
+  <ul>
 
-<p> conversationscenario.good_conversation.text_one </p>
-{{conversationscenario.good_conversation.text_one}}
+      <b>Conversation:</b></br>
+      <ol>{{block.bad_conversation}}</p></br>
+        <div id="starting_bad">
+          <p>{{block.bad_conversation.text_one}}</p>
+        </div></br>
+        <div class="patient_bad_conversation" style="display: none">
+          <p>{{block.bad_conversation.response_one}}</p>
+        </div></br>
+        <div class="patient_bad_conversation" style="display: none">
+          <p>{{block.bad_conversation.response_two}}</p>
+        </div></br>
+        <div class="patient_bad_conversation" style="display: none">
+          <p>{{block.bad_conversation.response_three}}</p>
+        </div></br>
+
+        <div class="patient_bad_conversation" style="visibility: hidden">
+          <p>{{block.bad_conversation.complete_dialog}}</p>
+        </div></br>
+     </ol>
+</div>
+</ul>
 
 
-</br></br>
-<p>  for conv in conversationscenario.conversations </p>
-{% for conv in conversationscenario.conversations %}
-<p>{{conv.text_one}}</p>
-<p>{{conv.text_two}}</p>
-<p>{{conv.text_three}}</p>
-{% endfor %}
-</br></br>
-<p>  for conv in conversationscenario.conversations.all </p>
-{% for conv in conversationscenario.conversations.all %}
-<p>{{conv.text_one}}</p>
-<p>{{conv.text_two}}</p>
-<p>{{conv.text_three}}</p>
-{% endfor %}
-</br></br>
 
 
-</br></br>
-<p>  for cs in conversationscenario </p><p>  for conv in conversationscenario.conversations.all </p>
-   {% for cs in conversationscenario %}
-    {% for conv in cs.conversations.all %}
-        <p>{{conv.text_one}}</p>
-        <p>{{conv.text_two}}</p>
-        <p>{{conv.text_three}}</p>starting_conv
-    {% endfor %}
-{% endfor %}
 
+
+
+
+</br></br></br></br></br></br>
+
+
+
+
+
+
+
+
+
+
+
+
+<ul>
+{% if block.good_conversation %}
+               <p> <space><space>
+               <b>Conversation:</b>
+               <ol>{{block.good_conversation}}</br>
+               <u>Scenario Type:</u> {{block.good_conversation.scenario_type}} <space><space></br>
+               <u>Text One:</u> {{block.good_conversation.text_one}} <space><space></br>
+               <u>Response One:</u> {{block.good_conversation.response_one}} <space><space></br>
+               <u>Response Two:</u> {{block.good_conversation.response_two}} <space><space></br>
+               <u>Response Three:</u> {{block.good_conversation.response_three}} <space><space></br>
+               <u>Complete Dialog:</u> {{block.good_conversation.complete_dialog}} <space><space></br>
+               </ol> <a href="/activities/update_conversation/{{ block.good_conversation.pk }}/">Edit Conversation {{ block.good_conversation.pk }}</a> <space><space>  <a href="/activities/delete_conversation/{{ block.good_conversation.pk }}/">Delete Conversation</a></p>
+{% else %}
+               <p>There are good conversations for this scenario yet. <space><space>  <a href="/activities/add_conversation/{{ block.pk }}/">Add Conversation</a> </p>
+
+{% endif %}
+
+
+{% if block.bad_conversation %}
+               <p> <space><space>
+               <b>Conversation:</b>
+               <ol>{{block.bad_conversation}}</br>
+               <u>Scenario Type</u> {{block.bad_conversation.scenario_type}} <space><space></br>
+               <u>Text One:</u> {{block.bad_conversation.text_one}} <space><space></br>
+               <u>Response One:</u> {{block.bad_conversation.response_one}} <space><space></br>
+               <u>Response Two:</u> {{block.bad_conversation.response_two}} <space><space></br>
+               <u>Response Three:</u> {{block.bad_conversation.response_three}} <space><space></br>
+               <u>Complete Dialog:</u> {{block.bad_conversation.complete_dialog}} <space><space></br>
+               </ol> <a href="/activities/update_conversation/{{ s.bad_conversation.pk }}/">Edit Conversation {{ block.bad_conversation.pk }}</a> <space><space>  <a href="/activities/delete_conversation/{{ block.bad_conversation.pk }}/">Delete Conversation</a></p>
+
+{% else %}
+
+               <p>There are no bad conversations for this scenario yet. <space><space>  <a href="/activities/add_conversation/{{ block.pk }}/">Add Conversation</a> </p>
+
+{% endif %}
+
+
+</ul>
 
 

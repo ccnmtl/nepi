@@ -51,19 +51,25 @@ def add_conversation(request, pk):
     class ConversationForm(forms.ModelForm):
         class Meta:
             model = Conversation
-            fields = ['text_one','text_two','text_three','complete_dialog']
+            fields = ['scenario_type','text_one','response_one', 'response_two', 'response_three','complete_dialog']            
     if request.method == 'POST':
         scenario = ConversationScenario.objects.get(pk=pk)
         form = ConversationForm(request.POST)
         if form.is_valid():
             nc = Conversation.objects.create()
-            nc.conv_scen = scenario
-            nc.scenario = ConversationScenario.objects.get(pk=pk)
+            nc.scenario_type = form.cleaned_data['scenario_type']
             nc.text_one = form.cleaned_data['text_one']
-            nc.text_two = form.cleaned_data['text_two']
-            nc.text_three = form.cleaned_data['text_three']
+            nc.response_one = form.cleaned_data['response_one']
+            nc.response_two = form.cleaned_data['response_two']
+            nc.response_three = form.cleaned_data['response_three']
             nc.complete_dialog = form.cleaned_data['complete_dialog']
             nc.save()
+            if nc.scenario_type == 'G':
+                scenario.good_conversation = nc
+                scenario.save()
+            if nc.scenario_type == 'B':
+                scenario.bad_conversation = nc
+                scenario.save()
             return HttpResponseRedirect('/thanks/')  # Redirect after POST
     else:
         form = ConversationForm()  # An unbound form
@@ -84,11 +90,6 @@ def get_scenarios_and_conversations(request):
 class ScenarioListView(ListView, AjaxableResponseMixin):
     template_name = "activities/class_scenario_list_view.html"
     model = ConversationScenario
-
-    def get_context_data(self, **kwargs):
-        context = super(ScenarioListView, self).get_context_data(**kwargs)
-        context['conversations'] = Conversation.objects.all()
-        return context
 
 
 class ScenarioDetailView(DetailView):
