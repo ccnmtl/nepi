@@ -1,18 +1,24 @@
 # Create your views here.
 from annoying.decorators import render_to
+from django import forms
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
-from pagetree.helpers import get_hierarchy
-from django import forms
-from nepi.activities.models import (
-    ConversationScenario, Conversation)
 from django.shortcuts import render
-from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from nepi.activities.models import Conversation, ConversationScenario
-from django.core.urlresolvers import reverse_lazy
+from django.views.generic.list import ListView
+from pagetree.helpers import get_hierarchy
+import json
 
+from nepi.activities.models import Conversation, ConversationScenario, ConvClick, ConversationResponse
+
+
+def render_to_json_response(context, **response_kwargs):
+    data = json.dumps(context)
+    response_kwargs['content_type'] = 'application/json'
+    return HttpResponse(data, **response_kwargs)
 
 class AjaxableResponseMixin(object):
     """
@@ -120,26 +126,64 @@ class DeleteConversationView(DeleteView):
     success_url = '../../../activities/classview_scenariolist/'
 
 
-
-
-
-
-
-
-
-
-
-def get_click(request):
-    # this will hopefully become an Ajax function...
     # what sort of validation do I perform if there is no form?
-    if request.is_ajax():
-        rs, created = ConversationResponse.objects.get_or_create(conv_scen=self, user=request.user)
-        course = Course(pk=self.object.pk, name=self.object.name,
-                        startingBudget=self.object.startingBudget,
-                        enableNarrative=self.object.enableNarrative,
-                        message=self.object.message,
-                        active=self.object.active)
-        course.save()
-        return self.render_to_json_response(course)
+def get_click(request):
+    #response = super(AjaxableResponseMixin, self).form_valid(form)
+    if request.method == 'POST' and request.is_ajax():
+        # we did not define a form so how do we clean it?
+        scenario = ConversationScenario.objects.get(pk=request.POST['scenario'])
+        conversation = Conversation.objects.get(pk=request.POST['conversation'])
+        conclick = ConvClick.objects.create(conversation=conversation)
+        conclick.save()
+        current_user = User.objects.get(pk=request.user.pk) 
+        rs, created = ConversationResponse.objects.get_or_create(conv_scen=scenario, user=current_user)
+        rs.save()
+        if rs.first_click == None:
+            conclick.save()
+            rs.first_click = conclick
+            rs.save()
+        if rs.first_click != None and rs.second_click == None:
+            conclick.save()
+            rs.second_click = conclick
+            rs.third_click = conclick
+            rs.save()
+        if rs.second_click != None:
+            conclick.save()
+            rs.third_click = conclick
+            rs.save()
+        return render_to_json_response({'success' : True})#self.render_to_json_response("please click on both dialogs to proceed")
     else:
-        return response
+        return render_to_json_response({'success' : False})
+
+
+
+# class ConvClick(models.Model):
+#     created = models.DateTimeField(default=datetime.now)
+#     conversation = models.ForeignKey(Conversation, null=True, blank=True)
+# 
+# 
+# class ConversationResponse(models.Model):
+#     conv_scen = models.ForeignKey(ConversationScenario, null=True, blank=True)
+#     user = models.ForeignKey(User, null=True, blank=True)
+#     first_click = models.ForeignKey(ConvClick, related_name="first_click",
+#                                     null=True, blank=True)
+#     second_click = models.ForeignKey(ConvClick, related_name="second_click",
+#                                      null=True, blank=True)
+#     last_click = models.ForeignKey(ConvClick, related_name="third_click",
+#                                    null=True, blank=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

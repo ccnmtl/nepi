@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 import factory
 from nepi.activities.models import ConversationScenario, \
-    Conversation, ConversationResponse
-
+    Conversation, ConversationResponse, ConvClick
+from datetime import datetime
 
 class UserFactory(factory.DjangoModelFactory):
     FACTORY_FOR = User
@@ -26,3 +26,8 @@ class ConversationFactory(factory.DjangoModelFactory):
 
 class ConversationResponseFactory(factory.DjangoModelFactory):
     FACTORY_FOR = ConversationResponse
+
+
+class ConvClickFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = ConvClick
+    created = datetime.now

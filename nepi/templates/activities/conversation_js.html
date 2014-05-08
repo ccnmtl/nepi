@@ -1,0 +1,80 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>
+jQuery(document).ready(function() {
+    // adding hack to see when to refresh page - will redo
+    // first check that it is not an inital visit somehow
+    var goodvar = 0;
+    var badvar = 0;
+    var frm = jQuery('#good');
+    jQuery("#starting_good").on("click", 
+        function()
+        { 
+             jQuery.ajax(
+             {
+                  type: frm.attr('method'),
+                  url: frm.attr('action'),
+                  data: frm.serialize(),
+                  success: function (data) 
+                  {
+                        //alert("This is a form submission.");
+                  },
+                  error: function(data) 
+                  {
+                         //alert("There was an error submitting your form.");
+                  }
+                });//end of ajax
+
+         jQuery("#starting_good").addClass( "right-selected" )
+         jQuery(".patient_good_conversation").addClass( "right-selected" ).show();
+
+         jQuery(".patient_bad_conversation").hide();
+         jQuery("#starting_bad").removeClass( "wrong-selected" );
+
+         goodvar = goodvar + 1;
+         if (goodvar > 0 && badvar > 0){location.reload(true);};
+
+      });
+
+   var frm = jQuery('#bad');
+   jQuery("#starting_bad").on("click", 
+      function()
+      { 
+
+             jQuery.ajax(
+             {
+                  type: frm.attr('method'),
+                  url: frm.attr('action'),
+                  data: frm.serialize(),
+                  success: function (data) 
+                  {
+                        //alert("This is a form submission.");
+                  },
+                  error: function(data) 
+                  {
+                         //alert("There was an error submitting your form.");
+                  }
+                });//end of ajax
+
+
+
+         jQuery("#starting_bad").addClass( "wrong-selected" )
+         jQuery(".patient_bad_conversation").addClass( "wrong-selected" ).show();
+
+         jQuery(".patient_good_conversation").hide();
+         jQuery("#starting_good").removeClass( "right-selected" ).show();
+
+         badvar = badvar + 1;
+
+        if (goodvar > 0 && badvar > 0)
+        {
+             location.reload(true);//refresh()
+        };
+
+
+      });
+
+});
+
+
+</script>
+

@@ -42,30 +42,11 @@ class ConversationScenario(models.Model):
 
     def needs_submit(self):
         return True
-
-    def submit(self, user, data):
-        rs, created = ConversationResponse.objects.get_or_create(conv_scen=self, user=user)
-        for k in data.keys():
-            if k.startswith('conversation-scenario'):
-                cid = int(k[len('conversation-scenario-'):])
-                conversation = Conversation.objects.get(id=cid)
-                if rs.first_click == null:
-                    rs.first_click = conversation
-                    rs.save()
-                    self.needs_submit() == True
-                elif rs.second_click == null:
-                    if rs.first_click == conversation:
-                        self.needs_submit() == True
-                    if rs.first_click != conversation:
-                        rs.second_click = conversation
-                        rs.third_click = conversation
-                        rs.save()
-                        self.needs_submit() == False
-                elif rs.first_click != null and rs.second_click != null:
-                    rs.third_click = conversation
-                    rs.save()
-                    self.needs_submit() == False
-    
+# 
+#     def submit(self, user, data):
+#         rs = ConversationResponse.objects.get(conv_scen=self, user=user)
+#         if rs.first_click != None and rs.second_click != None:
+#             return 
 
     @classmethod
     def add_form(self):
@@ -89,10 +70,11 @@ class ConversationScenario(models.Model):
         return True
 
     def unlocked(self, user):
-        response = ConversationResponse.objects.get(
-            conversation=self, user=user)
-        if (response.first_click != null and response.second_click != null):
-            return True
+        response = ConversationResponse.objects.filter(
+            conv_scen=self, user=user)
+        if len(response) == 1 and \
+           response[0].first_click != None and response[0].second_click != None:
+               return True
         else:
             return False
 
@@ -114,5 +96,5 @@ class ConversationResponse(models.Model):
                                     null=True, blank=True)
     second_click = models.ForeignKey(ConvClick, related_name="second_click",
                                      null=True, blank=True)
-    last_click = models.ForeignKey(ConvClick, related_name="third_click",
+    third_click = models.ForeignKey(ConvClick, related_name="third_click",
                                    null=True, blank=True)

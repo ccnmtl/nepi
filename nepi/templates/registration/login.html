@@ -13,7 +13,7 @@
         (UNI)... </p><input type="submit" value="LOG IN" class="btn btn-primary"/></p>
 </form>
 
-<form method="post" action="." class="well">
+<form method="post" action="/login/" class="well">
     {% csrf_token %}
 <p>If you have a project account...</p>
 
@@ -21,7 +21,7 @@
 <label for="id_password">Password: {{ form.password }}</label>
 
 <input type="submit" value="LOG IN" class="btn btn-primary" />
-<input type="hidden" name="next" value="{{ next }}" />
+
 </form>
 
 <p>Don't have an account? Register now. <a href="/register/" title="Create your new project account">create an account</a>.</p>

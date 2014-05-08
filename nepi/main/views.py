@@ -115,6 +115,7 @@ def nepi_login(request):
     '''Allow user to login.'''
     if request.method == 'POST':  # If the form has been submitted...
         form = LoginForm(request.POST)  # A form bound to the POST data
+        print form
         if form.is_valid():  # All validation rules pass
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
@@ -122,10 +123,12 @@ def nepi_login(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return HttpResponseRedirect("/home/")
+                    return HttpResponseRedirect("/pages/main/")
                 else:
+                    print "user is not active"
                     return HttpResponseRedirect("/")
             else:
+                print "user is None"
                 return HttpResponseRedirect("/")
     else:
         form = LoginForm()  # An unbound form
@@ -194,34 +197,32 @@ class RegistrationView(FormView):
             new_profile = UserProfile(user=new_user)
             new_profile.profile_type = 'ST'
             new_profile.save()
-            # where to define the strings externally?
-            # send email to user
 
-            if form_data['email']:
-                subject = "NEPI Registration"
-                message = "Congratulations! " + \
-                          "You've successfully registered to use NEPI.\n\n" + \
-                          "Your user information is " + \
-                          form_data['username'] + \
-                          ".\n\n" + \
-                          "You may now log in to your account."
-                sender = "nepi@nepi.ccnmtl.columbia.edu"
-                recipients = [form_data['email']]
-                send_mail(subject, message, sender, recipients)
-            subject = "[Student] User Account Created"
-            sender = "nepi@nepi.ccnmtl.columbia.edu"
-            recipients = ["nepi@nepi.ccnmtl.columbia.edu"]
-            message = form_data['username'] + \
-                " has successfully created a NEPI account.\n\n"
-            if form_data['profile_type']:
-                subject = "[Teacher] Account Requested"
-                message = form_data['first_name'] + \
-                    " " + form_data['last_name'] + \
-                    "has requested teacher status in "
-                    # need to add country and schools here
-                pending = PendingTeachers(user_profile=new_profile)
-                pending.save()
-            send_mail(subject, message, sender, recipients)
+#             if form_data['email']:
+#                 subject = "NEPI Registration"
+#                 message = "Congratulations! " + \
+#                           "You've successfully registered to use NEPI.\n\n" + \
+#                           "Your user information is " + \
+#                           form_data['username'] + \
+#                           ".\n\n" + \
+#                           "You may now log in to your account."
+#                 sender = "nepi@nepi.ccnmtl.columbia.edu"
+#                 recipients = [form_data['email']]
+#                 send_mail(subject, message, sender, recipients)
+#             subject = "[Student] User Account Created"
+#             sender = "nepi@nepi.ccnmtl.columbia.edu"
+#             recipients = ["nepi@nepi.ccnmtl.columbia.edu"]
+#             message = form_data['username'] + \
+#                 " has successfully created a NEPI account.\n\n"
+#             if form_data['profile_type']:
+#                 subject = "[Teacher] Account Requested"
+#                 message = form_data['first_name'] + \
+#                     " " + form_data['last_name'] + \
+#                     "has requested teacher status in "
+#                     # need to add country and schools here
+#                 pending = PendingTeachers(user_profile=new_profile)
+#                 pending.save()
+#             send_mail(subject, message, sender, recipients)
         return super(RegistrationView, self).form_valid(form)
 
 

@@ -1,103 +1,9 @@
 {% extends "base.html" %}
-{% block js %}
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script>
-
-// function highlight(){
-
-// jQuery(".pageblock.right-question .casequestion").addClass( "right-selected" );
-// jQuery(".pageblock.right-question .casequestion").addClass( "right-select" );
-
-// }
-
- jQuery(document).ready(function() {
-     //jQuery(".pageblock.right-question .casequestion").addClass( "right-selected" );
-     jQuery(".pageblock.right-question .casequestion").on("click", //highlight());
-         function(){
-
- jQuery(".pageblock.right-question .casequestion").addClass( "right-selected" );
- jQuery(".pageblock.right-question .casequestion").addClass( "right-select" );
-
-         //     jQuery(this).addClass( "right-selected" );
-              //jQuery(this).children("li").addClass( "right-select" );
-              //jQuery(this).find("li").addClass( "right-selected" );
-              //$( "ul.topnav > li" ).css( "border", "3px double red" );
-              //jQuery(".pageblock.right-question p").addClass( "right-selected" );
-              //jQuery(".pageblock.right-question li").addClass( "right-selected" );
-    });
-
-  //   jQuery(".pageblock.right-question .casequestion").on("click",
-  //        function(){
-  //            //jQuery(this).addClass( "right-selected" );
-  //            jQuery(this).children("li").addClass( "right-select" );
-  //            jQuery(this).find("li").addClass( "right-select" );
-              //$( "ul.topnav > li" ).css( "border", "3px double red" );
-              //jQuery(".pageblock.right-question p").addClass( "right-selected" );
-              //jQuery(".pageblock.right-question li").addClass( "right-selected" );
-  //   });
-
-
-
-
- //    jQuery(".pageblock.right-question .casequestion").on("click",
- //         function(){
- //             jQuery(".pageblock.right-question > ul > li").addClass( "right-selected" );
- //    });
-
- //jQuery(.pageblock.right-question>ul).addClass( "right-selected" );
- });
-
-
- //.on( "mouseover",   
- //function() {
- //    jQuery( this ).css( "color", "red" );
- //  });
- //});
- //});
-
- //if(jQuery("pageblock .right-question .div casequestion"))
- //{
- //jQuery("pageblock .right-question .div casequestion .p").css("color", "blue");
- //jQuery("pageblock .right-question .div casequestion").css("color", "blue");
- //}
-
-//    var frm = jQuery('#create_course');
-//    var course_list = jQuery('#course_list');
-//    frm.submit(
-//      function () {
-//        jQuery.ajax({
-//            type: frm.attr('method'),
-//            url: frm.attr('action'),
-//            data: frm.serialize(),
-//            success: function (data) {
-//                jQuery(".modal-body").html("Course added!</br>");
-//            },
-//            error: function(data) {
-//                jQuery(".modal-body").html("Something went wrong!");
-//            }
-//        }
-
-//        );
-//        return false;
-//    });
-
-//    var refresh_bttn = jQuery('#refresh');
-//    refresh_bttn.click(
-//      function(){
-
-//        location.reload();
-
-
-
-//    });
-
-</script>
-{% endblock %}
 {% block content %}
 {% block title %}{{ section.title }}{% endblock %}
 
 <h1>{{ section.title }}</h1>
-
+{% if s in object_list %}
 {% for s in object_list %}
     <b>Scenario --> {{s}}</b></br>
     <ul>  <a href="{{ s.get_absolute_url }}"> </a>  {{ s.label }}  {{ s.description }}  {{ s.pk }}  <space><space>  
@@ -141,5 +47,5 @@
 
 
 </ul>
-{% endfor %}
+{% endfor %}{% endif %}
 {% endblock %}

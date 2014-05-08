@@ -10,10 +10,13 @@
 
 </br></br>
 <div id="good_conversation">
+  <form id="good" action="/activities/get_click/" method="post"> {% csrf_token %}
+    <input type="hidden" name="clicked_on" value="good_conversation"> 
+    <input type="hidden" name="conversation" value="{{block.good_conversation.pk}}">
+    <input type="hidden" name="scenario" value="{{block.pk}}">
+  </form>
   <ul>
-
-      <b>Conversation:</b></br>
-      <ol>{{block.good_conversation}}</br>
+      <ol>
         <div id="starting_good">
           <p>{{block.good_conversation.text_one}}</p>
         </div></br>
@@ -34,10 +37,13 @@
 </div>
 
 <div id="bad_conversation">
+  <form id="bad" action="/activities/get_click/" method="post"> {% csrf_token %}
+    <input type="hidden" name="clicked_on" value="bad_conversation"> 
+    <input type="hidden" name="conversation" value="{{block.bad_conversation.pk}}">
+    <input type="hidden" name="scenario" value="{{block.pk}}">
+  </form>
   <ul>
-
-      <b>Conversation:</b></br>
-      <ol>{{block.bad_conversation}}</p></br>
+      <ol>
         <div id="starting_bad">
           <p>{{block.bad_conversation.text_one}}</p>
         </div></br>
@@ -60,61 +66,7 @@
 
 
 
-
-
-
-
-
 </br></br></br></br></br></br>
 
-
-
-
-
-
-
-
-
-
-
-
-<ul>
-{% if block.good_conversation %}
-               <p> <space><space>
-               <b>Conversation:</b>
-               <ol>{{block.good_conversation}}</br>
-               <u>Scenario Type:</u> {{block.good_conversation.scenario_type}} <space><space></br>
-               <u>Text One:</u> {{block.good_conversation.text_one}} <space><space></br>
-               <u>Response One:</u> {{block.good_conversation.response_one}} <space><space></br>
-               <u>Response Two:</u> {{block.good_conversation.response_two}} <space><space></br>
-               <u>Response Three:</u> {{block.good_conversation.response_three}} <space><space></br>
-               <u>Complete Dialog:</u> {{block.good_conversation.complete_dialog}} <space><space></br>
-               </ol> <a href="/activities/update_conversation/{{ block.good_conversation.pk }}/">Edit Conversation {{ block.good_conversation.pk }}</a> <space><space>  <a href="/activities/delete_conversation/{{ block.good_conversation.pk }}/">Delete Conversation</a></p>
-{% else %}
-               <p>There are good conversations for this scenario yet. <space><space>  <a href="/activities/add_conversation/{{ block.pk }}/">Add Conversation</a> </p>
-
-{% endif %}
-
-
-{% if block.bad_conversation %}
-               <p> <space><space>
-               <b>Conversation:</b>
-               <ol>{{block.bad_conversation}}</br>
-               <u>Scenario Type</u> {{block.bad_conversation.scenario_type}} <space><space></br>
-               <u>Text One:</u> {{block.bad_conversation.text_one}} <space><space></br>
-               <u>Response One:</u> {{block.bad_conversation.response_one}} <space><space></br>
-               <u>Response Two:</u> {{block.bad_conversation.response_two}} <space><space></br>
-               <u>Response Three:</u> {{block.bad_conversation.response_three}} <space><space></br>
-               <u>Complete Dialog:</u> {{block.bad_conversation.complete_dialog}} <space><space></br>
-               </ol> <a href="/activities/update_conversation/{{ s.bad_conversation.pk }}/">Edit Conversation {{ block.bad_conversation.pk }}</a> <space><space>  <a href="/activities/delete_conversation/{{ block.bad_conversation.pk }}/">Delete Conversation</a></p>
-
-{% else %}
-
-               <p>There are no bad conversations for this scenario yet. <space><space>  <a href="/activities/add_conversation/{{ block.pk }}/">Add Conversation</a> </p>
-
-{% endif %}
-
-
-</ul>
 
 
