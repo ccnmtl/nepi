@@ -41,19 +41,17 @@ class ConversationScenario(models.Model):
         return unicode(self.pageblock())
 
     def needs_submit(self):
+        '''Pageblock will see that block has needs
+        submit and then check the conditions defined
+        in "unlocked to determine if it is unlocked or not."'''
         return True
-# 
-#     def submit(self, user, data):
-#         rs = ConversationResponse.objects.get(conv_scen=self, user=user)
-#         if rs.first_click != None and rs.second_click != None:
-#             return 
 
     @classmethod
     def add_form(self):
         return ConversationScenarioForm()
 
     def edit_form(self):
-         return ConversationScenarioForm()#instance=self)
+         return ConversationScenarioForm()
 
     @classmethod
     def create(self, request):
@@ -66,10 +64,13 @@ class ConversationScenario(models.Model):
             form.save()
 
     def redirect_to_self_on_submit(self):
-        # show the student feedback before proceeding
+        '''Show student feedback before proceeding,
+        not sure if this is ever called since there is no "submit"'''
         return True
 
     def unlocked(self, user):
+        '''We want to make sure the user has selected both dialogs
+           from the conversation before they can proceed.'''
         response = ConversationResponse.objects.filter(
             conv_scen=self, user=user)
         if len(response) == 1 and \
