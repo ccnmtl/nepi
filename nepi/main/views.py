@@ -1,16 +1,13 @@
 '''Views for NEPI, should probably break up
 into smaller pieces.'''
-from annoying.decorators import render_to
 from django import forms
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from nepi.main.forms import CreateAccountForm, ContactForm, \
-    LoginForm
+from nepi.main.forms import CreateAccountForm, ContactForm
 from nepi.main.models import Course, UserProfile
 from nepi.main.models import School, PendingTeachers
 from django.views.generic.edit import FormView

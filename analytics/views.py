@@ -1,12 +1,12 @@
-import csv
-#from wacep.certificates.models import CertificateCourse, CourseAccess
-#from wacep.main.views import get_submodule
+from annoying.decorators import render_to
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from annoying.decorators import render_to
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from pagetree.models import Section
+import csv
+#from wacep.certificates.models import CertificateCourse, CourseAccess
+#from wacep.main.views import get_submodule
 
 
 def responses_for(user):

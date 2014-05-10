@@ -55,7 +55,7 @@ urlpatterns += patterns(
      'is_accessible', {}, 'is-accessible'),
 
     # ICAP related pages
-    (r'^add_school/$',  CreateSchoolView.as_view()),
+    (r'^add_school/$', CreateSchoolView.as_view()),
     (r'^edit_school/(?P<pk>\d+)/$', UpdateSchoolView.as_view()),
 
     # Teacher related pages
