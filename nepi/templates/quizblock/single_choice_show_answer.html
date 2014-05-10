@@ -1,6 +1,5 @@
 {% load markup %}
 <div id="q{{question.id}}" style="display:none">
-           <i>The correct answer is {{question.correct_answer_letter}}:</i>
-           {{question.explanation|markdown}}
+    {{question.explanation|markdown}}
 </div>
 

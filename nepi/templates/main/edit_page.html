@@ -3,19 +3,19 @@
 {% load render %}
 {% block title %}{{section.label}} (edit){% endblock %}
    
-   {% block css %} 
-       <style type="text/css"> 
-           .draghandle {float: left; cursor: pointer;} 
-           #children-order-list {list-style-type: none; margin: 0; padding: 0;} 
-           #children li { margin: 0 3px 3px 3px; padding: 0.4em; 
-           padding-left: 1.5em; 
-                 background-color: #ddd; 
-           } 
-           #children li span { position: absolute; margin-left: -1.3em; } 
-           .dragging {background-color: #fee;} 
-     </style>
-     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" />
-  {% endblock %} 
+{% block css %} 
+   <style type="text/css"> 
+       .draghandle {float: left; cursor: pointer;} 
+       #children-order-list {list-style-type: none; margin: 0; padding: 0;} 
+       #children li { margin: 0 3px 3px 3px; padding: 0.4em; 
+       padding-left: 1.5em; 
+             background-color: #ddd; 
+       } 
+       #children li span { position: absolute; margin-left: -1.3em; } 
+       .dragging {background-color: #fee;} 
+ </style>
+ <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" />
+{% endblock %} 
 
 {% block js %}
     <script type="text/javascript">
@@ -227,11 +227,10 @@
           <div class="span1 draghandle">
              <i class="icon-resize-vertical"></i>
          </div>
-            {% comment %} <span title="drag to reorder pageblocks" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span>{% endcomment %}
              <a href="{{child.get_edit_url}}">{{child.label}}</a>
-<div class="span3">
-             <b><a href="{{child.get_edit_url}}">{{child.label}}</a></b>
-        </div>
+             <div class="span3">
+                <b><a href="{{child.get_edit_url}}">{{child.label}}</a></b>
+             </div>
 
         </li></div>
      {% endfor %}
