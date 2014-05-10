@@ -35,7 +35,7 @@ class TestRegistration(TestCase):
              "username": "username", "email": "test_email@email.com",
              "password1": "password", "password2": "password",
              "country": "LS", "captcha": True})
-        response = RegistrationView.as_view()(request)
+        RegistrationView.as_view()(request)
 
     def test_teacher_registration_and_login(self):
         '''when teachers register they should
@@ -46,4 +46,4 @@ class TestRegistration(TestCase):
              "username": "username", "email": "test_email@email.com",
              "password1": "password", "password2": "password",
              "country": "LS", "profile_type": True, "captcha": True})
-        response = RegistrationView.as_view()(request)
+        RegistrationView.as_view()(request)

@@ -34,7 +34,7 @@ class TestFormViews(TestCase):
             '/add_school/',
             {"name": "School Needs Name",
              "country": self.country})
-        response = CreateSchoolView.as_view()(request)
+        CreateSchoolView.as_view()(request)
 
     def test_create_course(self):
         '''CreateSchoolView'''
@@ -43,4 +43,4 @@ class TestFormViews(TestCase):
             {"name": "Course Needs Name",
              "country": self.country,
              "school": self.school})
-        response = CreateCourseView.as_view()(request)
+        CreateCourseView.as_view()(request)

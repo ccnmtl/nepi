@@ -4,6 +4,7 @@ from nepi.activities.models import ConversationScenario, \
     Conversation, ConversationResponse, ConvClick
 from datetime import datetime
 
+
 class UserFactory(factory.DjangoModelFactory):
     FACTORY_FOR = User
     username = factory.Sequence(lambda n: "user%d" % n)

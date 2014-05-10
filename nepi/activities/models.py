@@ -7,13 +7,14 @@ from django import forms
 
 
 CONV_CHOICES = (
-        ('G', 'Good'),
-        ('B', 'Bad'),
-    )
+    ('G', 'Good'),
+    ('B', 'Bad'),
+)
 
 
 class Conversation(models.Model):
-    scenario_type = models.CharField(max_length=1, choices=CONV_CHOICES, default='G')
+    scenario_type = models.CharField(max_length=1, choices=CONV_CHOICES,
+                                     default='G')
     text_one = models.CharField(max_length=255, null=True)
     response_one = models.CharField(max_length=255, null=True)
     response_two = models.CharField(max_length=255, null=True)
@@ -30,9 +31,10 @@ class ConversationScenario(models.Model):
     css_template_file = "activities/conversation_css.html"
     exportable = False
     importable = False
-    
-    good_conversation = models.ForeignKey(Conversation, null=True, related_name='good_conversation')
-    bad_conversation = models.ForeignKey(Conversation, null=True, related_name='bad_conversation')
+    good_conversation = models.ForeignKey(Conversation, null=True,
+                                          related_name='good_conversation')
+    bad_conversation = models.ForeignKey(Conversation, null=True,
+                                         related_name='bad_conversation')
 
     def pageblock(self):
         return self.pageblocks.all()[0]
@@ -41,19 +43,17 @@ class ConversationScenario(models.Model):
         return unicode(self.pageblock())
 
     def needs_submit(self):
+        '''Pageblock will see that block has needs
+        submit and then check the conditions defined
+        in "unlocked to determine if it is unlocked or not."'''
         return True
-# 
-#     def submit(self, user, data):
-#         rs = ConversationResponse.objects.get(conv_scen=self, user=user)
-#         if rs.first_click != None and rs.second_click != None:
-#             return 
 
     @classmethod
     def add_form(self):
         return ConversationScenarioForm()
 
     def edit_form(self):
-         return ConversationScenarioForm()#instance=self)
+        return ConversationScenarioForm()
 
     @classmethod
     def create(self, request):
@@ -66,15 +66,19 @@ class ConversationScenario(models.Model):
             form.save()
 
     def redirect_to_self_on_submit(self):
-        # show the student feedback before proceeding
+        '''Show student feedback before proceeding,
+        not sure if this is ever called since there is no "submit"'''
         return True
 
     def unlocked(self, user):
+        '''We want to make sure the user has selected both dialogs
+           from the conversation before they can proceed.'''
         response = ConversationResponse.objects.filter(
             conv_scen=self, user=user)
-        if len(response) == 1 and \
-           response[0].first_click != None and response[0].second_click != None:
-               return True
+        if (len(response) == 1
+                and response[0].first_click is not None
+                and response[0].second_click is not None):
+            return True
         else:
             return False
 
@@ -97,4 +101,4 @@ class ConversationResponse(models.Model):
     second_click = models.ForeignKey(ConvClick, related_name="second_click",
                                      null=True, blank=True)
     third_click = models.ForeignKey(ConvClick, related_name="third_click",
-                                   null=True, blank=True)
+                                    null=True, blank=True)

@@ -1,7 +1,7 @@
 
 
 {% load markup %}
-
+{% load conversation_state %}
 {% with block.conversationscenario as conversationscenario %}
 {% endwith %}
 
@@ -14,6 +14,7 @@
     <input type="hidden" name="clicked_on" value="good_conversation"> 
     <input type="hidden" name="conversation" value="{{block.good_conversation.pk}}">
     <input type="hidden" name="scenario" value="{{block.pk}}">
+    <input type="hidden" name="last_click" value="{% get_response user scenario %}" />
   </form>
   <ul>
       <ol>
