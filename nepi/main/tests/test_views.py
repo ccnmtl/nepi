@@ -82,4 +82,3 @@ class TestLoggedInViews(TestCase):
     def test_home(self):
         response = self.c.get("/")
         self.assertEqual(response.status_code, 200)
-
