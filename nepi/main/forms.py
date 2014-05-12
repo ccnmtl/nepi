@@ -9,7 +9,7 @@ class LoginForm(forms.Form):
                                required=True)
 
     def form_valid(self, form):
-        form_data = form.cleaned_data
+        pass
 
 
 class CreateAccountForm(forms.Form):
@@ -44,7 +44,6 @@ class CreateAccountForm(forms.Form):
         email = form.get("email")
         password1 = form.get("password1")
         password2 = form.get("password2")
-        f_username = form.get("username")
 
         if is_teacher and (email == ""):
             self._errors["email"] = self.error_class(
