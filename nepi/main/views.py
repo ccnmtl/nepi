@@ -1,26 +1,18 @@
 '''Views for NEPI, should probably break up
 into smaller pieces.'''
-from annoying.decorators import render_to
 from django import forms
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from nepi.main.forms import CreateAccountForm, ContactForm, \
-    LoginForm
+from nepi.main.forms import CreateAccountForm, ContactForm
 from nepi.main.models import Course, UserProfile
 from nepi.main.models import School, PendingTeachers
 from django.views.generic.edit import FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.core.mail import send_mail
-
-
-@render_to('main/index.html')
-def index(request):
-    return dict()
 
 
 class LoggedInMixin(object):
@@ -76,15 +68,6 @@ class InstructorPage(LoggedInMixinStaff, InstructorView):
 #     return False
 
 
-'''Below this line is old code'''
-
-
-def logout_view(request):
-    """When user logs out redirect to home page."""
-    logout(request)
-    return HttpResponseRedirect('/')
-
-
 class ContactView(FormView):
     '''changed contact view function to
     generic class based view'''
@@ -108,39 +91,10 @@ def thanks_course(request, course_id):
     return render(request, 'student/thanks_course.html')
 
 
-"""More General Views"""
-
-
-def nepi_login(request):
-    '''Allow user to login.'''
-    if request.method == 'POST':  # If the form has been submitted...
-        form = LoginForm(request.POST)  # A form bound to the POST data
-        print form
-        if form.is_valid():  # All validation rules pass
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return HttpResponseRedirect("/pages/main/")
-                else:
-                    print "user is not active"
-                    return HttpResponseRedirect("/")
-            else:
-                print "user is None"
-                return HttpResponseRedirect("/")
-    else:
-        form = LoginForm()  # An unbound form
-
-    return render(request, 'main/login.html', {
-        'form': form,
-    })
-
-
 # when to use class based views vs generic class based views?
 # can you just have classes inherit generic based views
 # do mixin for being logged in?
+@login_required
 def home(request):
     '''Return homepage appropriate for user type.'''
     try:

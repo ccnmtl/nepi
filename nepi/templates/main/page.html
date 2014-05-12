@@ -5,8 +5,6 @@
     {{ block.super }}
     <script type="text/javascript" src="/site_media/js/json2.js"></script>
     <script type="text/javascript" src="/site_media/js/util.js"></script>
-    <script type="text/javascript" src="/site_media/js/chapter_marker_player.js"></script>
-    <script type="text/javascript" src="/site_media/js/json2.js"></script>
     {% for block in section.pageblock_set.all %}
         {% renderjs block %}
     {% endfor %}
@@ -94,9 +92,18 @@
                     <input type="hidden" name="action" value="reset" />
                     <input type="submit" value="clear your answers and try again" class="btn" />
                     </form>
-                {% endif %}
+                {% else %}{% if user.is_superuser %}
+                    <form action="." method="post">
+                        <div>
+                            <input type="hidden" name="action" value="reset" />
+                            <input type="submit" id="generic-reset" value="Clear Responses (superuser only)" class="btn pull-right" />
+                            <div style="clear: both"></div>
+                        </div>
+                    </form>
+                {% endif %}{% endif %}
             {% else %}
-                <input type="submit" value="Submit" class="btn btn-primary" />
+                <input type="submit" value="Submit" class="btn btn-primary pull-right" />
+                <div style="clear: both"></div>
             </form>
             {% endif %}
         {% endif %}
