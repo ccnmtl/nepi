@@ -7,7 +7,6 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 import json
-
 from nepi.activities.models import (
     Conversation, ConversationScenario, ConvClick, ConversationResponse)
 
@@ -48,47 +47,6 @@ class AjaxableResponseMixin(object):
             return self.render_to_json_response(data)
         else:
             return response
-
-
-def add_conversation(request, pk):
-    class ConversationForm(forms.ModelForm):
-        class Meta:
-            model = Conversation
-            fields = ['scenario_type', 'text_one', 'response_one',
-                      'response_two', 'response_three', 'complete_dialog']
-    if request.method == 'POST':
-        scenario = ConversationScenario.objects.get(pk=pk)
-        form = ConversationForm(request.POST)
-        if form.is_valid():
-            nc = Conversation.objects.create()
-            nc.scenario_type = form.cleaned_data['scenario_type']
-            nc.text_one = form.cleaned_data['text_one']
-            nc.response_one = form.cleaned_data['response_one']
-            nc.response_two = form.cleaned_data['response_two']
-            nc.response_three = form.cleaned_data['response_three']
-            nc.complete_dialog = form.cleaned_data['complete_dialog']
-            nc.save()
-            if nc.scenario_type == 'G':
-                scenario.good_conversation = nc
-                scenario.save()
-            if nc.scenario_type == 'B':
-                scenario.bad_conversation = nc
-                scenario.save()
-            return HttpResponseRedirect('/thanks/')  # Redirect after POST
-    else:
-        form = ConversationForm()  # An unbound form
-
-    return render(request, 'activities/add_conversation.html', {
-        'form': form,
-    })
-
-
-def get_scenarios_and_conversations(request):
-    scenarios = ConversationScenario.objects.all()
-    conversations = Conversation.objects.all()
-    return render(request, 'activities/scenario_list.html', {
-        'scenarios': scenarios, 'conversations': conversations
-    })
 
 
 class ScenarioListView(ListView, AjaxableResponseMixin):

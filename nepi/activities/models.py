@@ -31,9 +31,9 @@ class ConversationScenario(models.Model):
     css_template_file = "activities/conversation_css.html"
     exportable = False
     importable = False
-    good_conversation = models.ForeignKey(Conversation, null=True,
+    good_conversation = models.ForeignKey(Conversation, null=True, blank=True,
                                           related_name='good_conversation')
-    bad_conversation = models.ForeignKey(Conversation, null=True,
+    bad_conversation = models.ForeignKey(Conversation, null=True, blank=True,
                                          related_name='bad_conversation')
 
     def pageblock(self):
@@ -53,7 +53,7 @@ class ConversationScenario(models.Model):
         return ConversationScenarioForm()
 
     def edit_form(self):
-        return ConversationScenarioForm()
+        return ConversationScenarioForm(instance=self)
 
     @classmethod
     def create(self, request):
@@ -86,6 +86,7 @@ class ConversationScenario(models.Model):
 class ConversationScenarioForm(forms.ModelForm):
     class Meta:
         model = ConversationScenario
+        fields = ["description"]
 
 
 class ConvClick(models.Model):
