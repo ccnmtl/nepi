@@ -54,13 +54,13 @@ class ConversationScenario(models.Model):
         return ConversationScenarioForm()
 
     def edit_form(self):
-    	class EditForm(forms.Form):
-    	    alt_text = ("<a href=\"" + reverse("create_conversation", args=[self.id])
+        class EditForm(forms.Form):
+            alt_text = ("<a href=\"" +
+                        reverse("create_conversation", args=[self.id])
                         + "\">add a conversation</a>")
-    	    description = forms.CharField(initial=self.description)
-    	form = EditForm()
+            description = forms.CharField(initial=self.description)
+        form = EditForm()
         return form
-
 
     @classmethod
     def create(self, request):
@@ -98,7 +98,7 @@ class ConversationForm(forms.ModelForm):
 class ConversationScenarioForm(forms.ModelForm):
     class Meta:
         model = ConversationScenario
-    
+
 
 class ConvClick(models.Model):
     created = models.DateTimeField(default=datetime.now)
