@@ -17,8 +17,11 @@ urlpatterns = patterns(
     url(r'^delete_conversation/(?P<pk>\d+)/$',
         DeleteConversationView.as_view()),
 
-    url(r'^classview_scenariolist/$', ScenarioListView.as_view()),
-    url(r'^delete_scenario/(?P<pk>\d+)/$', ScenarioDeleteView.as_view()),
-    url(r'^scenario_display/(?P<pk>\d+)/$', ScenarioDetailView.as_view()),
+    url(r'^classview_scenariolist/$',
+        ScenarioListView.as_view()),
+    url(r'^delete_scenario/(?P<pk>\d+)/$',
+        ScenarioDeleteView.as_view()),
+    url(r'^scenario_display/(?P<pk>\d+)/$',
+        ScenarioDetailView.as_view()),
     url(r'^get_click/$', 'nepi.activities.views.get_click'),
 )
