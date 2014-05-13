@@ -1,6 +1,6 @@
 {% load compress %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="utf-8" />
   <title>nepi: {% block title %}{% endblock %}</title>
@@ -32,24 +32,11 @@
 </head>
 <body>
 
-{% block topnavbar %}
-  <div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container">
-        <ul class="nav">
-          <li><a class="brand" href="/">nepi</a></li>
-          {% block topnavbarleftitems %}
-
-            <li class="flatpages"><a href="/about/">About</a></li>
-            <li class="flatpages"><a href="/help/">Help</a></li>
-            <li class="flatpages"><a href="/contact/">Contact</a></li>
-
-          {% endblock %}
-        </ul>
-
-        <p class="navbar-text pull-right">
-          {% block topnavbarrightitems %}{% endblock %}
-{% block usernav %}
+<div class="container" id="outer-container">
+    {% block masthead %}
+        <header id="masthead">
+          <h1 class="logo"><a href="./" title="nepi"><img src="site_media/img/icap-nursing-elearning.png"></a></h1>
+         {% block usernav %}
           {% if request.user.is_anonymous %}
           <a href="/login/" class="btn btn-success">login</a>
           {% else %}
@@ -60,24 +47,6 @@
           <a href="/logout/" class="btn btn-inverse">logout</a>
           {% endif %}
 {% endblock %}
-       </p>
-
-       </div>
-     </div>
-  </div>
-{% endblock %}
-
-  <div class="container" id="outer-container">
-    {% block masthead %}
-        <header class="subhead hidden-phone" id="masthead">
-          <h1><a href="./" title="nepi">nepi</a></h1>
-          <h4 id="logo-ccnmtl">
-            <a href="http://ccnmtl.columbia.edu" target="_blank"
-              title="Columbia Center for New Media Teaching and Learning">
-              <span>Produced by the Columbia Center for New Media Teaching
-              and Learning</span>
-            </a>
-          </h4>
         </header>
     
         {% block primarynav %}
@@ -94,12 +63,9 @@
         {% endblock %}    
     {% endblock %}
 
-    <div class="container-fluid" id="content">
+    <div class="container" id="content">
       <div class="row-fluid">
-        <div class="span2" id="sidebar">
-            {% block sidebar %}{% endblock %}
-        </div>
-        <div class="span10" id="right-content">
+        <div class="span12">
             {% block pagetitle %}{% endblock %}
             {% block content %}{% endblock %}
             {% block contentnav %}{% endblock %}
@@ -110,9 +76,7 @@
 </div>
 
 {% block footer %}
-  <footer class="footer navbar-fixed-bottom hidden-phone">
-    <img src="/site_media/img/logo_ccnmtl_sidebar.gif" class="printonly pull-right" />
-  </footer>
+ 
 {% endblock %}
 
 <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
