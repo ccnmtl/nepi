@@ -6,7 +6,7 @@ from nepi.activities.views import DeleteConversationView
 from nepi.activities.views import ScenarioListView
 from nepi.activities.views import ScenarioDetailView
 from nepi.activities.views import ScenarioDeleteView
-from nepi.activities.views import get_click, add_conversation
+# from nepi.activities.views import get_click, add_conversation
 
 
 urlpatterns = patterns(
