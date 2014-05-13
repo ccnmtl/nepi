@@ -20,6 +20,7 @@ class ConversationState(template.Node):
         except ConversationResponse.DoesNotExist:
             return 0
 
+
 @register.tag('get_response')
 def get_response(parser, token):
     user = token.split_contents()[1:][0]
