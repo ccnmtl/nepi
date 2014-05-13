@@ -25,5 +25,4 @@ class ConversationState(template.Node):
 def get_response(parser, token):
     user = token.split_contents()[1:][0]
     senario = token.split_contents()[1:][1]
-    #response = token.split_contents()[1:][2]
-    return ConversationState(user, senario)  #, response)
+    return ConversationState(user, senario)
