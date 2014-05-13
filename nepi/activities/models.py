@@ -4,6 +4,7 @@ from django.contrib.contenttypes import generic
 from pagetree.models import PageBlock
 from datetime import datetime
 from django import forms
+from django.core.urlresolvers import reverse
 
 
 CONV_CHOICES = (
@@ -53,7 +54,13 @@ class ConversationScenario(models.Model):
         return ConversationScenarioForm()
 
     def edit_form(self):
-        return ConversationScenarioForm(instance=self)
+    	class EditForm(forms.Form):
+    	    alt_text = ("<a href=\"" + reverse("create_conversation", args=[self.id])
+                        + "\">add a conversation</a>")
+    	    description = forms.CharField(initial=self.description)
+    	form = EditForm()
+        return form
+
 
     @classmethod
     def create(self, request):
@@ -83,11 +90,15 @@ class ConversationScenario(models.Model):
             return False
 
 
+class ConversationForm(forms.ModelForm):
+    class Meta:
+        model = Conversation
+
+
 class ConversationScenarioForm(forms.ModelForm):
     class Meta:
         model = ConversationScenario
-        fields = ["description"]
-
+    
 
 class ConvClick(models.Model):
     created = models.DateTimeField(default=datetime.now)

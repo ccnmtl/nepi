@@ -108,7 +108,7 @@ def home(request):
             pass
         elif user_profile.profile_type == 'IC':
             pending_teachers = PendingTeachers.objects.filter(
-                profile_type='TE')
+                user_profile__profile_type='TE')
             schools = School.objects.all()
             return render(request, 'icap/icindex.html',
                           {'schools': schools,

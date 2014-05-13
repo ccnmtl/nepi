@@ -8,7 +8,54 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 import json
 from nepi.activities.models import (
-    Conversation, ConversationScenario, ConvClick, ConversationResponse)
+    Conversation, ConversationScenario, ConvClick, ConversationResponse, ConversationForm)
+
+
+def add_conversation(request, pk):
+     if request.method == 'POST':
+         scenario = ConversationScenario.objects.get(pk=pk)
+         #print scenario
+         #print type(scenario)
+         form = ConversationForm(request.POST)
+         if form.is_valid():
+             nc = Conversation.objects.create()
+             #print nc
+             scenario=ConversationScenario.objects.get(pk=pk)
+             nc.scenario_type = form.cleaned_data['scenario_type']
+             #print nc.scenario_type
+             if nc.scenario_type == 'G':
+                 scenario.good_conversation = nc
+                 print scenario
+                 print scenario.good_conversation
+                 scenario.save()
+                 #nc__good_conversation=ConversationScenario.objects.get(pk=pk)
+                 #print type(nc__good_conversation)
+                 #print nc__good_conversation
+                 #nc.save()
+             elif nc.scenario_type == 'B':
+                 #nc__bad_conversation=ConversationScenario.objects.get(pk=pk)
+                 scenario.bad_conversation = nc
+                 scenario.save()
+                 print scenario
+                 print scenario.good_conversation
+                 #print nc__bad_conversation
+                 #print type(nc__bad_conversation)
+                 #nc.save()
+             nc.text_one = form.cleaned_data['text_one']
+             nc.response_one = form.cleaned_data['response_one']
+             nc.response_two = form.cleaned_data['response_two']
+             nc.response_three = form.cleaned_data['response_three']
+             nc.complete_dialog = form.cleaned_data['complete_dialog']
+             nc.save()
+             return HttpResponseRedirect('/thanks/') # Redirect after POST
+     else:
+         form = ConversationForm() # An unbound form
+
+
+     return render(request, 'activities/add_conversation.html', {
+         'form': form,
+     })
+
 
 
 def render_to_json_response(context, **response_kwargs):
@@ -17,39 +64,7 @@ def render_to_json_response(context, **response_kwargs):
     return HttpResponse(data, **response_kwargs)
 
 
-class AjaxableResponseMixin(object):
-    """
-    Taken from Django site.
-    Mixin to add AJAX support to a form.
-    Must be used with an object-based FormView (e.g. CreateView)
-    """
-    def render_to_json_response(self, context, **response_kwargs):
-        data = json.dumps(context)
-        response_kwargs['content_type'] = 'application/json'
-        return HttpResponse(data, **response_kwargs)
-
-    def form_invalid(self, form):
-        response = super(AjaxableResponseMixin, self).form_invalid(form)
-        if self.request.is_ajax():
-            return self.render_to_json_response(form.errors, status=400)
-        else:
-            return response
-
-    def form_valid(self, form):
-        # We make sure to call the parent's form_valid() method because
-        # it might do some processing (in the case of CreateView, it will
-        # call form.save() for example).
-        response = super(AjaxableResponseMixin, self).form_valid(form)
-        if self.request.is_ajax():
-            data = {
-                'pk': self.object.pk,
-            }
-            return self.render_to_json_response(data)
-        else:
-            return response
-
-
-class ScenarioListView(ListView, AjaxableResponseMixin):
+class ScenarioListView(ListView):
     template_name = "activities/class_scenario_list_view.html"
     model = ConversationScenario
 
@@ -82,11 +97,8 @@ class DeleteConversationView(DeleteView):
     success_url = '../../../activities/classview_scenariolist/'
 
 
-    # what sort of validation do I perform if there is no form?
 def get_click(request):
-    #response = super(AjaxableResponseMixin, self).form_valid(form)
     if request.method == 'POST' and request.is_ajax():
-        # we did not define a form so how do we clean it?
         scenario = ConversationScenario.objects.get(
             pk=request.POST['scenario'])
         conversation = Conversation.objects.get(
@@ -113,3 +125,5 @@ def get_click(request):
         return render_to_json_response({'success': True})
     else:
         return render_to_json_response({'success': False})
+
+
