@@ -1,0 +1,35 @@
+<div id="chartcontent">
+    <div id="charttext">
+        <div class="infotext_default textactive">
+            <div class="instructions">
+            {{block.intro_text|safe}}
+            </div>
+        </div>
+    
+        {% for item in block.items.all %}
+        <div class="text{{item.label}}">
+        <!-- {{item.label_name}} -->
+            {{item.content|safe}}
+        </div>
+        {% endfor %}
+    
+    </div><!-- id="charttext" -->
+    
+    <div id="chartnav">
+        <img name="imagemap_shim" id="imagemap_shim" usemap="#imageMapArea" src="/site_media/img/infographics/shim.gif" />
+        
+        {% for item in block.items.all %}
+        <div id="chart_nav{{item.label}}" class="nav{{item.label}}"></div><!-- id="chart_nav{{item.label}}" -->
+        {% endfor %}
+        
+    </div><!-- id="chartnav" -->
+</div><!-- id="chartcontent" -->
+
+
+
+
+<map name="imageMapArea" id="imageMapArea">
+        {% for item in block.items.all %}
+        <area shape="{{item.map_area_shape}}" coords="{{item.coordinates}}" alt="{{item.label}}">
+        {% endfor %}
+</map>
