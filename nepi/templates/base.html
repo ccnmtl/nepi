@@ -17,12 +17,9 @@
         
     {% block css %}
     {% endblock %}    
-  
 
     <script src="/site_media/js/jquery-1.10.1.min.js"></script>
     <script src="/site_media/js/jquery-ui-1.10.3.min.js"></script>
-    <script src="/site_media/js/jquery-1.7.2.min.js"></script>
-    <script src="{{STATIC_URL}}js/jquery-1.7.2.min.js"></script>
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
         <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -32,6 +29,7 @@
 </head>
 <body>
 
+<<<<<<< HEAD
 <div class="container" id="outer-container">
     {% block masthead %}
         <header id="masthead">
@@ -47,6 +45,53 @@
           <a href="/logout/" class="btn btn-inverse">logout</a>
           {% endif %}
 {% endblock %}
+=======
+{% block topnavbar %}
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <ul class="nav">
+          <li><a class="brand" href="/">nepi</a></li>
+          {% block topnavbarleftitems %}
+
+            <li class="flatpages"><a href="/about/">About</a></li>
+            <li class="flatpages"><a href="/help/">Help</a></li>
+            <li class="flatpages"><a href="/contact/">Contact</a></li>
+
+          {% endblock %}
+        </ul>
+
+        <p class="navbar-text pull-right">
+            {% block topnavbarrightitems %}{% endblock %}
+          
+            {% block usernav %}
+                {% if not request.user.is_anonymous %}
+                    logged in as {{request.user.first_name}} {{request.user.last_name}}
+                    {% if request.user.is_superuser %}
+                        <a href="{% url "impersonate-list" %}">[impersonate]</a>
+                    {% endif %}
+                    <a href="/accounts/logout/?next=/" class="btn btn-inverse">logout</a>
+                {% endif %}
+            {% endblock %}
+       </p>
+
+       </div>
+     </div>
+  </div>
+{% endblock %}
+
+  <div class="container" id="outer-container">
+    {% block masthead %}
+        <header class="subhead hidden-phone" id="masthead">
+          <h1><a href="./" title="nepi">nepi</a></h1>
+          <h4 id="logo-ccnmtl">
+            <a href="http://ccnmtl.columbia.edu" target="_blank"
+              title="Columbia Center for New Media Teaching and Learning">
+              <span>Produced by the Columbia Center for New Media Teaching
+              and Learning</span>
+            </a>
+          </h4>
+>>>>>>> 183e590920e8929f1aced03133255e17a8a32421
         </header>
     
         {% block primarynav %}
@@ -86,12 +131,6 @@
 {% endcompress %}
 
 {% block js %}
-
-
-
-
-
-
 {% endblock %}
 
 {% comment %}

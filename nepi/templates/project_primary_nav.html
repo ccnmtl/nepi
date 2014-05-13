@@ -1,4 +1,5 @@
 {% load getroot %}
+
  {% block primarynavtabs %}
     <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -44,51 +45,4 @@
            {% endfor %} 
          </ul>
      </div>        
-
-{% comment %}{% load accessible %}
-{% block primarynavtabs %}
-
-<ul class="nav">
-    {% for s in root.get_descendants %}
-        {% if s.get_children %}
-            <li class="{% ifequal s.slug module.slug %}
-                           active
-                       {% else %}{% ifequal s.slug section.slug %}
-                           active
-                       {% endifequal %}{% endifequal %}            
-                       {% ifequal s.depth 2 %}
-                           dropdown
-                       {% else %}{% ifequal s.depth 3 %} 
-                           dropdown-submenu
-                       {% else %}{% ifequal s.depth 4 %}
-                           nav-header 
-                       {% endifequal %}{% endifequal %}{% endifequal %}">
-                {% ifequal s.depth 4 %}
-                    {{s.label}}
-                    <ul>
-                {% else %}
-                    <a href="#"
-                        class="dropdown-toggle {% ifaccessible s %}{% else %}grayout{%endifaccessible %}"
-                        data-toggle="dropdown">{{s.label}}
-                        {% ifequal s.depth 2 %}<b class="caret"></b>{% endifequal %}
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-{{s.depth}} {{s.slug}}">
-                {% endifequal %}        
-        {% else %}
-            <li>
-                {% ifaccessible s %}
-                    <a href="{{s.get_absolute_url}}">{{s.label}}</a>
-                {% else %}
-                    <span>{{s.label}}</span>
-                {% endifaccessible %}        
-            </li>                    
-            {% if s.is_last_child %}
-                {% for lc in s.closing_children %}
-                    {% if lc.depth > 2 %}</ul></li>{% endif %}
-                {% endfor %}
-            {% endif %}
-        {% endif %}
-    {% endfor %}
- </ul>
-       {% endcomment %}
 {% endblock %}

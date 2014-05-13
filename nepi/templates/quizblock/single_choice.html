@@ -1,28 +1,35 @@
 {% load markup %}
 
-<script>
-$( document ).ready(function() {
-
-    console.log("document ready");
-});
-function showAnswer(questionId) {
-    console.log("onclick called short answer function");
-    var qid = "#q" + questionId;
-    console.log("div id is " + qid);
-    var display_type = $(qid).css("display");
-    console.log(display_type);
-    $(qid).css("display", "block");
-
-    //$(qid).toggle();
-    //$(qid).css('visibility', 'visible');
-    //alert(qid);
-    //document.getElementById(qid).css('visibility', 'visible');
-}
-</script>
-<ol type="A">
+<ol type="A" class="caseanswers">
   {% for answer in question.answer_set.all %}
     {% if block.rhetorical %}
-      <li><input name="question{{question.id}}" value="{{answer.label}}" type="radio" onClick="showAnswer({{question.id}})"/>{{answer.label}}</li>
+        <li><input name="question{{question.id}}" value="{{answer.label}}" type="radio" onClick="showAnswer({{question.id}})"/>{{answer.label}}</li>
+    {% else %}
+        <li><div class="radio">        
+            {% if response %}
+                {% ifequal response.value answer.value %}
+                    <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+                           checked="checked" disabled="disabled"
+                           value="{{answer.value}}" type="radio"></input>
+                {% else %}
+                    <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+                           value="{{answer.value}}" type="radio"></input>
+                {% endifequal %}
+                {% if answer.correct %}
+                    <div class="alert alert-success">
+                        <b>Correct</b>
+                    </div>
+                {% else %}
+                    <div class="alert alert-error">
+                        <b>Incorrect</b>
+                    </div>
+                {% endif %}
+            {% else %}
+                <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+                       value="{{answer.value}}" type="radio""/>
+            {% endif %}
+            {{answer.label|safe}}
+        </div></li>      
     {% endif %}
   {% endfor %}
 </ol>

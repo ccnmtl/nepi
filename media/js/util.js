@@ -1,49 +1,16 @@
-function showVideo(radioElt) {
-    if (jQuery("div.multiple-video-quiz").length > 0) {    
-        // hide any videos that are currently playing
-        // stop the video?
-        jQuery("div.quiz-video").addClass("answer-video").removeClass("quiz-video");
-        var video = jQuery(radioElt).siblings("div.answer-video")[0];
-        
-        jQuery(video).addClass("quiz-video");
-        
-        // center the video vertically 
-        var top = jQuery("div.multiple-video-quiz").offset().top;
-        var height = jQuery("div.multiple-video-quiz").outerHeight();
-        
-        var center = (top + height) / 2 - jQuery(video).height() / 2 ; 
-        
-        jQuery(video).css({"top": center + "px"});
-        
-        jQuery(video).removeClass("answer-video");
-    }
+function showAnswer(questionId) {
+    var qid = "#q" + questionId;
+    var display_type = jQuery(qid).css("display");
+    jQuery(qid).css("display", "block");
 }
-
-jQuery(document).ready(function() {
-    var a = jQuery("div.multiple-video-quiz").find("input[type='radio']:checked");
-    if (a.length > 0) {
-        showVideo(a[0]);
-    }
-    
-    if (jQuery("div.survey").length > 0) {
-        jQuery("div.block input[type='text']").addClass("optional");
-    }
-    
-    if (jQuery("div.survey").length > 0 &&
-            jQuery("input[name='submitted']").length > 0) {
-        jQuery("div.block input[type='radio']").attr("disabled", "disabled");
-    }
-});
-
 
 function is_form_complete(form) {
     var complete = true;
-    
-    var children = jQuery(form).find("input,textarea,select");
+
+    var children = jQuery(form).find("div.required").find("input,textarea,select");
     jQuery.each(children, function() {
-        if (complete && jQuery(this).is(":visible") &&
-                !jQuery(this).hasClass("optional")) {
-            
+        if (complete && jQuery(this).is(":visible")) {
+
             if (this.tagName === 'INPUT' && this.type === 'text' ||
                 this.tagName === 'TEXTAREA') {
                 complete = jQuery(this).val().trim().length > 0;
@@ -65,3 +32,15 @@ function is_form_complete(form) {
     return complete;
 }
 
+jQuery(document).ready(function () {            
+    jQuery("form").submit(function(evt) {
+        evt.stopImmediatePropagation();
+
+        if (!is_form_complete(this)) {
+            alert("Please complete all form fields before continuing.");
+            return false;
+        } else {
+            return true;
+        }
+    });
+});

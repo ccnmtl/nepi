@@ -1,26 +1,18 @@
 '''Views for NEPI, should probably break up
 into smaller pieces.'''
-from annoying.decorators import render_to
 from django import forms
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from nepi.main.forms import CreateAccountForm, ContactForm, \
-    LoginForm
+from nepi.main.forms import CreateAccountForm, ContactForm
 from nepi.main.models import Course, UserProfile
 from nepi.main.models import School, PendingTeachers
 from django.views.generic.edit import FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.core.mail import send_mail
-
-
-@render_to('main/index.html')
-def index(request):
-    return dict()
 
 
 class LoggedInMixin(object):
@@ -76,15 +68,6 @@ class InstructorPage(LoggedInMixinStaff, InstructorView):
 #     return False
 
 
-'''Below this line is old code'''
-
-
-def logout_view(request):
-    """When user logs out redirect to home page."""
-    logout(request)
-    return HttpResponseRedirect('/')
-
-
 class ContactView(FormView):
     '''changed contact view function to
     generic class based view'''
@@ -108,39 +91,10 @@ def thanks_course(request, course_id):
     return render(request, 'student/thanks_course.html')
 
 
-"""More General Views"""
-
-
-def nepi_login(request):
-    '''Allow user to login.'''
-    if request.method == 'POST':  # If the form has been submitted...
-        form = LoginForm(request.POST)  # A form bound to the POST data
-        print form
-        if form.is_valid():  # All validation rules pass
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return HttpResponseRedirect("/pages/main/")
-                else:
-                    print "user is not active"
-                    return HttpResponseRedirect("/")
-            else:
-                print "user is None"
-                return HttpResponseRedirect("/")
-    else:
-        form = LoginForm()  # An unbound form
-
-    return render(request, 'main/login.html', {
-        'form': form,
-    })
-
-
 # when to use class based views vs generic class based views?
 # can you just have classes inherit generic based views
 # do mixin for being logged in?
+@login_required
 def home(request):
     '''Return homepage appropriate for user type.'''
     try:
@@ -197,32 +151,6 @@ class RegistrationView(FormView):
             new_profile = UserProfile(user=new_user)
             new_profile.profile_type = 'ST'
             new_profile.save()
-
-#             if form_data['email']:
-#                 subject = "NEPI Registration"
-#                 message = "Congratulations! " + \
-#                           "You've successfully registered to use NEPI.\n\n" + \
-#                           "Your user information is " + \
-#                           form_data['username'] + \
-#                           ".\n\n" + \
-#                           "You may now log in to your account."
-#                 sender = "nepi@nepi.ccnmtl.columbia.edu"
-#                 recipients = [form_data['email']]
-#                 send_mail(subject, message, sender, recipients)
-#             subject = "[Student] User Account Created"
-#             sender = "nepi@nepi.ccnmtl.columbia.edu"
-#             recipients = ["nepi@nepi.ccnmtl.columbia.edu"]
-#             message = form_data['username'] + \
-#                 " has successfully created a NEPI account.\n\n"
-#             if form_data['profile_type']:
-#                 subject = "[Teacher] Account Requested"
-#                 message = form_data['first_name'] + \
-#                     " " + form_data['last_name'] + \
-#                     "has requested teacher status in "
-#                     # need to add country and schools here
-#                 pending = PendingTeachers(user_profile=new_profile)
-#                 pending.save()
-#             send_mail(subject, message, sender, recipients)
         return super(RegistrationView, self).form_valid(form)
 
 

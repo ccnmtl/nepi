@@ -15,11 +15,9 @@ class AccessibleNode(template.Node):
         if 'request' in context:
             r = context['request']
             u = r.user
-
-    
             visited, last_section = s.gate_check(u)
 
-            if s.get_previous().submitted(u):# and visited:
+            if s.get_previous().submitted(u):  # and visited:
                 return self.nodelist_true.render(context)
 
         return self.nodelist_false.render(context)
