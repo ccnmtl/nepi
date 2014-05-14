@@ -13,7 +13,7 @@ import json
 from django.core.urlresolvers import reverse
 from django.views.generic.base import View
 from django.views.generic.edit import CreateView, UpdateView
-#from django.views.generic.edit import ListView
+from django.views.generic.edit import DeleteView
 
 
 @user_passes_test(lambda u: u.is_superuser)
