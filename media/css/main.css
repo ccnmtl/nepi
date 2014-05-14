@@ -464,6 +464,8 @@ body  {
 	border: none;
 	background-color: transparent;
 	border-radius: 3px;
+	padding-right: 0;
+	padding-left: 0;
 }
 
 .navbar .nav > li > a /*overwriting bootstrap*/ {
@@ -477,10 +479,31 @@ body  {
 	text-decoration: none;
 	background-color: transparent;
 	background-image: url(../img/nav-active-bg.png);
-	background-repeat: repeat;
-	
+	background-repeat: repeat;	
 }
 
+.navbar .nav li.dropdown > .dropdown-toggle .caret {
+	border-top-color: #fff;
+	border-bottom-color: #fff;
+}
+
+.navbar .nav .dropdown-toggle .caret {
+	margin: 9px 0 0 4px;
+}
+
+.navbar .nav li.dropdown > a:hover .caret,
+.navbar .nav li.dropdown > a:focus .caret {
+  border-top-color: #fff;
+  border-bottom-color: #fff;
+}
+
+.navbar .nav li.dropdown.open > .dropdown-toggle, 
+.navbar .nav li.dropdown.active > .dropdown-toggle, 
+.navbar .nav li.dropdown.open.active > .dropdown-toggle {
+	color: #555555;
+	background-color: #e5e5e5;
+	background-image: none;
+}
 	/*Text Styles*/
 
 .small-text {
@@ -488,7 +511,10 @@ body  {
 	font-size: 12px;
 }
 
-/* Basic survey styles */
+
+
+
+	/* Basic survey styles */
 .survey {
     min-width: 970px;
 }
