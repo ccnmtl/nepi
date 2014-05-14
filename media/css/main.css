@@ -458,7 +458,7 @@ body  {
 
 	/*Navigation*/
 
-.navbar-inner {
+.navbar-inner /*overwriting bootstrap*/ {
 	background-image: url(../img/nav-bg.png);
 	background-repeat: repeat;
 	border: none;
@@ -466,6 +466,27 @@ body  {
 	border-radius: 3px;
 }
 
+.navbar .nav > li > a /*overwriting bootstrap*/ {
+	color: #fff;
+	text-shadow: none;
+	font-weight: normal;
+}
+
+.navbar .nav > li > a:focus, .navbar .nav > li > a:hover {
+	color: #fff;
+	text-decoration: none;
+	background-color: transparent;
+	background-image: url(../img/nav-active-bg.png);
+	background-repeat: repeat;
+	
+}
+
+	/*Text Styles*/
+
+.small-text {
+	color: #fff;
+	font-size: 12px;
+}
 
 /* Basic survey styles */
 .survey {
