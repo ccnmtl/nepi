@@ -3,8 +3,9 @@
 jQuery(document).ready(function() {
     // adding hack to see when to refresh page - will redo
     // first check that it is not an inital visit somehow
-    var goodvar = 0;
-    var badvar = 0;
+    var last_click="";
+    alert(jQuery('#last_click').val());
+    //if jQuery('#last_click'){alert(jQuery('#last_click').attr());}
     var frm = jQuery('#good');
     jQuery("#starting_good").on("click", 
         function()

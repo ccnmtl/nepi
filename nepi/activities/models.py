@@ -89,6 +89,20 @@ class ConversationScenario(models.Model):
         else:
             return False
 
+    def last_response(self, user):
+        try:
+            response = ConversationResponse.objects.get(
+                conv_scen=self, user=user)
+            if (response.first_click is not None
+                    and response.second_click is not None):
+                #print response.third_click
+                return response.third_click.conversation.scenario_type
+            elif (response.first_click is not None
+                    and response.second_click is None):
+                return response.first_click.conversation.scenario_type
+        except ConversationResponse.DoesNotExist:
+            return 0  # is this correct?
+
 
 class ConversationForm(forms.ModelForm):
     class Meta:

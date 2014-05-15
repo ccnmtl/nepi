@@ -4,26 +4,23 @@ register = template.Library()
 
 
 class ConversationState(template.Node):
-    def __init__(self, user, scenario):
-        self.user = template.Variable(user)
-        self.scenario = template.Variable(scenario)
-
+    # if there is not response yet can we do this?
+    # do I need to stick this in the template?
+    def __init__(self, cblock, scenario_response):
+        self.cblock = cblock
+        self.scenario_response = scenario_response
+        
     def render(self, context):
-        u = self.user.resolve(context)
-        try:
-            response = ConversationResponse.objects.get(
-                conv_scen=self.scenario, user=u)
-            if response.third_click:
-                return response.third_click.id
-            if response.first_click:
-                return response.first_click.id
-        except ConversationResponse.DoesNotExist:
-            return 0
+        b = context[self.cblock]
+        #print b
+        u = context['request'].user
+        #print b.last_response(u).conversation.scenario_type
+        context[self.scenario_response] = b.last_response(u)
+        return ''
 
 
 @register.tag('get_response')
 def get_response(parser, token):
-    user = token.split_contents()[1:][0]
-    senario = token.split_contents()[1:][1]
-    #response = token.split_contents()[1:][2]
-    return ConversationState(user, senario)  #, response)
+    cblock = token.split_contents()[1:][0]
+    scenario_response = token.split_contents()[1:][1]
+    return ConversationState(cblock, scenario_response)
