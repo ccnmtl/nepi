@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>nepi: {% block title %}{% endblock %}</title>
+  <title>ICAP Nursing E-Learning: {% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="nepi">
     <meta name="author" content="CCNMTL">
@@ -28,24 +28,27 @@
   {% block feeds %}{% endblock %}
 </head>
 <body>
-
-<div class="container" id="outer-container">
+	<div class="container" id="outer-container">
     {% block masthead %}
         <header id="masthead">
-          <h1 class="logo"><a href="./" title="nepi"><img src="site_media/img/icap-nursing-elearning.png"></a></h1>
-         {% block usernav %}
-          {% if request.user.is_anonymous %}
-          <a href="/login/" class="btn btn-success">login</a>
-          {% else %}
-          logged in as {{request.user.first_name}} {{request.user.last_name}}
-{% if request.user.is_superuser %}
-          <a href="{% url "impersonate-list" %}">[impersonate]</a>
-{% endif %}
-          <a href="/logout/" class="btn btn-inverse">logout</a>
-          {% endif %}
-{% endblock %}
+        	<div id="titlebar">
+          	<a href="./" title="nepi"><img src="/site_media/img/icap-nursing-elearning.png"></a>
+    		{% block usernav %}
+    			<div class="pull-right small-text">
+				{% if request.user.is_anonymous %}
+          		<a href="/login/" class="btn btn-success">login</a>
+          		{% else %}
+          		Logged in as {{request.user.first_name}} {{request.user.last_name}}
+				{% if request.user.is_superuser %}
+          		<a href="{% url "impersonate-list" %}">[impersonate]</a>
+				{% endif %}
+          		<a href="/logout/" class="btn btn-inverse">logout</a>
+          		{% endif %}
+    			</div>
+    		</div>      
+			{% endblock %}
 
-{% block primarynav %}
+	{% block primarynav %}
             <div class="navbar" id="primarynav">
               <div class="navbar-inner">
                 <div class="container">

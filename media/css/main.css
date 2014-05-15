@@ -220,7 +220,7 @@ pre {
   overflow: auto;
 }
 
-<<<<<<< HEAD
+
 /**
  * Address odd `em`-unit font size rendering in all browsers.
  */
@@ -238,7 +238,7 @@ pre {
     border:4px solid #006699;
     top:0;left:0;
     margin:0; padding:3;}
->>>>>>> 183e590920e8929f1aced03133255e17a8a32421
+
 
 code,
 kbd,
@@ -263,7 +263,7 @@ samp {
  * 3. Address margins set differently in Firefox 4+, Safari, and Chrome.
  */
 
-<<<<<<< HEAD
+
 button,
 input,
 optgroup,
@@ -447,9 +447,74 @@ th {
 body  {
 	background-image: url(../img/bg-blue-stripe.png);
 	background-repeat: repeat;
+	font-family: Arial, 'Helvetica', sans-serif;
 }
-=======
-/* Basic survey styles */
+
+
+#titlebar {
+	padding: 25px 0 10px 0;
+}
+
+
+	/*Navigation*/
+
+.navbar-inner /*overwriting bootstrap*/ {
+	background-image: url(../img/nav-bg.png);
+	background-repeat: repeat;
+	border: none;
+	background-color: transparent;
+	border-radius: 3px;
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.navbar .nav > li > a /*overwriting bootstrap*/ {
+	color: #fff;
+	text-shadow: none;
+	font-weight: normal;
+}
+
+.navbar .nav > li > a:focus, .navbar .nav > li > a:hover {
+	color: #fff;
+	text-decoration: none;
+	background-color: transparent;
+	background-image: url(../img/nav-active-bg.png);
+	background-repeat: repeat;	
+}
+
+.navbar .nav li.dropdown > .dropdown-toggle .caret {
+	border-top-color: #fff;
+	border-bottom-color: #fff;
+}
+
+.navbar .nav .dropdown-toggle .caret {
+	margin: 9px 0 0 4px;
+}
+
+.navbar .nav li.dropdown > a:hover .caret,
+.navbar .nav li.dropdown > a:focus .caret {
+  border-top-color: #fff;
+  border-bottom-color: #fff;
+}
+
+.navbar .nav li.dropdown.open > .dropdown-toggle, 
+.navbar .nav li.dropdown.active > .dropdown-toggle, 
+.navbar .nav li.dropdown.open.active > .dropdown-toggle {
+	color: #555555;
+	background-color: #e5e5e5;
+	background-image: none;
+}
+	/*Text Styles*/
+
+.small-text {
+	color: #fff;
+	font-size: 12px;
+}
+
+
+
+
+	/* Basic survey styles */
 .survey {
     min-width: 970px;
 }
@@ -503,5 +568,3 @@ body  {
     float: left;
     width: 116px;
 }
-
->>>>>>> 183e590920e8929f1aced03133255e17a8a32421
