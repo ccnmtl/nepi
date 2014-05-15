@@ -16,11 +16,12 @@ class ConversationState(template.Node):
         u = context['request'].user
         #print b.last_response(u).conversation.scenario_type
         context[self.scenario_response] = b.last_response(u)
+        print context[self.scenario_response]
         return ''
 
 
 @register.tag('get_response')
 def get_response(parser, token):
     cblock = token.split_contents()[1:][0]
-    scenario_response = token.split_contents()[1:][1]
+    scenario_response = token.split_contents()[1:][2]
     return ConversationState(cblock, scenario_response)

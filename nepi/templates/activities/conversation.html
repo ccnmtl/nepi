@@ -8,15 +8,15 @@
 {{block.description|markdown}}
 
 </br></br>{% get_response block as response %}
-{{response.last_response|safe}}
-<div id="click"> {{response.scenario_response|safe}} </div>
-<div id="last_click"> {% get_response block response %} </div>
+
+<div id="click"> {{response.id|safe}} </div>
+
 <div id="good_conversation">
   <form id="good" action="/activities/get_click/" method="post"> {% csrf_token %}
     <input type="hidden" name="clicked_on" value="good_conversation"> 
     <input type="hidden" name="conversation" value="{{block.good_conversation.pk}}">
     <input type="hidden" name="scenario" value="{{block.pk}}">
-    <input type="hidden" id="last_click" name="last_click" value="{% get_response block response %}" />
+    <input type="hidden" id="last_click" name="last_click" value="" />
     
   </form>
   <ul>
@@ -45,7 +45,7 @@
     <input type="hidden" name="clicked_on" value="bad_conversation"> 
     <input type="hidden" name="conversation" value="{{block.bad_conversation.pk}}">
     <input type="hidden" name="scenario" value="{{block.pk}}">
-    <input type="hidden" id="last_click" name="last_click" value="{% get_response block cblock response.third_click %}" />
+    <input type="hidden" id="last_click" name="last_click" value="" />
   </form>
   <ul>
       <ol>
