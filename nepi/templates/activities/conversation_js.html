@@ -1,22 +1,47 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script>
+
 jQuery(document).ready(function() {
-    // adding hack to see when to refresh page - will redo
-    // first check that it is not an inital visit somehow
-    var last_click="";
-    alert(jQuery('#last_click').val());
-    //if jQuery('#last_click'){alert(jQuery('#last_click').attr());}
-    var frm = jQuery('#good');
+    // can use .html or .text
+    var last_click = jQuery('#last_click').text();
+   
+    
+    if(jQuery('#last_click').attr('value') == "B")
+    {
+         jQuery("#starting_bad").addClass( "wrong-selected" )
+         jQuery(".patient_bad_conversation").addClass( "wrong-selected" ).show();
+
+         jQuery(".patient_good_conversation").hide();
+         jQuery("#starting_good").removeClass( "right-selected" ).show();
+
+    }
+    
+    
+    if(jQuery('#last_click').attr('value') == "G")
+    {
+         jQuery("#starting_good").addClass( "right-selected" )
+         jQuery(".patient_good_conversation").addClass( "right-selected" ).show();
+
+         jQuery(".patient_bad_conversation").hide();
+         jQuery("#starting_bad").removeClass( "wrong-selected" );
+
+    }
+    
+    
+    
+    var gfrm = jQuery('#good');
+    var bfrm = jQuery('#bad');
     jQuery("#starting_good").on("click", 
         function()
         { 
              jQuery.ajax(
              {
-                  type: frm.attr('method'),
-                  url: frm.attr('action'),
-                  data: frm.serialize(),
+                  type: gfrm.attr('method'),
+                  url: gfrm.attr('action'),
+                  data: gfrm.serialize(),
                   success: function (data) 
                   {
+                      //alert(gfrm.serialize());
                         //alert("This is a form submission.");
                   },
                   error: function(data) 
@@ -36,18 +61,19 @@ jQuery(document).ready(function() {
 
       });
 
-   var frm = jQuery('#bad');
+   
    jQuery("#starting_bad").on("click", 
       function()
       { 
 
              jQuery.ajax(
              {
-                  type: frm.attr('method'),
-                  url: frm.attr('action'),
-                  data: frm.serialize(),
+                  type: bfrm.attr('method'),
+                  url: bfrm.attr('action'),
+                  data: bfrm.serialize(),
                   success: function (data) 
                   {
+                      //alert(bfrm.serialize());
                         //alert("This is a form submission.");
                   },
                   error: function(data) 

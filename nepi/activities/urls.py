@@ -5,6 +5,7 @@ from nepi.activities.views import DeleteConversationView
 from nepi.activities.views import ScenarioListView
 from nepi.activities.views import ScenarioDetailView
 from nepi.activities.views import ScenarioDeleteView
+from nepi.activities.views import get_click
 
 
 urlpatterns = patterns(
@@ -23,5 +24,6 @@ urlpatterns = patterns(
         ScenarioDeleteView.as_view()),
     url(r'^scenario_display/(?P<pk>\d+)/$',
         ScenarioDetailView.as_view()),
-    url(r'^get_click/$', 'nepi.activities.views.get_click'),
+    (r'^get_click/$', 'nepi.activities.views.get_click'),
+    url(r'^get_last/$', 'nepi.activities.views.get_last'),
 )
