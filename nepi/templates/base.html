@@ -35,14 +35,12 @@
           	<a href="./" title="nepi"><img src="/site_media/img/icap-nursing-elearning.png"></a>
     		{% block usernav %}
     			<div class="pull-right small-text">
-				{% if request.user.is_anonymous %}
-          		<a href="/login/" class="btn btn-success">login</a>
-          		{% else %}
-          		Logged in as {{request.user.first_name}} {{request.user.last_name}}
-				{% if request.user.is_superuser %}
-          		<a href="{% url "impersonate-list" %}">[impersonate]</a>
-				{% endif %}
-          		<a href="/logout/" class="btn btn-inverse">logout</a>
+				{% if not request.user.is_anonymous %}
+          		    Logged in as {{request.user.first_name}} {{request.user.last_name}}
+				    {% if request.user.is_superuser %}
+          		    <a href="{% url "impersonate-list" %}">[impersonate]</a>
+				    {% endif %}
+          		    <a href="/accounts/logout/?next=/" class="btn btn-inverse">logout</a>
           		{% endif %}
     			</div>
     		</div>      
