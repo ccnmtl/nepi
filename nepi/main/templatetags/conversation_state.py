@@ -1,5 +1,4 @@
 from django import template
-from nepi.activities.models import ConversationResponse
 register = template.Library()
 
 
@@ -9,7 +8,7 @@ class ConversationState(template.Node):
     def __init__(self, cblock, scenario_response):
         self.cblock = cblock
         self.scenario_response = scenario_response
-        
+
     def render(self, context):
         b = context[self.cblock]
         #print b
