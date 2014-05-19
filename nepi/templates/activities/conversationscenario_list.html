@@ -1,0 +1,8 @@
+<h1>Scenarios</h1>
+<ul>
+{% for scenario in object_list %}
+    <li>{{ scenario.description }} - {{ scenario }}</li>
+{% empty %}
+    <li>No articles yet.</li>
+{% endfor %}
+</ul>

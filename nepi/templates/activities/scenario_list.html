@@ -1,0 +1,27 @@
+<h1>Scenarios</h1>
+<ul>
+{% for scenario in object_list %}
+    <li><b>{{ scenario.description }} - {{ scenario }}</b></li>
+        <ul>
+        {% for c in scenario.conversations.all %}
+            <li>{{ c.pk }}  {{ c.text_one }}  {{ c.text_two }}  {{ c.text_three }}  {{ c.conv_scen }}  {{ c.scenario }}  {{c.complete_dialog}}</li></ul>
+        {% empty %}
+            <li>No conversations yet.<space><space><a href="../../activities/add_conversation/{{ scenario.pk }}">Add Conversation</a></li>
+        {% endfor %}</ul>
+
+        {% for c in conversation_list %}
+            <li>{{ c.pk }}  {{ c.text_one }}  {{ c.text_two }}  {{ c.text_three }}  {{ c.conv_scen }}  {{ c.scenario }}  {{c.complete_dialog}}</li>
+        {% empty %}
+            <li>No conversations yet.<space><space><a href="../../activities/add_conversation/{{ scenario.pk }}">Add Conversation</a></li>
+        {% endfor %}
+
+        {% for conversation in scenario.conversation_set.all %}
+            <li>{{ c.pk }}  {{ c.text_one }}  {{ c.text_two }}  {{ c.text_three }}  {{ c.conv_scen }}  {{ c.scenario }}  {{c.complete_dialog}}</li>
+        {% empty %}
+            <li>No conversations yet.<space><space><a href="../../activities/add_conversation/{{ scenario.pk }}">Add Conversation</a></li>
+        {% endfor %}
+{% empty %}
+    <li>No conversation scenarios yet.</li>
+
+{% endfor %}
+</ul>
