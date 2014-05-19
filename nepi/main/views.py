@@ -94,29 +94,33 @@ def thanks_course(request, course_id):
 # when to use class based views vs generic class based views?
 # can you just have classes inherit generic based views
 # do mixin for being logged in?
+
+
 @login_required
 def home(request):
     '''Return homepage appropriate for user type.'''
     try:
         user_profile = UserProfile.objects.get(user=request.user)
-        if user_profile.profile_type == 'ST':
-            courses = user_profile.course.all()
-            return render(request, 'student/stindex.html',
-                          {'courses': courses})
-
-        elif user_profile.profile_type == 'TE':
-            pass
-        elif user_profile.profile_type == 'IC':
-            pending_teachers = PendingTeachers.objects.filter(
-                user_profile__profile_type='TE')
-            schools = School.objects.all()
-            return render(request, 'icap/icindex.html',
-                          {'schools': schools,
-                              'pending_teachers': pending_teachers})
-        else:
-            return HttpResponseRedirect('/')
     except User.DoesNotExist:
+        profile = None
+        return HttpResponseRedirect(reverse('register'))
+    
+    if user_profile.profile_type == 'ST':
+        courses = user_profile.course.all()
+        return render(request, 'student/stindex.html',
+                      {'courses': courses})
+    elif user_profile.profile_type == 'TE':
+        pass
+    elif user_profile.profile_type == 'IC':
+        pending_teachers = PendingTeachers.objects.filter(
+            user_profile__profile_type='TE')
+        schools = School.objects.all()
+        return render(request, 'icap/icindex.html',
+                      {'schools': schools,
+                          'pending_teachers': pending_teachers})
+    else:
         return HttpResponseRedirect('/')
+
 
     # should there be methods for registering
     # teacher and checking country?
