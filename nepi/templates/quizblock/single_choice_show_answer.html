@@ -1,0 +1,37 @@
+{% load markup %}
+
+{% if block.rhetorical %}
+      <div class="casesanswerdisplay">
+        <div id="q{{question.id}}" class="toggleable" style="display: none">
+          <p>
+            {% if question.correct_answer_letter %}
+              <b>The correct answer is {{question.correct_answer_letter}}</b>
+            {% endif %} 
+            {{question.explanation|markdown}}
+          </p>
+        </div>
+      </div>
+{% else %}
+    <div class="well">
+        <div class="personalized-feedback">
+            <p>
+                {% ifequal response.value|upper question.correct_answer_letter %}
+                    <div class="correct">Correct</div>
+                    <b>The correct answer is: {{question.correct_answer_letter}}. You are right! Nice work!</b>
+                {% else %}
+                    <div class="incorrect">Incorrect</div>
+                    <b>The correct answer is: {{question.correct_answer_letter}}. You chose {{response.value|upper}}. Oops!</b>
+                {% endifequal %}
+            </p>
+        </div>
+        <div class="generic-feedback">
+            <p>
+                {% if question.correct_answer_letter %}
+                  <b>The correct answer is {{question.correct_answer_letter}}</b>
+                {% endif %} 
+            </p>
+        </div>        
+        <p>{{question.explanation|markdown}}</p>
+    </div>
+{% endif %}
+

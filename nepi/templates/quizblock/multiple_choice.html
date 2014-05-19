@@ -1,0 +1,41 @@
+{% load markup %}
+{% load getresponse %}
+
+<ul class="caseanswers">
+{% if response %}
+    {% for answer in question.answer_set.all %}
+        {% ifanswerin response answer  %}
+            <li>
+                <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"                        
+                    value="{{answer.value}}"
+                    type="checkbox"
+                    checked="checked"
+                    disabled="disabled"
+                    class="yours {% if answer.correct %}correct correctanswer{% else %}incorrect incorrectanswer{% endif %}"                            
+                    /> &nbsp;{{answer.label|safe}}
+                {% if answer.correct %}
+                    <span class="alert alert-success">Correct</span>
+                {% endif %}                    
+            </li>
+            
+        {% else %}
+            <li>
+                <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"                        
+                    value="{{answer.value}}"
+                    type="checkbox"
+                    disabled="disabled"
+                    class="{% if answer.correct %}correct {% else %}incorrect {% endif %}"                            
+                     /> &nbsp;{{answer.label|safe}}
+                     
+                 {% if answer.correct %}
+                    <span class="alert alert-success">Correct</span>
+                 {% endif %}
+            </li>
+        {% endifanswerin %}        
+    {% endfor %}
+{% else %}
+    {% for answer in question.answer_set.all %}
+        <li><input name="pageblock-{{block.pageblock.id}}-question{{question.id}}" value="{{answer.value}}" type="checkbox" /> &nbsp;{{answer.label|safe}}</li>
+    {% endfor %}
+{% endif %}
+</ul>
