@@ -1,4 +1,5 @@
 from django import forms
+from choices import COUNTRY_CHOICES
 from captcha.fields import CaptchaField
 
 
@@ -22,13 +23,14 @@ class CreateAccountForm(forms.Form):
         max_length=25, required=True, label="Last Name")
     username = forms.CharField(
         max_length=25, required=True, label="Username")
+    email = forms.EmailField(required=False, label="Email(not required):")
+    country = forms.ChoiceField(required=True, label="What country do you reside in?", choices=COUNTRY_CHOICES)
     password1 = forms.CharField(
         max_length=25, widget=forms.PasswordInput, required=True,
         label="Password")
     password2 = forms.CharField(
         max_length=25, widget=forms.PasswordInput, required=True,
         label="Confirm Password")
-    email = forms.EmailField(required=False)
     profile_type = forms.BooleanField(
         required=False, label="Are you a Teacher?")
     captcha = CaptchaField()

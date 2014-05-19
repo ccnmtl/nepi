@@ -20,10 +20,10 @@ class TestRegistration(TestCase):
                              start_date=datetime.now(),
                              end_date=datetime.now())
         self.course.save()
-        self.student = User(first_name="student", last_name="student",
-                            username="student", email="student@email.com",
-                            password="student")
-        self.student.save()
+#         self.student = User(first_name="student", last_name="student",
+#                             username="student", email="student@email.com",
+#                             password="student")
+#         self.student.save()
 #         self.teacher = User(first_name="teacher", last_name="teacher",
 #                             username="teacher", email="teacher@email.com",
 #                             password="teacher")

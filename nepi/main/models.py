@@ -39,6 +39,7 @@ class Course(models.Model):
     def __unicode__(self):
         return self.name
 
+'''ADD VALIDATION'''
 
 class UserProfile(models.Model):
     '''UserProfile adds exta information to a user,

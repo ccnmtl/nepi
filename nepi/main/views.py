@@ -13,6 +13,40 @@ from nepi.main.models import School, PendingTeachers
 from django.views.generic.edit import FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.core.mail import send_mail
+import json
+from django.views.generic.list import ListView
+
+
+class AjaxableResponseMixin(object):
+    """
+    Taken from Django Website
+    Mixin to add AJAX support to a form.
+    Must be used with an object-based FormView (e.g. CreateView)
+    """
+    def render_to_json_response(self, context, **response_kwargs):
+        data = json.dumps(context)
+        response_kwargs['content_type'] = 'application/json'
+        return HttpResponse(data, **response_kwargs)
+
+    def form_invalid(self, form):
+        response = super(AjaxableResponseMixin, self).form_invalid(form)
+        if self.request.is_ajax():
+            return self.render_to_json_response(form.errors, status=400)
+        else:
+            return response
+
+    def form_valid(self, form):
+        # We make sure to call the parent's form_valid() method because
+        # it might do some processing (in the case of CreateView, it will
+        # call form.save() for example).
+        response = super(AjaxableResponseMixin, self).form_valid(form)
+        if self.request.is_ajax():
+            data = {
+                'pk': self.object.pk,
+            }
+            return self.render_to_json_response(data)
+        else:
+            return response
 
 
 class LoggedInMixin(object):
@@ -138,6 +172,7 @@ class RegistrationView(FormView):
             new_user.save()
             new_profile = UserProfile(user=new_user)
             new_profile.profile_type = 'ST'
+            new_profile.country = form_data['country']
             new_profile.save()
             if form_data['email']:
                 subject = "NEPI Registration"
@@ -229,6 +264,13 @@ def course_students(request, crs_id):
 def remove_student(request, stud_id, cors_id):
     """Allow teacher to remove student."""
     pass
+
+
+
+class GrabCountryClasses(AjaxableResponseMixin, ListView):
+    '''Not sure if it is better to grab a DetailView of Country courses or
+    to do list view of Course for the Country'''
+
 
 
 # def student_test_score(u_id, q_id):
