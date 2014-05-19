@@ -52,22 +52,6 @@ class InstructorPage(LoggedInMixinStaff, InstructorView):
     hierarchy_base = "/pages/main/"
 
 
-# @render_to('main/instructor_index.html')
-# def instructor_index(request):
-#     h = get_hierarchy()
-#     root = h.get_root()
-#     all_modules = root.get_children()
-#     return dict(students=User.objects.all(),
-#                 all_modules=all_modules)
-#
-#
-# def has_lab(section):
-#     for p in section.pageblock_set.all():
-#         if p.block().display_name == "Lab":
-#             return True
-#     return False
-
-
 class ContactView(FormView):
     '''changed contact view function to
     generic class based view'''
@@ -178,7 +162,6 @@ class RegistrationView(FormView):
                     "has requested teacher status in "
                     # need to add country and schools here
                 pending = PendingTeachers(user_profile=new_profile)
-                print pending
                 pending.save()
                 send_mail(subject, message, sender, recipients)
         return super(RegistrationView, self).form_valid(form)  # human = True

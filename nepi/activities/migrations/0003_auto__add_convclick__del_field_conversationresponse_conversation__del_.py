@@ -151,9 +151,12 @@ class Migration(SchemaMigration):
         },
         u'pagetree.hierarchy': {
             'Meta': {'object_name': 'Hierarchy'},
-            'base_url': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '256'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '256'})
+            'base_url': ('django.db.models.fields.CharField',
+                         [], {'default': "''", 'max_length': '256'}),
+            u'id': ('django.db.models.fields.AutoField',
+                    [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField',
+                    [], {'max_length': '256'})
         },
         u'pagetree.pageblock': {
             'Meta': {'ordering': "('section', 'ordinality')", 'object_name': 'PageBlock'},

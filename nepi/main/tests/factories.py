@@ -1,7 +1,10 @@
 from datetime import datetime
 from django.contrib.auth.models import User
-from nepi.main.models import Country, School, Course, UserProfile
-from pagetree.models import Hierarchy
+from nepi.main.models import (Country,
+                              School,
+                              Course,
+                              UserProfile)
+from pagetree.models import Hierarchy, Section
 import factory
 
 
