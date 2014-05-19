@@ -1,30 +1,36 @@
-from datetime import datetime
+from factories import UserFactory, ConversationScenarioFactory
+from factories import ConversationResponseFactory
 from django.contrib.auth.models import User
-from pagetree.models import Hierarchy
-from .factories import UserFactory, ConversationScenarioFactory, \
-    ConversationFactory#, HierarchyFactory
 from django.test import TestCase
+from nepi.activities.models import ConversationScenario, \
+    Conversation, ConversationResponse, ConvClick
 
 
 class TestConversationScenario(TestCase):
-    def test_unicode(self):
-        pass
-        #cs = ConversationScenarioFactory()
-        #self.assertEqual(str(cs), "Conversation Scenario")
+    '''We want to make sure we can create a conversation
+     response associated with the user upon submission.'''
+    def test_submission(self):
+        user = User.objects.create_user(
+            'person', 'email@emailperson.com', 'personpassword')
+        user.save()
+        scenario = ConversationScenario.objects.create()
+        scenario.save()
+        conversation = Conversation.objects.create()
+        conversation.save()
+        click = ConvClick.objects.create(conversation=conversation)
+        click.save()
+        response = ConversationResponse.objects.create(
+            conv_scen=scenario, user=user, first_click=click)
+        response.save()
+
+    def test_first_submission(self):
+        # on first user submission - no
+        # conversation response has been created yet
+        ConversationScenarioFactory()
+        UserFactory()
+        ConversationResponseFactory()
 
 
 class TestConversation(TestCase):
     def test_unicode(self):
         pass
-        #c = ConversationFactory()
-        #self.assertEqual(str(c), "Conversation Scenario")
-#class PatientConversationFactory(factory.DjangoModelFactory):
-#    FACTORY_FOR = PatientConversation
-#    starting = ""
-#    response_one = "Patient thought can go here"
-#    response_two = "Patient response can go here"
-
-#class ConversationDialogFactory(factory.DjangoModelFactory):
-#    FACTORY_FOR = ConversationDialog
-#    order = 1
-#    content = "This is the nurse's first line"

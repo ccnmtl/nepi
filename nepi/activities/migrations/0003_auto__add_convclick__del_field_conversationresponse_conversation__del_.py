@@ -42,7 +42,6 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='third_click', null=True, to=orm['activities.ConvClick']),
                       keep_default=False)
 
-
     def backwards(self, orm):
         # Deleting model 'ConvClick'
         db.delete_table(u'activities_convclick')
@@ -66,8 +65,6 @@ class Migration(SchemaMigration):
 
         # Deleting field 'ConversationResponse.last_click'
         db.delete_column(u'activities_conversationresponse', 'last_click_id')
-
-
     models = {
         u'activities.convclick': {
             'Meta': {'object_name': 'ConvClick'},

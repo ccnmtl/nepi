@@ -1,30 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
+<br />
+<div class="login">
+    
+    <div style="padding-bottom: 5px">
+        <h3>Log In</h3>
+    </div>    
+    <div style="padding-top: 5px">
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                <span>
+                    <b>Invalid username or password.</b>
+                </span>
+                Note that both username and password are case-sensitive.
+            </div>
+        {% endif %}    
+        
+        <form method="post" action=".">
+            <table>
+            <tr><td style="border: hidden;"><label for="id_username">Username:&nbsp;</label></td><td style="border: hidden">{{ form.username }}</td></tr>
+            <tr>
+                <td style="border: hidden; padding-top: 3px;"><label for="id_password">Password:&nbsp;</label>
+                </td>
+                <td style="border: hidden; padding-top: 5px;">
+                    {{ form.password }}<br />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="border: hidden; text-align: right; padding-top: 7px;">
+                    <input class="btn" type="submit" value="Log In"></input>
+                </td>
+            </tr>
+            </table>
+            <input type="hidden" name="next" value="{{ next }}"></input>
+        </form>
+        <a href="/register/">Register for an account</a> 
+    </div>
+</div>
 
-<h2>Choose a Login Option...</h2>
+<h2>Welcome to NEPI</h2>
+<p>The Nursing Education Partnership Initiative (NEPI) is an initiative developed to address the critical shortage of health care workers in sub-Saharan Africa by strengthening the quality and capacity of nurses and midwives throughout Africa. NEPI intends to strengthen the quality and capacity of nursing and midwifery education institutions, increase the number of highly skilled nurses and midwives, and support innovative nursing retention strategies in African countries. As part of the NEPI mandate, ICAP will collaborate with CCNMTL to develop and manage a new NEPI website that will facilitate communication and collaboration across NEPI partners. This website will enable the exchange of ideas and best practices, and serve as an online hub for nursing curricula and training resources. The site will also feature online webinars and courses, and provide networking tools for NEPI partners to communicate directly with one another.</p>
 
-<form method="post" action="{{ wind_base }}login" class="well">
-    {% csrf_token %}
-<input type="hidden" name="service" value="{{ wind_service }}" />
-<input type="hidden" name="destination" value="http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}/accounts/windlogin/?next={{ next }}" />
-
-<p>This is the wrong page..</p>
-<p>If you have a Columbia University Network ID
-        (UNI)... </p><input type="submit" value="LOG IN" class="btn btn-primary"/></p>
-</form>
-
-<form method="post" action="." class="well">
-    {% csrf_token %}
-<p>If you have a project account...</p>
-
-<label for="id_username">Username: {{ form.username }}</label>
-<label for="id_password">Password: {{ form.password }}</label>
-
-<input type="submit" value="LOG IN" class="btn btn-primary" />
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
-
-<p>Don't have an account? Register now. <a href="/register/" title="Create your new project account">create an account</a>.</p>
 {% endblock %}
-
-

@@ -3,8 +3,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.conf import settings
 import nepi.main.views
-#import nepi.activities.urls
-#import nepi.activities.views
 from django.views.generic import TemplateView
 import os.path
 admin.autodiscover()
@@ -46,14 +44,10 @@ urlpatterns += patterns(
     '',
     auth_urls,
     logout_page,
-    url(r'^$', 'nepi.main.views.index', name="index"),
+    url(r'^$', 'nepi.main.views.home', name="home"),
     (r'^admin/', include(admin.site.urls)),
-    (r'^login/$', 'nepi.main.views.nepi_login'),
-    (r'^logout/$', 'nepi.main.views.logout_view'),
-#    (r'^activities/create_scenario/$', CreateConversationScenarioView.as_view()),
 
     # flat and universally accessible pages
-    (r'^home/$', 'nepi.main.views.home'),
     #(r'^edit_profile/$', ContactView.as_view())
     (r'^contact/$', ContactView.as_view()),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
@@ -61,7 +55,7 @@ urlpatterns += patterns(
      'is_accessible', {}, 'is-accessible'),
 
     # ICAP related pages
-    (r'^add_school/$',  CreateSchoolView.as_view()),
+    (r'^add_school/$', CreateSchoolView.as_view()),
     (r'^edit_school/(?P<pk>\d+)/$', UpdateSchoolView.as_view()),
 
     # Teacher related pages
@@ -102,11 +96,6 @@ urlpatterns += patterns(
      nepi.main.views.EditPage.as_view(),
      {}, 'edit-page'),
 
-#    (r'^pages/main/activities/edit/(?P<path>.*)$',
-#     nepi.main.views.EditPage.as_view(),
-#     {}, 'edit-page'),
-#    (r'^pages/main/instructor/(?P<path>.*)$',
-#     nepi.main.views.InstructorPage.as_view()),
     (r'^pages/main/(?P<path>.*)$', nepi.main.views.ViewPage.as_view()),
 
 

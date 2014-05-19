@@ -1,19 +1,27 @@
-from django.conf.urls.defaults import patterns
+from django.conf.urls import url, patterns
 '''Want to switch to class based views but not sure how'''
-#from nepi.activities.models import CreateConversationScenarioView
-#from nepi.activities.models import UpdateConversationScenarioView
-from nepi.activities.models import CreateConversationView
-from nepi.activities.models import UpdateConversationView
-from nepi.activities.models import ConversationScenarioListView
-#from pagetree.generic.views import PageView
+from nepi.activities.views import UpdateConversationView
+from nepi.activities.views import DeleteConversationView
+from nepi.activities.views import ScenarioListView
+from nepi.activities.views import ScenarioDetailView
+from nepi.activities.views import ScenarioDeleteView
+
 
 urlpatterns = patterns(
     '',
-    (r'^create_conversation/$', CreateConversationView.as_view()),
-    (r'^add_conversation/(?P<pk>\d+)/$', 'nepi.activities.views.add_conversation'),
-    (r'^update_conversation/(?P<pk>\d+)/$', UpdateConversationView.as_view()),
-    (r'^see_scenarios/$', ConversationScenarioListView.as_view()),
-    #(r'^create_scenario/$', 'CreateConversationScenarioView.as_view()'),
-    #(r'^update_scenario/(?P<id>\d+)/$',
-    #    'UpdateConversationScenarioView.as_view()')
+    url(r'^create_conversation/(?P<pk>\d+)/$',
+        'nepi.activities.views.add_conversation',
+        name='create_conversation'),
+    url(r'^update_conversation/(?P<pk>\d+)/$',
+        UpdateConversationView.as_view()),
+    url(r'^delete_conversation/(?P<pk>\d+)/$',
+        DeleteConversationView.as_view()),
+    url(r'^classview_scenariolist/$',
+        ScenarioListView.as_view()),
+    url(r'^delete_scenario/(?P<pk>\d+)/$',
+        ScenarioDeleteView.as_view()),
+    url(r'^scenario_display/(?P<pk>\d+)/$',
+        ScenarioDetailView.as_view()),
+    (r'^get_click/$', 'nepi.activities.views.get_click'),
+    url(r'^get_last/$', 'nepi.activities.views.get_last'),
 )

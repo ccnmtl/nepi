@@ -4,8 +4,6 @@ from nepi.main.models import UserProfile, Country, School
 from nepi.main.models import Course
 from datetime import datetime
 from factories import CountryFactory, SchoolFactory, CourseFactory
-from factories import UserProfileFactory, TeacherProfileFactory
-from factories import ICAPProfileFactory, HierarchyFactory
 
 
 class TestCountry(TestCase):

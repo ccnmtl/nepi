@@ -3,8 +3,8 @@ from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 from nepi.main.models import Country, School
 from nepi.main.models import Course
-from nepi.main.views import ContactView, CreateSchoolView
-from nepi.main.views import CreateCourseView, UpdateCourseView
+from nepi.main.views import CreateSchoolView
+from nepi.main.views import CreateCourseView
 from datetime import datetime
 
 
@@ -34,22 +34,7 @@ class TestFormViews(TestCase):
             '/add_school/',
             {"name": "School Needs Name",
              "country": self.country})
-        response = CreateSchoolView.as_view()(request)
-#        self.assertEqual(response.status_code, 302)
-#        self.assertTrue(School.objects.count() > 0)
-
-# need to pass it saved school object
-# check templates and urls?
-#    def test_update_school(self):
-#        '''UpdateSchoolView'''
-#        request = self.factory.post(
-#            '/edit_school/',
-#            {"name": "School Needs Name",
-#             "country": "ET"})
-#        response = UpdateSchoolView.as_view()(request)
-#        self.assertEqual(response.status_code, 302)
-#        self.assertTrue(School.objects.count() > 0)
-
+        CreateSchoolView.as_view()(request)
 
     def test_create_course(self):
         '''CreateSchoolView'''
@@ -58,17 +43,4 @@ class TestFormViews(TestCase):
             {"name": "Course Needs Name",
              "country": self.country,
              "school": self.school})
-        response = CreateCourseView.as_view()(request)
-#        self.assertEqual(response.status_code, 302)
-#        self.assertTrue(Course.objects.count() > 0)
-
-#    def test_teacher_registration_and_login(self):
-#        '''when teachers register they should
-#        be added to the pending teachers table'''
-#        request = self.factory.post(
-#            '/add_course/',
-#            {"name": "Course Needs Name",
-#             "country": "ET"})
-#        response = RegistrationView.as_view()(request)
-#        self.assertEqual(response.status_code, 302)
-#        self.assertTrue(PendingTeachers.objects.count() > 0)
+        CreateCourseView.as_view()(request)

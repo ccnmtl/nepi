@@ -1,29 +1,18 @@
 '''Views for NEPI, should probably break up
 into smaller pieces.'''
-from annoying.decorators import render_to
 from django import forms
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from nepi.main.forms import CreateAccountForm, ContactForm, \
-    LoginForm
+from nepi.main.forms import CreateAccountForm, ContactForm
 from nepi.main.models import Course, UserProfile
 from nepi.main.models import School, PendingTeachers
-from pagetree.generic.views import EditView
 from django.views.generic.edit import FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.core.mail import send_mail
-
-
-@render_to('main/index.html')
-def index(request):
-    # import pdb
-    # pdb.set_trace()
-    return dict()
 
 
 class LoggedInMixin(object):
@@ -79,15 +68,6 @@ class InstructorPage(LoggedInMixinStaff, InstructorView):
 #     return False
 
 
-'''Below this line is old code'''
-
-
-def logout_view(request):
-    """When user logs out redirect to home page."""
-    logout(request)
-    return HttpResponseRedirect('/')
-
-
 class ContactView(FormView):
     '''changed contact view function to
     generic class based view'''
@@ -111,36 +91,10 @@ def thanks_course(request, course_id):
     return render(request, 'student/thanks_course.html')
 
 
-"""More General Views"""
-
-
-def nepi_login(request):
-    '''Allow user to login.'''
-    if request.method == 'POST':  # If the form has been submitted...
-        form = LoginForm(request.POST)  # A form bound to the POST data
-        if form.is_valid():  # All validation rules pass
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return HttpResponseRedirect("/home/")
-                else:
-                    return HttpResponseRedirect("/")
-            else:
-                return HttpResponseRedirect("/")
-    else:
-        form = LoginForm()  # An unbound form
-
-    return render(request, 'main/login.html', {
-        'form': form,
-    })
-
-
 # when to use class based views vs generic class based views?
 # can you just have classes inherit generic based views
 # do mixin for being logged in?
+@login_required
 def home(request):
     '''Return homepage appropriate for user type.'''
     try:
@@ -154,7 +108,7 @@ def home(request):
             pass
         elif user_profile.profile_type == 'IC':
             pending_teachers = PendingTeachers.objects.filter(
-                profile_type='TE')
+                user_profile__profile_type='TE')
             schools = School.objects.all()
             return render(request, 'icap/icindex.html',
                           {'schools': schools,
@@ -182,7 +136,6 @@ class RegistrationView(FormView):
     success_url = '/thank_you_reg/'
 
     def form_valid(self, form):
-        human = True
         form_data = form.cleaned_data
         try:
             User.objects.get(username=form_data['username'])
@@ -198,9 +151,6 @@ class RegistrationView(FormView):
             new_profile = UserProfile(user=new_user)
             new_profile.profile_type = 'ST'
             new_profile.save()
-            # where to define the strings externally?
-            # send email to user
-
             if form_data['email']:
                 subject = "NEPI Registration"
                 message = "Congratulations! " + \
@@ -226,8 +176,7 @@ class RegistrationView(FormView):
                 pending = PendingTeachers(user_profile=new_profile)
                 pending.save()
             send_mail(subject, message, sender, recipients)
-        return super(RegistrationView, self).form_valid(form)
-
+        return super(RegistrationView, self).form_valid(form)  # human = True
 
 ############
 """NEPI Peoples Views"""

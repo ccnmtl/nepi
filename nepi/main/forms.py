@@ -1,5 +1,4 @@
 from django import forms
-from nepi.main.choices import COUNTRY_CHOICES
 from captcha.fields import CaptchaField
 
 
@@ -10,7 +9,7 @@ class LoginForm(forms.Form):
                                required=True)
 
     def form_valid(self, form):
-        form_data = form.cleaned_data
+        pass
 
 
 class CreateAccountForm(forms.Form):
@@ -35,7 +34,6 @@ class CreateAccountForm(forms.Form):
         max_length=25, widget=forms.PasswordInput, required=True,
         label="Confirm Password")
     email = forms.EmailField(required=False)
-    #country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=False)
     profile_type = forms.BooleanField(
         required=False, label="Are you a Teacher?")
     captcha = CaptchaField()
@@ -46,29 +44,16 @@ class CreateAccountForm(forms.Form):
         email = form.get("email")
         password1 = form.get("password1")
         password2 = form.get("password2")
-        f_username = form.get("username")
 
         if is_teacher and (email == ""):
             self._errors["email"] = self.error_class(
                 ["If you are registering as an instructor " +
                  "you must enter a valid email address"])
-            #raise forms.ValidationError(
-            #"If you are registering as an instructor
-            #you must enter a valid email address")
         if password1 != password2:
             self._errors["password1"] = self.error_class(
                 ["Passwords must match each other."])
             self._errors["password2"] = self.error_class(
                 ["Passwords must match each other."])
-            #raise forms.ValidationError("passwords dont match each other")
-#        try:
-#            User.objects.get(username=f_username)
-#            self._errors["username"] = self.error_class(
-#                ["This username is taken, please pick another one."])
-#            raise forms.ValidationError("this username already exists")
-#        except:
-#            pass
-
         return form
 
 

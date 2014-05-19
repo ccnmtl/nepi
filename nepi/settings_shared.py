@@ -51,7 +51,7 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_pyflakes',
 )
 PROJECT_APPS = [
-    'nepi.main','nepi.activities',
+    'nepi.main', 'nepi.activities',
 ]
 
 ALLOWED_HOSTS = ['localhost', '.ccnmtl.columbia.edu']
@@ -137,10 +137,6 @@ INSTALLED_APPS = [
     'nepi.activities',
 ]
 
-LETTUCE_APPS = (
-    'nepi.main', 'nepi.activities',
-)
-
 INTERNAL_IPS = ('127.0.0.1', )
 DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.version.VersionDebugPanel',
@@ -161,6 +157,7 @@ STATSD_PORT = 8125
 STATSD_PATCHES = ['django_statsd.patches.db', ]
 
 THUMBNAIL_SUBDIR = "thumbs"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_SUBJECT_PREFIX = "[nepi] "
 EMAIL_HOST = 'localhost'
 SERVER_EMAIL = "nepi@ccnmtl.columbia.edu"
@@ -183,9 +180,9 @@ COMPRESS_ROOT = "media/"
 
 # WIND settings
 
-AUTHENTICATION_BACKENDS = (#'django_auth_ldap.backend.LDAPBackend',
-                           'djangowind.auth.WindAuthBackend',
-                           'django.contrib.auth.backends.ModelBackend', )
+AUTHENTICATION_BACKENDS = (
+    'djangowind.auth.WindAuthBackend',
+    'django.contrib.auth.backends.ModelBackend', )
 WIND_BASE = "https://wind.columbia.edu/"
 WIND_SERVICE = "cnmtl_full_np"
 WIND_PROFILE_HANDLERS = ['djangowind.auth.CDAPProfileHandler']
@@ -207,7 +204,8 @@ PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
               'pageblocks.HTMLBlock',
               'pageblocks.ImageBlock',
               'quizblock.Quiz',
-              'activities.ConversationScenario']
+              'activities.ConversationScenario',
+              'activities.ImageMapChart']
 
 AUTH_PROFILE_MODULE = 'nepi.main.UserProfile'
 
