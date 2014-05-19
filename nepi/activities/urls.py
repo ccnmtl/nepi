@@ -17,7 +17,6 @@ urlpatterns = patterns(
         UpdateConversationView.as_view()),
     url(r'^delete_conversation/(?P<pk>\d+)/$',
         DeleteConversationView.as_view()),
-
     url(r'^classview_scenariolist/$',
         ScenarioListView.as_view()),
     url(r'^delete_scenario/(?P<pk>\d+)/$',
