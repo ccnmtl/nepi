@@ -174,8 +174,9 @@ class RegistrationView(FormView):
                     "has requested teacher status in "
                     # need to add country and schools here
                 pending = PendingTeachers(user_profile=new_profile)
+                print pending
                 pending.save()
-            send_mail(subject, message, sender, recipients)
+                send_mail(subject, message, sender, recipients)
         return super(RegistrationView, self).form_valid(form)  # human = True
 
 ############

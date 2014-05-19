@@ -16,11 +16,6 @@ class CreateAccountForm(forms.Form):
     '''This is a form class that will be used
     to allow guest users to create guest accounts.'''
 
-    TEACHER_CHOICES = (
-        ('TE', 'Teacher'),
-        ('ST', 'Student'),
-    )
-
     first_name = forms.CharField(
         max_length=25, required=True, label="First Name")
     last_name = forms.CharField(

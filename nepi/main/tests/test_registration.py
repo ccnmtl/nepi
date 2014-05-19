@@ -2,7 +2,7 @@
 from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 from nepi.main.models import Country, School
-from nepi.main.models import Course
+from nepi.main.models import Course, PendingTeachers
 from nepi.main.views import RegistrationView
 from datetime import datetime
 
@@ -43,7 +43,9 @@ class TestRegistration(TestCase):
         request = self.factory.post(
             '/register/',
             {"first_name": "firstname", "last_name": "lastname",
-             "username": "username", "email": "test_email@email.com",
+             "username": "new_username", "email": "test_email@email.com",
              "password1": "password", "password2": "password",
              "country": "LS", "profile_type": True, "captcha": True})
         RegistrationView.as_view()(request)
+        # new_teacher = User.objects.get(first_name="firstname")
+        # self.assertTrue(new_teacher)
