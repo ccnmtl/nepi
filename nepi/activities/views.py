@@ -111,24 +111,20 @@ def get_click(request):
         return render_to_json_response({'success': False})
 
 
-
 def get_last(request):
-    print "get_last is called"
     if request.method == 'POST' and request.is_ajax():
         scenario = ConversationScenario.objects.get(
             pk=request.POST['scenario'])
-        print "get_last is called"
         user = User.objects.get(pk=request.user.pk)
-        # Conversation.objects.get(pk=request.POST['user'])
         try:
-            cresp = ConversationResponse.objects.get(user=user, scenario=scenario)
+            cresp = ConversationResponse.objects.get(
+                user=user, scenario=scenario)
             if cresp.third_click is not None:
-                return render_to_json_response({'success': True, 'last_conv' : cresp.third_click})
+                return render_to_json_response(
+                    {'success': True, 'last_conv': cresp.third_click})
             elif cresp.first_click is not None and cresp.second_click is None:
-                return render_to_json_response({'success': True, 'last_conv' : cresp.first_click})
-            
+                return render_to_json_response(
+                    {'success': True, 'last_conv': cresp.first_click})
+
         except ConversationResponse.DoesNotExist:
             return render_to_json_response({'success': False})
-
-
-

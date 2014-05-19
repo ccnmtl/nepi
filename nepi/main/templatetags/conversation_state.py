@@ -11,12 +11,9 @@ class ConversationState(template.Node):
 
     def render(self, context):
         b = context[self.cblock]
-        #print b
         u = context['request'].user
-        #print b.last_response(u).conversation.scenario_type
         context[self.scenario_response] = b.last_response(u)
-        print context[self.scenario_response]
-        return #''
+        return
 
 
 @register.tag('getresponse')
