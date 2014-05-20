@@ -2,7 +2,7 @@
 from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 from nepi.main.models import Country, School
-from nepi.main.models import Course, PendingTeachers
+from nepi.main.models import Course
 from nepi.main.views import RegistrationView
 from datetime import datetime
 
