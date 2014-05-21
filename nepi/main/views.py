@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from nepi.main.forms import CreateAccountForm, ContactForm, JoinCourseForm
+from nepi.main.forms import CreateAccountForm, ContactForm
 from nepi.main.models import Course, UserProfile, Module
 from nepi.main.models import School, PendingTeachers
 from django.views.generic.edit import FormView
@@ -17,6 +17,8 @@ import json
 from django.views.generic import View
 from django.core.urlresolvers import reverse
 from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
+
 
 
 class AjaxableResponseMixin(object):
@@ -120,7 +122,7 @@ def thanks_course(request, course_id):
 def home(request):
     '''Return homepage appropriate for user type.'''
     try:
-        user_profile = UserProfile.objects.get(user=request.user)
+        user_profile = UserProfile.objects.get(user=request.user.pk)
     except User.DoesNotExist:
         profile = None
         return HttpResponseRedirect(reverse('register'))
@@ -189,9 +191,6 @@ class RegistrationView(FormView):
                 send_mail(subject, message, sender, recipients)
         return super(RegistrationView, self).form_valid(form)  # human = True
 
-############
-"""NEPI Peoples Views"""
-
 
 class CreateSchoolView(CreateView):
     '''generic class based view for
@@ -207,9 +206,6 @@ class UpdateSchoolView(UpdateView):
     model = School
     template_name = 'icap/add_school.html'
     success_url = '/thank_you/'
-
-
-"""Teacher Views"""
 
 
 class CreateCourseView(CreateView):
@@ -284,8 +280,6 @@ class JoinCourse(LoggedInMixin, UpdateView, AjaxableResponseMixin):
     success_url = '/thank_you/'
 
     def get(self, request, *args, **kwargs):
-        #print args
-        #print kwargs
         return render(request, 'join_course.html', {'form' : JoinCourseForm()})
     
     def post(self, request, *args, **kwargs):
@@ -320,6 +314,20 @@ class JoinCourse(LoggedInMixin, UpdateView, AjaxableResponseMixin):
             return response
 
       
+
+class GetCountrySchools(ListView):
+    model = School
+    template_name = 'student_dashboard.html'
+    success_url = '/thank_you/'
+
+    def get_context_data(self, request, country_pk):
+         print request
+         context = super(GetCountrySchools, self).get_context_data(**kwargs)
+         context['country_schools'] = School.objects.filter(country=self.country_pk)
+         return render(request, 'join_course.html', {'form' : JoinCourseForm()})
+
+
+
 
 #     def join_course(request):
 #         user = request.user
@@ -362,10 +370,5 @@ class JoinCourse(LoggedInMixin, UpdateView, AjaxableResponseMixin):
 #                   'teacher/show_students.html',
 #                   {'course_students': course_students})
 
-def student_average(s_id):
-    pass
-
-
-"""Student Views"""
-
-
+#def student_average(s_id):
+#    pass

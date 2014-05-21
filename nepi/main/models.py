@@ -10,7 +10,7 @@ from pagetree.models import Section, Hierarchy, UserLocation, UserPageVisit
 
 class Country(models.Model):
     '''Users can select counties from drop down menu,
-    countries are stored by their officil 2 letter codes.'''
+    countries are stored by their official 2 letter codes.'''
     name = models.CharField(max_length=2, choices=COUNTRY_CHOICES, blank=True)
     region = models.CharField(max_length=50, blank=True)
 
@@ -32,6 +32,33 @@ class Module(models.Model):
     '''How do we keep track of content?
     Do we associate with a Hierarchy?'''
     name = models.CharField(max_length=50)
+    # in wacep there is order rank? is this "order" of the courses
+    
+    section = models.ForiegnKey(Section, null=True, blank=True,
+        help_text="The section corresponding to this course.",
+        unique=True)#, limit_choices_to={'depth': 2})
+
+    description = models.TextField(
+        blank=True, default='',
+        help_text=(
+            "A description of this module, to appear on the Modules page."))
+
+    class Meta:
+        ordering = ['order_rank']
+        verbose_name_plural = "Modules"
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
+#     def student_user_ids(self):
+#         return [m.user.id for m in self.courseaccess_set.all()]
+# 
+#     def completed_user_ids(self):
+#         return [c.user.id for c in self.certificate_set.all()]
+
 
 
 class Course(models.Model):
@@ -62,7 +89,7 @@ class UserProfile(models.Model):
     school = models.ForeignKey(School, null=True, default=None, blank=True)
     course = models.ManyToManyField(
         Course, null=True, default=None, blank=True)
-    module = models.ForeignKey(Module, null=True, default=None, blank=True)
+    module = models.ManyToManyField(Module, null=True, default=None, blank=True)
 
     def __unicode__(self):
         return self.user.username

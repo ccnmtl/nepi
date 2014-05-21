@@ -60,11 +60,11 @@ class CountryCourseForm(forms.Form):
     country = forms.ChoiceField(required=True, label="What country do you reside in?", choices=COUNTRY_CHOICES)
     school = forms.ModelChoiceField(queryset=Country.objects.all())
 
+
 class SchoolCourseForm(forms.Form):
     country = forms.ChoiceField(required=True, label="What country do you reside in?", choices=COUNTRY_CHOICES)
     school = forms.ModelChoiceField(queryset=Country.objects.all())
-#    course = forms.ModelChoiceField(queryset=Course.objects.all())
-
+    course = forms.ModelChoiceField(queryset=Course.objects.all())
 
 
 class ContactForm(forms.Form):
@@ -74,3 +74,7 @@ class ContactForm(forms.Form):
     subject = forms.CharField(max_length=100, required=True)
     message = forms.CharField(max_length=500, required=True,
                               widget=forms.Textarea)
+
+class JoinCourseForm(forms.Form):
+    country = forms.ModelChoiceField(queryset=Country.objects.all(), required=True, label="What country do you reside in?")
+    school = forms.ModelChoiceField(queryset=School.objects.all(), required=True, label="What country do you reside in?")
