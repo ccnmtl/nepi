@@ -263,19 +263,6 @@ class StudentDashboard(LoggedInMixin, DetailView):
     model = User
     template_name = 'student_dashboard.html'
     success_url = '/thank_you_reg/'
-    
-    
-    def get_user_modules(self):
-        user = self.request.user.pk
-        profile = UserProfile.objects.get(user=self.request.user.pk)
-        user_modules = Module.objects.filter(user_profile=profile)
-        return user_modules
-
-    def get_user_courses(self):
-        user = self.request.user.pk
-        profile = UserProfile.objects.get(user=self.request.user.pk)
-
-
 
     def get_context_data(self, **kwargs):
          context = super(StudentDashboard, self).get_context_data(**kwargs)
@@ -283,13 +270,11 @@ class StudentDashboard(LoggedInMixin, DetailView):
          profile = UserProfile.objects.get(user=self.request.user.pk)
          context['user_profile'] = UserProfile.objects.get(user=self.request.user.pk)
          context['modules'] = Module.objects.all()
-         #context['user_module'] = 
+         context['user_modules'] = Module.objects.filter(userprofile=profile)
          context['student_courses'] = Course.objects.filter(userprofile=profile)
 
-         
-         #student_courses = Student.objects.filter(user=self.request.user.pk)
-         #context['user_courses'] = Course.objects.filter(
-         #    student=student_courses)
+    def return_courses_for_country(self):
+    
 
 #     def join_course(request):
 #         user = request.user
