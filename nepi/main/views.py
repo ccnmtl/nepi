@@ -8,13 +8,14 @@ from pagetree.generic.views import PageView, EditView, InstructorView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from nepi.main.forms import CreateAccountForm, ContactForm
-from nepi.main.models import Course, UserProfile
+from nepi.main.models import Course, UserProfile, Module
 from nepi.main.models import School, PendingTeachers
 from django.views.generic.edit import FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.core.mail import send_mail
 import json
-from django.views.generic.list import ListView
+from django.core.urlresolvers import reverse
+from django.views.generic.detail import DetailView
 
 
 class AjaxableResponseMixin(object):
@@ -122,16 +123,8 @@ def home(request):
     except User.DoesNotExist:
         profile = None
         return HttpResponseRedirect(reverse('register'))
-    if user_profile.course == None:
-        print user_profile.course
-        courses = Course.objects.all()
-        return render(request, 'student/stindex.html',
-                      {'courses': courses})
-    
-    elif user_profile.course != None and user_profile.profile_type == 'ST':
-        courses = user_profile.course.all()
-        return render(request, 'student/stindex.html',
-                      {'courses': courses})
+    if user_profile.profile_type == 'ST':
+        return HttpResponseRedirect(reverse('student-dashboard'))
     elif user_profile.profile_type == 'TE':
         pass
     elif user_profile.profile_type == 'IC':
@@ -270,14 +263,28 @@ class StudentDashboard(LoggedInMixin, DetailView):
     model = User
     template_name = 'student_dashboard.html'
     success_url = '/thank_you_reg/'
+    
+    
+    def get_user_modules(self):
+        user = self.request.user.pk
+        profile = UserProfile.objects.get(user=self.request.user.pk)
+        user_modules = Module.objects.filter(user_profile=profile)
+        return user_modules
+
+    def get_user_courses(self):
+        user = self.request.user.pk
+        profile = UserProfile.objects.get(user=self.request.user.pk)
+
+
 
     def get_context_data(self, **kwargs):
-         context = super(StudentCourseView, self).get_context_data(**kwargs)
+         context = super(StudentDashboard, self).get_context_data(**kwargs)
          # how doe we specify "this user"
+         profile = UserProfile.objects.get(user=self.request.user.pk)
          context['user_profile'] = UserProfile.objects.get(user=self.request.user.pk)
          context['modules'] = Module.objects.all()
-         context['user_modules'] = Module.objects.filter(user=self.request.user.pk)
-         context['student_courses'] = Course.objects.filter(user=self.request.user.pk)
+         #context['user_module'] = 
+         context['student_courses'] = Course.objects.filter(userprofile=profile)
 
          
          #student_courses = Student.objects.filter(user=self.request.user.pk)
