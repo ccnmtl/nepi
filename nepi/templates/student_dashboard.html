@@ -3,14 +3,14 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script>
     var join_btn = jQuery('#join_course_button');
-    
+    // should I return the whole form at once?
     join_btn.click(function(){jQuery('#user-courses').load('/join_course/');})
-
+    var school_list = jQuery('#school_list');
+    var course_list = jQuery('#course_list');
 
 
     var frm = jQuery('#join_course');
-    var school_list = jQuery('#school_list');
-    var course_list = jQuery('#course_list');
+
     frm.submit(
       function () {
         jQuery.ajax({
