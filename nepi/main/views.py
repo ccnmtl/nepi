@@ -284,8 +284,6 @@ class JoinCourse(LoggedInMixin, UpdateView, AjaxableResponseMixin):
     success_url = '/thank_you/'
 
     def get(self, request, *args, **kwargs):
-        #print args
-        #print kwargs
         return render(request, 'join_course.html', {'form' : JoinCourseForm()})
     
     def post(self, request, *args, **kwargs):
