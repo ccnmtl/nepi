@@ -1,6 +1,7 @@
 from django import forms
 from choices import COUNTRY_CHOICES
 from captcha.fields import CaptchaField
+from nepi.main.models import Country, School, Course
 
 
 class LoginForm(forms.Form):
@@ -54,10 +55,17 @@ class CreateAccountForm(forms.Form):
                 ["Passwords must match each other."])
         return form
 
-
-class JoinCourseForm(forms.Form):
+'''Do I really need three forms or is their a better way to do this dynamically?'''
+class CountryCourseForm(forms.Form):
     country = forms.ChoiceField(required=True, label="What country do you reside in?", choices=COUNTRY_CHOICES)
-#    school = forms.ChoiceField
+    school = forms.ModelChoiceField(queryset=Country.objects.all())
+
+class SchoolCourseForm(forms.Form):
+    country = forms.ChoiceField(required=True, label="What country do you reside in?", choices=COUNTRY_CHOICES)
+    school = forms.ModelChoiceField(queryset=Country.objects.all())
+#    course = forms.ModelChoiceField(queryset=Course.objects.all())
+
+
 
 class ContactForm(forms.Form):
     '''This is a form class that will be returned

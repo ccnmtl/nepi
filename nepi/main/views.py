@@ -275,14 +275,24 @@ class StudentDashboard(LoggedInMixin, DetailView):
          context['student_courses'] = Course.objects.filter(userprofile=profile)
 
 
+
+'''Can either do seperate view for form update and submit'''
+
 class JoinCourse(LoggedInMixin, UpdateView, AjaxableResponseMixin):
     model = UserProfile
     template_name = 'student_dashboard.html'
     success_url = '/thank_you/'
 
     def get(self, request, *args, **kwargs):
-        print "GET called"
+        #print args
+        #print kwargs
         return render(request, 'join_course.html', {'form' : JoinCourseForm()})
+    
+    def post(self, request, *args, **kwargs):
+        form = JoinCourseForm(request)
+        #print args
+        #print kwargs
+        return render('join_course.html', {'form' : form})
     
     def render_to_json_response(self, context, **response_kwargs):
         data = json.dumps(context)
