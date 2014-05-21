@@ -7,13 +7,14 @@ from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from nepi.main.forms import CreateAccountForm, ContactForm
+from nepi.main.forms import CreateAccountForm, ContactForm, JoinCourseForm
 from nepi.main.models import Course, UserProfile, Module
 from nepi.main.models import School, PendingTeachers
 from django.views.generic.edit import FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.core.mail import send_mail
 import json
+from django.views.generic import View
 from django.core.urlresolvers import reverse
 from django.views.generic.detail import DetailView
 
@@ -273,8 +274,42 @@ class StudentDashboard(LoggedInMixin, DetailView):
          context['user_modules'] = Module.objects.filter(userprofile=profile)
          context['student_courses'] = Course.objects.filter(userprofile=profile)
 
-    def return_courses_for_country(self):
+
+class JoinCourse(LoggedInMixin, UpdateView, AjaxableResponseMixin):
+    model = UserProfile
+    template_name = 'student_dashboard.html'
+    success_url = '/thank_you/'
+
+    def get(self, request, *args, **kwargs):
+        print "GET called"
+        return render(request, 'join_course.html', {'form' : JoinCourseForm()})
     
+    def render_to_json_response(self, context, **response_kwargs):
+        data = json.dumps(context)
+        response_kwargs['content_type'] = 'application/json'
+        return HttpResponse(data, **response_kwargs)
+
+    def form_invalid(self, form):
+        response = super(AjaxableResponseMixin, self).form_invalid(form)
+        if self.request.is_ajax():
+            return self.render_to_json_response(form.errors, status=400)
+        else:
+            return response
+
+    def form_valid(self, form):
+        # We make sure to call the parent's form_valid() method because
+        # it might do some processing (in the case of CreateView, it will
+        # call form.save() for example).
+        response = super(AjaxableResponseMixin, self).form_valid(form)
+        if self.request.is_ajax():
+            data = {
+                'pk': self.object.pk,
+            }
+            return self.render_to_json_response(data)
+        else:
+            return response
+
+      
 
 #     def join_course(request):
 #         user = request.user

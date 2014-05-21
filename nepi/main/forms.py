@@ -55,6 +55,10 @@ class CreateAccountForm(forms.Form):
         return form
 
 
+class JoinCourseForm(forms.Form):
+    country = forms.ChoiceField(required=True, label="What country do you reside in?", choices=COUNTRY_CHOICES)
+#    school = forms.ChoiceField
+
 class ContactForm(forms.Form):
     '''This is a form class that will be returned
     later in the contact form view.'''

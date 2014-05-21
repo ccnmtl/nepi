@@ -2,6 +2,13 @@
 {% block js %}
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script>
+    var join_btn = jQuery('#join_course_button');
+    
+    join_btn.click(function(){jQuery('#user-courses').load('/join_course/');})
+
+
+
+
     var frm = jQuery('#join_course');
     var school_list = jQuery('#school_list');
     var course_list = jQuery('#course_list');
@@ -33,8 +40,13 @@
 
      });
 
+
+
 </script>
 {% endblock %}
+
+
+
 
 {% block content %}
 <ul class="nav nav-tabs">
@@ -69,17 +81,21 @@
 
 
     <div class="tab-pane" id="user-courses">
-        <table width="100%" class="table table-striped table-condensed">
-        <p>Your Groups</p>
-        {% for uc in user_courses %}
-            <tr>
-            <td><a href="{{uc.get_absolute_url}}">{{uc.name}}</a></td>
-            </tr>
-        {% empty %}
-            <div name="instruction-div"><tr> There should be an instruction div of somesorts here to tell first timers what to do.</tr></div>
-            <tr><p>You have not joined any groups yet.</p><a href="/join_course/">Join Course</a></tr>
-        {% endfor %}
-        </table><button data-toggle="modal" data-target="#basicModal" class="btn btn-sm btn-success" type="button"> Add Course </button></br>
+        <div id="pane-content">
+             <table width="100%" class="table table-striped table-condensed">
+                  <p>Your Groups</p>
+                  {% for uc in user_courses %}
+                      <tr>
+                      <td><a href="{{uc.get_absolute_url}}">{{uc.name}}</a></td>
+                      </tr>
+                  {% empty %}
+                      <div name="instruction-div"><tr> There should be an instruction div of somesorts here to tell first timers what to do.</tr></div>
+                      <tr><p>You have not joined any groups yet.</p>
+                      <button id="join_course_button">Join Course</button>
+                      <a href="/join_course/">Join Course</a></tr>
+                  {% endfor %}
+             </table><button data-toggle="modal" data-target="#basicModal" class="btn btn-sm btn-success" type="button"> Add Course </button></br>
+        </div>
     </div>
 
 
