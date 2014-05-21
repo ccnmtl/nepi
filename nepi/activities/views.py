@@ -22,21 +22,27 @@ class ThanksView(AjaxableResponseMixin, View):
         return render('thanks.html')
 
 
-class CreateConverstionView(AjaxResponseMixin, CreateView):
+class CreateConverstionView(CreateView):
     model = Conversation
     template_name = "activities/add_conversation.html"
-    # do I need to list fields for ajax? even though form
-    # is defined?
-    fields = ["scenario_type", "text_one", "response_one",
+    fields = ["text_one", "response_one",
               "response_two", "response_three", "response_four",
               "response_five", "response_six", "complete_dialog"]
     success_url = '/thank_you/'
 
-    def from_valid(self, request, pk, form):
-        response = super(CreateConverstionView, self).form_valid(form)
-        if self.request.is_ajax():
-            # request.pk? or self.pk? or just pk
-            scenario = Scenario.objects.get(scenario=pk)
+    def from_valid(self, pk, form):
+        # possible?
+        scenario = Scenario.objects.get(pk=pk)
+        form.instance.scenario = self.request.pk
+        form.instance.scenario = scenario
+        return super(CreateConverstionView, self).form_valid(form)
+        
+        
+        
+#        
+#        if self.request.is_ajax():
+#            # request.pk? or self.pk? or just pk
+#            scenario = Scenario.objects.get(scenario=pk)
 
 # 93     def form_valid(self, form):
 # 94         response = super(, self).form_valid(form)

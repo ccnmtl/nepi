@@ -105,10 +105,13 @@ class ConversationScenario(models.Model):
         except ConversationResponse.DoesNotExist:
             return 0
 
-
+# dont think I need this
 class ConversationForm(forms.ModelForm):
     class Meta:
         model = Conversation
+
+
+
 
 
 class ConversationScenarioForm(forms.ModelForm):
