@@ -25,6 +25,7 @@ class CreateAccountForm(forms.Form):
         max_length=25, required=True, label="Username")
     email = forms.EmailField(required=False, label="Email(not required):")
     country = forms.ChoiceField(required=True, label="What country do you reside in?", choices=COUNTRY_CHOICES)
+    nepi_affiliated = forms.BooleanField(required=False)
     password1 = forms.CharField(
         max_length=25, widget=forms.PasswordInput, required=True,
         label="Password")

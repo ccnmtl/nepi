@@ -28,6 +28,12 @@ class School(models.Model):
         return self.name
 
 
+class Module(models.Model):
+    '''How do we keep track of content?
+    Do we associate with a Hierarchy?'''
+    name = models.CharField(max_length=50)
+
+
 class Course(models.Model):
     '''Allow association of course with module.'''
     school = models.ForeignKey(School)
@@ -35,9 +41,12 @@ class Course(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     name = models.CharField(max_length=50)
+    # leaving null and blank to avoid dealing with migrations problems
+    module = models.ForeignKey(Module, null=True, default=None, blank=True)
 
     def __unicode__(self):
         return self.name
+
 
 '''ADD VALIDATION'''
 
@@ -48,9 +57,12 @@ class UserProfile(models.Model):
     user = models.ForeignKey(User, related_name="application_user")
     profile_type = models.CharField(max_length=2, choices=PROFILE_CHOICES)
     country = models.ForeignKey(Country, null=True, default=None, blank=True)
+    # not sure why we are saving this in user profile
+    icap_affil = models.BooleanField(default=False)
     school = models.ForeignKey(School, null=True, default=None, blank=True)
     course = models.ManyToManyField(
         Course, null=True, default=None, blank=True)
+    module = models.ForeignKey(Module, null=True, default=None, blank=True)
 
     def __unicode__(self):
         return self.user.username
@@ -111,3 +123,5 @@ class PendingTeachers(models.Model):
     user_profile = models.ForeignKey(UserProfile,
                                      related_name="pending_teachers")
     school = models.ForeignKey(School, null=True, default=None)
+
+

@@ -122,8 +122,13 @@ def home(request):
     except User.DoesNotExist:
         profile = None
         return HttpResponseRedirect(reverse('register'))
+    if user_profile.course == None:
+        print user_profile.course
+        courses = Course.objects.all()
+        return render(request, 'student/stindex.html',
+                      {'courses': courses})
     
-    if user_profile.profile_type == 'ST':
+    elif user_profile.course != None and user_profile.profile_type == 'ST':
         courses = user_profile.course.all()
         return render(request, 'student/stindex.html',
                       {'courses': courses})
@@ -138,17 +143,6 @@ def home(request):
                           'pending_teachers': pending_teachers})
     else:
         return HttpResponseRedirect('/')
-
-
-    # should there be methods for registering
-    # teacher and checking country?
-    # should form validation be done in the Form Class
-    # or in the View
-    # online see example with
-    # form = CreateAccountForm(data=request.POST)
-    # under class def does this mean if method post?
-# confused a bit about whether validation
-# and assigning variables is automatic...
 
 
 class RegistrationView(FormView):
@@ -267,25 +261,60 @@ def remove_student(request, stud_id, cors_id):
 
 
 
-class GrabCountryClasses(AjaxableResponseMixin, ListView):
-    '''Not sure if it is better to grab a DetailView of Country courses or
-    to do list view of Course for the Country'''
+class StudentDashboard(LoggedInMixin, DetailView):
+    '''For the first tab of the dashboard we are showing
+    courses that the user belongs to, and if they do not belong to any
+    we are giving the the option to affiliate with one'''
+    # Return User & current courses have ajax method for getting
+    # courses affiliated with country
+    model = User
+    template_name = 'student_dashboard.html'
+    success_url = '/thank_you_reg/'
 
+    def get_context_data(self, **kwargs):
+         context = super(StudentCourseView, self).get_context_data(**kwargs)
+         # how doe we specify "this user"
+         context['user_profile'] = UserProfile.objects.get(user=self.request.user.pk)
+         context['modules'] = Module.objects.all()
+         context['user_modules'] = Module.objects.filter(user=self.request.user.pk)
+         context['student_courses'] = Course.objects.filter(user=self.request.user.pk)
 
+         
+         #student_courses = Student.objects.filter(user=self.request.user.pk)
+         #context['user_courses'] = Course.objects.filter(
+         #    student=student_courses)
 
-# def student_test_score(u_id, q_id):
-#     '''see student score on exam'''
-#     quizzes = Quiz.objects.all()
-#     user_s = User.objects.get(pk=u_id)
-#     profile = UserProfile.objects.get(user=user_s)
-#
-#     course_students = []
-#     for u in users:
-#         try:
-#             profile = UserProfile.objects.get(user=u)
-#             if profile.profile_type == 'ST':
-#                 courses = profile.course_set.all()
-#                 for c in courses:
+#     def join_course(request):
+#         user = request.user
+#         user_profile = UserProfile.objects.get(user=user)
+#         country = user_profile.country
+#         schools = School.objects.filter(country=country)
+#         return render(request,
+#                   'student/join_course.html',
+#                   {'schools': schools,
+#                    'country': country
+#                    }
+#                   )
+#     def view_courses(request, schl_id):
+#     school = School.objects.get(pk=schl_id)
+#     courses = Course.objects.filter(school=school)
+#     return render(request,
+#                   'student/view_courses.html',
+#                   {'courses': courses, 'school': school})
+# 
+# # def student_test_score(u_id, q_id):
+# #     '''see student score on exam'''
+# #     quizzes = Quiz.objects.all()
+# #     user_s = User.objects.get(pk=u_id)
+# #     profile = UserProfile.objects.get(user=user_s)
+# #
+# #     course_students = []
+# #     for u in users:
+# #         try:
+# #             profile = UserProfile.objects.get(user=u)
+# #             if profile.profile_type == 'ST':
+# #                 courses = profile.course_set.all()
+# #                 for c in courses:
 #                     if c.crs_id == crs_id:
 #                         course_students.add(profile)
 #                         # [u][profile][c])
@@ -303,22 +332,3 @@ def student_average(s_id):
 """Student Views"""
 
 
-def join_course(request):
-    user = request.user
-    user_profile = UserProfile.objects.get(user=user)
-    country = user_profile.country
-    schools = School.objects.filter(country=country)
-    return render(request,
-                  'student/join_course.html',
-                  {'schools': schools,
-                   'country': country
-                   }
-                  )
-
-
-def view_courses(request, schl_id):
-    school = School.objects.get(pk=schl_id)
-    courses = Course.objects.filter(school=school)
-    return render(request,
-                  'student/view_courses.html',
-                  {'courses': courses, 'school': school})
