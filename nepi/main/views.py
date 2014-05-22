@@ -320,28 +320,30 @@ class JoinCourse(LoggedInMixin, UpdateView, AjaxableResponseMixin):
 class GetCountries(ListView):
     model = Country
     template_name = 'country_list.html'
-    success_url = '/thank_you/'        
+    success_url = '/thank_you/'
 
 
 class GetCountrySchools(ListView):
     model = School
-    template_name = 'student_dashboard.html'
+    template_name = 'school_list.html'
     success_url = '/thank_you/'
-    
-    def get(self, request, *args, **kwargs):
-        # not sure... does this interfere with get context data?
-        #what are args and kwargs, know they are variable args but how would they be used here
-        return render(request, 'country_list.html')
-        
 
-    def get_context_data(self, request, country_pk):
-         print request
-         context = super(GetCountrySchools, self).get_context_data(**kwargs)
-         context['country_schools'] = School.objects.filter(country=self.country_pk)
-         return render(request, 'country_list.html', {'form' : JoinCourseForm()})
+    def get_context_data(self, **kwargs):
+        print "get context"
+        context = super(GetCountrySchools, self).get_context_data(**kwargs)
+        school_key = self.request.GET.__getitem__('name')
+        country = Country.objects.get(pk=school_key)
+        print country
+        s = School.objects.filter(country=country)
+        print s
+        context['school_list'] = School.objects.filter(country=country)
 
 
 
+class GetSchoolCourses(ListView):
+    model = Country
+    template_name = 'course_list.html'
+    success_url = '/thank_you/'        
 
 
 
