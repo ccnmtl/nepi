@@ -2,43 +2,9 @@
 {% block js %}
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script>
+    // for now - posting entire form at once
     var join_btn = jQuery('#join_course_button');
-    // should I return the whole form at once?
-    join_btn.click(function(){jQuery('#user-courses').load('/join_course/');})
-    var school_list = jQuery('#school_list');
-    var course_list = jQuery('#course_list');
-
-
-    var frm = jQuery('#join_course');
-
-    frm.submit(
-      function () {
-        jQuery.ajax({
-             type: frm.attr('method'),
-             url: frm.attr('action'),
-             data: frm.serialize(),
-             success: function (data) {
-                 jQuery(".modal-body").html("Course added!</br>");
-             },
-             error: function(data) {
-                 jQuery(".modal-body").html("Something went wrong!");
-             }
-         }
-
-         );
-         return false;
-     });
-
-     var refresh_bttn = jQuery('#refresh');
-     refresh_bttn.click(
-       function(){
-
-         location.reload();
-
-
-
-     });
-
+    join_btn.click(function(){jQuery('#user-courses').load('/get_countries/');})
 
 
 </script>

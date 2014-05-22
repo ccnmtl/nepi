@@ -34,9 +34,9 @@ class Module(models.Model):
     name = models.CharField(max_length=50)
     # in wacep there is order rank? is this "order" of the courses
     
-    section = models.ForiegnKey(Section, null=True, blank=True,
-        help_text="The section corresponding to this course.",
-        unique=True)#, limit_choices_to={'depth': 2})
+#     section = models.ForiegnKey(Section, null=True, blank=True,
+#         help_text="The section corresponding to this course.",
+#         unique=True)#, limit_choices_to={'depth': 2})
 
     description = models.TextField(
         blank=True, default='',
@@ -44,7 +44,7 @@ class Module(models.Model):
             "A description of this module, to appear on the Modules page."))
 
     class Meta:
-        ordering = ['order_rank']
+        #ordering = ['order_rank']
         verbose_name_plural = "Modules"
 
     def to_json(self):

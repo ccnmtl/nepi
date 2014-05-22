@@ -12,7 +12,7 @@ from nepi.activities.models import (
     ConvClick, ConversationResponse,
     ConversationForm)
 from nepi.main.views import AjaxableResponseMixin
-
+from django.views.generic import View
 
 # but I don't really need and ajax thanks view...
 class ThanksView(AjaxableResponseMixin, View):

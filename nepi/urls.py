@@ -9,7 +9,7 @@ admin.autodiscover()
 import staticmedia
 from nepi.main.views import CreateCourseView, UpdateCourseView
 from nepi.main.views import CreateSchoolView, UpdateSchoolView
-from nepi.main.views import ContactView, RegistrationView
+from nepi.main.views import ContactView, RegistrationView, GetCountries
 from nepi.main.views import StudentDashboard, JoinCourse, GetCountrySchools
 
 
@@ -54,6 +54,8 @@ urlpatterns += patterns(
     url(r'^register/$', RegistrationView.as_view(), name='register'),
     url(r'^student-dashboard/(?P<pk>\d+)/$', StudentDashboard.as_view(), name='student-dashboard'),
     url(r'^join_course/$', JoinCourse.as_view(), name='join-course'),
+    url(r'^get_countries/$', GetCountries.as_view()),
+    url(r'^get_schools/$', GetCountrySchools.as_view()),
     url(r'^get_schools/(?P<pk>\d+)/$', GetCountrySchools.as_view(), name='get-country-schools'),
     url(r'^join_course/(?P<pk>\d+)/$', JoinCourse.as_view(), name='join-course'),
     (r'^accessible/(?P<section_slug>.*)/$',

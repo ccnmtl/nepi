@@ -8,7 +8,7 @@ from pagetree.generic.views import PageView, EditView, InstructorView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from nepi.main.forms import CreateAccountForm, ContactForm
-from nepi.main.models import Course, UserProfile, Module
+from nepi.main.models import Course, UserProfile, Module, Country
 from nepi.main.models import School, PendingTeachers
 from django.views.generic.edit import FormView
 from django.views.generic.edit import CreateView, UpdateView
@@ -18,6 +18,7 @@ from django.views.generic import View
 from django.core.urlresolvers import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+from django.views.generic import View
 
 
 
@@ -127,7 +128,8 @@ def home(request):
         profile = None
         return HttpResponseRedirect(reverse('register'))
     if user_profile.profile_type == 'ST':
-        return HttpResponseRedirect(reverse('student-dashboard'))
+        #return HttpResponseRedirect(reverse('student-dashboard', {'pk' : request.user}))
+        return render(request, 'student_dashboard.html')
     elif user_profile.profile_type == 'TE':
         pass
     elif user_profile.profile_type == 'IC':
@@ -313,18 +315,35 @@ class JoinCourse(LoggedInMixin, UpdateView, AjaxableResponseMixin):
         else:
             return response
 
-      
+
+
+class GetCountries(ListView):
+    model = Country
+    template_name = 'country_list.html'
+    success_url = '/thank_you/'        
+
 
 class GetCountrySchools(ListView):
     model = School
     template_name = 'student_dashboard.html'
     success_url = '/thank_you/'
+    
+    def get(self, request, *args, **kwargs):
+        # not sure... does this interfere with get context data?
+        #what are args and kwargs, know they are variable args but how would they be used here
+        return render(request, 'country_list.html')
+        
 
     def get_context_data(self, request, country_pk):
          print request
          context = super(GetCountrySchools, self).get_context_data(**kwargs)
          context['country_schools'] = School.objects.filter(country=self.country_pk)
-         return render(request, 'join_course.html', {'form' : JoinCourseForm()})
+         return render(request, 'country_list.html', {'form' : JoinCourseForm()})
+
+
+
+
+
 
 
 
