@@ -9,49 +9,19 @@
                     url: "/get_schools/",
                     data: { 'name' : jQuery('#id_country').val()},
                     success: function (data) {
-                        //alert(data); //this prints the html ?
                         jQuery('#school_list').replaceWith(data)
                     },
                     error: function (data) {
                         //alert(data);
                     },
 
-                }); //end of ajax
+                });
 
-            }); // end of change
-
-                    //success: function (data) {
-                    //    alert(data);//'jQuery(".modal-body").html("Course added!</br>");
-                    //}//,
-
-                    //.done(function( data ) {
-                    //jQuery( "#school_list" ).append( data );
-                    //});
-                    //success: alert("success");//function(data) {
-                    //    alert( "Data Loaded: " + data );
-                    //});
-//success,
-                    //dataType: dataType
+            });
 
 
-
-
-
-
-//jQuery.get( "/get_schools/", { name: jQuery('#id_country').val()});
-//.done(function( data ) {
-//alert( "Data Loaded: " + data );
-//});
-// function( data ) {
-//$( ".result" ).html( data );
-//alert( "Load was performed." );
-//});
-
-
-                //jQuery('#school_list').load(
-                //    "/get_schools/ #school_list",
-                //    { name: jQuery('#id_country').val()}
-                //);
+        //var school_change = jQuery('#id_school');
+        //alert(jQuery('#id_school'));
 
 
         </script>

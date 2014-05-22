@@ -339,17 +339,23 @@ class GetCountrySchools(ListView):
             string_html = render_to_string('school_list.html', {'school_list': s})
             return {'school_list': s}
 
-            
-
-
-
 
 class GetSchoolCourses(ListView):
-    model = Country
+    model = Course
     template_name = 'course_list.html'
     success_url = '/thank_you/'        
 
-
+    def get_context_data(self, **kwargs):
+        if self.request.is_ajax():
+            print "inside school course"
+            context = super(GetSchoolCourses, self).get_context_data(**kwargs)
+            school_key = self.request.GET.__getitem__('name')
+            print school_key
+            school = School.objects.get(pk=school_key)
+            print school
+            course_list = Course.objects.filter(school=school)
+            print course_list
+            return {'course_list': course_list}
 
 
 

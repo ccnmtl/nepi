@@ -1,3 +1,14 @@
+
+
+       <select id="id_course" name="course" >
+            <option value="blank">------</option>
+            {% for course in course_list %}
+                <option value="{{course.name}}">{{course.name}} {{course.pk}}</option>
+            {% empty %}
+                <p>Oh no! there are no school.</p>
+            {% endfor %}
+       </select>
+
         <input type="submit" value="Submit" />
         </form>
         
