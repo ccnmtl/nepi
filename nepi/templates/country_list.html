@@ -61,7 +61,7 @@
             <select id="id_country" name="country" >
                 <option value="blank">------</option>
                 {% for c in object_list %}
-                    <option value="{{c.pk}}">{{c.name}}</option>
+                    <option value="{{c.id}}">{{c.name}}</option>
                 {% empty %}
                     <p>Oh no! there are no countries.</p>
                 {% endfor %}

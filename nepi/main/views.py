@@ -336,9 +336,12 @@ class GetCountrySchools(AjaxableResponseMixin, ListView):
             country_key = self.request.GET.__getitem__('name')
             country = Country.objects.get(pk=country_key)
             s = School.objects.filter(country=country_key)
-            html = render_to_string('school_list.html', {'school_list': s})
-            print html #THIS PRINTS THE CORRECT INFO
-            return html
+            print render_to_string('school_list.html', {'school_list': s})
+            #print render('school_list.html', {'school_list': s})
+            return render_to_string('school_list.html', {'school_list': s})
+            #print html #THIS PRINTS THE CORRECT INFO
+            #return html
+            #print render_to_json_response({ 'data' : html})
             #print self.HttpResponse(html)
             #return self.HttpResponse(html)
             #print self.render_to_json_response({'school_list': s})
