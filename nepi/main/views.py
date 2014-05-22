@@ -19,6 +19,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic import View
+from django.template.loader import render_to_string
 
 
 
@@ -271,6 +272,7 @@ class StudentDashboard(LoggedInMixin, DetailView):
          context['modules'] = Module.objects.all()
          context['user_modules'] = Module.objects.filter(userprofile=profile)
          context['student_courses'] = Course.objects.filter(userprofile=profile)
+         
 
 
 
@@ -329,14 +331,29 @@ class GetCountrySchools(AjaxableResponseMixin, ListView):
     success_url = '/thank_you/'
 
     def get_context_data(self, **kwargs):
-        print "get context"
-        context = super(GetCountrySchools, self).get_context_data(**kwargs)
-        school_key = self.request.GET.__getitem__('name')
-        country = Country.objects.get(pk=school_key)
-        print country
-        s = School.objects.filter(country=country)
-        print s
-        context['school_list'] = School.objects.filter(country=country)
+        if self.request.is_ajax():
+            context = super(GetCountrySchools, self).get_context_data(**kwargs)
+            country_key = self.request.GET.__getitem__('name')
+            country = Country.objects.get(pk=country_key)
+            s = School.objects.filter(country=country_key)
+            html = render_to_string('school_list.html', {'school_list': s})
+            print html #THIS PRINTS THE CORRECT INFO
+            return html
+            #print self.HttpResponse(html)
+            #return self.HttpResponse(html)
+            #print self.render_to_json_response({'school_list': s})
+            #data = { "school_list" : s }
+            #print render(
+            #      'school_list.html',
+            #      { "school_list" : s })
+#             t = loader.get_template('school_list.html')
+#             html = t.render(RequestContext({'school_list': s})
+#             return HttpResponse(json.dumps({'html': html})
+            #school_list = School.objects.filter(country=country)
+            #context['school_list'] = School.objects.filter(country=country)
+            # print type(context['school_list'])
+            
+
 
 
 
