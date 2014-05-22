@@ -325,7 +325,7 @@ class GetCountries(ListView):
     success_url = '/thank_you/'
 
 
-class GetCountrySchools(AjaxableResponseMixin, ListView):
+class GetCountrySchools(ListView):
     model = School
     template_name = 'school_list.html'
     success_url = '/thank_you/'
@@ -336,25 +336,9 @@ class GetCountrySchools(AjaxableResponseMixin, ListView):
             country_key = self.request.GET.__getitem__('name')
             country = Country.objects.get(pk=country_key)
             s = School.objects.filter(country=country_key)
-            print render_to_string('school_list.html', {'school_list': s})
-            #print render('school_list.html', {'school_list': s})
-            return render_to_string('school_list.html', {'school_list': s})
-            #print html #THIS PRINTS THE CORRECT INFO
-            #return html
-            #print render_to_json_response({ 'data' : html})
-            #print self.HttpResponse(html)
-            #return self.HttpResponse(html)
-            #print self.render_to_json_response({'school_list': s})
-            #data = { "school_list" : s }
-            #print render(
-            #      'school_list.html',
-            #      { "school_list" : s })
-#             t = loader.get_template('school_list.html')
-#             html = t.render(RequestContext({'school_list': s})
-#             return HttpResponse(json.dumps({'html': html})
-            #school_list = School.objects.filter(country=country)
-            #context['school_list'] = School.objects.filter(country=country)
-            # print type(context['school_list'])
+            string_html = render_to_string('school_list.html', {'school_list': s})
+            return {'school_list': s}
+
             
 
 
