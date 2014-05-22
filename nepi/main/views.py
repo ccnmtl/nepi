@@ -323,7 +323,7 @@ class GetCountries(ListView):
     success_url = '/thank_you/'
 
 
-class GetCountrySchools(ListView):
+class GetCountrySchools(AjaxableResponseMixin, ListView):
     model = School
     template_name = 'school_list.html'
     success_url = '/thank_you/'

@@ -1,0 +1,69 @@
+        <div id="pane-content">
+        <script>
+            var country_change = jQuery('#id_country');
+
+            country_change.change(
+                function(){
+
+                jQuery.ajax({
+                    url: "/get_schools/",
+                    data: { 'name' : jQuery('#id_country').val()},
+
+                    success: function (data) {
+                       //alert(data);
+                       jQuery("#school_list").html(data);
+                    },
+
+                    //.done(function( data ) {
+                    //jQuery( "" ).append( data );
+                    //});
+                    //success: alert("success");//function(data) {
+                    //    alert( "Data Loaded: " + data );
+                    //});
+//success,
+                    //dataType: dataType
+                }); //end of ajax
+
+            }); // end of change
+
+
+
+
+
+//jQuery.get( "/get_schools/", { name: jQuery('#id_country').val()});
+//.done(function( data ) {
+//alert( "Data Loaded: " + data );
+//});
+// function( data ) {
+//$( ".result" ).html( data );
+//alert( "Load was performed." );
+//});
+
+
+                //jQuery('#school_list').load(
+                //    "/get_schools/ #school_list",
+                //    { name: jQuery('#id_country').val()}
+                //);
+
+
+        </script>
+        
+        <form action="/join_course/" method="post">{% csrf_token %}
+        <div id="country_list">
+            <select id="id_country" name="country" >
+                <option value="blank">------</option>
+                {% for c in object_list %}
+                    <option value="{{c.pk}}">{{c.name}}</option>
+                {% empty %}
+                    <p>Oh no! there are no countries.</p>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="school_list"></div>
+        <div id="course_list"></div>
+</form>
+
+</div>
+
+
+

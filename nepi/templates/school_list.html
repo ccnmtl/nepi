@@ -1,0 +1,22 @@
+    <div id="school_list">
+        <script>
+        var school_change = jQuery('#id_school');
+
+        school_change.change(
+            function(){
+                alert(jQuery('#id_school').val());
+                //jQuery.get( "/get_schools/" +jQuery('#id_country').val()+ "/", function() {
+                //jQuery( "#id_school" ).html(data);
+                //alert( "Load was performed." );
+         });
+        </script>
+        
+        <select id="id_school" name="school" >
+            <option value="blank">------</option>
+            {% for s in school_list %}
+                <option value="{{s.name}}">{{s.name}} {{s.pk}}</option>
+            {% empty %}
+                <p>Oh no! there are no school.</p>
+            {% endfor %}
+       </select>
+</div>
