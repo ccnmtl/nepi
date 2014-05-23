@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from choices import COUNTRY_CHOICES, PROFILE_CHOICES
-from pagetree.models import Hierarchy, UserLocation, UserPageVisit
+from pagetree.models import Section, Hierarchy, UserLocation, UserPageVisit
 
 
 '''Add change delete are by default for each django model.
@@ -43,6 +43,7 @@ class Course(models.Model):
 
 
 '''ADD VALIDATION'''
+
 
 class UserProfile(models.Model):
     '''UserProfile adds exta information to a user,
@@ -116,5 +117,3 @@ class PendingTeachers(models.Model):
     user_profile = models.ForeignKey(UserProfile,
                                      related_name="pending_teachers")
     school = models.ForeignKey(School, null=True, default=None)
-
-

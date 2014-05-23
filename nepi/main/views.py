@@ -5,10 +5,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from nepi.main.forms import CreateAccountForm, ContactForm
-from nepi.main.models import Course, UserProfile, Module, Country
+from nepi.main.models import Course, UserProfile, Country
 from nepi.main.models import School, PendingTeachers
 from django.views.generic.edit import FormView
 from django.views.generic.edit import CreateView, UpdateView
@@ -18,9 +18,7 @@ from django.views.generic import View
 from django.core.urlresolvers import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.views.generic import View
-from django.template.loader import render_to_string
-
+from pagetree.models import Hierarchy
 
 
 class AjaxableResponseMixin(object):
@@ -126,11 +124,12 @@ def home(request):
     try:
         user_profile = UserProfile.objects.get(user=request.user.pk)
     except User.DoesNotExist:
-        profile = None
+        # profile = None
         return HttpResponseRedirect(reverse('register'))
     if user_profile.profile_type == 'ST':
-        return HttpResponseRedirect(reverse('student-dashboard', {'pk' : profile.pk}))
-        #return render(request, 'student_dashboard.html')
+        # return HttpResponseRedirect(reverse('student-dashboard',
+        #    {'pk' : profile.pk}))
+        return render(request, 'student_dashboard.html')
     elif user_profile.profile_type == 'TE':
         pass
     elif user_profile.profile_type == 'IC':
@@ -149,13 +148,16 @@ class RegistrationView(FormView):
     template_name = 'registration_form.html'
     form_class = CreateAccountForm
     success_url = '/thank_you_reg/'
-    
+
     def register_user(self):
         pass
+
     def register_profile(self):
         pass
+
     def send_student_email(self):
         pass
+
     def send_teacher_notifiction(self):
         pass
 
@@ -175,16 +177,13 @@ class RegistrationView(FormView):
             new_profile = UserProfile(user=new_user)
             new_profile.profile_type = 'ST'
             try:
-                print form_data['country']
-                user_country = Country.objects.get(name=form_data['country'])
-                print user_country
-                new_profile.country = Country.objects.get(name=form_data['country'])
+                new_profile.country = Country.objects.get(
+                    name=form_data['country'])
                 new_profile.save()
             except Country.DoesNotExist:
                 new_country = Country.objects.create(name=form_data['country'])
+                new_country.save()
                 new_profile.save()
-                print new_country
-            new_profile.save()
             if form_data['email']:
                 subject = "NEPI Registration"
                 message = "Congratulations! " + \
@@ -196,18 +195,17 @@ class RegistrationView(FormView):
                 sender = "nepi@nepi.ccnmtl.columbia.edu"
                 recipients = [form_data['email']]
                 send_mail(subject, message, sender, recipients)
-            subject = "[Student] User Account Created"
-            sender = "nepi@nepi.ccnmtl.columbia.edu"
             recipients = ["nepi@nepi.ccnmtl.columbia.edu"]
-            message = form_data['username'] + \
-                " has successfully created a NEPI account.\n\n"
             if form_data['profile_type']:
+                print form_data['profile_type']
                 subject = "[Teacher] Account Requested"
                 message = form_data['first_name'] + \
                     " " + form_data['last_name'] + \
                     "has requested teacher status in "
                     # need to add country and schools here
-                pending = PendingTeachers(user_profile=new_profile)
+                pending = PendingTeachers.objects.create(
+                    user_profile=new_profile)
+                print "pending" + str(pending)
                 pending.save()
                 send_mail(subject, message, sender, recipients)
         return super(RegistrationView, self).form_valid(form)  # human = True
@@ -271,7 +269,6 @@ def remove_student(request, stud_id, cors_id):
     pass
 
 
-
 class StudentDashboard(LoggedInMixin, DetailView):
     '''For the first tab of the dashboard we are showing
     courses that the user belongs to, and if they do not belong to any
@@ -282,39 +279,38 @@ class StudentDashboard(LoggedInMixin, DetailView):
     template_name = 'student_dashboard.html'
     success_url = '/thank_you_reg/'
 
-
-
     def get_context_data(self, **kwargs):
-         context = super(StudentDashboard, self).get_context_data(**kwargs)
-         # how doe we specify "this user"
-         profile = UserProfile.objects.get(user=self.request.user.pk)
-         context['user_profile'] = UserProfile.objects.get(user=self.request.user.pk)
-         context['modules'] = Module.objects.all()
-         context['user_modules'] = Module.objects.filter(userprofile=profile)
-         context['student_courses'] = Course.objects.filter(userprofile=profile)
-         
-
+        context = super(StudentDashboard, self).get_context_data(**kwargs)
+        # how doe we specify "this user"
+        profile = UserProfile.objects.get(user=self.request.user.pk)
+        context['user_profile'] = UserProfile.objects.get(
+            user=self.request.user.pk)
+        context['modules'] = Hierarchy.objects.all()
+        context['user_modules'] = Hierarchy.objects.filter(userprofile=profile)
+        context['student_courses'] = Course.objects.filter(userprofile=profile)
 
 
 '''Can either do seperate view for form update and submit'''
+
 
 class JoinCourse(LoggedInMixin, View):
     template_name = 'student_dashboard.html'
     #success_url = '/thank_you/'
 
     def post(self, request):
-         if self.request.is_ajax():
-             user_id = request.user.pk
-             user_profile = UserProfile.objects.get(user=user_id)
-             user_profile.country = Country.objects.get(pk=self.request.POST.__getitem__('country'))
-             user_profile.school = School.objects.get(pk=self.request.POST.__getitem__('school'))
-             user_profile.course = Course.objects.filter(pk=self.request.POST.__getitem__('course'))
-             user_profile.save()
-             return self.render_to_json_response(user_profile)
-         else:
-             return response
-
-
+        if self.request.is_ajax():
+            user_id = request.user.pk
+            user_profile = UserProfile.objects.get(user=user_id)
+            user_profile.country = Country.objects.get(
+                pk=self.request.POST.__getitem__('country'))
+            user_profile.school = School.objects.get(
+                pk=self.request.POST.__getitem__('school'))
+            user_profile.course = Course.objects.filter(
+                pk=self.request.POST.__getitem__('course'))
+            user_profile.save()
+            return self.render_to_json_response(user_profile)
+        else:
+            return self.request
 
 
 class GetCountries(LoggedInMixin, ListView):
@@ -330,28 +326,29 @@ class GetCountrySchools(LoggedInMixin, ListView):
 
     def get_context_data(self, **kwargs):
         if self.request.is_ajax():
-            context = super(GetCountrySchools, self).get_context_data(**kwargs)
+            # context = super(GetCountrySchools, self).
+            # get_context_data(**kwargs)
             country_key = self.request.GET.__getitem__('name')
             country = Country.objects.get(pk=country_key)
-            s = School.objects.filter(country=country_key)
-            string_html = render_to_string('school_list.html', {'school_list': s})
+            s = School.objects.filter(country=country)
+            # string_html = render_to_string(
+            # 'school_list.html', {'school_list': s})
             return {'school_list': s}
 
 
 class GetSchoolCourses(LoggedInMixin, ListView):
     model = Course
     template_name = 'course_list.html'
-    success_url = '/thank_you/'        
+    success_url = '/thank_you/'
 
     def get_context_data(self, **kwargs):
         if self.request.is_ajax():
-            context = super(GetSchoolCourses, self).get_context_data(**kwargs)
+            # context = super(GetSchoolCourses, self).get_context_data(
+            #    **kwargs)
             school_key = self.request.GET.__getitem__('name')
             school = School.objects.get(pk=school_key)
             course_list = Course.objects.filter(school=school)
             return {'course_list': course_list}
-
-
 
 
 #     def join_course(request):
@@ -371,7 +368,7 @@ class GetSchoolCourses(LoggedInMixin, ListView):
 #     return render(request,
 #                   'student/view_courses.html',
 #                   {'courses': courses, 'school': school})
-# 
+#
 # # def student_test_score(u_id, q_id):
 # #     '''see student score on exam'''
 # #     quizzes = Quiz.objects.all()

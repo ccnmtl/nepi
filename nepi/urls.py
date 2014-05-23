@@ -7,10 +7,12 @@ from django.views.generic import TemplateView
 import os.path
 admin.autodiscover()
 import staticmedia
-from nepi.main.views import CreateCourseView, UpdateCourseView, GetSchoolCourses
-from nepi.main.views import CreateSchoolView, UpdateSchoolView
-from nepi.main.views import ContactView, RegistrationView, GetCountries
-from nepi.main.views import StudentDashboard, JoinCourse, GetCountrySchools
+from nepi.main.views import (CreateCourseView, UpdateCourseView,
+                             GetSchoolCourses, CreateSchoolView,
+                             UpdateSchoolView, ContactView,
+                             RegistrationView, GetCountries,
+                             StudentDashboard, JoinCourse,
+                             GetCountrySchools)
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -52,14 +54,17 @@ urlpatterns += patterns(
     #(r'^edit_profile/$', ContactView.as_view())
     (r'^contact/$', ContactView.as_view()),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
-    url(r'^student-dashboard/(?P<pk>\d+)/$', StudentDashboard.as_view(), name='student-dashboard'),
+    url(r'^student-dashboard/(?P<pk>\d+)/$',
+        StudentDashboard.as_view(), name='student-dashboard'),
     url(r'^join_course/$', JoinCourse.as_view(), name='join-course'),
     url(r'^get_countries/$', GetCountries.as_view()),
     url(r'^get_schools/$', GetCountrySchools.as_view()),
-    url(r'^get_schools/(?P<pk>\d+)/$', GetCountrySchools.as_view(), name='get-country-schools'),
+    url(r'^get_schools/(?P<pk>\d+)/$',
+        GetCountrySchools.as_view(), name='get-country-schools'),
     url(r'^get_courses/$', GetSchoolCourses.as_view()),
     url(r'^get_courses/(?P<pk>\d+)/$', GetSchoolCourses.as_view()),
-    url(r'^join_course/(?P<pk>\d+)/$', JoinCourse.as_view(), name='join-course'),
+    url(r'^join_course/(?P<pk>\d+)/$',
+        JoinCourse.as_view(), name='join-course'),
     (r'^accessible/(?P<section_slug>.*)/$',
      'is_accessible', {}, 'is-accessible'),
 

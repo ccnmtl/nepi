@@ -14,6 +14,7 @@ from nepi.activities.models import (
 from nepi.main.views import AjaxableResponseMixin
 from django.views.generic import View
 
+
 # but I don't really need and ajax thanks view...
 class ThanksView(AjaxableResponseMixin, View):
     '''We need a generic thanks view to pop up
@@ -32,21 +33,19 @@ class CreateConverstionView(CreateView):
 
     def from_valid(self, pk, form):
         # possible?
-        scenario = Scenario.objects.get(pk=pk)
+        scenario = ConversationScenario.objects.get(pk=pk)
         form.instance.scenario = self.request.pk
         form.instance.scenario = scenario
         return super(CreateConverstionView, self).form_valid(form)
-        
-        
-        
-#        
+
+
 #        if self.request.is_ajax():
 #            # request.pk? or self.pk? or just pk
 #            scenario = Scenario.objects.get(scenario=pk)
 
 # 93     def form_valid(self, form):
 # 94         response = super(, self).form_valid(form)
-# 95         
+# 95
 # 96             course = Course(pk=self.object.pk, name=self.object.name,
 # 97                             startingBudget=self.object.startingBudget,
 # 98                             enableNarrative=self.object.enableNarrative,

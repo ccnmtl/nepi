@@ -23,7 +23,7 @@ class Conversation(models.Model):
     response_four = models.CharField(max_length=255, null=True)
     response_five = models.CharField(max_length=255, null=True)
     response_six = models.CharField(max_length=255, null=True)
-    complete_dialog = models.CharField(max_length=255, null=True)
+    complete_dialog = models.TextField(max_length=255, null=True)
 
 
 class ConversationScenario(models.Model):
@@ -105,13 +105,11 @@ class ConversationScenario(models.Model):
         except ConversationResponse.DoesNotExist:
             return 0
 
+
 # dont think I need this
 class ConversationForm(forms.ModelForm):
     class Meta:
         model = Conversation
-
-
-
 
 
 class ConversationScenarioForm(forms.ModelForm):
