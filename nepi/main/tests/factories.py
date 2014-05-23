@@ -4,7 +4,7 @@ from nepi.main.models import (Country,
                               School,
                               Course,
                               UserProfile)
-from pagetree.models import Hierarchy, Section
+from pagetree.models import Hierarchy
 import factory
 
 
