@@ -129,8 +129,8 @@ def home(request):
         profile = None
         return HttpResponseRedirect(reverse('register'))
     if user_profile.profile_type == 'ST':
-        #return HttpResponseRedirect(reverse('student-dashboard', {'pk' : request.user}))
-        return render(request, 'student_dashboard.html')
+        return HttpResponseRedirect(reverse('student-dashboard', {'pk' : profile.pk}))
+        #return render(request, 'student_dashboard.html')
     elif user_profile.profile_type == 'TE':
         pass
     elif user_profile.profile_type == 'IC':
@@ -149,6 +149,15 @@ class RegistrationView(FormView):
     template_name = 'registration_form.html'
     form_class = CreateAccountForm
     success_url = '/thank_you_reg/'
+    
+    def register_user(self):
+        pass
+    def register_profile(self):
+        pass
+    def send_student_email(self):
+        pass
+    def send_teacher_notifiction(self):
+        pass
 
     def form_valid(self, form):
         form_data = form.cleaned_data
@@ -165,7 +174,16 @@ class RegistrationView(FormView):
             new_user.save()
             new_profile = UserProfile(user=new_user)
             new_profile.profile_type = 'ST'
-            new_profile.country = form_data['country']
+            try:
+                print form_data['country']
+                user_country = Country.objects.get(name=form_data['country'])
+                print user_country
+                new_profile.country = Country.objects.get(name=form_data['country'])
+                new_profile.save()
+            except Country.DoesNotExist:
+                new_country = Country.objects.create(name=form_data['country'])
+                new_profile.save()
+                print new_country
             new_profile.save()
             if form_data['email']:
                 subject = "NEPI Registration"
@@ -260,9 +278,11 @@ class StudentDashboard(LoggedInMixin, DetailView):
     we are giving the the option to affiliate with one'''
     # Return User & current courses have ajax method for getting
     # courses affiliated with country
-    model = User
+    model = UserProfile
     template_name = 'student_dashboard.html'
     success_url = '/thank_you_reg/'
+
+
 
     def get_context_data(self, **kwargs):
          context = super(StudentDashboard, self).get_context_data(**kwargs)
@@ -278,54 +298,32 @@ class StudentDashboard(LoggedInMixin, DetailView):
 
 '''Can either do seperate view for form update and submit'''
 
-class JoinCourse(LoggedInMixin, UpdateView, AjaxableResponseMixin):
-    model = UserProfile
+class JoinCourse(LoggedInMixin, View):
     template_name = 'student_dashboard.html'
-    success_url = '/thank_you/'
+    #success_url = '/thank_you/'
 
-    def get(self, request, *args, **kwargs):
-        return render(request, 'join_course.html', {'form' : JoinCourseForm()})
-    
-    def post(self, request, *args, **kwargs):
-        form = JoinCourseForm(request)
-        #print args
-        #print kwargs
-        return render('join_course.html', {'form' : form})
-    
-    def render_to_json_response(self, context, **response_kwargs):
-        data = json.dumps(context)
-        response_kwargs['content_type'] = 'application/json'
-        return HttpResponse(data, **response_kwargs)
-
-    def form_invalid(self, form):
-        response = super(AjaxableResponseMixin, self).form_invalid(form)
-        if self.request.is_ajax():
-            return self.render_to_json_response(form.errors, status=400)
-        else:
-            return response
-
-    def form_valid(self, form):
-        # We make sure to call the parent's form_valid() method because
-        # it might do some processing (in the case of CreateView, it will
-        # call form.save() for example).
-        response = super(AjaxableResponseMixin, self).form_valid(form)
-        if self.request.is_ajax():
-            data = {
-                'pk': self.object.pk,
-            }
-            return self.render_to_json_response(data)
-        else:
-            return response
+    def post(self, request):
+         if self.request.is_ajax():
+             user_id = request.user.pk
+             user_profile = UserProfile.objects.get(user=user_id)
+             user_profile.country = Country.objects.get(pk=self.request.POST.__getitem__('country'))
+             user_profile.school = School.objects.get(pk=self.request.POST.__getitem__('school'))
+             user_profile.course = Course.objects.filter(pk=self.request.POST.__getitem__('course'))
+             user_profile.save()
+             return self.render_to_json_response(user_profile)
+         else:
+             return response
 
 
 
-class GetCountries(ListView):
+
+class GetCountries(LoggedInMixin, ListView):
     model = Country
     template_name = 'country_list.html'
     success_url = '/thank_you/'
 
 
-class GetCountrySchools(ListView):
+class GetCountrySchools(LoggedInMixin, ListView):
     model = School
     template_name = 'school_list.html'
     success_url = '/thank_you/'
@@ -340,21 +338,17 @@ class GetCountrySchools(ListView):
             return {'school_list': s}
 
 
-class GetSchoolCourses(ListView):
+class GetSchoolCourses(LoggedInMixin, ListView):
     model = Course
     template_name = 'course_list.html'
     success_url = '/thank_you/'        
 
     def get_context_data(self, **kwargs):
         if self.request.is_ajax():
-            print "inside school course"
             context = super(GetSchoolCourses, self).get_context_data(**kwargs)
             school_key = self.request.GET.__getitem__('name')
-            print school_key
             school = School.objects.get(pk=school_key)
-            print school
             course_list = Course.objects.filter(school=school)
-            print course_list
             return {'course_list': course_list}
 
 

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from choices import COUNTRY_CHOICES, PROFILE_CHOICES
-from pagetree.models import Section, Hierarchy, UserLocation, UserPageVisit
+from pagetree.models import Hierarchy, UserLocation, UserPageVisit
 
 
 '''Add change delete are by default for each django model.
@@ -28,39 +28,6 @@ class School(models.Model):
         return self.name
 
 
-class Module(models.Model):
-    '''How do we keep track of content?
-    Do we associate with a Hierarchy?'''
-    name = models.CharField(max_length=50)
-    # in wacep there is order rank? is this "order" of the courses
-    
-#     section = models.ForiegnKey(Section, null=True, blank=True,
-#         help_text="The section corresponding to this course.",
-#         unique=True)#, limit_choices_to={'depth': 2})
-
-    description = models.TextField(
-        blank=True, default='',
-        help_text=(
-            "A description of this module, to appear on the Modules page."))
-
-    class Meta:
-        #ordering = ['order_rank']
-        verbose_name_plural = "Modules"
-
-    def to_json(self):
-        return {
-            'id': self.id,
-            'name': self.name
-        }
-
-#     def student_user_ids(self):
-#         return [m.user.id for m in self.courseaccess_set.all()]
-# 
-#     def completed_user_ids(self):
-#         return [c.user.id for c in self.certificate_set.all()]
-
-
-
 class Course(models.Model):
     '''Allow association of course with module.'''
     school = models.ForeignKey(School)
@@ -69,7 +36,7 @@ class Course(models.Model):
     end_date = models.DateField()
     name = models.CharField(max_length=50)
     # leaving null and blank to avoid dealing with migrations problems
-    module = models.ForeignKey(Module, null=True, default=None, blank=True)
+    module = models.ForeignKey(Hierarchy, null=True, default=None, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -89,7 +56,6 @@ class UserProfile(models.Model):
     school = models.ForeignKey(School, null=True, default=None, blank=True)
     course = models.ManyToManyField(
         Course, null=True, default=None, blank=True)
-    module = models.ManyToManyField(Module, null=True, default=None, blank=True)
 
     def __unicode__(self):
         return self.user.username

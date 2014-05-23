@@ -75,6 +75,6 @@ class ContactForm(forms.Form):
     message = forms.CharField(max_length=500, required=True,
                               widget=forms.Textarea)
 
-class JoinCourseForm(forms.Form):
-    country = forms.ModelChoiceField(queryset=Country.objects.all(), required=True, label="What country do you reside in?")
-    school = forms.ModelChoiceField(queryset=School.objects.all(), required=True, label="What country do you reside in?")
+#class JoinCourseForm(forms.Form):
+#    country = forms.ModelChoiceField(queryset=Country.objects.all(), required=True, label="What country do you reside in?")
+#    school = forms.ModelChoiceField(queryset=School.objects.all(), required=True, label="What country do you reside in?")
