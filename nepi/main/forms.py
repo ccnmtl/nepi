@@ -1,7 +1,7 @@
 from django import forms
 from choices import COUNTRY_CHOICES
 from captcha.fields import CaptchaField
-from nepi.main.models import Country, School, Course
+from nepi.main.models import Country, Course
 
 
 class LoginForm(forms.Form):
@@ -25,7 +25,9 @@ class CreateAccountForm(forms.Form):
     username = forms.CharField(
         max_length=25, required=True, label="Username")
     email = forms.EmailField(required=False, label="Email(not required):")
-    country = forms.ChoiceField(required=True, label="What country do you reside in?", choices=COUNTRY_CHOICES)
+    country = forms.ChoiceField(required=True,
+                                label="What country do you reside in?",
+                                choices=COUNTRY_CHOICES)
     nepi_affiliated = forms.BooleanField(required=False)
     password1 = forms.CharField(
         max_length=25, widget=forms.PasswordInput, required=True,
@@ -55,14 +57,21 @@ class CreateAccountForm(forms.Form):
                 ["Passwords must match each other."])
         return form
 
-'''Do I really need three forms or is their a better way to do this dynamically?'''
+'''Do I really need three forms or is their
+a better way to do this dynamically?'''
+
+
 class CountryCourseForm(forms.Form):
-    country = forms.ChoiceField(required=True, label="What country do you reside in?", choices=COUNTRY_CHOICES)
+    country = forms.ChoiceField(required=True,
+                                label="What country do you reside in?",
+                                choices=COUNTRY_CHOICES)
     school = forms.ModelChoiceField(queryset=Country.objects.all())
 
 
 class SchoolCourseForm(forms.Form):
-    country = forms.ChoiceField(required=True, label="What country do you reside in?", choices=COUNTRY_CHOICES)
+    country = forms.ChoiceField(required=True,
+                                label="What country do you reside in?",
+                                choices=COUNTRY_CHOICES)
     school = forms.ModelChoiceField(queryset=Country.objects.all())
     course = forms.ModelChoiceField(queryset=Course.objects.all())
 
@@ -74,7 +83,3 @@ class ContactForm(forms.Form):
     subject = forms.CharField(max_length=100, required=True)
     message = forms.CharField(max_length=500, required=True,
                               widget=forms.Textarea)
-
-#class JoinCourseForm(forms.Form):
-#    country = forms.ModelChoiceField(queryset=Country.objects.all(), required=True, label="What country do you reside in?")
-#    school = forms.ModelChoiceField(queryset=School.objects.all(), required=True, label="What country do you reside in?")
