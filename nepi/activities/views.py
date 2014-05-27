@@ -30,7 +30,7 @@ class CreateConverstionView(CreateView):
               "response_two", "response_three", "complete_dialog"]
     success_url = '/thank_you/'
 
-    def from_valid(self, request, form):
+    def from_valid(self, pk, form):
         scenario = ConversationScenario.objects.get(pk=pk)
         form.instance.scenario = self.request.pk
         form.instance.scenario = scenario
@@ -57,7 +57,7 @@ def add_conversation(request, pk):
             nc.response_three = form.cleaned_data['response_three']
             nc.complete_dialog = form.cleaned_data['complete_dialog']
             nc.save()
-            return HttpResponseRedirect('/pages/main/edit/')  # Redirect after POST
+            return HttpResponseRedirect('/pages/main/edit/')
     else:
         form = ConversationForm()  # An unbound form
 
