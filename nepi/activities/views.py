@@ -23,34 +23,69 @@ class ThanksView(AjaxableResponseMixin, View):
         return render('thanks.html')
 
 
-class CreateConverstionView(View):
-    form = ConversationForm()
-    template = 'activities/add_conversation.html'
+class CreateConverstionView(CreateView):
+    template_name = 'activities/add_conversation.html'
+    model = Conversation
+    fields = ['text_one','response_one','response_two','response_three','complete_dialog']
+    
+    def form_valid(self, form):
+        print self.request.GET
+        print self.request.POST
+        print form.instance
+#         if nc.scenario_type == 'G':
+#             scenario.good_conversation = nc
+#             scenario.save()
+#         elif nc.scenario_type == 'B':
+#             scenario.bad_conversation = nc
+#             scenario.save()
+#         form.instance. = self.request.user
+#         form.instance. = self.request.user
+#         nc = Conversation.objects.create()
+#             scenario = ConversationScenario.objects.get(pk=pk)
+#             nc.scenario_type = form.cleaned_data['scenario_type']
+#             if nc.scenario_type == 'G':
+#                 scenario.good_conversation = nc
+#                 scenario.save()
+#             elif nc.scenario_type == 'B':
+#                 scenario.bad_conversation = nc
+#                 scenario.save()
+#             nc.text_one = form.cleaned_data['text_one']
+#             nc.response_one = form.cleaned_data['response_one']
+#             nc.response_two = form.cleaned_data['response_two']
+#             nc.response_three = form.cleaned_data['response_three']
+#             nc.complete_dialog = form.cleaned_data['complete_dialog']
+#             nc.save()
+#             return HttpResponseRedirect('/pages/main/edit/')  # Redirect after POST
+    
+    #def get(self, request, pk):
+    #    return render(request, self.template, {
+    #    'form': form,
+    #})
 
-    def post(self, request, pk):
-        form = self.form(request.POST)
-        scenario = ConversationScenario.objects.get(pk=pk)
-        if form.is_valid():
-            nc = Conversation.objects.create()
-            scenario = ConversationScenario.objects.get(pk=pk)
-            nc.scenario_type = form.cleaned_data['scenario_type']
-            if nc.scenario_type == 'G':
-                scenario.good_conversation = nc
-                scenario.save()
-            elif nc.scenario_type == 'B':
-                scenario.bad_conversation = nc
-                scenario.save()
-            nc.text_one = form.cleaned_data['text_one']
-            nc.response_one = form.cleaned_data['response_one']
-            nc.response_two = form.cleaned_data['response_two']
-            nc.response_three = form.cleaned_data['response_three']
-            nc.complete_dialog = form.cleaned_data['complete_dialog']
-            nc.save()
-            return HttpResponseRedirect('/pages/main/edit/')  # Redirect after POST
-        else:
-            return render(request, self.template, {
-        'form': form,
-    })
+#     def post(self, request, pk):
+#         form = self.form(request.POST)
+#         scenario = ConversationScenario.objects.get(pk=pk)
+#         if form.is_valid():
+#             nc = Conversation.objects.create()
+#             scenario = ConversationScenario.objects.get(pk=pk)
+#             nc.scenario_type = form.cleaned_data['scenario_type']
+#             if nc.scenario_type == 'G':
+#                 scenario.good_conversation = nc
+#                 scenario.save()
+#             elif nc.scenario_type == 'B':
+#                 scenario.bad_conversation = nc
+#                 scenario.save()
+#             nc.text_one = form.cleaned_data['text_one']
+#             nc.response_one = form.cleaned_data['response_one']
+#             nc.response_two = form.cleaned_data['response_two']
+#             nc.response_three = form.cleaned_data['response_three']
+#             nc.complete_dialog = form.cleaned_data['complete_dialog']
+#             nc.save()
+#             return HttpResponseRedirect('/pages/main/edit/')  # Redirect after POST
+#         else:
+#             return render(request, self.template, {
+#         'form': form,
+#     })
     
 
 
