@@ -10,11 +10,8 @@ from nepi.activities.views import CreateConverstionView
 
 urlpatterns = patterns(
     '',
-    #url(r'^class_create_conversation/(?P<pk>\d+)/$',
-    #    CreateConverstionView.as_view(),
-    #    name='class_create_conversation'),
-    url(r'^create_conversation/(?P<pk>\d+)/$',
-        'nepi.activities.views.add_conversation',
+    url(r'^class_create_conversation/(?P<pk>\d+)/$',
+        CreateConverstionView.as_view(),
         name='create_conversation'),
     url(r'^update_conversation/(?P<pk>\d+)/$',
         UpdateConversationView.as_view()),

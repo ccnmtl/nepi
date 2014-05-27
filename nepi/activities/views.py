@@ -23,24 +23,13 @@ class ThanksView(AjaxableResponseMixin, View):
         return render('thanks.html')
 
 
-class CreateConverstionView(CreateView):
-    model = Conversation
-    template_name = "activities/add_conversation.html"
-    fields = ["text_one", "response_one",
-              "response_two", "response_three", "complete_dialog"]
-    success_url = '/thank_you/'
+class CreateConverstionView(View):
+    form = ConversationForm()
+    template = 'activities/add_conversation.html'
 
-    def from_valid(self, request, form):
+    def post(self, request, pk):
+        form = self.form(request.POST)
         scenario = ConversationScenario.objects.get(pk=pk)
-        form.instance.scenario = self.request.pk
-        form.instance.scenario = scenario
-        return super(CreateConverstionView, self).form_valid(form)
-
-
-def add_conversation(request, pk):
-    if request.method == 'POST':
-        scenario = ConversationScenario.objects.get(pk=pk)
-        form = ConversationForm(request.POST)
         if form.is_valid():
             nc = Conversation.objects.create()
             scenario = ConversationScenario.objects.get(pk=pk)
@@ -58,12 +47,11 @@ def add_conversation(request, pk):
             nc.complete_dialog = form.cleaned_data['complete_dialog']
             nc.save()
             return HttpResponseRedirect('/pages/main/edit/')  # Redirect after POST
-    else:
-        form = ConversationForm()  # An unbound form
-
-    return render(request, 'activities/add_conversation.html', {
+        else:
+            return render(request, self.template, {
         'form': form,
     })
+    
 
 
 def render_to_json_response(context, **response_kwargs):
