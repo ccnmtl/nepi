@@ -24,47 +24,32 @@ class ThanksView(AjaxableResponseMixin, View):
 
 
 class CreateConverstionView(CreateView):
-    model = Conversation
-    template_name = "activities/add_conversation.html"
-    fields = ["text_one", "response_one",
-              "response_two", "response_three", "complete_dialog"]
-    success_url = '/thank_you/'
 
-    def from_valid(self, pk, form):
-        print self.request
-        scenario = ConversationScenario.objects.get(pk=pk)
-        form.instance.scenario = self.request.pk
-        form.instance.scenario = scenario
-        return super(CreateConverstionView, self).form_valid(form)
+    template_name = 'activities/add_conversation.html'
+    form_class = ConversationForm
+    fields = ['text_one', 'response_one',
+              'response_two', 'response_three', 'complete_dialog']
 
+    def form_valid(self, form):
+        nc = Conversation.objects.create()
+        nc.scenario_type = form.cleaned_data['scenario_type']
+        path_split = self.request.path.split('/')
+        key = path_split[3]
+        scenario = ConversationScenario.objects.get(pk=key)
+        if nc.scenario_type == 'G':
+            scenario.good_conversation = nc
+            scenario.save()
+        elif nc.scenario_type == 'B':
+            scenario.bad_conversation = nc
+            scenario.save()
 
-def add_conversation(request, pk):
-    if request.method == 'POST':
-        scenario = ConversationScenario.objects.get(pk=pk)
-        form = ConversationForm(request.POST)
-        if form.is_valid():
-            nc = Conversation.objects.create()
-            scenario = ConversationScenario.objects.get(pk=pk)
-            nc.scenario_type = form.cleaned_data['scenario_type']
-            if nc.scenario_type == 'G':
-                scenario.good_conversation = nc
-                scenario.save()
-            elif nc.scenario_type == 'B':
-                scenario.bad_conversation = nc
-                scenario.save()
-            nc.text_one = form.cleaned_data['text_one']
-            nc.response_one = form.cleaned_data['response_one']
-            nc.response_two = form.cleaned_data['response_two']
-            nc.response_three = form.cleaned_data['response_three']
-            nc.complete_dialog = form.cleaned_data['complete_dialog']
-            nc.save()
-            return HttpResponseRedirect('/pages/main/edit/')
-    else:
-        form = ConversationForm()  # An unbound form
-
-    return render(request, 'activities/add_conversation.html', {
-        'form': form,
-    })
+        nc.text_one = form.cleaned_data['text_one']
+        nc.response_one = form.cleaned_data['response_one']
+        nc.response_two = form.cleaned_data['response_two']
+        nc.response_three = form.cleaned_data['response_three']
+        nc.complete_dialog = form.cleaned_data['complete_dialog']
+        nc.save()
+        return HttpResponseRedirect('/pages/main/edit/')
 
 
 def render_to_json_response(context, **response_kwargs):

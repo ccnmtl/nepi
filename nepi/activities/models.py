@@ -112,7 +112,7 @@ class ConversationForm(forms.ModelForm):
 class ConversationScenarioForm(forms.ModelForm):
     class Meta:
         model = ConversationScenario
-
+        exclude = ('good_conversation', 'bad_conversation',)
 
 class ConvClick(models.Model):
     created = models.DateTimeField(default=datetime.now)

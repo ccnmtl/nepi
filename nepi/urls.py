@@ -51,7 +51,6 @@ urlpatterns += patterns(
     (r'^admin/', include(admin.site.urls)),
 
     # flat and universally accessible pages
-    #(r'^edit_profile/$', ContactView.as_view())
     (r'^contact/$', ContactView.as_view()),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
     url(r'^student-dashboard/(?P<pk>\d+)/$',
