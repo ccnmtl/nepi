@@ -27,34 +27,15 @@ class CreateConverstionView(CreateView):
     model = Conversation
     template_name = "activities/add_conversation.html"
     fields = ["text_one", "response_one",
-              "response_two", "response_three", "response_four",
-              "response_five", "response_six", "complete_dialog"]
+              "response_two", "response_three", "complete_dialog"]
     success_url = '/thank_you/'
 
-    def from_valid(self, pk, form):
-        # possible?
+    def from_valid(self, request, form):
         scenario = ConversationScenario.objects.get(pk=pk)
         form.instance.scenario = self.request.pk
         form.instance.scenario = scenario
         return super(CreateConverstionView, self).form_valid(form)
 
-
-#        if self.request.is_ajax():
-#            # request.pk? or self.pk? or just pk
-#            scenario = Scenario.objects.get(scenario=pk)
-
-# 93     def form_valid(self, form):
-# 94         response = super(, self).form_valid(form)
-# 95
-# 96             course = Course(pk=self.object.pk, name=self.object.name,
-# 97                             startingBudget=self.object.startingBudget,
-# 98                             enableNarrative=self.object.enableNarrative,
-# 99                             message=self.object.message,
-# 100                             active=self.object.active)
-# 101             course.save()
-# 102             return self.render_to_json_response(course)
-# 103         else:
-# 104             return response
 
 def add_conversation(request, pk):
     if request.method == 'POST':
@@ -74,12 +55,9 @@ def add_conversation(request, pk):
             nc.response_one = form.cleaned_data['response_one']
             nc.response_two = form.cleaned_data['response_two']
             nc.response_three = form.cleaned_data['response_three']
-            nc.response_four = form.cleaned_data['response_four']
-            nc.response_five = form.cleaned_data['response_five']
-            nc.response_six = form.cleaned_data['response_six']
             nc.complete_dialog = form.cleaned_data['complete_dialog']
             nc.save()
-            return HttpResponseRedirect('/thanks/')  # Redirect after POST
+            return HttpResponseRedirect('/pages/main/edit/')  # Redirect after POST
     else:
         form = ConversationForm()  # An unbound form
 
