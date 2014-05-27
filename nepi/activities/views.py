@@ -91,34 +91,24 @@ class DeleteConversationView(DeleteView):
     success_url = '../../../activities/classview_scenariolist/'
 
 
-def get_click(request):
-    if request.method == 'POST' and request.is_ajax():
-        scenario = ConversationScenario.objects.get(
-            pk=request.POST['scenario'])
-        conversation = Conversation.objects.get(
-            pk=request.POST['conversation'])
-        conclick = ConvClick.objects.create(conversation=conversation)
-        conclick.save()
-        current_user = User.objects.get(pk=request.user.pk)
-        rs, created = ConversationResponse.objects.get_or_create(
-            conv_scen=scenario, user=current_user)
-        rs.save()
-        if rs.first_click is None:
+class SaveResponse(View, AjaxableResponseMixin):
+
+    def post(self, request):
+        if self.request.is_ajax():
+            scenario = ConversationScenario.objects.get(
+                pk=self.request.POST['scenario'])
+            conversation = Conversation.objects.get(
+                pk=self.request.POST['conversation'])
+            conclick = ConvClick.objects.create(conversation=conversation)
             conclick.save()
-            rs.first_click = conclick
+            current_user = User.objects.get(pk=self.request.user.pk)
+            rs, created = ConversationResponse.objects.get_or_create(
+                conv_scen=scenario, user=current_user)
+            rs.save_click(conclick)
             rs.save()
-        if rs.first_click is not None and rs.second_click is None:
-            conclick.save()
-            rs.second_click = conclick
-            rs.third_click = conclick
-            rs.save()
-        if rs.second_click is not None:
-            conclick.save()
-            rs.third_click = conclick
-            rs.save()
-        return render_to_json_response({'success': True})
-    else:
-        return render_to_json_response({'success': False})
+            return render_to_json_response({'success': True})
+        else:
+            return render_to_json_response({'success': False})
 
 
 def get_last(request):
@@ -128,7 +118,7 @@ def get_last(request):
         user = User.objects.get(pk=request.user.pk)
         try:
             cresp = ConversationResponse.objects.get(
-                user=user, scenario=scenario)
+                 user=user, scenario=scenario)
             if cresp.third_click is not None:
                 return render_to_json_response(
                     {'success': True, 'last_conv': cresp.third_click})
@@ -138,3 +128,24 @@ def get_last(request):
 
         except ConversationResponse.DoesNotExist:
             return render_to_json_response({'success': False})
+
+
+
+# class GetLastClick(View, AjaxableResponseMixin):
+#     def post(self, request):
+#         if self.request.is_ajax():
+#             scenario = ConversationScenario.objects.get(
+#                 pk=self.request.POST['scenario'])
+#             user = User.objects.get(pk=self.request.user.pk)
+#             try:
+#                 cresp = ConversationResponse.objects.get(
+#                     user=user, scenario=scenario)
+#                 if cresp.third_click is not None:
+#                     return render_to_json_response(
+#                         {'success': True, 'last_conv': cresp.third_click})
+#                 elif cresp.first_click is not None and cresp.second_click is None:
+#                     return render_to_json_response(
+#                         {'success': True, 'last_conv': cresp.first_click})
+# 
+#             except ConversationResponse.DoesNotExist:
+#                 return render_to_json_response({'success': False})
