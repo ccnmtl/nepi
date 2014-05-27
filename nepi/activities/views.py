@@ -24,10 +24,11 @@ class ThanksView(AjaxableResponseMixin, View):
 
 
 class CreateConverstionView(CreateView):
-    
+
     template_name = 'activities/add_conversation.html'
     form_class = ConversationForm
-    fields = ['text_one','response_one','response_two','response_three','complete_dialog']
+    fields = ['text_one', 'response_one',
+              'response_two', 'response_three', 'complete_dialog']
 
     def form_valid(self, form):
         nc = Conversation.objects.create()
@@ -49,9 +50,6 @@ class CreateConverstionView(CreateView):
         nc.complete_dialog = form.cleaned_data['complete_dialog']
         nc.save()
         return HttpResponseRedirect('/pages/main/edit/')
-    
-
-
 
 
 def render_to_json_response(context, **response_kwargs):

@@ -1,11 +1,11 @@
 from django.conf.urls import url, patterns
 '''Want to switch to class based views but not sure how'''
-from nepi.activities.views import ( UpdateConversationView,
-                                    DeleteConversationView,
-                                    ScenarioListView,
-                                    ScenarioDetailView,
-                                    ScenarioDeleteView,
-                                    CreateConverstionView)
+from nepi.activities.views import (UpdateConversationView,
+                                   DeleteConversationView,
+                                   ScenarioListView,
+                                   ScenarioDetailView,
+                                   ScenarioDeleteView,
+                                   CreateConverstionView)
 
 
 urlpatterns = patterns(
