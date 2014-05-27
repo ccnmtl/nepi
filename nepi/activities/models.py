@@ -114,6 +114,7 @@ class ConversationScenarioForm(forms.ModelForm):
         model = ConversationScenario
         exclude = ('good_conversation', 'bad_conversation',)
 
+
 class ConvClick(models.Model):
     created = models.DateTimeField(default=datetime.now)
     conversation = models.ForeignKey(Conversation, null=True, blank=True)
