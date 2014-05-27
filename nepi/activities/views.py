@@ -31,6 +31,7 @@ class CreateConverstionView(CreateView):
     success_url = '/thank_you/'
 
     def from_valid(self, pk, form):
+        print self.request
         scenario = ConversationScenario.objects.get(pk=pk)
         form.instance.scenario = self.request.pk
         form.instance.scenario = scenario
