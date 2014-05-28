@@ -7,9 +7,12 @@ from django.views.generic import TemplateView
 import os.path
 admin.autodiscover()
 import staticmedia
-from nepi.main.views import CreateCourseView, UpdateCourseView
-from nepi.main.views import CreateSchoolView, UpdateSchoolView
-from nepi.main.views import ContactView, RegistrationView
+from nepi.main.views import (CreateCourseView, UpdateCourseView,
+                             GetSchoolCourses, CreateSchoolView,
+                             UpdateSchoolView, ContactView,
+                             RegistrationView, GetCountries,
+                             StudentDashboard, JoinCourse,
+                             GetCountrySchools)
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -48,9 +51,19 @@ urlpatterns += patterns(
     (r'^admin/', include(admin.site.urls)),
 
     # flat and universally accessible pages
-    #(r'^edit_profile/$', ContactView.as_view())
     (r'^contact/$', ContactView.as_view()),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
+    url(r'^student-dashboard/(?P<pk>\d+)/$',
+        StudentDashboard.as_view(), name='student-dashboard'),
+    url(r'^join_course/$', JoinCourse.as_view(), name='join-course'),
+    url(r'^get_countries/$', GetCountries.as_view()),
+    url(r'^get_schools/$', GetCountrySchools.as_view()),
+    url(r'^get_schools/(?P<pk>\d+)/$',
+        GetCountrySchools.as_view(), name='get-country-schools'),
+    url(r'^get_courses/$', GetSchoolCourses.as_view()),
+    url(r'^get_courses/(?P<pk>\d+)/$', GetSchoolCourses.as_view()),
+    url(r'^join_course/(?P<pk>\d+)/$',
+        JoinCourse.as_view(), name='join-course'),
     (r'^accessible/(?P<section_slug>.*)/$',
      'is_accessible', {}, 'is-accessible'),
 
@@ -72,10 +85,6 @@ urlpatterns += patterns(
     (r'^activities/', include('nepi.activities.urls')),
     # Student related pages
     (r'^thanks_course/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_course'),
-    (r'^view_courses/(?P<schl_id>\d+)/$', 'nepi.main.views.view_courses'),
-    (r'^join_course/$', 'nepi.main.views.join_course'),
-    (r'^view_courses/(?P<schl_id>\d+)/$', 'nepi.main.views.view_courses'),
-
 
     url(r'^_impersonate/', include('impersonate.urls')),
     (r'^stats/$', TemplateView.as_view(template_name="stats.html")),

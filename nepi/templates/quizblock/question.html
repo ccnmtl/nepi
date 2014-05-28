@@ -6,48 +6,65 @@
 <div class="cases">
     {{question.intro_text|markdown}}
 
-    <div class="casetitle"> Question {{question.display_number}}:</div>
-     
     <div class="casecontent">
         <div class="casequestion">
-            <div class="casequestiontext">{{question.text|markdown}}</div>
+            {% if not 'survey' in block.pageblock.css_extra %}
+            <div class="caseuserfeedback top">
+                {% if block.rhetorical %}
+                    {% include 'quizblock/show_answer.html' %}
+                {% else %}
+                    {% if response %}
+                        {% include 'quizblock/show_answer.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
+            {% endif %}
 
+            <div class="casequestiontext">
+            {{question.text|safe}}
+            </div>
+            
             {% if question.answerable %}
-                {% if block.rhetorical %}<form id="form-{{question.id}}" method="post">{% endif %}
-
-                {% if question.is_single_choice %}
-                    {% include 'quizblock/single_choice.html' %}
+                {% if block.rhetorical %}
+                    <form id="form-{{question.id}}" method="post">
                 {% endif %}
 
-                {% if question.is_single_choice_dropdown %}
-                  {% include 'quizblock/single_choice_dropdown.html' %}
-                {% endif %}
+            	{% if question.is_single_choice %}
+              	  {% include 'quizblock/single_choice.html' %}
+            	{% endif %}
 
-                {% if question.is_multiple_choice %}
-                  {% include 'quizblock/multiple_choice.html' %}
-                {% endif %}
+            	{% if question.is_single_choice_dropdown %}
+              	  {% include 'quizblock/single_choice_dropdown.html' %}
+            	{% endif %}
+
+            	{% if question.is_multiple_choice %}
+            	  {% include 'quizblock/multiple_choice.html' %}
+            	{% endif %}
 
                 {% if block.rhetorical %}
-                  </form>
+                    </form>
                 {% endif %}
             {% else %}
                 {% if question.is_short_text %}
-                    {% include 'quizblock/short_text.html' %}
+                  {% include 'quizblock/short_text.html' %}
                 {% endif %}
 
                 {% if question.is_long_text %}
-                    {% include 'quizblock/long_text.html' %}
+                  {% include 'quizblock/long_text.html' %}
                 {% endif %}
             {% endif %}
-        </div>
-
-        {% if block.rhetorical %}
-            {% include 'quizblock/show_answer.html' %}
-        {% else %}
-            {% if response %}
-                {% include 'quizblock/show_answer.html' %}
+            
+            {% if not 'survey' in block.pageblock.css_extra %}
+            <div class="caseuserfeedback bottom">
+                {% if block.rhetorical %}
+                    {% include 'quizblock/show_answer.html' %}
+                {% else %}
+                    {% if response %}
+                        {% include 'quizblock/show_answer.html' %}
+                    {% endif %}
+                {% endif %}
+            </div>
             {% endif %}
-        {% endif %}
+        </div>
     </div>
 </div>
-<div style="clear: both"></div>

@@ -10,7 +10,7 @@ from pagetree.models import Section, Hierarchy, UserLocation, UserPageVisit
 
 class Country(models.Model):
     '''Users can select counties from drop down menu,
-    countries are stored by their officil 2 letter codes.'''
+    countries are stored by their official 2 letter codes.'''
     name = models.CharField(max_length=2, choices=COUNTRY_CHOICES, blank=True)
     region = models.CharField(max_length=50, blank=True)
 
@@ -35,9 +35,14 @@ class Course(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     name = models.CharField(max_length=50)
+    # leaving null and blank to avoid dealing with migrations problems
+    module = models.ForeignKey(Hierarchy, null=True, default=None, blank=True)
 
     def __unicode__(self):
         return self.name
+
+
+'''ADD VALIDATION'''
 
 
 class UserProfile(models.Model):
@@ -47,6 +52,8 @@ class UserProfile(models.Model):
     user = models.ForeignKey(User, related_name="application_user")
     profile_type = models.CharField(max_length=2, choices=PROFILE_CHOICES)
     country = models.ForeignKey(Country, null=True, default=None, blank=True)
+    # not sure why we are saving this in user profile
+    icap_affil = models.BooleanField(default=False)
     school = models.ForeignKey(School, null=True, default=None, blank=True)
     course = models.ManyToManyField(
         Course, null=True, default=None, blank=True)

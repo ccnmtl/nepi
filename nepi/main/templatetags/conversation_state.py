@@ -3,8 +3,7 @@ register = template.Library()
 
 
 class ConversationState(template.Node):
-    # if there is not response yet can we do this?
-    # do I need to stick this in the template?
+
     def __init__(self, cblock, scenario_response):
         self.cblock = cblock
         self.scenario_response = scenario_response

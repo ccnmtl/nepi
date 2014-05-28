@@ -1,5 +1,5 @@
 {% load markup %}
-{% comment %}{% if block.rhetorical %}{% endcomment %}
+{% if block.rhetorical %}
       <div class="casesanswerdisplay">
         <a href="#q{{question.id}}" class="moretoggle">Show answer(s) &gt;&gt;</a>
         <div id="q{{question.id}}" class="toggleable">
@@ -8,7 +8,7 @@
 	    {% for answer in question.answer_set.all %}
 	      <li>
                 {% if answer.correct %}
-	          <span class="right-question">
+	          <span class="correctanswer">
 		{% else %}
 		  <span class="incorrectanswer" %>
 		{% endif %}
@@ -20,8 +20,6 @@
           <p>{{question.explanation|markdown}}</p>
         </div>
       </div>
-{% comment %}{% else %}
-    is_correct
-  <p>{{question.explanation|markdown}}</p>
-{% endif %}
-{% endcomment %}
+{% else %}{% if question.explanation %}
+    <p>{{question.explanation|markdown}}</p>
+{% endif %}{% endif %}
