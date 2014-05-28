@@ -81,8 +81,8 @@ class CreateConversationView(CreateView):
 
 class UpdateConversationView(UpdateView):
     model = Conversation
-    template_name = 'activities/update_conversation.html'
-    fields = ['text_one', 'text_two', 'text_three', 'complete_dialog']
+    template_name = 'activities/add_conversation.html'
+    fields = ['text_one', 'response_one', 'response_two', 'response_three', 'complete_dialog']
     success_url = '/thank_you/'
 
 

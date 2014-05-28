@@ -54,13 +54,45 @@ class ConversationScenario(models.Model):
         return ConversationScenarioForm()
 
     def edit_form(self):
-        class EditForm(forms.Form):
-            alt_text = ("<a href=\"" +
-                        reverse("create_conversation", args=[self.id])
-                        + "\">add a conversation</a>")
-            description = forms.CharField(initial=self.description)
-        form = EditForm()
-        return form
+        if self.good_conversation is None and self.bad_conversation is None:
+           class EditForm(forms.Form):
+               alt_text = ("<a href=\"" +
+                           reverse("create_conversation", args=[self.id])
+                           + "\">add a conversation</a>")
+               description = forms.CharField(initial=self.description)
+           form = EditForm()
+           return form
+        elif self.good_conversation is not None and self.bad_conversation is None:
+            class EditForm(forms.Form):
+                alt_text = ("<a href=\"" +
+                            reverse("create_conversation", args=[self.id])
+                            + "\">add a bad conversation</a><br><a href=\"" +
+                            reverse("update_conversation", args=[self.good_conversation.id])
+                            + "\">update good conversation</a>")
+                description = forms.CharField(initial=self.description)
+            form = EditForm()
+            return form
+        elif self.good_conversation is None and self.bad_conversation is not None:
+            class EditForm(forms.Form):
+                alt_text = ("<a href=\"" +
+                            reverse("create_conversation", args=[self.id])
+                            + "\">add a good conversation</a><br><a href=\"" +
+                            reverse("update_conversation", args=[self.bad_conversation.id])
+                            + "\">update bad conversation</a>")
+                description = forms.CharField(initial=self.description)
+            form = EditForm()
+            return form
+        elif self.good_conversation is not None and self.bad_conversation is not None:
+            class EditForm(forms.Form):
+                alt_text = ("<a href=\"" +
+                            reverse("update_conversation", args=[self.good_conversation.id])
+                            + "\">update a good conversation</a><br><a href=\"" +
+                            reverse("update_conversation", args=[self.bad_conversation.id])
+                            + "\">update bad conversation</a>")
+                description = forms.CharField(initial=self.description)
+            form = EditForm()
+            return form
+           
 
     @classmethod
     def create(self, request):
