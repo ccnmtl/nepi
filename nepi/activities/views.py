@@ -82,7 +82,9 @@ class CreateConversationView(CreateView):
 class UpdateConversationView(UpdateView):
     model = Conversation
     template_name = 'activities/add_conversation.html'
-    fields = ['text_one', 'response_one', 'response_two', 'response_three', 'complete_dialog']
+    fields = ['text_one', 'response_one',
+              'response_two', 'response_three',
+              'complete_dialog']
     success_url = '/thank_you/'
 
 
@@ -134,9 +136,10 @@ class LastResponse(View):
                 if cresp.third_click is not None:
                     return render_to_json_response(
                         {'success': True, 'last_conv': cresp.third_click})
-                elif cresp.first_click is not None and cresp.second_click is None:
-                    return render_to_json_response(
-                        {'success': True, 'last_conv': cresp.first_click})
+                elif (cresp.first_click is not None
+                      and cresp.second_click is None):
+                        return render_to_json_response(
+                            {'success': True, 'last_conv': cresp.first_click})
 
             except ConversationResponse.DoesNotExist:
                 return render_to_json_response({'success': False})
