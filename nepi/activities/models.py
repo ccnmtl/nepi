@@ -16,11 +16,11 @@ CONV_CHOICES = (
 class Conversation(models.Model):
     scenario_type = models.CharField(max_length=1, choices=CONV_CHOICES,
                                      default='G')
-    text_one = models.CharField(max_length=255, null=True)
-    response_one = models.CharField(max_length=255, null=True)
-    response_two = models.CharField(max_length=255, null=True)
-    response_three = models.CharField(max_length=255, null=True)
-    complete_dialog = models.TextField(max_length=255, null=True)
+    text_one = models.CharField(max_length=255, null=True, blank=True)
+    response_one = models.CharField(max_length=255, null=True, blank=True)
+    response_two = models.CharField(max_length=255, null=True, blank=True)
+    response_three = models.CharField(max_length=255, null=True, blank=True)
+    complete_dialog = models.TextField(max_length=255, null=True, blank=True)
 
 
 class ConversationScenario(models.Model):
