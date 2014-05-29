@@ -568,3 +568,17 @@ body  {
     float: left;
     width: 116px;
 }
+
+.container #content {
+   background-color: #fff;
+   padding: 10px;
+}
+
+.dosage {
+}
+
+.bloodspot {
+}
+
+
+

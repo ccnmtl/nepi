@@ -6,49 +6,21 @@ jQuery(".day").on("click",
     
     function() {
 
-            //alert("you clicked on a day");
-            
-            var clicked_num = jQuery(this).html();
-            var correct_day = jQuery("#correct_day").html();
-            alert(clicked_num);
-            alert(correct_day);
+            var clicked_num = jQuery(this).data().day;
+            var correct_day = jQuery("#correct_day").data().day;
   
-
-
-            //if (clicked_num.toString() == correct_day.toString()){
             if (clicked_num == correct_day){
                 alert("you have selected the correct date");
             }
-  //          if (jQuery(this).val() == correct_date){
-        //        alert("you have selected the correct date");
-   //         }
-   //         if (jQuery(this).val() == correct_date){
-      //          alert("you have selected the correct date");
-   //         }
+            if (clicked_num > correct_day){
+                alert("waited too long");
+            }
+            if (clicked_num < correct_day){
+                alert("baby has not been born yet");
+            }
 });
 
 });
-    // can use .html or .text
-    //var last_click = jQuery('#correct_date').text();
-
-//    jQuery("#day").on("click", 
-//        function()
-//        { 
-//            alert("you clicked on a day");
-      //      if (this.val() == correct_date){
-      //          alert("you have selected the correct date");
-      //      }
-      //      if (this.val() == correct_date){
-      //          alert("you have selected the correct date");
-      //      }
-      //      if (this.val() == correct_date){
-      //          alert("you have selected the correct date");
-      //      }
-
-//      });
-
-//});
-
 
 </script>
 
