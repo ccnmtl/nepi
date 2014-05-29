@@ -26,8 +26,14 @@
     <![endif]-->
 
   {% block feeds %}{% endblock %}
+  
+  
 </head>
 <body>
+
+
+ 
+ 
 	<div class="container" id="outer-container">
     {% block masthead %}
         <header id="masthead">
@@ -83,6 +89,22 @@
 {% endcompress %}
 
 {% block js %}
+<script>
+
+jQuery(document).ready(function() {
+	//alert(document.getElementsByClassName("pageblock .dosage"));
+
+		if(document.getElementsByClassName("pageblock .dosage").length > 0)
+		{
+ 			alert("part of dosage activity");
+ 
+		}
+
+
+});
+
+</script>
+  
 {% endblock %}
 
 {% comment %}
