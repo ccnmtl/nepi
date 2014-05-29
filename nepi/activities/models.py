@@ -245,3 +245,47 @@ class ImageMapChart(models.Model):
 class ImageMapChartForm(forms.ModelForm):
     class Meta:
         model = ImageMapChart
+
+
+class CalendarChart(models.Model):
+    pageblocks = generic.GenericRelation(PageBlock)
+    template_file = "activities/calendarchart.html"
+    js_template_file = "activities/calendarchart_js.html"
+    css_template_file = "activities/calendarchart_css.html"
+    display_name = "Calendar Chart"
+    intro_text = models.TextField(default='')
+
+    def pageblock(self):
+        return self.pageblocks.all()[0]
+
+    def __unicode__(self):
+        return unicode(self.pageblock())
+
+    def needs_submit(self):
+        return True
+
+    @classmethod
+    def add_form(self):
+        return CalendarChartForm()
+
+    def edit_form(self):
+        return CalendarChartForm(instance=self)
+
+    @classmethod
+    def create(self, request):
+        form = CalendarChartForm(request.POST)
+        return form.save()
+
+    def edit(self, vals, files):
+        form = CalendarChartForm(data=vals, files=files, instance=self)
+        if form.is_valid():
+            form.save()
+
+    def unlocked(self, user):
+        return True
+
+class ImageMapChartForm(forms.ModelForm):
+    class Meta:
+        model = CalendarChart
+
+

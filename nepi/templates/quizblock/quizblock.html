@@ -16,21 +16,4 @@
     {% if block.rhetorical %}
       <script src="http://mt.ccnmtl.columbia.edu/pedialabs/js/quizshow.js" type="text/javascript" language="javascript"></script>
     {% endif %}
-    
-    <div class="visualclear"></div>
-    {% ifquizcomplete block %}
-        {% if  not 'survey' in block.pageblock.css_extra %}        
-            <div class="quiz-results">        
-                {% ifquizcorrect block %}
-                    <div class="alert alert-success">
-                        <b>Correct!</b> You've selected all of the correct choices.
-                    </div>
-                {% else %}
-                    <div class="alert alert-error">
-                        <b>Incorrect.</b> Please review the correct choices before continuing.
-                    </div>    
-                {% endifquizcorrect %}    
-            </div>
-        {% endif %}
-    {% endifquizcomplete %}
 {% endif %}

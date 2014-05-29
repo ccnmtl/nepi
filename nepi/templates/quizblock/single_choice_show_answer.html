@@ -12,14 +12,14 @@
         </div>
       </div>
 {% else %}
-    <div class="well">
-        <div class="personalized-feedback">
+     {% comment %}<div class="well">
+       <div class="personalized-feedback">
             <p>
                 {% ifequal response.value|upper question.correct_answer_letter %}
-                    <div class="correct">Correct</div>
+                    <div class="correct">Correct: {{question.correct_answer_letter}}</div>
                     <b>The correct answer is: {{question.correct_answer_letter}}. You are right! Nice work!</b>
                 {% else %}
-                    <div class="incorrect">Incorrect</div>
+                    <div class="incorrect">Incorrect {{question.correct_answer_letter}}</div>
                     <b>The correct answer is: {{question.correct_answer_letter}}. You chose {{response.value|upper}}. Oops!</b>
                 {% endifequal %}
             </p>
@@ -32,6 +32,6 @@
             </p>
         </div>        
         <p>{{question.explanation|markdown}}</p>
-    </div>
+    </div>{% endcomment %}
 {% endif %}
 
