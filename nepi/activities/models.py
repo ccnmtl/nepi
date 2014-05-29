@@ -253,7 +253,8 @@ class CalendarChart(models.Model):
     js_template_file = "activities/calendarchart_js.html"
     css_template_file = "activities/calendarchart_css.html"
     display_name = "Calendar Chart"
-    intro_text = models.TextField(default='')
+    description = models.TextField(default='')
+    birth_date = models.IntegerField(default=0)
 
     def pageblock(self):
         return self.pageblocks.all()[0]
@@ -262,7 +263,7 @@ class CalendarChart(models.Model):
         return unicode(self.pageblock())
 
     def needs_submit(self):
-        return True
+        return False
 
     @classmethod
     def add_form(self):
@@ -284,7 +285,7 @@ class CalendarChart(models.Model):
     def unlocked(self, user):
         return True
 
-class ImageMapChartForm(forms.ModelForm):
+class CalendarChartForm(forms.ModelForm):
     class Meta:
         model = CalendarChart
 
