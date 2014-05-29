@@ -285,8 +285,7 @@ class CalendarChart(models.Model):
     def unlocked(self, user):
         return True
 
+
 class CalendarChartForm(forms.ModelForm):
     class Meta:
         model = CalendarChart
-
-
