@@ -309,7 +309,7 @@ class DosageActivity(models.Model):
     template_file = "activities/dosageactivity.html"
     js_template_file = "activities/dosageactivity_js.html"
     css_template_file = "activities/dosageactivity_css.html"
-    display_name = "Calendar Chart"
+    display_name = "Dosage Activity"
     explanation = models.TextField(default='')
     question = models.CharField(max_length=64)
     ml_nvp = models.IntegerField(default=0)
@@ -342,6 +342,29 @@ class DosageActivity(models.Model):
         if form.is_valid():
             form.save()
 
+    def submit(self, user, data):
+        print "inside submit"
+        try:
+            dr = DosageActivityResponse.objects.create(dosage_activity=self, user=user)
+        except:
+            print "there is problem creating a dosage activity response"
+        print dr
+        print dr.user
+        print dr.dosage_activity
+        for k in data.keys():
+            if k == 'mlvp':
+                dr.mlvp = data[k]
+            if k == 'per_day':
+                dr.per_day = data[k]
+            if k == 'weeks':
+                dr.weeks = data[k]
+
+            dr.save()
+
+
+    def redirect_to_self_on_submit(self):
+        return True
+
     def unlocked(self, user):
         '''We want to make sure the user has filled out
         the appropriate fields before proceeding.'''
@@ -354,16 +377,19 @@ class DosageActivity(models.Model):
             return True
         else:
             return False
+        
+    def clear_user_submissions(self, user):
+        DosageActivityResponse.objects.filter(user=user, dosage_activity=self).delete()
+
 
 
 class DosageActivityForm(forms.ModelForm):
     class Meta:
         model = DosageActivity
 
-
 class DosageActivityResponse(models.Model):
-    dosage_activity = models.ForeignKey(DosageActivity, null=True, blank=True)
+    dosage_activity = models.ForeignKey(DosageActivity, null=True, blank=True, related_name='dosage_response')
     user = models.ForeignKey(User, null=True, blank=True)
-    ml_nvp = models.IntegerField(default=0)
-    times_day = models.IntegerField(default=0)
-    weeks = models.IntegerField(default=0)
+    ml_nvp = models.IntegerField()
+    times_day = models.IntegerField()
+    weeks = models.IntegerField()
