@@ -345,54 +345,13 @@ class DosageActivity(models.Model):
     def submit(self, user, data):
         for k in data.keys():
             if k == "times_day":
-                #dr.times_day = int(data[k])
                 td = int(data[k])
-                #print type(dr.times_day)
-                #dr.save()
             if k == 'mlnvp':
-                #print "inside if"
-                #key = int(data[k])
-                #print key
-                #dr.mlnvp = int(data[k])
-                #print dr.mlnvp
                 ml = int(data[k])
-                #dr.save()
             if k == 'weeks':
-                #dr.weeks = int(data[k])
                 wks = int(data[k])
-                #print dr.weeks
         dr = DosageActivityResponse(dosage_activity=self, user=user, times_day=td, weeks=wks, ml_nvp=ml)
         dr.save()
-        #print "inside submit"
-#         #try:
-#             #dr = DosageActivityResponse(
-#             #    dosage_activity=self, user=user)
-#             #print dr
-#             #print data
-#             for k in data.keys():
-#                 if k == "times_day":
-#                     #print "inside if statement"
-#                     #print type(data[k])
-#                     dr.times_day = int(data[k])
-#                     td = int(data[k])
-#                     print type(dr.times_day)
-#                     #dr.save()
-#                 if k == 'mlnvp':
-#                     #print "inside if"
-#                     key = int(data[k])
-#                     #print key
-#                     dr.mlnvp = int(data[k])
-#                     print dr.mlnvp
-#                     ml = int(data[k])
-#                     #dr.save()
-#                 if k == 'weeks':
-#                     dr.weeks = int(data[k])
-#                     wks = int(data[k])
-#                     print dr.weeks
-#             dr = DosageActivityResponse(dosage_activity=self, user=user, times_day=td, weeks=wks, ml_nvp=ml)
-#             dr.save()
-        #except:
-        #    print "there is problem creating a dosage activity response"
 
     def redirect_to_self_on_submit(self):
         return True
@@ -417,15 +376,23 @@ class DosageActivity(models.Model):
 
     def dosage_response(self, user):
         try:
-            response = DosageActivityResponse.objects.get(
+            response = DosageActivityResponse.objects.filter(
                 dosage_activity=self, user=user)
-            return response
+            return response[0]
 #             if (response.first_click is not None
 #                     and response.second_click is not None):
 #                 return response.third_click.conversation.scenario_type
 #             elif (response.first_click is not None
 #                     and response.second_click is None):
 #                 return response.first_click.conversation.scenario_type
+        except DosageActivityResponse.DoesNotExist:
+            return 0
+
+    def user_mlnvp(self, user):
+        try:
+            response = DosageActivityResponse.objects.filter(
+                dosage_activity=self, user=user)
+            return response[0].ml_nvp
         except DosageActivityResponse.DoesNotExist:
             return 0
 
