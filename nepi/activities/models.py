@@ -350,7 +350,9 @@ class DosageActivity(models.Model):
                 ml = int(data[k])
             if k == 'weeks':
                 wks = int(data[k])
-        dr = DosageActivityResponse(dosage_activity=self, user=user, times_day=td, weeks=wks, ml_nvp=ml)
+        dr = DosageActivityResponse(dosage_activity=self,
+                                    user=user, times_day=td,
+                                    weeks=wks, ml_nvp=ml)
         dr.save()
 
     def redirect_to_self_on_submit(self):
@@ -379,20 +381,6 @@ class DosageActivity(models.Model):
             response = DosageActivityResponse.objects.filter(
                 dosage_activity=self, user=user)
             return response[0]
-#             if (response.first_click is not None
-#                     and response.second_click is not None):
-#                 return response.third_click.conversation.scenario_type
-#             elif (response.first_click is not None
-#                     and response.second_click is None):
-#                 return response.first_click.conversation.scenario_type
-        except DosageActivityResponse.DoesNotExist:
-            return 0
-
-    def user_mlnvp(self, user):
-        try:
-            response = DosageActivityResponse.objects.filter(
-                dosage_activity=self, user=user)
-            return response[0].ml_nvp
         except DosageActivityResponse.DoesNotExist:
             return 0
 
