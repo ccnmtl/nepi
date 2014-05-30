@@ -345,7 +345,8 @@ class DosageActivity(models.Model):
     def submit(self, user, data):
         print "inside submit"
         try:
-            dr = DosageActivityResponse.objects.create(dosage_activity=self, user=user)
+            dr = DosageActivityResponse.objects.create(
+                dosage_activity=self, user=user)
         except:
             print "there is problem creating a dosage activity response"
         print dr
@@ -358,9 +359,7 @@ class DosageActivity(models.Model):
                 dr.per_day = data[k]
             if k == 'weeks':
                 dr.weeks = data[k]
-
             dr.save()
-
 
     def redirect_to_self_on_submit(self):
         return True
@@ -377,18 +376,22 @@ class DosageActivity(models.Model):
             return True
         else:
             return False
-        
-    def clear_user_submissions(self, user):
-        DosageActivityResponse.objects.filter(user=user, dosage_activity=self).delete()
 
+    def clear_user_submissions(self, user):
+        DosageActivityResponse.objects.filter(user=user,
+                                              dosage_activity=
+                                              self).delete()
 
 
 class DosageActivityForm(forms.ModelForm):
     class Meta:
         model = DosageActivity
 
+
 class DosageActivityResponse(models.Model):
-    dosage_activity = models.ForeignKey(DosageActivity, null=True, blank=True, related_name='dosage_response')
+    dosage_activity = models.ForeignKey(DosageActivity,
+                                        null=True, blank=True,
+                                        related_name='dosage_response')
     user = models.ForeignKey(User, null=True, blank=True)
     ml_nvp = models.IntegerField()
     times_day = models.IntegerField()
