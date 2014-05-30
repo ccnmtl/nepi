@@ -24,11 +24,11 @@ class ThanksView(AjaxableResponseMixin, View):
 
 
 class CreateConverstionView(CreateView):
-
     template_name = 'activities/add_conversation.html'
     form_class = ConversationForm
     fields = ['text_one', 'response_one',
               'response_two', 'response_three', 'complete_dialog']
+    success_url = '/pages/main/edit/'
 
     def form_valid(self, form):
         nc = Conversation.objects.create()
@@ -76,7 +76,7 @@ class ScenarioDeleteView(DeleteView):
 class CreateConversationView(CreateView):
     model = Conversation
     template_name = 'activities/add_conversation.html'
-    success_url = '/thank_you/'
+    success_url = '/pages/main/edit/'
 
 
 class UpdateConversationView(UpdateView):
@@ -85,7 +85,7 @@ class UpdateConversationView(UpdateView):
     fields = ['text_one', 'response_one',
               'response_two', 'response_three',
               'complete_dialog']
-    success_url = '/thank_you/'
+    success_url = '/pages/main/edit/'
 
 
 class DeleteConversationView(DeleteView):
@@ -143,3 +143,9 @@ class LastResponse(View):
 
             except ConversationResponse.DoesNotExist:
                 return render_to_json_response({'success': False})
+
+
+class CreateCalendar(CreateView):
+    model = Conversation
+    template_name = 'activities/add_conversation.html'
+    success_url = '/pages/main/edit/'

@@ -26,8 +26,14 @@
     <![endif]-->
 
   {% block feeds %}{% endblock %}
+  
+  
 </head>
 <body>
+
+
+ 
+ 
 	<div class="container" id="outer-container">
     {% block masthead %}
         <header id="masthead">
@@ -83,6 +89,30 @@
 {% endcompress %}
 
 {% block js %}
+<script>
+
+jQuery(document).ready(function() {
+
+		//if(document.getElementsByClassName("pageblock .dosage").length > 0)
+	//	{
+ 			//alert("part of dosage activity");
+           // document.getElementsByClassName("caseanswers")
+           //jQuery(".radio").css(style="visiblity:hidden");
+		//}
+
+
+		if(document.getElementsByClassName("pageblock .bloodspot").length > 0)
+		{
+ 			alert("part of bloodspot activity");
+ 			jQuery(".radio").hide();//css(style="visiblity:hidden");
+ 
+		}
+
+
+});
+
+</script>
+  
 {% endblock %}
 
 {% comment %}

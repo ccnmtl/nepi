@@ -245,3 +245,119 @@ class ImageMapChart(models.Model):
 class ImageMapChartForm(forms.ModelForm):
     class Meta:
         model = ImageMapChart
+
+
+class CalendarChart(models.Model):
+    pageblocks = generic.GenericRelation(PageBlock)
+    template_file = "activities/calendarchart.html"
+    js_template_file = "activities/calendarchart_js.html"
+    css_template_file = "activities/calendarchart_css.html"
+    display_name = "Calendar Chart"
+    description = models.TextField(default='')
+    birth_date = models.IntegerField(default=0)
+
+    def pageblock(self):
+        return self.pageblocks.all()[0]
+
+    def __unicode__(self):
+        return unicode(self.pageblock())
+
+    def needs_submit(self):
+        return False
+
+    @classmethod
+    def add_form(self):
+        return CalendarChartForm()
+
+    def edit_form(self):
+        return CalendarChartForm(instance=self)
+
+    @classmethod
+    def create(self, request):
+        form = CalendarChartForm(request.POST)
+        return form.save()
+
+    def edit(self, vals, files):
+        form = CalendarChartForm(data=vals,
+                                 files=files,
+                                 instance=self)
+        if form.is_valid():
+            form.save()
+
+    def unlocked(self, user):
+        return True
+
+
+class CalendarChartForm(forms.ModelForm):
+    class Meta:
+        model = CalendarChart
+
+
+class CalendarResponse(models.Model):
+    conv_scen = models.ForeignKey(CalendarChart, null=True, blank=True)
+    user = models.ForeignKey(User, null=True, blank=True)
+    first_click = models.ForeignKey(ConvClick,
+                                    related_name="calendar_first_click",
+                                    null=True, blank=True)
+    last_click = models.ForeignKey(ConvClick,
+                                   related_name="calendar_last_click",
+                                   null=True, blank=True)
+
+
+class DosageActivity(models.Model):
+    pageblocks = generic.GenericRelation(PageBlock)
+    template_file = "activities/dosageactivity.html"
+    js_template_file = "activities/dosageactivity_js.html"
+    css_template_file = "activities/dosageactivity_css.html"
+    display_name = "Calendar Chart"
+    explanation = models.TextField(default='')
+    question = models.CharField(max_length=64)
+    ml_nvp = models.IntegerField(default=0)
+    times_day = models.IntegerField(default=0)
+    weeks = models.IntegerField(default=0)
+
+    def pageblock(self):
+        return self.pageblocks.all()[0]
+
+    def __unicode__(self):
+        return unicode(self.pageblock())
+
+    def needs_submit(self):
+        return False
+
+    @classmethod
+    def add_form(self):
+        return DosageActivityForm()
+
+    def edit_form(self):
+        return DosageActivityForm(instance=self)
+
+    @classmethod
+    def create(self, request):
+        form = DosageActivityForm(request.POST)
+        return form.save()
+
+    def edit(self, vals, files):
+        form = DosageActivityForm(data=vals, files=files, instance=self)
+        if form.is_valid():
+            form.save()
+
+    def unlocked(self, user):
+        return True
+
+
+class DosageActivityForm(forms.ModelForm):
+    class Meta:
+        model = DosageActivity
+
+
+class DosageActivityResponse(models.Model):
+    conv_scen = models.ForeignKey(DosageActivity,
+                                  null=True, blank=True)
+    user = models.ForeignKey(User, null=True, blank=True)
+    first_click = models.ForeignKey(ConvClick,
+                                    related_name="dosage_first_click",
+                                    null=True, blank=True)
+    last_click = models.ForeignKey(ConvClick,
+                                   related_name="dosage_last_click",
+                                   null=True, blank=True)

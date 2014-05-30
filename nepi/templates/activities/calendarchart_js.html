@@ -1,0 +1,26 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>
+
+jQuery(document).ready(function() {
+jQuery(".day").on("click",
+    
+    function() {
+
+            var clicked_num = jQuery(this).data().day;
+            var correct_day = jQuery("#correct_day").data().day;
+  
+            if (clicked_num == correct_day){
+                alert("you have selected the correct date");
+            }
+            if (clicked_num > correct_day){
+                alert("waited too long");
+            }
+            if (clicked_num < correct_day){
+                alert("baby has not been born yet");
+            }
+});
+
+});
+
+</script>
+

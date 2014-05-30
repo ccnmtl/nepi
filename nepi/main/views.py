@@ -136,7 +136,7 @@ def home(request):
         pending_teachers = PendingTeachers.objects.filter(
             user_profile__profile_type='TE')
         schools = School.objects.all()
-        return render(request, 'icap/icindex.html',
+        return render(request, 'dashboard.html',
                       {'schools': schools,
                           'pending_teachers': pending_teachers})
     else:
