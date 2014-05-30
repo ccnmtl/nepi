@@ -1,8 +1,7 @@
-
 {% extends "admin/base_site.html" %}
-{% load i18n %}
+{% load i18n admin_static %}
 
-{% block stylesheet %}media/css/admin.css{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/login.css" %}" />{% endblock %}
 
 {% block bodyclass %}login{% endblock %}
 
