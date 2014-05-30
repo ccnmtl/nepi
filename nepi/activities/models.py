@@ -398,4 +398,3 @@ class DosageActivityResponse(models.Model):
     ml_nvp = models.IntegerField()
     times_day = models.IntegerField()
     weeks = models.IntegerField()
-
