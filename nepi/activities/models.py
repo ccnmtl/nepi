@@ -323,7 +323,7 @@ class DosageActivity(models.Model):
         return unicode(self.pageblock())
 
     def needs_submit(self):
-        return False
+        return True
 
     @classmethod
     def add_form(self):
@@ -343,7 +343,17 @@ class DosageActivity(models.Model):
             form.save()
 
     def unlocked(self, user):
-        return True
+        '''We want to make sure the user has filled out
+        the appropriate fields before proceeding.'''
+        response = DosageActivityResponse.objects.filter(
+            dosage_activity=self, user=user)
+        if (len(response) == 1
+                and response[0].ml_nvp is not None
+                and response[0].times_day is not None
+                and response[0].weeks is not None):
+            return True
+        else:
+            return False
 
 
 class DosageActivityForm(forms.ModelForm):
@@ -352,12 +362,8 @@ class DosageActivityForm(forms.ModelForm):
 
 
 class DosageActivityResponse(models.Model):
-    conv_scen = models.ForeignKey(DosageActivity,
-                                  null=True, blank=True)
+    dosage_activity = models.ForeignKey(DosageActivity, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
-    first_click = models.ForeignKey(ConvClick,
-                                    related_name="dosage_first_click",
-                                    null=True, blank=True)
-    last_click = models.ForeignKey(ConvClick,
-                                   related_name="dosage_last_click",
-                                   null=True, blank=True)
+    ml_nvp = models.IntegerField(default=0)
+    times_day = models.IntegerField(default=0)
+    weeks = models.IntegerField(default=0)
