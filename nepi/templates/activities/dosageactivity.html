@@ -11,13 +11,16 @@
 
 </br></br>{% if block.question %}<h3>{{block.question}}</h3>{% endif %}
 
+<input type="hidden" name="submission" value="{{block.ml_nvp}}">
+<input type="hidden" name="submission" value="{{block.times_day}}">
+<input type="hidden" name="submission" value="{{block.weeks}}">
 
 <div id="dosage">
 <form action="." method="post">{% csrf_token %}
 
    MLVP:
    		{% if dosager %}
-   			<div>{{dosager.ml_nvp}}</div><input type="hidden" name="submission" value="{{block.ml_nvp}}">
+   			<div>{{dosager.ml_nvp}}</div>
    		{% else %}
    			<input type="text" name="pageblock-{{block.pageblock.id}}-mlnvp" value="">
    		{% endif %}
@@ -25,15 +28,15 @@
    
    Number of Times per Day:
    		{% if dosager %}
-   			<div>{{dosager.times_day}}</div><input type="hidden" name="submission" value="{{block.times_day}}">
+   			<div>{{dosager.times_day}}</div>
    		{% else %}
-   			<input type="text" name="pageblock-{{block.pageblock.id}}-times_day" value=""></br>
+   			<input type="text" name="pageblock-{{block.pageblock.id}}-times_day" value="">
    		{% endif %}
    		</br>
 
    Number of Weeks:
 	   {% if dosager %}
-	   		<div>{{dosager.weeks}}</div><input type="hidden" name="submission" value="{{block.weeks}}">
+	   		<div>{{dosager.weeks}}</div>
 	   {% else %}
 		   <input type="text" name="pageblock-{{block.pageblock.id}}-weeks" value="">
 	   {% endif %}
