@@ -1,4 +1,10 @@
 {% load markup %}
+{% load dosage_state %}
+{% with block.dosageactivity as dosageactivity %}
+{% endwith %}
+{% getdosageresponse block as dosager %}
+
+<div id="response" value="{{dosager}}"> {{response}} </div>
 
 {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
 {{block.description|markdown}}
@@ -8,13 +14,17 @@
 
 <div id="dosage">
 <form action="." method="post">{% csrf_token %}
-   MLVP: <input type="text" name="mlvp" 
+
+   MLVP: 
+   <input type="text" name="pageblock-{{block.pageblock.id}}-mlnvp" 
    {% if block.dosage_response %}value="{{block.dosage_response.ml_nvp}}"
    {% else %}value=""{% endif %}></br>
-   Number of Times per Day: <input type="text" name="times_day"
+   Number of Times per Day:
+   <input type="text" name="pageblock-{{block.pageblock.id}}-times_day"
    {% if block.dosage_response %}value="{{block.dosage_response.times_day}}"
    {% else %}value=""{% endif %}></br>
-   Number of Weeks: <input type="text" name="weeks"
+   Number of Weeks:
+   <input type="text" name="pageblock-{{block.pageblock.id}}-weeks"
    {% if block.dosage_response %}value="{{block.dosage_response.weeks}}"
    {% else %}value=""{% endif %}></br>
 <input type="submit" value="Submit" />

@@ -343,23 +343,56 @@ class DosageActivity(models.Model):
             form.save()
 
     def submit(self, user, data):
-        print "inside submit"
-        try:
-            dr = DosageActivityResponse.objects.create(
-                dosage_activity=self, user=user)
-        except:
-            print "there is problem creating a dosage activity response"
-        print dr
-        print dr.user
-        print dr.dosage_activity
         for k in data.keys():
-            if k == 'mlvp':
-                dr.mlvp = data[k]
-            if k == 'per_day':
-                dr.per_day = data[k]
+            if k == "times_day":
+                #dr.times_day = int(data[k])
+                td = int(data[k])
+                #print type(dr.times_day)
+                #dr.save()
+            if k == 'mlnvp':
+                #print "inside if"
+                #key = int(data[k])
+                #print key
+                #dr.mlnvp = int(data[k])
+                #print dr.mlnvp
+                ml = int(data[k])
+                #dr.save()
             if k == 'weeks':
-                dr.weeks = data[k]
-            dr.save()
+                #dr.weeks = int(data[k])
+                wks = int(data[k])
+                #print dr.weeks
+        dr = DosageActivityResponse(dosage_activity=self, user=user, times_day=td, weeks=wks, ml_nvp=ml)
+        dr.save()
+        #print "inside submit"
+#         #try:
+#             #dr = DosageActivityResponse(
+#             #    dosage_activity=self, user=user)
+#             #print dr
+#             #print data
+#             for k in data.keys():
+#                 if k == "times_day":
+#                     #print "inside if statement"
+#                     #print type(data[k])
+#                     dr.times_day = int(data[k])
+#                     td = int(data[k])
+#                     print type(dr.times_day)
+#                     #dr.save()
+#                 if k == 'mlnvp':
+#                     #print "inside if"
+#                     key = int(data[k])
+#                     #print key
+#                     dr.mlnvp = int(data[k])
+#                     print dr.mlnvp
+#                     ml = int(data[k])
+#                     #dr.save()
+#                 if k == 'weeks':
+#                     dr.weeks = int(data[k])
+#                     wks = int(data[k])
+#                     print dr.weeks
+#             dr = DosageActivityResponse(dosage_activity=self, user=user, times_day=td, weeks=wks, ml_nvp=ml)
+#             dr.save()
+        #except:
+        #    print "there is problem creating a dosage activity response"
 
     def redirect_to_self_on_submit(self):
         return True
@@ -382,6 +415,20 @@ class DosageActivity(models.Model):
                                               dosage_activity=
                                               self).delete()
 
+    def dosage_response(self, user):
+        try:
+            response = DosageActivityResponse.objects.get(
+                dosage_activity=self, user=user)
+            return response
+#             if (response.first_click is not None
+#                     and response.second_click is not None):
+#                 return response.third_click.conversation.scenario_type
+#             elif (response.first_click is not None
+#                     and response.second_click is None):
+#                 return response.first_click.conversation.scenario_type
+        except DosageActivityResponse.DoesNotExist:
+            return 0
+
 
 class DosageActivityForm(forms.ModelForm):
     class Meta:
@@ -391,7 +438,7 @@ class DosageActivityForm(forms.ModelForm):
 class DosageActivityResponse(models.Model):
     dosage_activity = models.ForeignKey(DosageActivity,
                                         null=True, blank=True,
-                                        related_name='dosage_response')
+                                        related_name='dosage_resp')
     user = models.ForeignKey(User, null=True, blank=True)
     ml_nvp = models.IntegerField()
     times_day = models.IntegerField()

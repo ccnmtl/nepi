@@ -9,6 +9,7 @@ from nepi.activities.views import (UpdateConversationView,
                                    SaveResponse,
                                    LastResponse,
                                    CreateCalendar)
+from nepi.activities.models import DosageActivity
 
 
 urlpatterns = patterns(
@@ -34,5 +35,7 @@ urlpatterns = patterns(
     url(r'^create_calendar/$',
         CreateCalendar.as_view(),
         name='create_calendar'),
-    #url(r)
+#     url(r'^submit/$',
+#         DosageActivity.submit(),
+#         name='submit')
 )
