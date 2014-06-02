@@ -171,25 +171,6 @@ class ConversationResponse(models.Model):
     third_click = models.ForeignKey(ConvClick, related_name="third_click",
                                     null=True, blank=True)
 
-#     def save_click(self, new_click):
-#         if self.first_click is None:
-#             print "inside first is none..."
-#             self.first_click = new_click
-#             self.save()
-#             return True
-#         if self.first_click is not None and self.second_click is None:
-#             print "inside second is none..."
-#             self.second_click = new_click
-#             self.third_click = new_click
-#             self.save()
-#             return True
-#         if rs.second_click is not None:
-#             print "inside third is not none..."
-#             self.third_click = new_click
-#             print "inside third is not none..."
-#             self.save()
-#             return True
-
 
 class ImageMapItem(models.Model):
     label_name = models.CharField(max_length=64, default='')

@@ -4,7 +4,8 @@
 {% endwith %}
 {% getdosageresponse block as dosager %}
 
-<div id="response" value="{{dosager}}"> {{dosager}}   </div>
+<div id="response" value="{{dosager}}"> {{dosager}} </div>
+<div id="clipboard-button"> Clip Board Here </div>
 
 {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
 {{block.description|markdown}}
@@ -43,8 +44,40 @@
 	   </br>
 	   
 	   <div id="explanation">{{block.explanation}}</div>
-<input type="submit" value="Submit" />
+	   
+	   {% if not dosager %}
+       <input type="submit" value="Submit" />
+       {% endif %}
 </form>
+
+<div id="clipboard" style="display: none">
+<b>NVP Dosage Chart</b>
+
+<b>Daily dosing for NVP for infants from
+birth to 6 weeks</b>
+
+<table border="1" style="width:350px">
+<tr><td>Birth weight 2000-2499 g </td><td> 1ml (10mg) once a day </td></tr>
+<tr><td>Birth weight ≥ 2500 g </td><td> 1.5 ml (15mg) once a day </td></tr>
+<tr><td>Infants < 2000 g 0.2 ml </td><td> (2mg)/kg once a day </td></tr>
+</table>
+<div>
+Depending on country guidelines, there may
+be rare cases in which children over 6 weeks
+are given NVP as prophylaxis. In this case the
+dosages are:
+</div>
+
+<b> Daily dosing for NVP for infants > 6
+weeks of age: </b>
+<table border="1" style="width:350px">
+<tr><td>6 weeks to 6 months </td><td> 20mg (2ml) once a day</td></tr>
+<tr><td>Over 6 months to 9 months </td><td> 30mg (3ml) once a day</td></tr>
+<tr><td>Over 9 months until breastfeeding ends </td><td> 40mg (4ml) once a day</td></tr>
+</table>
+</div>
+
+
 </div>
 
 
