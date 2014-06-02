@@ -4,7 +4,6 @@
 {% endwith %}
 {% getdosageresponse block as dosager %}
 
-<div id="response" value="{{dosager}}"> {{dosager}} </div>
 <div id="clipboard-button"> Clip Board Here </div>
 
 {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
@@ -12,16 +11,18 @@
 
 </br></br>{% if block.question %}<h3>{{block.question}}</h3>{% endif %}
 
-<input type="hidden" name="submission" value="{{block.ml_nvp}}">
-<input type="hidden" name="submission" value="{{block.times_day}}">
-<input type="hidden" name="submission" value="{{block.weeks}}">
+{% if dosager %}
+<input type="hidden" id="sub_nvp" data-value="{{block.ml_nvp}}">
+<input type="hidden" id="sub_times_day" data-value="{{block.times_day}}">
+<input type="hidden" id="sub_weeks" data-value="{{block.weeks}}">
+{% endif %}
 
 <div id="dosage">
 <form action="." method="post">{% csrf_token %}
 
    MLVP:
    		{% if dosager %}
-   			<div id="user_ml_nvp">{{dosager.ml_nvp}}</div>
+   			<div id="user_nvp" data-value="{{dosager.ml_nvp}}">{{dosager.ml_nvp}}</div>
    		{% else %}
    			<input type="text" name="pageblock-{{block.pageblock.id}}-mlnvp" value="">
    		{% endif %}
@@ -29,7 +30,7 @@
    
    Number of Times per Day:
    		{% if dosager %}
-   			<div id="time_day">{{dosager.times_day}}</div>
+   			<div id="user_times_day" data-value="{{dosager.times_day}}">{{dosager.times_day}}</div>
    		{% else %}
    			<input type="text" name="pageblock-{{block.pageblock.id}}-times_day" value="">
    		{% endif %}
@@ -37,14 +38,14 @@
 
    Number of Weeks:
 	   {% if dosager %}
-	   		<div id="weeks">{{dosager.weeks}}</div>
+	   		<div id="user_weeks" data-value="{{dosager.weeks}}">{{dosager.weeks}}</div>
 	   {% else %}
 		   <input type="text" name="pageblock-{{block.pageblock.id}}-weeks" value="">
 	   {% endif %}
 	   </br>
-	   
+	   {% if dosager %}
 	   <div id="explanation">{{block.explanation}}</div>
-	   
+	   {% endif %}
 	   {% if not dosager %}
        <input type="submit" value="Submit" />
        {% endif %}

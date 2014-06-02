@@ -16,6 +16,35 @@ jQuery(document).ready(function(){
 			jQuery("#clipboard").hide();
 			
 		});
+		
+
+		if (jQuery("#sub_nvp").attr('data-value') != jQuery("#user_nvp").attr('data-value'))
+		{
+				jQuery("#user_nvp").append("<p>Incorrect</p>");
+		}
+		if (jQuery("#sub_times_day").attr('data-value') != jQuery("#user_times_day").attr('data-value'))
+		{
+				jQuery("#user_times_day").append("<p>Incorrect</p>");
+		}
+		if (jQuery("#sub_weeks").attr('data-value') != jQuery("#user_weeks").attr('data-value'))
+		{
+				jQuery("#user_weeks").append("<p>Incorrect</p>");
+		}
+		if (jQuery("#sub_nvp").attr('data-value') == jQuery("#user_nvp").attr('data-value'))
+		{
+				jQuery("#user_nvp").append("<p>Correct</p>");
+		}
+		if (jQuery("#sub_times_day").attr('data-value') == jQuery("#user_times_day").attr('data-value'))
+		{
+				jQuery("#user_times_day").append("<p>Correct</p>");
+		}
+		if (jQuery("#sub_weeks").attr('data-value') == jQuery("#user_weeks").attr('data-value'))
+		{
+				jQuery("#user_weeks").append("<p>Correct</p>");
+		}
+
+
+
 
 });
 </script>
