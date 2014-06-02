@@ -21,7 +21,7 @@
 
    MLVP:
    		{% if dosager %}
-   			<div>{{dosager.ml_nvp}}</div>
+   			<div id="user_ml_nvp">{{dosager.ml_nvp}}</div>
    		{% else %}
    			<input type="text" name="pageblock-{{block.pageblock.id}}-mlnvp" value="">
    		{% endif %}
@@ -29,7 +29,7 @@
    
    Number of Times per Day:
    		{% if dosager %}
-   			<div>{{dosager.times_day}}</div>
+   			<div id="time_day">{{dosager.times_day}}</div>
    		{% else %}
    			<input type="text" name="pageblock-{{block.pageblock.id}}-times_day" value="">
    		{% endif %}
@@ -37,7 +37,7 @@
 
    Number of Weeks:
 	   {% if dosager %}
-	   		<div>{{dosager.weeks}}</div>
+	   		<div id="weeks">{{dosager.weeks}}</div>
 	   {% else %}
 		   <input type="text" name="pageblock-{{block.pageblock.id}}-weeks" value="">
 	   {% endif %}
