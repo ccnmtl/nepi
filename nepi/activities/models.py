@@ -361,9 +361,12 @@ class DosageActivity(models.Model):
         try:
             response = DosageActivityResponse.objects.filter(
                 dosage_activity=self, user=user)
-            return response[0]
+            if response.count() > 0:
+                return response[0]
+            else:
+                return None
         except DosageActivityResponse.DoesNotExist:
-            return 0
+            return None
 
 
 class DosageActivityForm(forms.ModelForm):

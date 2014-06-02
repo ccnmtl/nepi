@@ -20,27 +20,28 @@ jQuery(document).ready(function(){
 
 		if (jQuery("#sub_nvp").attr('data-value') != jQuery("#user_nvp").attr('data-value'))
 		{
-				jQuery("#user_nvp").append("<p>Incorrect</p>");
+				jQuery("#user_nvp").append("<div class='alert alert-error'><b>Incorrect</b></div>");
 		}
 		if (jQuery("#sub_times_day").attr('data-value') != jQuery("#user_times_day").attr('data-value'))
 		{
-				jQuery("#user_times_day").append("<p>Incorrect</p>");
+				jQuery("#user_times_day").append("<div class='alert alert-error'><b>Incorrect</b></div>");
 		}
 		if (jQuery("#sub_weeks").attr('data-value') != jQuery("#user_weeks").attr('data-value'))
 		{
-				jQuery("#user_weeks").append("<p>Incorrect</p>");
+				jQuery("#user_weeks").append("<div class='alert alert-error'><b>Incorrect</b></div>");
 		}
 		if (jQuery("#sub_nvp").attr('data-value') == jQuery("#user_nvp").attr('data-value'))
 		{
-				jQuery("#user_nvp").append("<p>Correct</p>");
+				jQuery("#user_nvp").append("<div class='alert alert-success'><b>Correct</b></div>");
+				//jQuery("#user_nvp").replace("<div class='alert alert-success'><b>Correct</b></div>");
 		}
 		if (jQuery("#sub_times_day").attr('data-value') == jQuery("#user_times_day").attr('data-value'))
 		{
-				jQuery("#user_times_day").append("<p>Correct</p>");
+				jQuery("#user_times_day").append("<div class='alert alert-success'><b>Correct</b></div>");
 		}
 		if (jQuery("#sub_weeks").attr('data-value') == jQuery("#user_weeks").attr('data-value'))
 		{
-				jQuery("#user_weeks").append("<p>Correct</p>");
+				jQuery("#user_weeks").append("<div class='alert alert-success'><b>Correct</b></div>");
 		}
 
 
