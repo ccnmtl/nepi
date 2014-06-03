@@ -4,6 +4,26 @@
 {% endwith %}
 {% getdosageresponse block as dosager %}
 
+
+<script type="text/javascript">
+function validateForm() {
+    alert("validate form");
+    var x = document.forms["doseageform"]["usernvp"].value;
+    if (x == null || x == "") {
+        alert("All values must be filled out");
+        return false;
+    }
+    if (x.length() > 2)  {
+        alert("Values should consist of one or two digits");
+        return false;
+    }
+    if (parseInt(x) == False)  {
+        alert("Values should consist of one or two digits");
+        return false;
+    }
+
+}
+</script>
 <div id="clipboard-button"> Clip Board Here </div>
 
 {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
@@ -18,11 +38,11 @@
 {% endif %}
 
 <div id="dosage">
-<form action="." method="post">{% csrf_token %}
+<form name="doseageform" id="dosage-form" onsubmit="return validateForm()" action="." method="post" >{% csrf_token %}
 <table>
    <tr><td> MLVP:</td><td>
    		{% if dosager %}
-   			<div id="user_nvp" data-value="{{dosager.ml_nvp}}">{{dosager.ml_nvp}}</div>
+   			<div id="user_nvp" name="usernvp"" data-value="{{dosager.ml_nvp}}" value="{{dosager.ml_nvp}}">{{dosager.ml_nvp}}</div>
    		{% else %}
    			<input type="text" id="nvp_input" name="pageblock-{{block.pageblock.id}}-mlnvp" value="">
    		{% endif %}
@@ -30,7 +50,7 @@
    
    <tr><td>Number of Times per Day:</td><td>
    		{% if dosager %}
-   			<div id="user_times_day" data-value="{{dosager.times_day}}">{{dosager.times_day}}</div>
+   			<div id="user_times_day" data-value="{{dosager.times_day}}" value="{{dosager.times_day}}">{{dosager.times_day}}</div>
    		{% else %}
    			<input type="text" id="times_day_input" name="pageblock-{{block.pageblock.id}}-times_day" value="">
    		{% endif %}
@@ -38,7 +58,7 @@
 
    <tr><td>Number of Weeks:</td><td>
 	   {% if dosager %}
-	   		<div id="user_weeks" data-value="{{dosager.weeks}}">{{dosager.weeks}}</div>
+	   		<div id="user_weeks" data-value="{{dosager.weeks}}" value="{{dosager.weeks}}">{{dosager.weeks}}</div>
 	   {% else %}
 		   <input type="text" id="week_input" name="pageblock-{{block.pageblock.id}}-weeks" value="">
 	   {% endif %}
@@ -46,6 +66,7 @@
 	   {% if dosager %}
 	   <div id="explanation">{{block.explanation}}</div>
 	   {% endif %}
+	   
 	   {% if not dosager %}
        <input type="submit" value="Submit" />
        {% endif %}

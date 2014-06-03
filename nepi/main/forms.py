@@ -83,3 +83,4 @@ class ContactForm(forms.Form):
     subject = forms.CharField(max_length=100, required=True)
     message = forms.CharField(max_length=500, required=True,
                               widget=forms.Textarea)
+    captcha = CaptchaField()

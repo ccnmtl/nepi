@@ -103,8 +103,9 @@ class ContactView(FormView):
         sender = form_data['sender'],
         subject = form_data['subject'],
         message = form_data['message'],
-        recipients = ['cdunlop@columbia.edu']
+        recipients = ["u'cdunlop@columbia.edu'"]
         send_mail(subject, message, sender, recipients)
+        #form.send_email(recipients)
         return super(ContactView, self).form_valid(form)
 
 
@@ -205,10 +206,9 @@ class RegistrationView(FormView):
                     # need to add country and schools here
                 pending = PendingTeachers.objects.create(
                     user_profile=new_profile)
-                print "pending" + str(pending)
                 pending.save()
                 send_mail(subject, message, sender, recipients)
-        return super(RegistrationView, self).form_valid(form)  # human = True
+        return super(RegistrationView, self).form_valid(form)
 
 
 class CreateSchoolView(CreateView):
