@@ -130,7 +130,7 @@
     {% ifaccessible next_section%}
 <li class="next"><a href="{{ next_section.get_absolute_url }}">{{next_section.label}} &rarr;</a></li>
 {% else %}
-{{next_section.label}}
+<li>{{next_section.label}}</li>
 {% endifaccessible %}
 {% endif %}
 </ul>
