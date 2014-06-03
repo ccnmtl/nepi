@@ -7,7 +7,7 @@ function showAnswer(questionId) {
 function is_form_complete(form) {
     var complete = true;
 
-    var children = jQuery(form).find("div.required").find("input,textarea,select");
+    var children = jQuery(form).find("input,textarea,select");
     jQuery.each(children, function() {
         if (complete && jQuery(this).is(":visible")) {
 
@@ -34,9 +34,8 @@ function is_form_complete(form) {
 
 jQuery(document).ready(function () {            
     jQuery("form").submit(function(evt) {
-        evt.stopImmediatePropagation();
-
         if (!is_form_complete(this)) {
+            evt.stopImmediatePropagation();
             alert("Please complete all form fields before continuing.");
             return false;
         } else {
