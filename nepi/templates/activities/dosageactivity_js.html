@@ -1,28 +1,43 @@
 <script type="text/javascript">
 jQuery(document).ready(function(){
 
-jQuery('form').submit(function(e) {
-	//alert( "Handler for .submit() called." );
-	e.preventDefault();
-	
-});
+       jQuery('form').submit(function(e) {
+            var rc = true;
+    
+            var x = document.forms["doseageform"]["usernvp"].value;
+            if (x == null || x == "") {
+                alert("All values must be filled out");
+                rc = false;
+            }
+            if (x.length() > 2)  {
+                alert("Values should consist of one or two digits");
+                rc = false;
+            }
+            if (parseInt(x) == False)  {
+                alert("Values should consist of one or two digits");
+                rc = false;
+            }
+
+            if (!rc) {
+                e.preventDefault();
+                return false;
+            } else {
+                return true;
+            }
+        });
 
 
 
 	jQuery("#clipboard-button").on("click",
-	
 		function()
 		{ 
 			jQuery("#clipboard").show();
-			
 		});
 
 	jQuery("#clipboard").on("click",
-	
 		function()
 		{ 
-			jQuery("#clipboard").hide();
-			
+			jQuery("#clipboard").hide();		
 		});
 		
 
@@ -51,48 +66,6 @@ jQuery('form').submit(function(e) {
 		{
 				jQuery("#user_weeks").append("<div class='alert alert-success'><b>Correct</b></div>");
 		}
-
-
-function validateForm() {
-    alert("validate form");
-//    var x = document.forms["doseageform"]["usernvp"].value;
-//    if (x == null || x == "") {
-//        alert("All values must be filled out");
-//        return false;
-//    }
-//    if (x.length() > 2)  {
-//        alert("Values should consist of one or two digits");
-//        return false;
-//    }
-//    if (parseInt(x) == False)  {
-//        alert("Values should consist of one or two digits");
-//        return false;
-//    }
-
-}
-
-
-//    jQuery("#submit_button").on("click",
-    
-//  	function()
-//   	{
-//   	alert("inside function");
-//  		alert(jQuery("#user_nvp").attr('data-value'));
-//    		if(jQuery("#user_nvp").attr('data-value').length() > 2)
-//     		{
-//     			jQuery("#user_nvp").append("<b>Only numbers of one or two digits are acceptable answers.</b>");
-//     		}
-//    		if(jQuery("#user_times_day").attr('data-value').length() > 2)
-//    		{
-//     			jQuery("#user_times_day").append("<b>Only numbers of one or two digits are acceptable answers.</b>");
-//     		}
-//     		if(jQuery("#user_weeks").attr('data-value').length() > 2)
-//     		{
-//     		    jQuery("#user_weeks").append("<b>Only numbers of one or two digits are acceptable answers.</b>");
-//     		}    
-    
-//    });
-
 
 
 

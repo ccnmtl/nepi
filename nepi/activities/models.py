@@ -172,26 +172,14 @@ class ConversationResponse(models.Model):
                                     null=True, blank=True)
 
 
-class ImageMapItem(models.Model):
-    label_name = models.CharField(max_length=64, default='')
-    label = models.CharField(max_length=64)
-    content = models.TextField()
-    map_area_shape = models.CharField(max_length=64, default='')
-    coordinates = models.TextField()
-
-    def __unicode__(self):
-        return self.label_name
-
-
-class ImageMapChart(models.Model):
+class ImageInteractive(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
     template_file = "activities/imagemapchart.html"
     js_template_file = "activities/imagemapchart_js.html"
     css_template_file = "activities/imagemapchart_css.html"
-    display_name = "Interactive Image Map Chart"
+    display_name = "Image Interactive"
     intro_text = models.TextField(default='')
 
-    items = models.ManyToManyField(ImageMapItem)
 
     def pageblock(self):
         return self.pageblocks.all()[0]
@@ -204,18 +192,18 @@ class ImageMapChart(models.Model):
 
     @classmethod
     def add_form(self):
-        return ImageMapChartForm()
+        return ImageInteractiveForm()
 
     def edit_form(self):
-        return ImageMapChartForm(instance=self)
+        return ImageInteractiveForm(instance=self)
 
     @classmethod
     def create(self, request):
-        form = ImageMapChartForm(request.POST)
+        form = ImageInteractiveForm(request.POST)
         return form.save()
 
     def edit(self, vals, files):
-        form = ImageMapChartForm(data=vals, files=files, instance=self)
+        form = ImageInteractiveForm(data=vals, files=files, instance=self)
         if form.is_valid():
             form.save()
 
@@ -223,9 +211,9 @@ class ImageMapChart(models.Model):
         return True
 
 
-class ImageMapChartForm(forms.ModelForm):
+class ImageInteractiveForm(forms.ModelForm):
     class Meta:
-        model = ImageMapChart
+        model = ImageInteractive
 
 
 class CalendarChart(models.Model):
@@ -236,7 +224,7 @@ class CalendarChart(models.Model):
     display_name = "Calendar Chart"
     description = models.TextField(default='')
     birth_date = models.IntegerField(default=0)
-    appointment = models.IntegerField()
+    appointment = models.IntegerField(default=0)
 
     def pageblock(self):
         return self.pageblocks.all()[0]
