@@ -180,7 +180,6 @@ class ImageInteractive(models.Model):
     display_name = "Image Interactive"
     intro_text = models.TextField(default='')
 
-
     def pageblock(self):
         return self.pageblocks.all()[0]
 
