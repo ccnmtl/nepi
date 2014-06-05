@@ -205,7 +205,7 @@ PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
               'pageblocks.ImageBlock',
               'quizblock.Quiz',
               'activities.ConversationScenario',
-              'activities.ImageMapChart',
+              'activities.ImageInteractive',
               'activities.CalendarChart',
               'activities.DosageActivity']
 

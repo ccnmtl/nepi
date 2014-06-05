@@ -5,7 +5,7 @@
             {% for course in course_list %}
                 <option value="{{course.pk}}">{{course.name}} {{course.pk}}</option>
             {% empty %}
-                <p>Oh no! there are no courses.</p>
+                <p>There are no groups listed in this country yet.</p>
             {% endfor %}
        </select>
   </div>

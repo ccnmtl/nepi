@@ -1,7 +1,7 @@
 from django import forms
 from choices import COUNTRY_CHOICES
 from captcha.fields import CaptchaField
-from nepi.main.models import Country, Course
+from nepi.main.models import Country, Course, School
 
 
 class LoginForm(forms.Form):
@@ -84,3 +84,31 @@ class ContactForm(forms.Form):
     message = forms.CharField(max_length=500, required=True,
                               widget=forms.Textarea)
     captcha = CaptchaField()
+
+
+class ICAPForm(forms.Form):
+    countries = forms.ModelChoiceField(queryset=Country.objects.all())
+    schools = forms.ModelChoiceField(queryset=School.objects.all())
+    groups = forms.ModelChoiceField(queryset=Course.objects.all())
+
+
+class ProfileForm(forms.Form):
+    first_name = forms.CharField(max_length=100, required=True,
+                                 label="First Name")
+    last_name = forms.CharField(max_length=100, required=True,
+                                label="Last Name")
+    username = forms.CharField(max_length=100, required=True,
+                               label="Username")
+    password1 = forms.CharField(max_length=100, required=False,
+                                label="Leave blank if you" +
+                                "wish to leave the same")
+    password2 = forms.CharField(max_length=100, required=False,
+                                label="Leave blank if you wish" +
+                                "to leave the same")
+    icap_affil = forms.BooleanField(required=False, label="ICAP Affiliated")
+    user_country = forms.ChoiceField(required=True,
+                                     label="Country of Residence: ",
+                                     choices=COUNTRY_CHOICES)
+    email = forms.EmailField(required=False, label="Email(not required):")
+    faculty_access = forms.BooleanField(
+        required=False, label="Request Faculty Access")
