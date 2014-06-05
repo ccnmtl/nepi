@@ -87,82 +87,221 @@ class InstructorPage(LoggedInMixinStaff, InstructorView):
     hierarchy_base = "/pages/main/"
 
 
-class ContactView(FormView):
-    '''changed contact view function to
-    generic class based view'''
-    template_name = 'main/contact.html'
-    form_class = ContactForm
-    success_url = '/thanks/'
-
-    def form_valid(self, form):
-        '''should this be in the form instead?'''
-        form_data = form.cleaned_data
-        sender = form_data['sender'],
-        subject = form_data['subject'],
-        message = form_data['message'],
-        recipients = ["u'cdunlop@columbia.edu'"]
-        send_mail(subject, message, sender, recipients)
-        #form.send_email(recipients)
-        return super(ContactView, self).form_valid(form)
-
-
 def thanks_course(request, course_id):
     """Returns thanks for joining course page."""
     return render(request, 'student/thanks_course.html')
 
 
-# when to use class based views vs generic class based views?
-# can you just have classes inherit generic based views
-# do mixin for being logged in?
-
-
-@login_required
-def home(request):
-    '''Return homepage appropriate for user type.'''
-    try:
-        user_profile = UserProfile.objects.get(user=request.user.pk)
-    except User.DoesNotExist:
-        return HttpResponseRedirect(reverse('register'))
-    if user_profile.profile_type == 'ST':
-        # return HttpResponseRedirect(reverse('student-dashboard',
-        #    {'pk' : profile.pk}))
-        '''We want to return different information if it is
-        the users first time logging in than if they are
-        returning to continue on their course'''
-        if user_profile.school is None:
-            country = user_profile.country
-            schools = School.objects.filter(country=country)
-            return render(request, 'dashboard.html',
-                          {'user_profile': user_profile,
-                           'school': schools,
-                           'country': country})
+class Home(LoggedInMixin, View):
+    '''redoing so that it simply redirects people where they need to be'''
+    def get(self, request):
+        try:
+            user_profile = UserProfile.objects.get(user=request.user.pk)
+        except User.DoesNotExist:
+            return HttpResponseRedirect(reverse('register'))
+        if user_profile.profile_type == 'ST':
+            return HttpResponseRedirect(reverse('student-dashboard'))
+            # return HttpResponseRedirect(reverse('student-dashboard',
+            #    {'pk' : profile.pk}))
+        elif user_profile.profile_type == 'TE':
+            return HttpResponseRedirect(reverse('faculty-dashboard'))
+        elif user_profile.profile_type == 'IC':
+            return HttpResponseRedirect(reverse('icap-dashboard'), {'user': request.user.pk})
         else:
-            return render(request, 'dashboard.html',
-                          {'user_profile': user_profile})
+            '''I assume it could be possible another app has a profile_type variable?'''
+            return HttpResponseRedirect(reverse('register'))
 
-    elif user_profile.profile_type == 'TE':
-        pass
-    elif user_profile.profile_type == 'IC':
-        pending_teachers = PendingTeachers.objects.filter(
-            user_profile__profile_type='TE')
-        students = UserProfile.objects.filter(profile_type="ST").count()
+
+class ICAPDashboard(LoggedInMixin, ListView):
+    model = Course
+    template_name = 'icap_dashboard.html'
+    success_url = '/thank_you/'
+
+    def get_students_in_progress(self):
         find_students = UserProfile.objects.filter(profile_type="ST")
         in_progress = 0
-        incomplete = 0
-        done = 0
         for each in find_students:
             if each.percent_complete() != 0 and each.percent_complete() != 100:
                 in_progress = in_progress + 1
+        return in_progress
+
+        
+    def get_students_incomplete(self):
+        find_students = UserProfile.objects.filter(profile_type="ST")
+        incomplete = 0
+        for each in find_students:
+            if each.percent_complete() != 0 and each.percent_complete() != 100:
                 incomplete = incomplete + 1
+            return incomplete
+
+    def get_students_done(self):
+        find_students = UserProfile.objects.filter(profile_type="ST")
+        done = 0
+        for each in find_students:
             if each.percent_complete() == 100:
                 done = done + 1
-        return render(request, 'icap_dashboard.html',
-                      {'pending_teachers': pending_teachers,
-                       'user_profile': user_profile,
-                       'students': students, 'incomplete': incomplete,
-                       'in_progress': in_progress, 'done': done})
-    else:
-        return HttpResponseRedirect('/')
+        return done
+
+    def get_context_data(self, **kwargs):
+        context = super(ICAPDashboard, self).get_context_data(**kwargs)
+        context['user_profile'] = UserProfile.objects.get(
+            user=self.request.user.pk)
+        context['pending_teachers'] = PendingTeachers.objects.filter(
+            user_profile__profile_type='TE')
+        context['students'] = UserProfile.objects.filter(profile_type="ST").count()
+        context['in_progress'] = self.get_students_in_progress()
+        context['incomplete'] = self.get_students_done()
+        context['done'] = self.get_students_incomplete()
+        return context
+
+
+class FacultyDashboard(LoggedInMixin, ListView):
+    model = Course
+    template_name = 'faculty_dashboard.html'
+    success_url = '/thank_you/'
+
+    def get_students_in_progress(self):
+        find_students = UserProfile.objects.filter(profile_type="ST")
+        in_progress = 0
+        for each in find_students:
+            if each.percent_complete() != 0 and each.percent_complete() != 100:
+                in_progress = in_progress + 1
+        return in_progress
+
+        
+    def get_students_incomplete(self):
+        find_students = UserProfile.objects.filter(profile_type="ST")
+        incomplete = 0
+        for each in find_students:
+            if each.percent_complete() != 0 and each.percent_complete() != 100:
+                incomplete = incomplete + 1
+            return incomplete
+
+    def get_students_done(self):
+        find_students = UserProfile.objects.filter(profile_type="ST")
+        done = 0
+        for each in find_students:
+            if each.percent_complete() == 100:
+                done = done + 1
+        return done
+
+
+    def get_context_data(self, **kwargs):
+        context = super(FacultyDashboard, self).get_context_data(**kwargs)
+        teacher = UserProfile.objects.get(user=request.user.pk)
+        #context['groups'] = 
+#         context['groups'] = Course.objects.filter(profile_type="ST").count()
+#         context['in_progress'] = self.get_students_in_progress()
+#         context['incomplete'] = self.get_students_done()
+#         context['done'] = self.get_students_incomplete()
+#         
+#         
+#         
+#         students = UserProfile.objects.filter(profile_type="ST").count()
+#         find_students = UserProfile.objects.filter(profile_type="ST")
+#         in_progress = 0
+#         incomplete = 0
+#         done = 0
+#         for each in find_students:
+#             if each.percent_complete() != 0 and each.percent_complete() != 100:
+#                 in_progress = in_progress + 1
+#                 incomplete = incomplete + 1
+#             if each.percent_complete() == 100:
+#                 done = done + 1
+#         return render(request, 'icap_dashboard.html',
+#                       {'pending_teachers': pending_teachers,
+#                        'user_profile': user_profile,
+#                        'students': students, 'incomplete': incomplete,
+#                        'in_progress': in_progress, 'done': done})
+
+
+class StudentDashboard(LoggedInMixin, DetailView):
+    '''For the first tab of the dashboard we are showing
+    courses that the user belongs to, and if they do not belong to any
+    we are giving the the option to affiliate with one'''
+    model = UserProfile
+    template_name = 'student_dashboard.html'
+    success_url = '/thank_you_reg/'
+
+    def get_context_data(self, **kwargs):
+        context = super(StudentDashboard, self).get_context_data(**kwargs)
+        profile = UserProfile.objects.get(user=self.request.user.pk)
+        context['user_profile'] = UserProfile.objects.get(
+            user=self.request.user.pk)
+        context['modules'] = Hierarchy.objects.all()
+        context['user_modules'] = Hierarchy.objects.filter(userprofile=profile)
+        context['student_courses'] = Course.objects.filter(userprofile=profile)
+
+
+class GetReport(LoggedInMixin, View):
+    template_name = 'dashboard.html'
+
+    def post(self, request):
+        if self.request.is_ajax():
+            user_id = request.user.pk
+            user_profile = UserProfile.objects.get(user=user_id)
+            user_profile.country = Country.objects.get(
+                pk=self.request.POST.__getitem__('country'))
+            user_profile.school = School.objects.get(
+                pk=self.request.POST.__getitem__('school'))
+            user_profile.course = Course.objects.filter(
+                pk=self.request.POST.__getitem__('course'))
+            user_profile.save()
+            return self.render_to_json_response(user_profile)
+        else:
+            return self.request
+
+
+class JoinCourse(LoggedInMixin, View):
+    template_name = 'student_dashboard.html'
+    #success_url = '/thank_you/'
+
+    def post(self, request):
+        if self.request.is_ajax():
+            user_id = request.user.pk
+            user_profile = UserProfile.objects.get(user=user_id)
+            user_profile.country = Country.objects.get(
+                pk=self.request.POST.__getitem__('country'))
+            user_profile.school = School.objects.get(
+                pk=self.request.POST.__getitem__('school'))
+            user_profile.course = Course.objects.filter(
+                pk=self.request.POST.__getitem__('course'))
+            user_profile.save()
+            return self.render_to_json_response(user_profile)
+        else:
+            return self.request
+
+
+class GetCountries(LoggedInMixin, ListView):
+    model = Country
+    template_name = 'country_list.html'
+    success_url = '/thank_you/'
+
+
+class GetCountrySchools(LoggedInMixin, ListView):
+    model = School
+    template_name = 'school_list.html'
+    success_url = '/thank_you/'
+
+    def get_context_data(self, **kwargs):
+        if self.request.is_ajax():
+            country_key = self.request.GET.__getitem__('name')
+            country = Country.objects.get(pk=country_key)
+            s = School.objects.filter(country=country)
+            return {'school_list': s}
+
+
+class GetSchoolCourses(LoggedInMixin, ListView):
+    model = Course
+    template_name = 'course_list.html'
+    success_url = '/thank_you/'
+
+    def get_context_data(self, **kwargs):
+        if self.request.is_ajax():
+            school_key = self.request.GET.__getitem__('name')
+            school = School.objects.get(pk=school_key)
+            course_list = Course.objects.filter(school=school)
+            return {'course_list': course_list}
 
 
 class RegistrationView(FormView):
@@ -289,151 +428,20 @@ def remove_student(request, stud_id, cors_id):
     pass
 
 
-class StudentDashboard(LoggedInMixin, DetailView):
-    '''For the first tab of the dashboard we are showing
-    courses that the user belongs to, and if they do not belong to any
-    we are giving the the option to affiliate with one'''
-    model = UserProfile
-    template_name = 'student_dashboard.html'
-    success_url = '/thank_you_reg/'
+class ContactView(FormView):
+    '''changed contact view function to
+    generic class based view'''
+    template_name = 'main/contact.html'
+    form_class = ContactForm
+    success_url = '/thanks/'
 
-    def get_context_data(self, **kwargs):
-        context = super(StudentDashboard, self).get_context_data(**kwargs)
-        profile = UserProfile.objects.get(user=self.request.user.pk)
-        context['user_profile'] = UserProfile.objects.get(
-            user=self.request.user.pk)
-        context['modules'] = Hierarchy.objects.all()
-        context['user_modules'] = Hierarchy.objects.filter(userprofile=profile)
-        context['student_courses'] = Course.objects.filter(userprofile=profile)
-
-
-'''Can either do seperate view for form update and submit'''
-
-
-class GetReport(LoggedInMixin, View):
-    template_name = 'dashboard.html'
-
-    def post(self, request):
-        if self.request.is_ajax():
-            user_id = request.user.pk
-            user_profile = UserProfile.objects.get(user=user_id)
-            user_profile.country = Country.objects.get(
-                pk=self.request.POST.__getitem__('country'))
-            user_profile.school = School.objects.get(
-                pk=self.request.POST.__getitem__('school'))
-            user_profile.course = Course.objects.filter(
-                pk=self.request.POST.__getitem__('course'))
-            user_profile.save()
-            return self.render_to_json_response(user_profile)
-        else:
-            return self.request
-
-
-class JoinCourse(LoggedInMixin, View):
-    template_name = 'student_dashboard.html'
-    #success_url = '/thank_you/'
-
-    def post(self, request):
-        if self.request.is_ajax():
-            user_id = request.user.pk
-            user_profile = UserProfile.objects.get(user=user_id)
-            user_profile.country = Country.objects.get(
-                pk=self.request.POST.__getitem__('country'))
-            user_profile.school = School.objects.get(
-                pk=self.request.POST.__getitem__('school'))
-            user_profile.course = Course.objects.filter(
-                pk=self.request.POST.__getitem__('course'))
-            user_profile.save()
-            return self.render_to_json_response(user_profile)
-        else:
-            return self.request
-
-
-class GetCountries(LoggedInMixin, ListView):
-    model = Country
-    template_name = 'country_list.html'
-    success_url = '/thank_you/'
-
-
-class GetCountrySchools(LoggedInMixin, ListView):
-    model = School
-    template_name = 'school_list.html'
-    success_url = '/thank_you/'
-
-    def get_context_data(self, **kwargs):
-        if self.request.is_ajax():
-            country_key = self.request.GET.__getitem__('name')
-            country = Country.objects.get(pk=country_key)
-            s = School.objects.filter(country=country)
-            return {'school_list': s}
-
-
-class GetSchoolCourses(LoggedInMixin, ListView):
-    model = Course
-    template_name = 'course_list.html'
-    success_url = '/thank_you/'
-
-    def get_context_data(self, **kwargs):
-        if self.request.is_ajax():
-            school_key = self.request.GET.__getitem__('name')
-            school = School.objects.get(pk=school_key)
-            course_list = Course.objects.filter(school=school)
-            return {'course_list': course_list}
-
-
-#     def join_course(request):
-#         user = request.user
-#         user_profile = UserProfile.objects.get(user=user)
-#         country = user_profile.country
-#         schools = School.objects.filter(country=country)
-#         return render(request,
-#                   'student/join_course.html',
-#                   {'schools': schools,
-#                    'country': country
-#                    }
-#                   )
-#     def view_courses(request, schl_id):
-#     school = School.objects.get(pk=schl_id)
-#     courses = Course.objects.filter(school=school)
-#     return render(request,
-#                   'student/view_courses.html',
-#                   {'courses': courses, 'school': school})
-#
-# # def student_test_score(u_id, q_id):
-# #     '''see student score on exam'''
-# #     quizzes = Quiz.objects.all()
-# #     user_s = User.objects.get(pk=u_id)
-# #     profile = UserProfile.objects.get(user=user_s)
-# #
-# #     course_students = []
-# #     for u in users:
-# #         try:
-# #             profile = UserProfile.objects.get(user=u)
-# #             if profile.profile_type == 'ST':
-# #                 courses = profile.course_set.all()
-# #                 for c in courses:
-#                     if c.crs_id == crs_id:
-#                         course_students.add(profile)
-#                         # [u][profile][c])
-#         except UserProfile.DoesNotExist:
-#             pass
-#     course_students =
-#     return render(request,
-#                   'teacher/show_students.html',
-#                   {'course_students': course_students})
-
-#def student_average(s_id):
-#    pass
-
-
-class ICAPReportView(LoggedInMixin, ListView):
-    model = Course
-    template_name = 'course_list.html'
-    success_url = '/thank_you/'
-
-    def get_context_data(self, **kwargs):
-        pass
-            # context = super(GetSchoolCourses, self).get_context_data(
-            #    **kwargs)
-            #Schools =
-            #return {'course_list': course_list}
+    def form_valid(self, form):
+        '''should this be in the form instead?'''
+        form_data = form.cleaned_data
+        sender = form_data['sender'],
+        subject = form_data['subject'],
+        message = form_data['message'],
+        recipients = ["u'cdunlop@columbia.edu'"]
+        send_mail(subject, message, sender, recipients)
+        #form.send_email(recipients)
+        return super(ContactView, self).form_valid(form)

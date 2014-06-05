@@ -12,7 +12,8 @@ from nepi.main.views import (CreateCourseView, UpdateCourseView,
                              UpdateSchoolView, ContactView,
                              RegistrationView, GetCountries,
                              StudentDashboard, JoinCourse,
-                             GetCountrySchools)
+                             GetCountrySchools, FacultyDashboard,
+                             ICAPDashboard, Home)
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -47,7 +48,7 @@ urlpatterns += patterns(
     '',
     auth_urls,
     logout_page,
-    url(r'^$', 'nepi.main.views.home', name="home"),
+    url(r'^$', Home.as_view(), name="home"),
     (r'^admin/', include(admin.site.urls)),
 
     # flat and universally accessible pages
@@ -55,6 +56,12 @@ urlpatterns += patterns(
     url(r'^register/$', RegistrationView.as_view(), name='register'),
     url(r'^student-dashboard/(?P<pk>\d+)/$',
         StudentDashboard.as_view(), name='student-dashboard'),
+    url(r'^faculty-dashboard/(?P<pk>\d+)/$',
+        FacultyDashboard.as_view(), name='faculty-dashboard'),
+    url(r'^icap-dashboard/$',
+        ICAPDashboard.as_view(), name='icap-dashboard'),
+    url(r'^icap-dashboard/(?P<pk>\d+)/$',
+        ICAPDashboard.as_view(), name='icap-dashboard'),
     url(r'^join_course/$', JoinCourse.as_view(), name='join-course'),
     url(r'^get_countries/$', GetCountries.as_view()),
     url(r'^get_schools/$', GetCountrySchools.as_view()),
