@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
-from nepi.main.forms import CreateAccountForm, ContactForm
+from nepi.main.forms import CreateAccountForm, ContactForm, ICAPForm
 from nepi.main.models import Course, UserProfile, Country
 from nepi.main.models import School, PendingTeachers
 from django.views.generic.edit import FormView
@@ -40,9 +40,6 @@ class AjaxableResponseMixin(object):
             return response
 
     def form_valid(self, form):
-        # We make sure to call the parent's form_valid() method because
-        # it might do some processing (in the case of CreateView, it will
-        # call form.save() for example).
         response = super(AjaxableResponseMixin, self).form_valid(form)
         if self.request.is_ajax():
             data = {
@@ -125,21 +122,29 @@ def home(request):
     try:
         user_profile = UserProfile.objects.get(user=request.user.pk)
     except User.DoesNotExist:
-        # profile = None
         return HttpResponseRedirect(reverse('register'))
     if user_profile.profile_type == 'ST':
         # return HttpResponseRedirect(reverse('student-dashboard',
         #    {'pk' : profile.pk}))
-        return render(request, 'student_dashboard.html')
+        '''We want to return different information if it is the users first time logging in
+        than if they are returning to continue on their course'''
+        if user_profile.school == None:
+            country = user_profile.country
+            schools = School.objects.filter(country=country)
+            #profile_form = CreateAccountForm() , 'form': profile_form
+            return render(request, 'dashboard.html', {'user_profile': user_profile, 'school': schools, 'country': country})
+        else:
+            return render(request, 'dashboard.html', {'user_profile': user_profile})
+
     elif user_profile.profile_type == 'TE':
         pass
     elif user_profile.profile_type == 'IC':
         pending_teachers = PendingTeachers.objects.filter(
             user_profile__profile_type='TE')
-        schools = School.objects.all()
+        icap_form = ICAPForm()
+        user = User.objects.get(pk=request.user.pk)
         return render(request, 'dashboard.html',
-                      {'schools': schools,
-                          'pending_teachers': pending_teachers})
+                      {'pending_teachers': pending_teachers, 'user_profile': user_profile, 'icap_form': icap_form})
     else:
         return HttpResponseRedirect('/')
 
@@ -255,7 +260,6 @@ def course_students(request, crs_id):
                 for c in courses:
                     if c.crs_id == crs_id:
                         course_students.add(profile)
-                        # [u][profile][c])
         except UserProfile.DoesNotExist:
             pass
 
@@ -273,15 +277,12 @@ class StudentDashboard(LoggedInMixin, DetailView):
     '''For the first tab of the dashboard we are showing
     courses that the user belongs to, and if they do not belong to any
     we are giving the the option to affiliate with one'''
-    # Return User & current courses have ajax method for getting
-    # courses affiliated with country
     model = UserProfile
     template_name = 'student_dashboard.html'
     success_url = '/thank_you_reg/'
 
     def get_context_data(self, **kwargs):
         context = super(StudentDashboard, self).get_context_data(**kwargs)
-        # how doe we specify "this user"
         profile = UserProfile.objects.get(user=self.request.user.pk)
         context['user_profile'] = UserProfile.objects.get(
             user=self.request.user.pk)
@@ -291,6 +292,26 @@ class StudentDashboard(LoggedInMixin, DetailView):
 
 
 '''Can either do seperate view for form update and submit'''
+
+
+class GetReport(LoggedInMixin, View):
+    template_name = 'dashboard.html'
+
+    def post(self, request):
+        if self.request.is_ajax():
+            user_id = request.user.pk
+            user_profile = UserProfile.objects.get(user=user_id)
+            user_profile.country = Country.objects.get(
+                pk=self.request.POST.__getitem__('country'))
+            user_profile.school = School.objects.get(
+                pk=self.request.POST.__getitem__('school'))
+            user_profile.course = Course.objects.filter(
+                pk=self.request.POST.__getitem__('course'))
+            user_profile.save()
+            return self.render_to_json_response(user_profile)
+        else:
+            return self.request
+
 
 
 class JoinCourse(LoggedInMixin, View):
@@ -326,13 +347,9 @@ class GetCountrySchools(LoggedInMixin, ListView):
 
     def get_context_data(self, **kwargs):
         if self.request.is_ajax():
-            # context = super(GetCountrySchools, self).
-            # get_context_data(**kwargs)
             country_key = self.request.GET.__getitem__('name')
             country = Country.objects.get(pk=country_key)
             s = School.objects.filter(country=country)
-            # string_html = render_to_string(
-            # 'school_list.html', {'school_list': s})
             return {'school_list': s}
 
 
@@ -343,8 +360,6 @@ class GetSchoolCourses(LoggedInMixin, ListView):
 
     def get_context_data(self, **kwargs):
         if self.request.is_ajax():
-            # context = super(GetSchoolCourses, self).get_context_data(
-            #    **kwargs)
             school_key = self.request.GET.__getitem__('name')
             school = School.objects.get(pk=school_key)
             course_list = Course.objects.filter(school=school)
@@ -394,3 +409,16 @@ class GetSchoolCourses(LoggedInMixin, ListView):
 
 #def student_average(s_id):
 #    pass
+
+
+class ICAPReportView(LoggedInMixin, ListView):
+    model = Course
+    template_name = 'course_list.html'
+    success_url = '/thank_you/'
+
+    def get_context_data(self, **kwargs):
+        pass
+            # context = super(GetSchoolCourses, self).get_context_data(
+            #    **kwargs)
+            #Schools = 
+            #return {'course_list': course_list}

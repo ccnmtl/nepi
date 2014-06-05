@@ -2,29 +2,56 @@
 jQuery(document).ready(function(){
 
        jQuery('form').submit(function(e) {
-            var rc = true;
-    
-            var x = document.forms["doseageform"]["usernvp"].value;
-            if (x == null || x == "") {
+       
+       var inputs = jQuery(e.currentTarget).find("input[type='text']");
+       // returns array of all inputs from form of type text
+       
+       for (var i=0; i < inputs.length; i++){
+           var value = jQuery(inputs[i]).val();
+           
+           if (value == null || value == "") {
+
                 alert("All values must be filled out");
+
                 rc = false;
-            }
-            if (x.length() > 2)  {
-                alert("Values should consist of one or two digits");
-                rc = false;
-            }
-            if (parseInt(x) == False)  {
-                alert("Values should consist of one or two digits");
-                rc = false;
+
             }
 
-            if (!rc) {
-                e.preventDefault();
-                return false;
-            } else {
-                return true;
+            if (value.length() > 2)  {
+                // runs till here but does not alert???
+                alert("Values should consist of one or two digits");
+
+                rc = false;
+
             }
-        });
+
+            if (parseInt(value) == "")  {
+
+                alert("Values should consist of one or two digits");
+
+                rc = false;
+
+            }
+
+
+            if (!rc) {
+
+                e.preventDefault();
+
+                return false;
+
+            } else {
+
+                return rc;
+
+            }
+           
+           
+       }
+       
+      //return false;
+       });
+          
 
 
 
