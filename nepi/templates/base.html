@@ -26,112 +26,74 @@
     <![endif]-->
 
   {% block feeds %}{% endblock %}
-  
-  
 </head>
 <body>
-
-
- 
- 
-	<div class="container" id="outer-container">
-    {% block masthead %}
-        	<div id="titlebar">
-          	<a href="./" title="nepi"><img src="/site_media/img/icap-nursing-elearning.png"></a>
-    		{% block usernav %}
-    			<div class="pull-right small-text">
-				{% if not request.user.is_anonymous %}
-          		    Logged in as {{request.user.first_name}} {{request.user.last_name}}
-				    {% if request.user.is_superuser %}
-          		    <a href="{% url "impersonate-list" %}">[impersonate]</a>
-				    {% endif %}
-          		    <a href="/accounts/logout/?next=/" class="btn btn-inverse">logout</a>
-          		{% endif %}
-    			</div>
-    		</div>      
-			{% endblock %}
-
-	{% block primarynav %}
-            <div class="navbar" id="primarynav">
-              <div class="navbar-inner">
-                <div class="container">
-
-                  {% block extraprimarynav %}{% endblock %}
-                  {% block primarynavtabs %}{% endblock %}
-        
-                </div>
-              </div>
+    <div class="container" id="outer-container">
+        {% block masthead %}
+            <div id="titlebar">
+                <a href="./" title="nepi"><img src="/site_media/img/icap-nursing-elearning.png" alt="nepi-logo"></a>
+        		{% block usernav %}
+        			<div class="pull-right small-text">
+        			{% if not request.user.is_anonymous %}
+              		    Logged in as {{request.user.first_name}} {{request.user.last_name}}
+        			    {% if request.user.is_superuser %}
+              		    <a href="{% url "impersonate-list" %}">[impersonate]</a>
+        			    {% endif %}
+              		    <a href="/accounts/logout/?next=/" class="btn btn-inverse">logout</a>
+              		{% endif %}
+        			</div>
+        		{% endblock %}
             </div>
-        {% endblock %}    
+    
+        	{% block primarynav %}
+                    <div class="navbar" id="primarynav">
+                      <div class="navbar-inner">
+                        <div class="container">
+        
+                          {% block extraprimarynav %}{% endblock %}
+                          {% block primarynavtabs %}{% endblock %}
+                
+                        </div>
+                      </div>
+                    </div>
+            {% endblock %}    
+        
+        {% endblock %}
+    
+        <div class="container" id="content">
+            <div class="row-fluid">
+                <div class="span12">
+                    {% block pagetitle %}{% endblock %}
+                    {% block content %}{% endblock %}
+                    {% block contentnav %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% block footer %}{% endblock %}
+
+    {% compress js %}
+    <script src="/site_media/bootstrap/js/bootstrap.js"></script>
+    {% endcompress %}
+
+    {% block js %}
     {% endblock %}
 
-    <div class="container" id="content">
-      <div class="row-fluid">
-        <div class="span12">
-            {% block pagetitle %}{% endblock %}
-            {% block content %}{% endblock %}
-            {% block contentnav %}{% endblock %}
+    {% if STAGING_ENV %}
+        <div class="alert alert-error" style="position: fixed; bottom: 0px;">
+            <h4>Warning: Staging Site</h4>
+            <p>You are viewing a staging version of this site, not the production site.</p>
+            <p>This site was last updated on: <b>{{STAGING_DEPLOY_TIME}}</b></p>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-{% block footer %}
- 
-{% endblock %}
-
-<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
-
-{% compress js %}
-<script src="/site_media/bootstrap/js/bootstrap.js"></script>
-{% endcompress %}
-
-{% block js %}
-<script>
-
-jQuery(document).ready(function() {
-
-		//if(document.getElementsByClassName("pageblock .dosage").length > 0)
-	//	{
- 			//alert("part of dosage activity");
-           // document.getElementsByClassName("caseanswers")
-           //jQuery(".radio").css(style="visiblity:hidden");
-		//}
-
-
-		if(document.getElementsByClassName("pageblock .bloodspot").length > 0)
-		{
- 			alert("part of bloodspot activity");
- 			jQuery(".radio").hide();//css(style="visiblity:hidden");
- 
-		}
-
-
-});
-
-</script>
-  
-{% endblock %}
-
-{% comment %}
-{% if STAGING_ENV %}
-<div class="alert alert-error" style="position: fixed; bottom: 0px;">
-<h4>Warning: Staging Site</h4>
-<p>You are viewing a staging version of this site, not the production site.</p>
-<p>This site was last updated on: <b>{{STAGING_DEPLOY_TIME}}</b></p>
-</div>
-{% endif %}
-{% endcomment %}
-
-{% if request.user.is_impersonate %}
-<div class="alert alert-error" style="position: fixed; left: 0px; top: 75px">
-You are impersonating.<br />
-
-<a class="btn" href="{% url "impersonate-stop" %}">stop</a>
-
-</div>
-{% endif %}
+    {% endif %}
+    
+    {% if request.user.is_impersonate %}
+        <div class="alert alert-error" style="position: fixed; left: 0px; top: 75px">
+        You are impersonating.<br />
+            <a class="btn" href="{% url "impersonate-stop" %}">stop</a>
+        </div>
+    {% endif %}
 </body>
 </html>
 
