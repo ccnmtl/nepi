@@ -100,13 +100,15 @@ class ProfileForm(forms.Form):
     username = forms.CharField(max_length=100, required=True,
                                label="Username")
     password1 = forms.CharField(max_length=100, required=False,
-                                label="Leave blank if you wish to leave the same")
+                                label="Leave blank if you" +
+                                "wish to leave the same")
     password2 = forms.CharField(max_length=100, required=False,
-                                label="Leave blank if you wish to leave the same")
+                                label="Leave blank if you wish" +
+                                "to leave the same")
     icap_affil = forms.BooleanField(required=False, label="ICAP Affiliated")
     user_country = forms.ChoiceField(required=True,
-                                label="Country of Residence: ",
-                                choices=COUNTRY_CHOICES)
+                                     label="Country of Residence: ",
+                                     choices=COUNTRY_CHOICES)
     email = forms.EmailField(required=False, label="Email(not required):")
     faculty_access = forms.BooleanField(
         required=False, label="Request Faculty Access")

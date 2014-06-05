@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
-from nepi.main.forms import CreateAccountForm, ContactForm, ICAPForm
+from nepi.main.forms import CreateAccountForm, ContactForm
 from nepi.main.models import Course, UserProfile, Country
 from nepi.main.models import School, PendingTeachers
 from django.views.generic.edit import FormView
@@ -126,25 +126,41 @@ def home(request):
     if user_profile.profile_type == 'ST':
         # return HttpResponseRedirect(reverse('student-dashboard',
         #    {'pk' : profile.pk}))
-        '''We want to return different information if it is the users first time logging in
-        than if they are returning to continue on their course'''
-        if user_profile.school == None:
+        '''We want to return different information if it is
+        the users first time logging in than if they are
+        returning to continue on their course'''
+        if user_profile.school is None:
             country = user_profile.country
             schools = School.objects.filter(country=country)
-            #profile_form = CreateAccountForm() , 'form': profile_form
-            return render(request, 'dashboard.html', {'user_profile': user_profile, 'school': schools, 'country': country})
+            return render(request, 'dashboard.html',
+                          {'user_profile': user_profile,
+                           'school': schools,
+                           'country': country})
         else:
-            return render(request, 'dashboard.html', {'user_profile': user_profile})
+            return render(request, 'dashboard.html',
+                          {'user_profile': user_profile})
 
     elif user_profile.profile_type == 'TE':
         pass
     elif user_profile.profile_type == 'IC':
         pending_teachers = PendingTeachers.objects.filter(
             user_profile__profile_type='TE')
-        icap_form = ICAPForm()
-        user = User.objects.get(pk=request.user.pk)
-        return render(request, 'dashboard.html',
-                      {'pending_teachers': pending_teachers, 'user_profile': user_profile, 'icap_form': icap_form})
+        students = UserProfile.objects.filter(profile_type="ST").count()
+        find_students = UserProfile.objects.filter(profile_type="ST")
+        in_progress = 0
+        incomplete = 0
+        done = 0
+        for each in find_students:
+            if each.percent_complete() != 0 and each.percent_complete() != 100:
+                in_progress = in_progress + 1
+                incomplete = incomplete + 1
+            if each.percent_complete() == 100:
+                done = done + 1
+        return render(request, 'icap_dashboard.html',
+                      {'pending_teachers': pending_teachers,
+                       'user_profile': user_profile,
+                       'students': students, 'incomplete': incomplete,
+                       'in_progress': in_progress, 'done': done})
     else:
         return HttpResponseRedirect('/')
 
@@ -313,7 +329,6 @@ class GetReport(LoggedInMixin, View):
             return self.request
 
 
-
 class JoinCourse(LoggedInMixin, View):
     template_name = 'student_dashboard.html'
     #success_url = '/thank_you/'
@@ -420,5 +435,5 @@ class ICAPReportView(LoggedInMixin, ListView):
         pass
             # context = super(GetSchoolCourses, self).get_context_data(
             #    **kwargs)
-            #Schools = 
+            #Schools =
             #return {'course_list': course_list}
