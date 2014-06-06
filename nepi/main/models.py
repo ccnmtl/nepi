@@ -4,6 +4,7 @@ from choices import COUNTRY_CHOICES, PROFILE_CHOICES
 from pagetree.models import Section, Hierarchy, UserLocation, UserPageVisit
 
 
+
 '''Add change delete are by default for each django model.
    Need to add permissions for visibility.'''
 
@@ -12,7 +13,6 @@ class Country(models.Model):
     '''Users can select counties from drop down menu,
     countries are stored by their official 2 letter codes.'''
     name = models.CharField(max_length=2, choices=COUNTRY_CHOICES, blank=True)
-    region = models.CharField(max_length=50, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -35,11 +35,15 @@ class Course(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     name = models.CharField(max_length=50)
-    # leaving null and blank to avoid dealing with migrations problems
+    creator = models.ForeignKey(User, related_name="created_by")
+
     module = models.ForeignKey(Hierarchy, null=True, default=None, blank=True)
 
     def __unicode__(self):
         return self.name
+    
+    def created_by(self):
+        return self.creator
 
 
 '''ADD VALIDATION'''

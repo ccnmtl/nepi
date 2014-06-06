@@ -112,3 +112,9 @@ class ProfileForm(forms.Form):
     email = forms.EmailField(required=False, label="Email(not required):")
     faculty_access = forms.BooleanField(
         required=False, label="Request Faculty Access")
+
+
+class CreateCourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        exclude = ("school",)

@@ -1,14 +1,4 @@
-{% extends "base.html" %}
-{% load i18n admin_static %}
-{% block title %}Create a Course{% endblock %}
-{% block content %}
-
-		<div id="breadcrumbbar">
-		<span class="here">You are Here:</span>  
-				&gt; 	Add School
-		</div>
-		
-		<div id="container">
+<div id="course_creation">
 			<h2>	Add Course	</h2>
 			<form action="." method="post">{% csrf_token %}
 			    {{ form.non_field_errors}}
@@ -49,7 +39,5 @@
 				</fieldset>
 			</form>
 			
-		</div>
 
-	
-{% endblock %}
+</div>

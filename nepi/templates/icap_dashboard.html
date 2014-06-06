@@ -4,9 +4,14 @@
 <script>
     // for now - posting entire form at once
     var join_btn = jQuery('#join_course_button');
-    join_btn.click(function(){jQuery('#user-courses').load('/get_countries/');})
+    join_btn.click(function(){jQuery('#join_course').load('/get_countries/');});
 
     jQuery('#report_form').load('/get_countries/');
+    
+    var create_btn = jQuery('#create_course_button');
+    create_btn.click(function(){jQuery('#course_creation').load('/create_course/');});
+    
+
 </script>
 {% endblock %}
 
@@ -16,6 +21,7 @@
     <li><a href="#user-courses" data-toggle="tab">Groups</a></li>
     {% if user_profile.profile_type == "IC" %}<li><a href="#reports" data-toggle="tab">Reports</a></li>{% endif %}
     <li><a href="#user-profile" data-toggle="tab">Profile</a></li>
+    {% if user_profile.profile_type == "IC" %}<li><a href="#pending-teachers" data-toggle="tab">Pending-Teachers</a></li>{% endif %}
 </ul>
 
 <div class="tab-content">
@@ -67,17 +73,41 @@
     <div class="tab-pane" id="user-courses">
         <div id="pane-content">
              <table width="100%" class="table table-striped table-condensed">
-                  <b><p>Your Groups</p></b>
-                  {% for uc in user_courses %}
+             
+             <div id="groups_created">
+                  <b><p>Groups You've Created: </p></b>
+                   {% for uc in user_courses %}
                       <tr>
                       <td><a href="{{uc.get_absolute_url}}">{{uc.name}}</a></td>
                       </tr>
                   {% empty %}
-                      <div name="instruction-div"><tr> There should be an instruction div of somesorts here to tell first timers what to do.</tr></div>
-                      <tr><p>You have not joined any groups yet.</p>
-                      <button id="join_course_button">Join Course</button>
-                      <a href="/join_course/">Join Course</a></tr>
+                      <div name="course_creation"></div>
+                      <tr><p>You have not created any groups yet.</p>
                   {% endfor %}
+                  <div id="course_creation">
+                  <button id="create_course_button">Create Course</button>
+                  </div>  
+             </div>
+            
+            
+             
+             <div id="groups_joined">
+                  <b><p>Groups You've Joined: </p></b>
+                   {% for uc in user_courses %}
+                      <tr>
+                      <td><a href="{{uc.get_absolute_url}}">{{uc.name}}</a></td>
+                      </tr>
+                  {% empty %}
+                      <div name="instruction-div">
+                          <tr> There should be an instruction div of some sorts here to tell first timers what to do.</tr>
+                      </div>
+                      <div id="join_course">
+                          <tr><p>You have not joined any groups yet.</p></tr>
+                          <button id="join_course_button">Join Course</button>
+                      </div>
+                  {% endfor %}
+             </div>
+
              </table>
              
              
@@ -127,9 +157,6 @@
 
 
 
-
-
-
     <div class="tab-pane" id="user-profile">
         <table width="100%" class="table table-striped table-condensed">
         <tr>
@@ -156,6 +183,38 @@
         </table>
     </div>
     
+
+{% if user_profile.profile_type == "IC" %}
+    <div class="tab-pane" id="pending-teachers">
+        <div id="pane-content">
+            <b><p>Pending Teachers</p></b>
+			
+            <table width="100%" class="table table-striped table-condensed">
+            <tr><td>Teacher Name </td><td> School </td><td> Country </td></tr>
+            {% for pt in pending_teachers %}
+                <tr>
+                      <td>{{pt.first_name}}{{pt.first_name}}</td><td>{{pt.school}}</td><td>{{pt.country}}</td>
+                </tr>
+                {% empty %}
+                 <tr><b><p>No instructors have self registered yet.</p></b></tr>
+                {% endfor %}
+            </table>
+           
+            
+        </div>
+    </div>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
 
     
     <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">

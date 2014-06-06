@@ -19,6 +19,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from pagetree.models import Hierarchy
+from nepi.main.forms import CreateCourseForm
 
 
 class AjaxableResponseMixin(object):
@@ -92,8 +93,9 @@ def thanks_course(request, course_id):
     return render(request, 'student/thanks_course.html')
 
 
-class Home(LoggedInMixin, View):
+class Home(View):
     '''redoing so that it simply redirects people where they need to be'''
+
     def get(self, request):
         try:
             user_profile = UserProfile.objects.get(user=request.user.pk)
@@ -106,7 +108,7 @@ class Home(LoggedInMixin, View):
         elif user_profile.profile_type == 'TE':
             return HttpResponseRedirect(reverse('faculty-dashboard'))
         elif user_profile.profile_type == 'IC':
-            return HttpResponseRedirect(reverse('icap-dashboard'), {'user': request.user.pk})
+            return HttpResponseRedirect(reverse('icap-dashboard'))
         else:
             '''I assume it could be possible another app has a profile_type variable?'''
             return HttpResponseRedirect(reverse('register'))
@@ -152,6 +154,7 @@ class ICAPDashboard(LoggedInMixin, ListView):
         context['in_progress'] = self.get_students_in_progress()
         context['incomplete'] = self.get_students_done()
         context['done'] = self.get_students_incomplete()
+        # context['create_course'] = CreateCourse.as_view()
         return context
 
 
@@ -188,15 +191,7 @@ class FacultyDashboard(LoggedInMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(FacultyDashboard, self).get_context_data(**kwargs)
-        teacher = UserProfile.objects.get(user=request.user.pk)
-        #context['groups'] = 
-#         context['groups'] = Course.objects.filter(profile_type="ST").count()
-#         context['in_progress'] = self.get_students_in_progress()
-#         context['incomplete'] = self.get_students_done()
-#         context['done'] = self.get_students_incomplete()
-#         
-#         
-#         
+        teacher = UserProfile.objects.get(user=request.user.pk)        
 #         students = UserProfile.objects.filter(profile_type="ST").count()
 #         find_students = UserProfile.objects.filter(profile_type="ST")
 #         in_progress = 0
@@ -387,11 +382,12 @@ class UpdateSchoolView(UpdateView):
     success_url = '/thank_you/'
 
 
-class CreateCourseView(CreateView):
+class CreateCourseView(LoggedInMixin, CreateView):
     '''generic class based view for
     creating a course'''
     model = Course
-    template_name = 'teacher/create_course.html'
+    form_class = CreateCourseForm
+    template_name = 'create_course.html'
     success_url = '/thank_you/'
 
 
