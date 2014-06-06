@@ -16,7 +16,6 @@ class UserFactory(factory.DjangoModelFactory):
 class CountryFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Country
     name = "LS"
-    region = "Region 1"
 
 
 class SchoolFactory(factory.DjangoModelFactory):
@@ -28,6 +27,7 @@ class SchoolFactory(factory.DjangoModelFactory):
 class CourseFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Course
     school = factory.SubFactory(SchoolFactory)
+    creator = factory.SubFactory(UserFactory)
     semester = "Fall"
     name = "A Course"
     start_date = datetime.now()

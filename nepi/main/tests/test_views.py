@@ -3,7 +3,7 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 from nepi.main.models import UserProfile, Country
 from factories import UserFactory, HierarchyFactory, UserProfileFactory
-
+from factories import CourseFactory
 
 class TestBasicViews(TestCase):
 
@@ -14,7 +14,7 @@ class TestBasicViews(TestCase):
         self.icap_user = User.objects.create_user(
             'icap_user', 'icap@icap.com', 'icap_user')
         self.icap_user.save()
-        self.country = Country(name='AO', region="region")
+        self.country = Country(name='AO')
         self.country.save()
         self.user_profile = UserProfile(
             user=self.icap_user, profile_type='IC', country=self.country)
@@ -78,6 +78,6 @@ class TestLoggedInViews(TestCase):
         r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
         self.assertEqual(r.status_code, 200)
 
-    def test_home(self):
-        response = self.c.get("/")
-        # self.assertEqual(response.status_code, 200)
+#    def test_home(self):
+#        response = self.c.get("/")
+#        # self.assertEqual(response.status_code, 200)

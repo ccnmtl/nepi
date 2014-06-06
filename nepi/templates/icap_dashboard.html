@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 {% block js %}
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script>
-    // for now - posting entire form at once
     var join_btn = jQuery('#join_course_button');
     join_btn.click(function(){jQuery('#join_course').load('/get_countries/');});
 
     jQuery('#report_form').load('/get_countries/');
     
     var create_btn = jQuery('#create_course_button');
-    create_btn.click(function(){jQuery('#course_creation').load('/create_course/');});
-    
+    create_btn.click(function(){jQuery('#course_creation').load('/create_course/')});
+
+
+
 
 </script>
 {% endblock %}
@@ -72,26 +72,27 @@
 
     <div class="tab-pane" id="user-courses">
         <div id="pane-content">
-             <table width="100%" class="table table-striped table-condensed">
+             <table width="100%" class="table table-striped table-condensed"> 
+                 <div id="groups_created">
+                     <b><p>Groups You've Created: </p></b>
+                     {% for uc in user_courses %}
+                         <tr>
+                             <td><a href="{{uc.get_absolute_url}}">{{uc.name}}</a></td>
+                         </tr>
+                     {% empty %}
+                         
+                         <tr><p>You have not created any groups yet.</p></tr>
+                     {% endfor %}
+                     <div id="course_creation">
+                     </div>
+                     <button id="create_course_button">Create Course</button>
+                 </div>
+                  
              
-             <div id="groups_created">
-                  <b><p>Groups You've Created: </p></b>
-                   {% for uc in user_courses %}
-                      <tr>
-                      <td><a href="{{uc.get_absolute_url}}">{{uc.name}}</a></td>
-                      </tr>
-                  {% empty %}
-                      <div name="course_creation"></div>
-                      <tr><p>You have not created any groups yet.</p>
-                  {% endfor %}
-                  <div id="course_creation">
-                  <button id="create_course_button">Create Course</button>
-                  </div>  
-             </div>
             
             
              
-             <div id="groups_joined">
+               <div id="groups_joined">
                   <b><p>Groups You've Joined: </p></b>
                    {% for uc in user_courses %}
                       <tr>

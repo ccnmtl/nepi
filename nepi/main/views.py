@@ -110,7 +110,8 @@ class Home(View):
         elif user_profile.profile_type == 'IC':
             return HttpResponseRedirect(reverse('icap-dashboard'))
         else:
-            '''I assume it could be possible another app has a profile_type variable?'''
+            '''I assume it could be possible another
+            app has a profile_type variable?'''
             return HttpResponseRedirect(reverse('register'))
 
 
@@ -127,7 +128,6 @@ class ICAPDashboard(LoggedInMixin, ListView):
                 in_progress = in_progress + 1
         return in_progress
 
-        
     def get_students_incomplete(self):
         find_students = UserProfile.objects.filter(profile_type="ST")
         incomplete = 0
@@ -150,7 +150,8 @@ class ICAPDashboard(LoggedInMixin, ListView):
             user=self.request.user.pk)
         context['pending_teachers'] = PendingTeachers.objects.filter(
             user_profile__profile_type='TE')
-        context['students'] = UserProfile.objects.filter(profile_type="ST").count()
+        context['students'] = UserProfile.objects.filter(
+            profile_type="ST").count()
         context['in_progress'] = self.get_students_in_progress()
         context['incomplete'] = self.get_students_done()
         context['done'] = self.get_students_incomplete()
@@ -171,7 +172,6 @@ class FacultyDashboard(LoggedInMixin, ListView):
                 in_progress = in_progress + 1
         return in_progress
 
-        
     def get_students_incomplete(self):
         find_students = UserProfile.objects.filter(profile_type="ST")
         incomplete = 0
@@ -188,17 +188,18 @@ class FacultyDashboard(LoggedInMixin, ListView):
                 done = done + 1
         return done
 
-
     def get_context_data(self, **kwargs):
         context = super(FacultyDashboard, self).get_context_data(**kwargs)
-        teacher = UserProfile.objects.get(user=request.user.pk)        
+        # teacher = UserProfile.objects.get(user=request.user.pk)
+        return context
 #         students = UserProfile.objects.filter(profile_type="ST").count()
 #         find_students = UserProfile.objects.filter(profile_type="ST")
 #         in_progress = 0
 #         incomplete = 0
 #         done = 0
 #         for each in find_students:
-#             if each.percent_complete() != 0 and each.percent_complete() != 100:
+#             if each.percent_complete() != 0 and
+# each.percent_complete() != 100:
 #                 in_progress = in_progress + 1
 #                 incomplete = incomplete + 1
 #             if each.percent_complete() == 100:
@@ -382,13 +383,31 @@ class UpdateSchoolView(UpdateView):
     success_url = '/thank_you/'
 
 
-class CreateCourseView(LoggedInMixin, CreateView):
+class CreateCourseView(LoggedInMixin, AjaxableResponseMixin, CreateView):
     '''generic class based view for
     creating a course'''
     model = Course
     form_class = CreateCourseForm
-    template_name = 'create_course.html'
-    success_url = '/thank_you/'
+    template_name = 'teacher/create_course.html'
+    success_url = '/thanks/'
+
+    def form_invalid(self, form):
+        #form = form
+        context = self.get_context_data()
+        return super(CreateCourseView, self).render_to_response(context)
+#   
+#   
+#     def form_valid(self, form):
+#         course = form.save(commit=False)
+#         course.created_by = self.request.user
+#         course.save()
+#   
+#         context = self.get_context_data()
+#         return super(CreateCourseView, self).render_to_response(context)
+#   
+#     def render_to_response(self, context, **response_kwargs):
+#        rendered = render_to_string(self.template_name, context_instance=context)
+#        return HttpResponse(rendered)
 
 
 class UpdateCourseView(UpdateView):

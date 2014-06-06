@@ -4,7 +4,6 @@ from choices import COUNTRY_CHOICES, PROFILE_CHOICES
 from pagetree.models import Section, Hierarchy, UserLocation, UserPageVisit
 
 
-
 '''Add change delete are by default for each django model.
    Need to add permissions for visibility.'''
 
@@ -36,12 +35,11 @@ class Course(models.Model):
     end_date = models.DateField()
     name = models.CharField(max_length=50)
     creator = models.ForeignKey(User, related_name="created_by")
-
     module = models.ForeignKey(Hierarchy, null=True, default=None, blank=True)
 
     def __unicode__(self):
         return self.name
-    
+
     def created_by(self):
         return self.creator
 

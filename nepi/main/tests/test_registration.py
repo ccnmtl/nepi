@@ -11,15 +11,12 @@ class TestRegistration(TestCase):
     def setUp(self):
         self.c = Client()
         self.factory = RequestFactory()
-        self.country = Country(name='LS', region='Region 1')
+        self.country = Country(name='LS')
         self.country.save()
         self.school = School(country=self.country, name='School 1')
         self.school.save()
-        self.course = Course(school=self.school,
-                             semester="Fall 2018", name="Course",
-                             start_date=datetime.now(),
-                             end_date=datetime.now())
-        self.course.save()
+        self.course = CourseFactory()
+
 #         self.student = User(first_name="student", last_name="student",
 #                             username="student", email="student@email.com",
 #                             password="student")
