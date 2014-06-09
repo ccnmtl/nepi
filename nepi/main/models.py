@@ -29,7 +29,7 @@ class School(models.Model):
 
 class Course(models.Model):
     '''Allow association of course with module.'''
-    school = models.ForeignKey(School)
+    school = models.ForeignKey(School, null=True, default=None, blank=True)
     # semester = models.CharField(max_length=50, blank=True)
     start_date = models.DateField()
     end_date = models.DateField()

@@ -114,7 +114,7 @@ class ProfileForm(forms.Form):
         required=False, label="Request Faculty Access")
 
 
-# class CreateCourseForm(forms.ModelForm):
-#     class Meta:
-#         model = Course
-#         exclude = ("school",)
+class CreateCourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        exclude = ("school", "creator", "module")
