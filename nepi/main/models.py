@@ -30,11 +30,12 @@ class School(models.Model):
 class Course(models.Model):
     '''Allow association of course with module.'''
     school = models.ForeignKey(School)
-    semester = models.CharField(max_length=50, blank=True)
+    # semester = models.CharField(max_length=50, blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
     name = models.CharField(max_length=50)
-    creator = models.ForeignKey(User, related_name="created_by")
+    creator = models.ForeignKey(User, related_name="created_by",
+                                null=True, default=None, blank=True)
     module = models.ForeignKey(Hierarchy, null=True, default=None, blank=True)
 
     def __unicode__(self):

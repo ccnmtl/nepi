@@ -6,8 +6,8 @@
 
     jQuery('#report_form').load('/get_countries/');
     
-    var create_btn = jQuery('#create_course_button');
-    create_btn.click(function(){jQuery('#course_creation').load('/create_course/')});
+    //var create_btn = jQuery('#create_course_button');
+    //create_btn.click(function(){jQuery('#course_creation').load('/create_course/')});
 
 
 
@@ -84,8 +84,9 @@
                          <tr><p>You have not created any groups yet.</p></tr>
                      {% endfor %}
                      <div id="course_creation">
-                     </div>
+                     <a href="/create_course/">Create Course</a>
                      <button id="create_course_button">Create Course</button>
+                     </div>
                  </div>
                   
              
@@ -110,10 +111,6 @@
              </div>
 
              </table>
-             
-             
-             
-             <button data-toggle="modal" data-target="#basicModal" class="btn btn-sm btn-success" type="button"> Create Group </button></br>
         </div>
     </div>
    

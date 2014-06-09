@@ -1,7 +1,19 @@
+{% extends 'base.html' %}
+{% block js %}
+<script>
+jQuery(function() {
+	jQuery( "#id_start_date" ).datepicker();
+});
+jQuery(function() {
+	jQuery( "#id_end_date" ).datepicker();
+});
+</script>
+{% endblock %}
+{% block content %}
 <div id="creation">
-    <form id="course" action="/create_course/" method="post">{% csrf_token %}
+    <form id="create_course_form" action="." method="post">{% csrf_token %}
     {{form.as_p}}
-    <input id="addschool" type="submit" value="Add School" />
+    <input type="submit" value="Add Group" />
     </form>
 </div>
-
+{% endblock %}

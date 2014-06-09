@@ -79,7 +79,7 @@ urlpatterns += patterns(
     # Teacher related pages
     #(r'^view_students/$', 'nepi.main.views.view_students'),
     #'nepi.main.views.create_course'),
-    url(r'^create_course/$', CreateCourseView.as_view()),
+    (r'^create_course/$', CreateCourseView.as_view()),
     (r'^edit_course/(?P<pk>\d+)/$', UpdateCourseView.as_view()),
     (r'^course_students/$', 'nepi.main.views.course_students'),
     #(r'^teacher_courses/$', 'nepi.main.views.current_courses'),

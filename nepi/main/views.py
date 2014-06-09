@@ -19,36 +19,37 @@ from django.core.urlresolvers import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from pagetree.models import Hierarchy
-from nepi.main.forms import CreateCourseForm
+#from nepi.main.forms import CreateCourseForm
 
 
-class AjaxableResponseMixin(object):
-    """
-    Taken from Django Website
-    Mixin to add AJAX support to a form.
-    Must be used with an object-based FormView (e.g. CreateView)
-    """
-    def render_to_json_response(self, context, **response_kwargs):
-        data = json.dumps(context)
-        response_kwargs['content_type'] = 'application/json'
-        return HttpResponse(data, **response_kwargs)
 
-    def form_invalid(self, form):
-        response = super(AjaxableResponseMixin, self).form_invalid(form)
-        if self.request.is_ajax():
-            return self.render_to_json_response(form.errors, status=400)
-        else:
-            return response
-
-    def form_valid(self, form):
-        response = super(AjaxableResponseMixin, self).form_valid(form)
-        if self.request.is_ajax():
-            data = {
-                'pk': self.object.pk,
-            }
-            return self.render_to_json_response(data)
-        else:
-            return response
+# class AjaxableResponseMixin(object):
+#     """
+#     Taken from Django Website
+#     Mixin to add AJAX support to a form.
+#     Must be used with an object-based FormView (e.g. CreateView)
+#     """
+#     def render_to_json_response(self, context, **response_kwargs):
+#         data = json.dumps(context)
+#         response_kwargs['content_type'] = 'application/json'
+#         return HttpResponse(data, **response_kwargs)
+# 
+#     def form_invalid(self, form):
+#         response = super(AjaxableResponseMixin, self).form_invalid(form)
+#         if self.request.is_ajax():
+#             return self.render_to_json_response(form.errors, status=400)
+#         else:
+#             return response
+# 
+#     def form_valid(self, form):
+#         response = super(AjaxableResponseMixin, self).form_valid(form)
+#         if self.request.is_ajax():
+#             data = {
+#                 'pk': self.object.pk,
+#             }
+#             return self.render_to_json_response(data)
+#         else:
+#             return response
 
 
 class LoggedInMixin(object):
@@ -372,7 +373,7 @@ class CreateSchoolView(CreateView):
     adding a school'''
     model = School
     template_name = 'icap/add_school.html'
-    success_url = '/thank_you/'
+    success_url = '/icap_dashboard/'
 
 
 class UpdateSchoolView(UpdateView):
@@ -382,32 +383,22 @@ class UpdateSchoolView(UpdateView):
     template_name = 'icap/add_school.html'
     success_url = '/thank_you/'
 
-
-class CreateCourseView(LoggedInMixin, AjaxableResponseMixin, CreateView):
+# LoggedInMixin, 
+class CreateCourseView(CreateView):
     '''generic class based view for
     creating a course'''
     model = Course
-    form_class = CreateCourseForm
+    #form_class = CreateCourseForm
+    fields = ['name', 'start_date', 'end_date']
     template_name = 'teacher/create_course.html'
-    success_url = '/thanks/'
+    success_url = '/icap_dashboard/'
 
-    def form_invalid(self, form):
-        #form = form
-        context = self.get_context_data()
-        return super(CreateCourseView, self).render_to_response(context)
-#   
-#   
-#     def form_valid(self, form):
-#         course = form.save(commit=False)
-#         course.created_by = self.request.user
-#         course.save()
-#   
-#         context = self.get_context_data()
-#         return super(CreateCourseView, self).render_to_response(context)
-#   
-#     def render_to_response(self, context, **response_kwargs):
-#        rendered = render_to_string(self.template_name, context_instance=context)
-#        return HttpResponse(rendered)
+#     def form_valid(self, request):
+#         form.save()
+#         
+#     def form_invalid(self, request):
+#         return HttpResponse(self.form.errors)
+
 
 
 class UpdateCourseView(UpdateView):
@@ -418,24 +409,24 @@ class UpdateCourseView(UpdateView):
     success_url = '/thank_you/'
 
 
-def course_students(request, crs_id):
-    '''see all students in a particular course'''
-    users = User.objects.all()
-    course_students = []
-    for u in users:
-        try:
-            profile = UserProfile.objects.get(user=u)
-            if profile.profile_type == 'ST':
-                courses = profile.course_set.all()
-                for c in courses:
-                    if c.crs_id == crs_id:
-                        course_students.add(profile)
-        except UserProfile.DoesNotExist:
-            pass
-
-    return render(request,
-                  'teacher/show_students.html',
-                  {'course_students': course_students})
+# def course_students(request, crs_id):
+#     '''see all students in a particular course'''
+#     users = User.objects.all()
+#     course_students = []
+#     for u in users:
+#         try:
+#             profile = UserProfile.objects.get(user=u)
+#             if profile.profile_type == 'ST':
+#                 courses = profile.course_set.all()
+#                 for c in courses:
+#                     if c.crs_id == crs_id:
+#                         course_students.add(profile)
+#         except UserProfile.DoesNotExist:
+#             pass
+# 
+#     return render(request,
+#                   'teacher/show_students.html',
+#                   {'course_students': course_students})
 
 
 def remove_student(request, stud_id, cors_id):

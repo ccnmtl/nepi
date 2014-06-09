@@ -1,7 +1,5 @@
 {% load markup %}
 {% load conversation_state %}
-{% with block.conversationscenario as conversationscenario %}
-{% endwith %}
 
 {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
 {{block.description|markdown}}
