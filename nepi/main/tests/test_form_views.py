@@ -6,7 +6,7 @@ from nepi.main.models import Course
 from nepi.main.views import CreateSchoolView
 from nepi.main.views import CreateCourseView
 from datetime import datetime
-from factories import UserFactory, CourseFactory
+from factories import UserFactory
 
 
 class TestFormViews(TestCase):
@@ -35,7 +35,7 @@ class TestFormViews(TestCase):
         request = self.factory.post(
             '/add_school/',
             {"name": "School Needs Name",
-             "creator" : u,
+             "creator": u,
              "country": self.country})
         CreateSchoolView.as_view()(request)
 
@@ -45,7 +45,7 @@ class TestFormViews(TestCase):
         request = self.factory.post(
             '/add_course/',
             {"name": "Course Needs Name",
-             "creator" : u,
+             "creator": u,
              "country": self.country,
              "school": self.school})
         CreateCourseView.as_view()(request)

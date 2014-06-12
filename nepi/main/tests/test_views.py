@@ -3,7 +3,7 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 from nepi.main.models import UserProfile, Country
 from factories import UserFactory, HierarchyFactory, UserProfileFactory
-from factories import CourseFactory
+
 
 class TestBasicViews(TestCase):
 
@@ -19,7 +19,6 @@ class TestBasicViews(TestCase):
         self.user_profile = UserProfile(
             user=self.icap_user, profile_type='IC', country=self.country)
         self.user_profile.save()
-
 #     def test_home(self):
 #         response = self.c.get("/", follow=True)
 #         self.assertEqual(response.status_code, 200)

@@ -54,7 +54,6 @@ class TestUserProfile(TestCase):
         self.student_profile = UserProfile(
             user=self.student, profile_type='ST', country=self.country1,
             school=self.school)
-
         self.student_profile.save()
         self.teacher_profile = UserProfile(
             user=self.teacher, profile_type='TE', country=self.country1,

@@ -1,11 +1,11 @@
 '''Creating test just for registration since it is prone to changing'''
 from django.test import TestCase, RequestFactory
 from nepi.main.models import Country, School
-from nepi.main.models import Course, PendingTeachers
+from nepi.main.models import PendingTeachers
 # from nepi.main.views import RegistrationView
-from datetime import datetime
 from django.test.client import Client
 from factories import CourseFactory
+
 
 class TestRegistration(TestCase):
     def setUp(self):

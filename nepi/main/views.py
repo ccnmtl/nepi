@@ -24,7 +24,6 @@ from django.views.generic.edit import DeleteView
 from django.core.urlresolvers import reverse_lazy
 
 
-
 class AjaxableResponseMixin(object):
     """
     Taken from Django Website
@@ -35,14 +34,14 @@ class AjaxableResponseMixin(object):
         data = json.dumps(context)
         response_kwargs['content_type'] = 'application/json'
         return HttpResponse(data, **response_kwargs)
- 
+
     def form_invalid(self, form):
         response = super(AjaxableResponseMixin, self).form_invalid(form)
         if self.request.is_ajax():
             return self.render_to_json_response(form.errors, status=400)
         else:
             return response
- 
+
     def form_valid(self, form):
         response = super(AjaxableResponseMixin, self).form_valid(form)
         if self.request.is_ajax():
@@ -158,7 +157,8 @@ class ICAPDashboard(LoggedInMixin, ListView):
         context['in_progress'] = self.get_students_in_progress()
         context['incomplete'] = self.get_students_done()
         context['done'] = self.get_students_incomplete()
-        context['created_courses'] = Course.objects.filter(creator=User.objects.get(pk=self.request.user.pk))
+        context['created_courses'] = Course.objects.filter(
+            creator=User.objects.get(pk=self.request.user.pk))
         context['joined_courses'] = UserProfile.objects.get(
             user=self.request.user.pk).course.all()
 #             user=self.request.user.pk)
@@ -389,7 +389,8 @@ class UpdateSchoolView(UpdateView):
     template_name = 'icap/add_school.html'
     success_url = '/thank_you/'
 
-# LoggedInMixin, 
+
+# LoggedInMixin,
 class CreateCourseView(CreateView):
     '''generic class based view for
     creating a course'''
@@ -404,13 +405,12 @@ class CreateCourseView(CreateView):
         creator = User.objects.get(pk=self.request.user.pk)
         profile = UserProfile.objects.get(user=creator)
         school = School.objects.get(pk=profile.school.pk)
-        new_course.creator=creator
-        new_course.school=school
+        new_course.creator = creator
+        new_course.school = school
         new_course.save()
-        # why do I need to return an HTTPResponse explicitly? Should happen automatically no?
+        # why do I need to return an HTTPResponse explicitly?
+        # Should happen automatically no?
         return HttpResponseRedirect('/')
-
-
 
 
 class AddCourse(CreateView):
@@ -427,14 +427,12 @@ class AddCourse(CreateView):
         creator = User.objects.get(pk=self.request.user.pk)
         profile = UserProfile.objects.get(user=creator)
         school = School.objects.get(pk=profile.school.pk)
-        new_course.creator=creator
-        new_course.school=school
+        new_course.creator = creator
+        new_course.school = school
         new_course.save()
-        # why do I need to return an HTTPResponse explicitly? Should happen automatically no?
+        # why do I need to return an HTTPResponse explicitly?
+        # Should happen automatically no?
         return HttpResponseRedirect('/')
-
-
-
 
 
 class UpdateCourseView(UpdateView):
@@ -459,7 +457,7 @@ def course_students(request, crs_id):
                         course_students.add(profile)
         except UserProfile.DoesNotExist:
             pass
- 
+
     return render(request,
                   'teacher/show_students.html',
                   {'course_students': course_students})
@@ -492,13 +490,13 @@ class ContactView(FormView):
 class DeleteCourseView(DeleteView):
     model = Course
     success_url = reverse_lazy('home')
-    
+
     def dispatch(self, *args, **kwargs):
         resp = super(DeleteCourseView, self).dispatch(*args, **kwargs)
         if self.request.is_ajax():
             response_data = {"result": "ok"}
             return HttpResponse(json.dumps(response_data),
-                content_type="application/json")
+                                content_type="application/json")
         else:
             # POST request (not ajax) will do a redirect to success_url
             return resp
@@ -508,10 +506,10 @@ class StudentClassStatView(DetailView):
     model = Course
     template_name = 'view_course_stats.html'
     success_url = reverse_lazy('home')
-    
+
     def get_context_data(self, **kwargs):
         if self.request.is_ajax():
-            module = course.__module
+            module = self.course.__module
             user = User.objects.get(pk=self.request.user.pk)
             profile = UserProfile.objects.get(user=user)
             return {'module': module, 'user': user, 'profile': profile }
