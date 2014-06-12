@@ -512,4 +512,4 @@ class StudentClassStatView(DetailView):
             module = self.course.__module
             user = User.objects.get(pk=self.request.user.pk)
             profile = UserProfile.objects.get(user=user)
-            return {'module': module, 'user': user, 'profile': profile }
+            return {'module': module, 'user': user, 'profile': profile}
