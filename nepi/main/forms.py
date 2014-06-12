@@ -117,4 +117,4 @@ class ProfileForm(forms.Form):
 class CreateCourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        exclude = ("school", "creator", "module")
+        exclude = ("school", "creator")

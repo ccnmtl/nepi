@@ -20,6 +20,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from pagetree.models import Hierarchy
 from nepi.main.forms import CreateCourseForm
+from django.views.generic.edit import DeleteView
+from django.core.urlresolvers import reverse_lazy
 
 
 
@@ -156,6 +158,10 @@ class ICAPDashboard(LoggedInMixin, ListView):
         context['in_progress'] = self.get_students_in_progress()
         context['incomplete'] = self.get_students_done()
         context['done'] = self.get_students_incomplete()
+        context['created_courses'] = Course.objects.filter(creator=User.objects.get(pk=self.request.user.pk))
+        context['joined_courses'] = UserProfile.objects.get(
+            user=self.request.user.pk).course.all()
+#             user=self.request.user.pk)
         # context['create_course'] = CreateCourse.as_view()
         return context
 
@@ -389,15 +395,45 @@ class CreateCourseView(CreateView):
     creating a course'''
     model = Course
     form_class = CreateCourseForm
-    #fields = ['name', 'start_date', 'end_date']
     template_name = 'teacher/create_course.html'
-    success_url = '/icap_dashboard/'
+    success_url = '/'
 
-#     def form_valid(self, request):
-#         form.save()
-#         
-#     def form_invalid(self, request):
-#         return HttpResponse(self.form.errors)
+    def form_valid(self, request):
+        f = CreateCourseForm(self.request.POST)
+        new_course = f.save(commit=False)
+        creator = User.objects.get(pk=self.request.user.pk)
+        profile = UserProfile.objects.get(user=creator)
+        school = School.objects.get(pk=profile.school.pk)
+        new_course.creator=creator
+        new_course.school=school
+        new_course.save()
+        # why do I need to return an HTTPResponse explicitly? Should happen automatically no?
+        return HttpResponseRedirect('/')
+
+
+
+
+class AddCourse(CreateView):
+    '''generic class based view for
+    creating a course'''
+    model = Course
+    form_class = CreateCourseForm
+    template_name = 'new_course.html'
+    success_url = '/'
+
+    def form_valid(self, request):
+        f = CreateCourseForm(self.request.POST)
+        new_course = f.save(commit=False)
+        creator = User.objects.get(pk=self.request.user.pk)
+        profile = UserProfile.objects.get(user=creator)
+        school = School.objects.get(pk=profile.school.pk)
+        new_course.creator=creator
+        new_course.school=school
+        new_course.save()
+        # why do I need to return an HTTPResponse explicitly? Should happen automatically no?
+        return HttpResponseRedirect('/')
+
+
 
 
 
@@ -451,3 +487,31 @@ class ContactView(FormView):
         send_mail(subject, message, sender, recipients)
         #form.send_email(recipients)
         return super(ContactView, self).form_valid(form)
+
+
+class DeleteCourseView(DeleteView):
+    model = Course
+    success_url = reverse_lazy('home')
+    
+    def dispatch(self, *args, **kwargs):
+        resp = super(DeleteCourseView, self).dispatch(*args, **kwargs)
+        if self.request.is_ajax():
+            response_data = {"result": "ok"}
+            return HttpResponse(json.dumps(response_data),
+                content_type="application/json")
+        else:
+            # POST request (not ajax) will do a redirect to success_url
+            return resp
+
+
+class StudentClassStatView(DetailView):
+    model = Course
+    template_name = 'view_course_stats.html'
+    success_url = reverse_lazy('home')
+    
+    def get_context_data(self, **kwargs):
+        if self.request.is_ajax():
+            module = course.__module
+            user = User.objects.get(pk=self.request.user.pk)
+            profile = UserProfile.objects.get(user=user)
+            return {'module': module, 'user': user, 'profile': profile }

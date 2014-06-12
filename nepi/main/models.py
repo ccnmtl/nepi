@@ -30,7 +30,6 @@ class School(models.Model):
 class Course(models.Model):
     '''Allow association of course with module.'''
     school = models.ForeignKey(School, null=True, default=None, blank=True)
-    # semester = models.CharField(max_length=50, blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
     name = models.CharField(max_length=50)
@@ -114,6 +113,9 @@ class UserProfile(models.Model):
             return "teacher"
         elif self.is_icap():
             return "icap"
+
+    def joined_courses(self):
+        return self.course.objects.all()
 
 
 class PendingTeachers(models.Model):

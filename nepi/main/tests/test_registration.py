@@ -5,7 +5,7 @@ from nepi.main.models import Course, PendingTeachers
 # from nepi.main.views import RegistrationView
 from datetime import datetime
 from django.test.client import Client
-
+from factories import CourseFactory
 
 class TestRegistration(TestCase):
     def setUp(self):

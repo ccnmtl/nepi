@@ -47,7 +47,7 @@ class TestUserProfile(TestCase):
         self.school = School(country=self.country1, name='School 1')
         self.school.save()
         self.course = Course(school=self.school,
-                             semester="Fall 2018", name="Course",
+                             name="Course",
                              start_date=datetime.now(),
                              end_date=datetime.now())
         self.course.save()

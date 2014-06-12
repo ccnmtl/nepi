@@ -8,12 +8,13 @@ import os.path
 admin.autodiscover()
 import staticmedia
 from nepi.main.views import (CreateCourseView, UpdateCourseView,
+                             DeleteCourseView, StudentClassStatView,
                              GetSchoolCourses, CreateSchoolView,
                              UpdateSchoolView, ContactView,
                              RegistrationView, GetCountries,
                              StudentDashboard, JoinCourse,
                              GetCountrySchools, FacultyDashboard,
-                             ICAPDashboard, Home)
+                             ICAPDashboard, Home, AddCourse)
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -69,11 +70,15 @@ urlpatterns += patterns(
     url(r'^get_courses/(?P<pk>\d+)/$', GetSchoolCourses.as_view()),
     url(r'^join_course/(?P<pk>\d+)/$',
         JoinCourse.as_view(), name='join-course'),
+    url(r'^add_course/$',
+        AddCourse.as_view(), name='add-course'),
     (r'^accessible/(?P<section_slug>.*)/$',
      'is_accessible', {}, 'is-accessible'),
 
     # ICAP related pages
     (r'^add_school/$', CreateSchoolView.as_view()),
+    url(r'^view_course_stats/(?P<pk>\d+)/', StudentClassStatView.as_view(),
+        name='view-course-stats'),
     (r'^edit_school/(?P<pk>\d+)/$', UpdateSchoolView.as_view()),
 
     # Teacher related pages
@@ -81,6 +86,8 @@ urlpatterns += patterns(
     #'nepi.main.views.create_course'),
     (r'^create_course/$', CreateCourseView.as_view()),
     (r'^edit_course/(?P<pk>\d+)/$', UpdateCourseView.as_view()),
+    url(r'^delete_course/(?P<pk>\d+)/$', DeleteCourseView.as_view(),
+        name='delete-course'),
     (r'^course_students/$', 'nepi.main.views.course_students'),
     #(r'^teacher_courses/$', 'nepi.main.views.current_courses'),
     (r'^remove_student/$', 'nepi.main.views.remove_student'),

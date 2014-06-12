@@ -28,7 +28,6 @@ class CourseFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Course
     school = factory.SubFactory(SchoolFactory)
     creator = factory.SubFactory(UserFactory)
-    semester = "Fall"
     name = "A Course"
     start_date = datetime.now()
     end_date = datetime.now()
