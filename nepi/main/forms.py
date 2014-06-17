@@ -110,6 +110,7 @@ class UpdateProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UpdateProfileForm, self).__init__(*args, **kwargs)
         passed_profile = kwargs.get('instance')
+        #print passed_profile
         self.fields['first_name'].initial = passed_profile.user.first_name
         self.fields['last_name'].initial = passed_profile.user.last_name
         self.fields['email'].initial = passed_profile.user.email
@@ -135,6 +136,18 @@ class UpdateProfileForm(forms.ModelForm):
             self._errors["password2"] = self.error_class(
                 ["Passwords must match each other."])
         return form
+
+    def save(self, *args, **kwargs):
+        '''to save attributes from another model must explicitly save the extra fields of the form'''
+        self.instance.user.first_name = self.cleaned_data.get('first_name')
+        self.instance.user.last_name = self.cleaned_data.get('last_name')
+        self.instance.user.email = self.cleaned_data.get('email')
+        if self.cleaned_data.get('password1') and self.cleaned_data.get('password2'):
+            self.instance.user.last_name = self.cleaned_data.get('password1')
+        self.instance.user.save()
+        return super(UpdateProfileForm, self).save(*args, **kwargs)
+
+
 
 
 class CreateCourseForm(forms.ModelForm):

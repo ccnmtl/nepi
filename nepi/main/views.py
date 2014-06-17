@@ -520,31 +520,29 @@ class UpdateProfileView(UpdateView):
     model = UserProfile
     template_name = 'profile_tab.html'
     form_class = UpdateProfileForm
-    success_url = '/thank_you/'
+    success_url = '/'
 
-#     u = User.objects.get(pk=self.request.user.pk)
-#     profile = UserProfile.objects.get(user=user)
-#         print "profile " + profile
-#         initial = {'first_name': user.first_name,
-#                    'last_name': user.last_name,
-#                    'icap_affil': profile.icap_affil,
-#                    'user_country': profile.user_country,
-#                    'email': user.email,
-#                    }
-#         print "after get initial " + type(initial)
-#         return initial
-#
-#     def get_form(self, form_class):
-#          # Initialize the form with initial values and the subscriber object
-#          # to be used in EmailPreferenceForm for populating fields
-#         return form_class(
-#             initial=self.get_initial()
-# #             subscriber=self.subscriber
-#         )
-#
-#
-#     def form_valid(self, form):
-#         form_data = form.cleaned_data
+    def form_valid(self, form):
+        response = super(UpdateProfileView, self).form_valid(form)
+        form_data = form.cleaned_data
+        if form_data['faculty_access']:
+            subject = "Facutly Access Requeted"
+            message = "The user, " + form_data['first_name'] + \
+                " " + form_data['last_name'] + " from " + \
+                form_data['country'] + " has requested faculty " + \
+                "faculty access at " + form_data['school'] + ".\n\n"
+            sender = "nepi@nepi.ccnmtl.columbia.edu"
+            recipients = "cdunlop@columbia.edu"
+            send_mail(subject, message, sender, recipients)
+        # not clear to me what validation is done for you
+        form_data.save()
+            
+    def form_invalid(self, form):
+        response = super(UpdateProfileView, self).form_invalid(form)
+        if self.request.is_ajax():
+            return self.render_to_json_response(form.errors, status=400)
+        else:
+            return response
 #         user = User.objects.get(pk=self.request.user.pk)
 #         user.email=form_data['email'],
 #         user.first_name = form_data['first_name']
@@ -578,14 +576,17 @@ class UpdateProfileView(UpdateView):
 # #        return {'profileform' : pf}
 
 
-#     def get_context_data(self, **kwargs):
-#         if self.request.is_ajax():
-#             print "method called"
-#             user = User.objects.get(pk=self.request.user.pk)
-#             profile = UserProfile.objects.get(user=user)
-#             pf = ProfileForm()
-#             #pf.first_name.value=user.firstname
-#             #pf.last_name.value=user.lastname
-#         return {'profileform' : pf, 'profile': profile}
-# #
-# #
+
+#     u = User.objects.get(pk=self.request.user.pk)
+#     profile = UserProfile.objects.get(user=user)
+#         print "profile " + profile
+#         initial = {'first_name': user.first_name,
+#                    'last_name': user.last_name,
+#                    'icap_affil': profile.icap_affil,
+#                    'user_country': profile.user_country,
+#                    'email': user.email,
+#                    }
+#         print "after get initial " + type(initial)
+#         return initial
+#
+

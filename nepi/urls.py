@@ -55,28 +55,39 @@ urlpatterns += patterns(
 
     # flat and universally accessible pages
     (r'^contact/$', ContactView.as_view()),
+    (r'^thanks_course/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_course'),
+
+    # profile related views
     url(r'^register/$', RegistrationView.as_view(), name='register'),
+    url(r'^update_profile/(?P<pk>\d+)/$', UpdateProfileView.as_view(),
+        name='update-profile'),
+
+    # dashboard base views
     url(r'^student-dashboard/$',
         StudentDashboard.as_view(), name='student-dashboard'),
     url(r'^faculty-dashboard/$',
         FacultyDashboard.as_view(), name='faculty-dashboard'),
     url(r'^icap-dashboard/$',
         ICAPDashboard.as_view(), name='icap-dashboard'),
+
+    # functionality to join a course
     url(r'^join_course/$', JoinCourse.as_view(), name='join-course'),
     url(r'^get_countries/$', GetCountries.as_view()),
-    #url(r'^get_countries/$', GetCountries.as_view()),
     url(r'^get_schools/$', GetCountrySchools.as_view()),
     url(r'^get_schools/(?P<pk>\d+)/$',
         GetCountrySchools.as_view(), name='get-country-schools'),
     url(r'^get_courses/$', GetSchoolCourses.as_view()),
-    url(r'^join_course/(?P<pk>\d+)/$',
-        JoinCourse.as_view(), name='join-course'),
+
+    # functionality for teacher create a course
     url(r'^add_course/$',
         AddCourse.as_view(), name='add-course'),
-    url(r'^update_profile/(?P<pk>\d+)/$', UpdateProfileView.as_view(),
-        name='update-profile'),
-    (r'^accessible/(?P<section_slug>.*)/$',
-     'is_accessible', {}, 'is-accessible'),
+    (r'^create_course/$', CreateCourseView.as_view()),
+    (r'^edit_course/(?P<pk>\d+)/$', UpdateCourseView.as_view()),
+    url(r'^delete_course/(?P<pk>\d+)/$', DeleteCourseView.as_view(),
+        name='delete-course'),
+    (r'^course_students/$', 'nepi.main.views.course_students'),
+    (r'^remove_student/$', 'nepi.main.views.remove_student'),
+    #(r'^course_results/$', 'nepi.main.views.course_results'),
 
     # ICAP related pages
     (r'^add_school/$', CreateSchoolView.as_view()),
@@ -86,19 +97,12 @@ urlpatterns += patterns(
     # Teacher related pages
     #(r'^view_students/$', 'nepi.main.views.view_students'),
     #'nepi.main.views.create_course'),
-    (r'^create_course/$', CreateCourseView.as_view()),
-    (r'^edit_course/(?P<pk>\d+)/$', UpdateCourseView.as_view()),
-    url(r'^delete_course/(?P<pk>\d+)/$', DeleteCourseView.as_view(),
-        name='delete-course'),
-    (r'^course_students/$', 'nepi.main.views.course_students'),
-    #(r'^teacher_courses/$', 'nepi.main.views.current_courses'),
-    (r'^remove_student/$', 'nepi.main.views.remove_student'),
-    #(r'^course_results/$', 'nepi.main.views.course_results'),
+
+    (r'^accessible/(?P<section_slug>.*)/$',
+     'is_accessible', {}, 'is-accessible'),
 
     url(r'^captcha/', include('captcha.urls')),
     (r'^activities/', include('nepi.activities.urls')),
-    # Student related pages
-    (r'^thanks_course/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_course'),
 
     url(r'^_impersonate/', include('impersonate.urls')),
     (r'^stats/$', TemplateView.as_view(template_name="stats.html")),
