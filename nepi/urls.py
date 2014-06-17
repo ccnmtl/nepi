@@ -82,8 +82,6 @@ urlpatterns += patterns(
     # need custom yet almost identical templates for requesting faculty access
     url(r'^faculty_countries/$', FacultyCountries.as_view()),
     url(r'^faculty_schools/$', FacultyCountrySchools.as_view()),
-    url(r'^faculty_schools/(?P<pk>\d+)/$',
-        FacultyCountrySchools.as_view(), name='faculty-country-schools'),
 
     # functionality for teacher create a course
     url(r'^add_course/$',

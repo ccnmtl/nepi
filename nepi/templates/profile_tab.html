@@ -19,7 +19,8 @@
 
       <form action="/update_profile/{{object.pk}}/" method="post">{% csrf_token %}
         {{ form.as_p }}
-        <div id="faculty"></div>
+        <div id="faculty">
+        </div>
         <input type="submit" value="Submit" />
       </form>
 
