@@ -1,0 +1,41 @@
+{% block content %}
+        <script>
+            var faculty_access = jQuery('#id_faculty_access');
+            
+            
+            faculty_access.change(
+                function()
+                {
+                    if($(this).is(":checked"))
+                    {
+                        alert("something");
+                    }
+                    
+                
+                }
+            );
+            
+            
+            
+            //{alert("checkbox clicked");};
+
+            //if (facutly_access.is(':checked')){alert("you clicked");};
+
+            //faculty_access.on(click, function(){ alert("you clicked");}
+
+//faculty_access.load('/get_countries/');})
+           //if facutly_access.prop('checked')
+           //{
+           //     facutly_access.append("</br><p>When requesting faculty access you must indicate what school you are affiliated with</p>");//.load('/get_countries/');
+           //};
+        </script>
+
+ <div> <p>some text here</p>
+
+      <form action="/update_profile/{{object.pk}}/" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit" />
+      </form>
+
+</div>
+{% endblock %}
