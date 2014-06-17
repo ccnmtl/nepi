@@ -14,7 +14,8 @@ from nepi.main.views import (CreateCourseView, UpdateCourseView,
                              RegistrationView, GetCountries,
                              StudentDashboard, JoinCourse,
                              GetCountrySchools, FacultyDashboard,
-                             ICAPDashboard, Home, AddCourse)
+                             ICAPDashboard, Home, AddCourse,
+                             UpdateProfileView)
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -63,15 +64,17 @@ urlpatterns += patterns(
         ICAPDashboard.as_view(), name='icap-dashboard'),
     url(r'^join_course/$', JoinCourse.as_view(), name='join-course'),
     url(r'^get_countries/$', GetCountries.as_view()),
+    #url(r'^get_countries/$', GetCountries.as_view()),
     url(r'^get_schools/$', GetCountrySchools.as_view()),
     url(r'^get_schools/(?P<pk>\d+)/$',
         GetCountrySchools.as_view(), name='get-country-schools'),
     url(r'^get_courses/$', GetSchoolCourses.as_view()),
-    url(r'^get_courses/(?P<pk>\d+)/$', GetSchoolCourses.as_view()),
     url(r'^join_course/(?P<pk>\d+)/$',
         JoinCourse.as_view(), name='join-course'),
     url(r'^add_course/$',
         AddCourse.as_view(), name='add-course'),
+    url(r'^update_profile/(?P<pk>\d+)/$', UpdateProfileView.as_view(),
+        name='update-profile'),
     (r'^accessible/(?P<section_slug>.*)/$',
      'is_accessible', {}, 'is-accessible'),
 
@@ -80,7 +83,6 @@ urlpatterns += patterns(
     url(r'^view_course_stats/(?P<pk>\d+)/', StudentClassStatView.as_view(),
         name='view-course-stats'),
     (r'^edit_school/(?P<pk>\d+)/$', UpdateSchoolView.as_view()),
-
     # Teacher related pages
     #(r'^view_students/$', 'nepi.main.views.view_students'),
     #'nepi.main.views.create_course'),

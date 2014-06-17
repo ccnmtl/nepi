@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
-from nepi.main.forms import CreateAccountForm, ContactForm
+from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Course, UserProfile, Country
 from nepi.main.models import School, PendingTeachers
 from django.views.generic.edit import FormView
@@ -234,6 +234,7 @@ class StudentDashboard(LoggedInMixin, DetailView):
         context['modules'] = Hierarchy.objects.all()
         context['user_modules'] = Hierarchy.objects.filter(userprofile=profile)
         context['student_courses'] = Course.objects.filter(userprofile=profile)
+        # context['student_courses'] = profiles.course.all()
 
 
 class GetReport(LoggedInMixin, View):
@@ -439,7 +440,7 @@ class UpdateCourseView(UpdateView):
     '''generic class based view for
     editing a course'''
     model = Course
-    template_name = 'teacher/create_course.html'
+    template_name = 'profile_tab.html'
     success_url = '/thank_you/'
 
 
@@ -513,3 +514,78 @@ class StudentClassStatView(DetailView):
             user = User.objects.get(pk=self.request.user.pk)
             profile = UserProfile.objects.get(user=user)
             return {'module': module, 'user': user, 'profile': profile}
+
+
+class UpdateProfileView(UpdateView):
+    model = UserProfile
+    template_name = 'profile_tab.html'
+    form_class = UpdateProfileForm
+    success_url = '/thank_you/'
+
+#     u = User.objects.get(pk=self.request.user.pk)
+#     profile = UserProfile.objects.get(user=user)
+#         print "profile " + profile
+#         initial = {'first_name': user.first_name,
+#                    'last_name': user.last_name,
+#                    'icap_affil': profile.icap_affil,
+#                    'user_country': profile.user_country,
+#                    'email': user.email,
+#                    }
+#         print "after get initial " + type(initial)
+#         return initial
+#
+#     def get_form(self, form_class):
+#          # Initialize the form with initial values and the subscriber object
+#          # to be used in EmailPreferenceForm for populating fields
+#         return form_class(
+#             initial=self.get_initial()
+# #             subscriber=self.subscriber
+#         )
+#
+#
+#     def form_valid(self, form):
+#         form_data = form.cleaned_data
+#         user = User.objects.get(pk=self.request.user.pk)
+#         user.email=form_data['email'],
+#         user.first_name = form_data['first_name']
+#         user.last_name = form_data['last_name']
+#         user.save()
+#         profile = UserProfile(user=user)
+#         try:
+#             new_profile.country = Country.objects.get(
+#                 name=form_data['country'])
+#             new_profile.save()
+#         except Country.DoesNotExist:
+#             new_country = Country.objects.create(name=form_data['country'])
+#             new_country.save()
+#             new_profile.save()
+#         return super(UpdateProfileView, self).form_valid(form)
+#
+# #    game = Game.objects.get(id=1) # just an example
+# #     data = {'id': game.id, 'position': game.position}
+# #     form = UserQueueForm(initial=data)
+# #     return render_to_response('my_template.html', {'form': form})
+# # #     def get(self, request): #if self.request.is_ajax():
+# # #         if self.request.is_ajax():
+# #             print "method called"
+# #             user = User.objects.get(pk=self.request.user.pk)
+# #             profile = UserProfile.objects.get(user=user)
+# #             pf = ProfileForm()
+# #             return self.render_to_json_response(profile)
+# #         else:
+# #             return self.request
+#
+# #        return {'profileform' : pf}
+
+
+#     def get_context_data(self, **kwargs):
+#         if self.request.is_ajax():
+#             print "method called"
+#             user = User.objects.get(pk=self.request.user.pk)
+#             profile = UserProfile.objects.get(user=user)
+#             pf = ProfileForm()
+#             #pf.first_name.value=user.firstname
+#             #pf.last_name.value=user.lastname
+#         return {'profileform' : pf, 'profile': profile}
+# #
+# #

@@ -1,11 +1,12 @@
 <script type="text/javascript" language="javascript">
 jQuery(document).ready(function() {
-
+    alert("see if javascript runs at all");
+    alert(jQuery("div").data("eyes").val());
     //var m_text = "mouth text here";
     //var e_text = "eyes text here";
     //var cr_text = "chair text here";
     //var ct_text = "chart text here";
-    alert(jQuery("div").data("eyes").html());
+    //alert(jQuery("div").data("eyes").html());
     jQuery("div").data("eyes").click(function(){  jQuery("div").data("explanation").append("<p>mouth explanation</p>");  });
     //jQuery("div").data("mouth").
     //jQuery("div").data("chair").
