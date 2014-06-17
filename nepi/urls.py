@@ -15,7 +15,8 @@ from nepi.main.views import (CreateCourseView, UpdateCourseView,
                              StudentDashboard, JoinCourse,
                              GetCountrySchools, FacultyDashboard,
                              ICAPDashboard, Home, AddCourse,
-                             UpdateProfileView)
+                             UpdateProfileView, FacultyCountries,
+                             FacultyCountrySchools)
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -77,6 +78,12 @@ urlpatterns += patterns(
     url(r'^get_schools/(?P<pk>\d+)/$',
         GetCountrySchools.as_view(), name='get-country-schools'),
     url(r'^get_courses/$', GetSchoolCourses.as_view()),
+
+    # need custom yet almost identical templates for requesting faculty access
+    url(r'^faculty_countries/$', FacultyCountries.as_view()),
+    url(r'^faculty_schools/$', FacultyCountrySchools.as_view()),
+    url(r'^faculty_schools/(?P<pk>\d+)/$',
+        FacultyCountrySchools.as_view(), name='faculty-country-schools'),
 
     # functionality for teacher create a course
     url(r'^add_course/$',

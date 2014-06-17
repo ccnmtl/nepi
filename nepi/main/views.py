@@ -543,50 +543,26 @@ class UpdateProfileView(UpdateView):
             return self.render_to_json_response(form.errors, status=400)
         else:
             return response
-#         user = User.objects.get(pk=self.request.user.pk)
-#         user.email=form_data['email'],
-#         user.first_name = form_data['first_name']
-#         user.last_name = form_data['last_name']
-#         user.save()
-#         profile = UserProfile(user=user)
-#         try:
-#             new_profile.country = Country.objects.get(
-#                 name=form_data['country'])
-#             new_profile.save()
-#         except Country.DoesNotExist:
-#             new_country = Country.objects.create(name=form_data['country'])
-#             new_country.save()
-#             new_profile.save()
-#         return super(UpdateProfileView, self).form_valid(form)
-#
-# #    game = Game.objects.get(id=1) # just an example
-# #     data = {'id': game.id, 'position': game.position}
-# #     form = UserQueueForm(initial=data)
-# #     return render_to_response('my_template.html', {'form': form})
-# # #     def get(self, request): #if self.request.is_ajax():
-# # #         if self.request.is_ajax():
-# #             print "method called"
-# #             user = User.objects.get(pk=self.request.user.pk)
-# #             profile = UserProfile.objects.get(user=user)
-# #             pf = ProfileForm()
-# #             return self.render_to_json_response(profile)
-# #         else:
-# #             return self.request
-#
-# #        return {'profileform' : pf}
 
 
 
-#     u = User.objects.get(pk=self.request.user.pk)
-#     profile = UserProfile.objects.get(user=user)
-#         print "profile " + profile
-#         initial = {'first_name': user.first_name,
-#                    'last_name': user.last_name,
-#                    'icap_affil': profile.icap_affil,
-#                    'user_country': profile.user_country,
-#                    'email': user.email,
-#                    }
-#         print "after get initial " + type(initial)
-#         return initial
-#
+class FacultyCountries(LoggedInMixin, ListView):
+    model = Country
+    template_name = 'faculty/country_list.html'
+    success_url = '/'
+
+
+class FacultyCountrySchools(LoggedInMixin, ListView):
+    model = School
+    template_name = 'faculty/school_list.html'
+    success_url = '/'
+
+    def get_context_data(self, **kwargs):
+        if self.request.is_ajax():
+            country_key = self.request.GET.__getitem__('name')
+            country = Country.objects.get(pk=country_key)
+            s = School.objects.filter(country=country)
+            return {'school_list': s}
+
+
 
