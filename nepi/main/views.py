@@ -134,7 +134,7 @@ class Home(View):
 
 class ICAPDashboard(LoggedInMixin, ListView):
     model = Course
-    template_name = 'icap_dashboard.html'
+    template_name = 'dashboard/dashboard.html'
     success_url = '/'
 
     def get_students_in_progress(self):
@@ -183,8 +183,8 @@ class ICAPDashboard(LoggedInMixin, ListView):
 
 class FacultyDashboard(LoggedInMixin, ListView):
     model = Course
-    template_name = 'faculty_dashboard.html'
-    success_url = '/thank_you/'
+    template_name = 'dashboard/faculty_dashboard.html'
+    success_url = '/'
 
     def get_students_in_progress(self):
         find_students = UserProfile.objects.filter(profile_type="ST")
@@ -255,8 +255,8 @@ class StudentDashboard(LoggedInMixin, DetailView):
     courses that the user belongs to, and if they do not belong to any
     we are giving the the option to affiliate with one'''
     model = UserProfile
-    template_name = 'student_dashboard.html'
-    success_url = '/thank_you_reg/'
+    template_name = 'dashboard/student_dashboard.html'
+    success_url = '/'
 
     def get_context_data(self, **kwargs):
         context = super(StudentDashboard, self).get_context_data(**kwargs)
