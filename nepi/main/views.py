@@ -134,7 +134,7 @@ class Home(View):
 
 class ICAPDashboard(LoggedInMixin, ListView):
     model = Course
-    template_name = 'dashboard/dashboard.html'
+    template_name = 'dashboard/icap_dashboard.html'
     success_url = '/'
 
     def get_students_in_progress(self):
