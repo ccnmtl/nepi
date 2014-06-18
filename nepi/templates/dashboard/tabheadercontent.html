@@ -1,0 +1,6 @@
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#user-modules" data-toggle="tab">Option B+</a></li>
+    <li><a href="#user-courses" data-toggle="tab">Groups</a></li>
+    {% if user_profile.profile_type == "IC" or user_profile.profile_type == "TE" %}<li><a href="#reports" data-toggle="tab">Reports</a></li> {% endif %}
+    <li><a href="#user-profile" data-toggle="tab">Profile</a></li>
+</ul>

@@ -1,0 +1,7 @@
+<div id="course_creation">
+    <form id="course_creation" action="/create_course/" method="post">{% csrf_token %}
+    {{form.as_p}}
+    <input id="addschool" type="submit" value="Add School" />
+    </form>
+</div>
+
