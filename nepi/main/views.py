@@ -89,6 +89,19 @@ class InstructorPage(LoggedInMixinStaff, InstructorView):
     hierarchy_name = "main"
     hierarchy_base = "/pages/main/"
 
+# should make a class to say thank you for... and give appropriate statement.
+class ThankYou(View):
+    def get(self, request):
+        '''not entirely sure how thise will be called yet...
+        need to determine how we will indicate what the situation is...'''
+        if request.is_ajax():
+            if get
+            pk=self.request.POST.__getitem__('country'))
+
+    def post(self, request):
+        '''again not entirely sure how this is going to be called'''
+
+
 
 def thanks_course(request, course_id):
     """Returns thanks for joining course page."""
@@ -215,8 +228,25 @@ class FacultyDashboard(LoggedInMixin, ListView):
 #                       {'pending_teachers': pending_teachers,
 #                        'user_profile': user_profile,
 #                        'students': students, 'incomplete': incomplete,
-#                        'in_progress': in_progress, 'done': done})
-
+# #                        'in_progress': in_progress, 'done': done})
+#     def get_context_data(self, **kwargs):
+#         context = super(ICAPDashboard, self).get_context_data(**kwargs)
+#         context['user_profile'] = UserProfile.objects.get(
+#             user=self.request.user.pk)
+#         context['pending_teachers'] = PendingTeachers.objects.filter(
+#             user_profile__profile_type='TE')
+#         context['students'] = UserProfile.objects.filter(
+#             profile_type="ST").count()
+#         context['in_progress'] = self.get_students_in_progress()
+#         context['incomplete'] = self.get_students_done()
+#         context['done'] = self.get_students_incomplete()
+#         context['created_courses'] = Course.objects.filter(
+#             creator=User.objects.get(pk=self.request.user.pk))
+#         context['joined_courses'] = UserProfile.objects.get(
+#             user=self.request.user.pk).course.all()
+# #             user=self.request.user.pk)
+#         # context['create_course'] = CreateCourse.as_view()
+#        return context
 
 class StudentDashboard(LoggedInMixin, DetailView):
     '''For the first tab of the dashboard we are showing
