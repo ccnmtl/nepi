@@ -103,6 +103,9 @@ class UserProfile(models.Model):
     def is_teacher(self):
         return self.profile_type == 'TE'
 
+    def is_country_administrator(self):
+        return self.profile_type == 'CA'
+
     def is_icap(self):
         return self.profile_type == 'IC'
 
@@ -111,6 +114,8 @@ class UserProfile(models.Model):
             return "student"
         elif self.is_teacher():
             return "teacher"
+        elif self.is_country_administrator():
+            return "country administrator"
         elif self.is_icap():
             return "icap"
 
