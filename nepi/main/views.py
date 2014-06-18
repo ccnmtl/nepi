@@ -311,13 +311,13 @@ class JoinCourse(LoggedInMixin, View):
 class GetCountries(LoggedInMixin, ListView):
     model = Country
     template_name = 'country_list.html'
-    success_url = '/thank_you/'
+    success_url = '/'
 
 
 class GetCountrySchools(LoggedInMixin, ListView):
     model = School
     template_name = 'school_list.html'
-    success_url = '/thank_you/'
+    success_url = '/'
 
     def get_context_data(self, **kwargs):
         if self.request.is_ajax():
@@ -330,7 +330,7 @@ class GetCountrySchools(LoggedInMixin, ListView):
 class GetSchoolCourses(LoggedInMixin, ListView):
     model = Course
     template_name = 'course_list.html'
-    success_url = '/thank_you/'
+    success_url = '/'
 
     def get_context_data(self, **kwargs):
         if self.request.is_ajax():
@@ -344,7 +344,7 @@ class RegistrationView(FormView):
     '''changing registration view to form'''
     template_name = 'registration_form.html'
     form_class = CreateAccountForm
-    success_url = '/thank_you_reg/'
+    success_url = '/'
 
     def register_user(self):
         pass
@@ -412,7 +412,7 @@ class CreateSchoolView(CreateView):
     adding a school'''
     model = School
     template_name = 'icap/add_school.html'
-    success_url = '/icap_dashboard/'
+    success_url = '/'
 
 
 class UpdateSchoolView(UpdateView):
@@ -420,7 +420,7 @@ class UpdateSchoolView(UpdateView):
     editing a school'''
     model = School
     template_name = 'icap/add_school.html'
-    success_url = '/thank_you/'
+    success_url = '/'
 
 
 # LoggedInMixin,
