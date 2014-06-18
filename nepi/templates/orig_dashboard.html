@@ -1,27 +1,23 @@
 {% extends 'base.html' %}
 {% block js %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>
+    // for now - posting entire form at once
+    var join_btn = jQuery('#join_course_button');
+    join_btn.click(function(){jQuery('#user-courses').load('/get_countries/');})
+
+    var get_report = jQuery('#get_report_button');
+    get_report.click(function(){jQuery('#reports').load('/get_countries/');})
+</script>
 {% endblock %}
 
-{% block tabheaders %}
-    {% include "tabheadercontent.html" %}
-{% endblock %}
-
-{% block actualtabs %}
-    {% block optionb %}
-        {% include "tab_optionb.html" %}
-    {% endblock %}
-    {% block groups %}
-        {% include "tab_groups.html" %}
-    {% endblock %}
-    {% block reports %}
-        {% include "tab_reports.html" %}
-    {% endblock %}
-    {% block profile %}
-        {% include "tab_profile.html" %}
-    {% endblock %}
-{% endblock %}
-
-
+{% block content %}
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#user-modules" data-toggle="tab">Option B+</a></li>
+    <li><a href="#user-courses" data-toggle="tab">Groups</a></li>
+    {% if user_profile.profile_type == "IC" or user_profile.profile_type == "TE" %}<li><a href="#reports" data-toggle="tab">Reports</a></li> {% endif %}
+    <li><a href="#user-profile" data-toggle="tab">Profile</a></li>
+</ul>
 
 <div class="tab-content">
     <div class="tab-pane active" id="user-modules">

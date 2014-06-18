@@ -58,16 +58,16 @@ urlpatterns += patterns(
     (r'^contact/$', ContactView.as_view()),
     (r'^thanks_course/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_course'),
     
-    '''ThankYou View --> want to indicate what we are thanking user for,
-    and have one single modal/alert thanking them for whatever it is they
-    have done, may later extend to take argument to direct them back to
-    the tab they were on/active
-    Situations:
-    1. Registering for site
-    2. Joining Group
-    3. Creating Group
-    '''
-    (r'^thank_you/$', ThankYou.as_view(), name="thank-you-reg"),
+#     '''ThankYou View --> want to indicate what we are thanking user for,
+#     and have one single modal/alert thanking them for whatever it is they
+#     have done, may later extend to take argument to direct them back to
+#     the tab they were on/active
+#     Situations:
+#     1. Registering for site
+#     2. Joining Group
+#     3. Creating Group
+#     '''
+    #(r'^thank_you/$', ThankYou.as_view(), name="thank-you-reg"),
     # (r'^thanks_you_j/(?P<grp_id>\d+)/$', ThankYou.as_view(), name="thank-you-join"),
     # (r'^thanks_you_c/(?P<grp_id>\d+)/$', ThankYou.as_view(), name="thank-you-create"),
     

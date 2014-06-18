@@ -95,11 +95,13 @@ class ThankYou(View):
         '''not entirely sure how thise will be called yet...
         need to determine how we will indicate what the situation is...'''
         if request.is_ajax():
-            if get
-            pk=self.request.POST.__getitem__('country'))
+            pass
+#             if get
+#             pk=self.request.POST.__getitem__('country'))
 
     def post(self, request):
         '''again not entirely sure how this is going to be called'''
+        pass
 
 
 
@@ -133,7 +135,7 @@ class Home(View):
 class ICAPDashboard(LoggedInMixin, ListView):
     model = Course
     template_name = 'icap_dashboard.html'
-    success_url = '/thank_you/'
+    success_url = '/'
 
     def get_students_in_progress(self):
         find_students = UserProfile.objects.filter(profile_type="ST")
@@ -470,8 +472,8 @@ class UpdateCourseView(UpdateView):
     '''generic class based view for
     editing a course'''
     model = Course
-    template_name = 'profile_tab.html'
-    success_url = '/thank_you/'
+    template_name = 'new_course.html'
+    success_url = '/'
 
 
 def course_students(request, crs_id):
@@ -593,6 +595,3 @@ class FacultyCountrySchools(LoggedInMixin, ListView):
             country = Country.objects.get(pk=country_key)
             s = School.objects.filter(country=country)
             return {'school_list': s}
-
-
-
