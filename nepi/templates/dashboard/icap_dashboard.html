@@ -72,19 +72,25 @@
             {% include "dashboard/tab_profile.html" %}
         {% endblock %}
     
+        {% comment %}
         {% block pending_teachers %}
             {% if user_profile.profile_type == "IC" %}
                 {% include "dashboard/tab_pending_teachers.html" %}
             {% endif %}
         {% endblock %}
+        {% endcomment %}
 
+        {% comment %}
         {% block formmodal%}
             {% include "dashboard/form_modal.html" %}
         {% endblock %}
+        {% endcomment %}
 
+        {% comment %}
         {% block thanksmodal%}
             {% include "dashboard/thank_you_modal.html" %}
         {% endblock %}
+        {% endcomment %}
     {% endblock %}       
     
 {% endblock%}
