@@ -477,24 +477,50 @@ class UpdateCourseView(UpdateView):
     form_class = CreateCourseForm
 
 
-def course_students(request, crs_id):
-    '''see all students in a particular course'''
-    users = User.objects.all()
-    course_students = []
-    for u in users:
-        try:
-            profile = UserProfile.objects.get(user=u)
-            if profile.profile_type == 'ST':
-                courses = profile.course_set.all()
-                for c in courses:
-                    if c.crs_id == crs_id:
-                        course_students.add(profile)
-        except UserProfile.DoesNotExist:
-            pass
 
-    return render(request,
-                  'teacher/show_students.html',
-                  {'course_students': course_students})
+class CourseDetail(DetailView):
+    '''generic class based view for
+    see course details - students etc'''
+    model = Course
+    template_name = 'dashboard/course_details.html'
+    success_url = '/'
+
+    def get_students_in_progress(self):
+        find_students = UserProfile.objects.filter(profile_type="ST")
+        in_progress = 0
+        for each in find_students:
+            if each.percent_complete() != 0 and each.percent_complete() != 100:
+                in_progress = in_progress + 1
+        return in_progress
+
+    def get_students_incomplete(self):
+        find_students = UserProfile.objects.filter(profile_type="ST")
+        incomplete = 0
+        for each in find_students:
+            if each.percent_complete() != 0 and each.percent_complete() != 100:
+                incomplete = incomplete + 1
+            return incomplete
+
+    def get_students_done(self):
+        find_students = UserProfile.objects.filter(profile_type="ST")
+        done = 0
+        for each in find_students:
+            if each.percent_complete() == 100:
+                done = done + 1
+        return done
+    
+    def get_context_data(self, **kwargs):
+        context = super(CourseDetail, self).get_context_data(**kwargs)
+        context['user_profile'] = UserProfile.objects.get(
+            user=self.request.user.pk)
+        context['students'] = self.object.userprofile_set.all()
+        context['student_count'] = self.object.userprofile_set.all().count()
+        context['in_progress'] = self.get_students_in_progress()
+        context['incomplete'] = self.get_students_done()
+        context['done'] = self.get_students_incomplete()
+        return context
+
+
 
 
 def remove_student(request, stud_id, cors_id):
@@ -537,6 +563,8 @@ class DeleteCourseView(DeleteView):
 
 
 class StudentClassStatView(DetailView):
+    '''This view is for students to see their progress,
+    should be included in main base template.'''
     model = Course
     template_name = 'view_course_stats.html'
     success_url = reverse_lazy('home')

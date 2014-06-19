@@ -17,6 +17,14 @@
                                         <a href="{{cc.module.get_absolute_url}}">
                                             {{cc.name}}
                                         </a>
+                                        <space>
+                                        <a href="/course_details/{{cc.pk}}/">
+                                            {{cc.name}} Information
+                                        </a>
+                                        <space>
+                                        <a href="/view_course_stats/{{cc.pk}}/">
+                                            {{cc.name}} Course Stats
+                                        </a>
                                     </td>
                                     <td>
                                         <a href="/edit_course/{{cc.pk}}">
@@ -53,8 +61,7 @@
                              <div id="edit_course_div">
                              </div>
                              <div id="course_creation">
-                                 <a href="/create_course/">Create Course</a> <button id="add_course_button">Add Course</button>
-                                 <button id="create_course_button">Create Course</button>
+                                 <a href="/create_course/">Create Course</a>
                              </div>
                          </div>    
                 {% endblock %}
