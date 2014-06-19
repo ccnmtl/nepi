@@ -329,7 +329,7 @@ class GetCountrySchools(LoggedInMixin, ListView):
 
 class GetSchoolCourses(LoggedInMixin, ListView):
     model = Course
-    template_name = 'course_list.html'
+    template_name = 'dashboard/course_list.html'
     success_url = '/'
 
     def get_context_data(self, **kwargs):
@@ -514,9 +514,9 @@ class ContactView(FormView):
         sender = form_data['sender'],
         subject = form_data['subject'],
         message = form_data['message'],
-        recipients = ["u'cdunlop@columbia.edu'"]
-        send_mail(subject, message, sender, recipients)
-        #form.send_email(recipients)
+        recipients = ['nepi@nepi.ccnmtl.columbia.edu']#["u'cdunlop@columbia.edu'"]
+        send_mail(subject, message, sender, 'nepi@nepi.ccnmtl.columbia.edu')
+        form.send_email(recipients)
         return super(ContactView, self).form_valid(form)
 
 
