@@ -429,7 +429,7 @@ class CreateCourseView(CreateView):
     creating a course'''
     model = Course
     form_class = CreateCourseForm
-    template_name = 'teacher/create_course.html'
+    template_name = 'dashboard/create_course.html'
     success_url = '/'
 
     def form_valid(self, request):
@@ -472,8 +472,9 @@ class UpdateCourseView(UpdateView):
     '''generic class based view for
     editing a course'''
     model = Course
-    template_name = 'new_course.html'
+    template_name = 'dashboard/create_course.html'
     success_url = '/'
+    form_class = CreateCourseForm
 
 
 def course_students(request, crs_id):
