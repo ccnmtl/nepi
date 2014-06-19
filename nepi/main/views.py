@@ -310,13 +310,13 @@ class JoinCourse(LoggedInMixin, View):
 
 class GetCountries(LoggedInMixin, ListView):
     model = Country
-    template_name = 'country_list.html'
+    template_name = 'dashboard/country_list.html'
     success_url = '/'
 
 
 class GetCountrySchools(LoggedInMixin, ListView):
     model = School
-    template_name = 'school_list.html'
+    template_name = 'dashboard/school_list.html'
     success_url = '/'
 
     def get_context_data(self, **kwargs):

@@ -1,16 +1,21 @@
 {% extends 'base.html' %}
 {% block js %}
 <script>
+
     var join_btn = jQuery('#join_course_button');
-    join_btn.click(function(){jQuery('#join_course').load('/get_countries/');});
+    join_btn.click(
+        function()
+        {
+            jQuery('#join_course').load('/get_countries/');
+        });
     
     var add_btn = jQuery('#add_course_button');
-    add_btn.click(function(){jQuery('#add_course_div').load('/add_course/');});
+    add_btn.click(function(){jQuery('#add_course_div').load('/dashboard/add_course/');});
     
-    jQuery('#report_form').load('/get_countries/');
+    jQuery('#report_form').load('/dashboard/get_countries/');
     
     var profilebtn = jQuery('#user-profile-button');
-    profilebtn.click(function(){jQuery('#new_profile').load('/update_profile/{{user_profile.pk}}/');});
+    profilebtn.click(function(){jQuery('#new_profile').load('/dashboard/update_profile/{{user_profile.pk}}/');});
     
     
     
