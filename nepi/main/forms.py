@@ -1,7 +1,7 @@
 from django import forms
 from choices import COUNTRY_CHOICES
 from captcha.fields import CaptchaField
-from nepi.main.models import Country, Course, School, UserProfile
+from nepi.main.models import Country, Group, School, UserProfile
 
 
 class LoginForm(forms.Form):
@@ -61,19 +61,19 @@ class CreateAccountForm(forms.Form):
 a better way to do this dynamically?'''
 
 
-class CountryCourseForm(forms.Form):
+class CountryGroupForm(forms.Form):
     country = forms.ChoiceField(required=True,
                                 label="What country do you reside in?",
                                 choices=COUNTRY_CHOICES)
     school = forms.ModelChoiceField(queryset=Country.objects.all())
 
 
-class SchoolCourseForm(forms.Form):
+class SchoolGroupForm(forms.Form):
     country = forms.ChoiceField(required=True,
                                 label="What country do you reside in?",
                                 choices=COUNTRY_CHOICES)
     school = forms.ModelChoiceField(queryset=Country.objects.all())
-    course = forms.ModelChoiceField(queryset=Course.objects.all())
+    group = forms.ModelChoiceField(queryset=Group.objects.all())
 
 
 class ContactForm(forms.Form):
@@ -89,7 +89,7 @@ class ContactForm(forms.Form):
 class ICAPForm(forms.Form):
     countries = forms.ModelChoiceField(queryset=Country.objects.all())
     schools = forms.ModelChoiceField(queryset=School.objects.all())
-    groups = forms.ModelChoiceField(queryset=Course.objects.all())
+    countrys = forms.ModelChoiceField(queryset=Group.objects.all())
 
 
 class UpdateProfileForm(forms.ModelForm):
@@ -117,7 +117,7 @@ class UpdateProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        exclude = ['profile_type', 'course', 'school', 'user']
+        exclude = ['profile_type', 'group', 'school', 'user']
 
     def clean(self):
         form = super(UpdateProfileForm, self).clean()
@@ -150,7 +150,7 @@ class UpdateProfileForm(forms.ModelForm):
 
 
 
-class CreateCourseForm(forms.ModelForm):
+class CreateGroupForm(forms.ModelForm):
     class Meta:
-        model = Course
+        model = Group
         exclude = ("school", "creator")

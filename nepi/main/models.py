@@ -27,8 +27,8 @@ class School(models.Model):
         return self.name
 
 
-class Course(models.Model):
-    '''Allow association of course with module.'''
+class Group(models.Model):
+    '''Allow association of group with module.'''
     school = models.ForeignKey(School, null=True, default=None, blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -49,7 +49,7 @@ class Course(models.Model):
 
 class UserProfile(models.Model):
     '''UserProfile adds exta information to a user,
-    and associates the user with a course, school,
+    and associates the user with a group, school,
     and counrty.'''
     user = models.ForeignKey(User, related_name="application_user")
     profile_type = models.CharField(max_length=2, choices=PROFILE_CHOICES)
@@ -57,8 +57,8 @@ class UserProfile(models.Model):
     # not sure why we are saving this in user profile
     icap_affil = models.BooleanField(default=False)
     school = models.ForeignKey(School, null=True, default=None, blank=True)
-    course = models.ManyToManyField(
-        Course, null=True, default=None, blank=True)
+    group = models.ManyToManyField(
+        Group, null=True, default=None, blank=True)
 
     def __unicode__(self):
         return self.user.username
@@ -119,8 +119,8 @@ class UserProfile(models.Model):
         elif self.is_icap():
             return "icap"
 
-    def joined_courses(self):
-        return self.course.objects.all()
+    def joined_groups(self):
+        return self.group.objects.all()
 
 
 class PendingTeachers(models.Model):

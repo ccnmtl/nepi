@@ -8,7 +8,7 @@ from pagetree.generic.views import PageView, EditView, InstructorView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
-from nepi.main.models import Course, UserProfile, Country
+from nepi.main.models import Group, UserProfile, Country
 from nepi.main.models import School, PendingTeachers
 from django.views.generic.edit import FormView
 from django.views.generic.edit import CreateView, UpdateView
@@ -19,7 +19,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from pagetree.models import Hierarchy
-from nepi.main.forms import CreateCourseForm
+from nepi.main.forms import CreateGroupForm
 from django.views.generic.edit import DeleteView
 from django.core.urlresolvers import reverse_lazy
 
@@ -105,9 +105,9 @@ class ThankYou(View):
 
 
 
-def thanks_course(request, course_id):
-    """Returns thanks for joining course page."""
-    return render(request, 'student/thanks_course.html')
+def thanks_group(request, group_id):
+    """Returns thanks for joining group page."""
+    return render(request, 'student/thanks_group.html')
 
 
 class Home(View):
@@ -133,7 +133,7 @@ class Home(View):
 
 
 class ICAPDashboard(LoggedInMixin, ListView):
-    model = Course
+    model = Group
     template_name = 'dashboard/icap_dashboard.html'
     success_url = '/'
 
@@ -172,17 +172,17 @@ class ICAPDashboard(LoggedInMixin, ListView):
         context['in_progress'] = self.get_students_in_progress()
         context['incomplete'] = self.get_students_done()
         context['done'] = self.get_students_incomplete()
-        context['created_courses'] = Course.objects.filter(
+        context['created_groups'] = Group.objects.filter(
             creator=User.objects.get(pk=self.request.user.pk))
-        context['joined_courses'] = UserProfile.objects.get(
-            user=self.request.user.pk).course.all()
+        context['joined_groups'] = UserProfile.objects.get(
+            user=self.request.user.pk).group.all()
 #             user=self.request.user.pk)
-        # context['create_course'] = CreateCourse.as_view()
+        # context['create_group'] = CreateGroup.as_view()
         return context
 
 
 class FacultyDashboard(LoggedInMixin, ListView):
-    model = Course
+    model = Group
     template_name = 'dashboard/faculty_dashboard.html'
     success_url = '/'
 
@@ -242,17 +242,17 @@ class FacultyDashboard(LoggedInMixin, ListView):
 #         context['in_progress'] = self.get_students_in_progress()
 #         context['incomplete'] = self.get_students_done()
 #         context['done'] = self.get_students_incomplete()
-#         context['created_courses'] = Course.objects.filter(
+#         context['created_groups'] = Group.objects.filter(
 #             creator=User.objects.get(pk=self.request.user.pk))
-#         context['joined_courses'] = UserProfile.objects.get(
-#             user=self.request.user.pk).course.all()
+#         context['joined_groups'] = UserProfile.objects.get(
+#             user=self.request.user.pk).group.all()
 # #             user=self.request.user.pk)
-#         # context['create_course'] = CreateCourse.as_view()
+#         # context['create_group'] = CreateGroup.as_view()
 #        return context
 
 class StudentDashboard(LoggedInMixin, DetailView):
     '''For the first tab of the dashboard we are showing
-    courses that the user belongs to, and if they do not belong to any
+    groups that the user belongs to, and if they do not belong to any
     we are giving the the option to affiliate with one'''
     model = UserProfile
     template_name = 'dashboard/student_dashboard.html'
@@ -265,8 +265,8 @@ class StudentDashboard(LoggedInMixin, DetailView):
             user=self.request.user.pk)
         context['modules'] = Hierarchy.objects.all()
         context['user_modules'] = Hierarchy.objects.filter(userprofile=profile)
-        context['student_courses'] = Course.objects.filter(userprofile=profile)
-        # context['student_courses'] = profiles.course.all()
+        context['student_groups'] = Group.objects.filter(userprofile=profile)
+        # context['student_groups'] = profiles.group.all()
 
 
 class GetReport(LoggedInMixin, View):
@@ -280,15 +280,15 @@ class GetReport(LoggedInMixin, View):
                 pk=self.request.POST.__getitem__('country'))
             user_profile.school = School.objects.get(
                 pk=self.request.POST.__getitem__('school'))
-            user_profile.course = Course.objects.filter(
-                pk=self.request.POST.__getitem__('course'))
+            user_profile.group = Group.objects.filter(
+                pk=self.request.POST.__getitem__('group'))
             user_profile.save()
             return self.render_to_json_response(user_profile)
         else:
             return self.request
 
 
-class JoinCourse(LoggedInMixin, View):
+class JoinGroup(LoggedInMixin, View):
     template_name = 'student_dashboard.html'
     #success_url = '/thank_you/'
 
@@ -300,8 +300,8 @@ class JoinCourse(LoggedInMixin, View):
                 pk=self.request.POST.__getitem__('country'))
             user_profile.school = School.objects.get(
                 pk=self.request.POST.__getitem__('school'))
-            user_profile.course = Course.objects.filter(
-                pk=self.request.POST.__getitem__('course'))
+            user_profile.group = Group.objects.filter(
+                pk=self.request.POST.__getitem__('group'))
             user_profile.save()
             return self.render_to_json_response(user_profile)
         else:
@@ -327,17 +327,17 @@ class GetCountrySchools(LoggedInMixin, ListView):
             return {'school_list': s}
 
 
-class GetSchoolCourses(LoggedInMixin, ListView):
-    model = Course
-    template_name = 'dashboard/course_list.html'
+class GetSchoolGroups(LoggedInMixin, ListView):
+    model = Group
+    template_name = 'dashboard/group_list.html'
     success_url = '/'
 
     def get_context_data(self, **kwargs):
         if self.request.is_ajax():
             school_key = self.request.GET.__getitem__('name')
             school = School.objects.get(pk=school_key)
-            course_list = Course.objects.filter(school=school)
-            return {'course_list': course_list}
+            group_list = Group.objects.filter(school=school)
+            return {'group_list': group_list}
 
 
 class RegistrationView(FormView):
@@ -424,65 +424,65 @@ class UpdateSchoolView(UpdateView):
 
 
 # LoggedInMixin,
-class CreateCourseView(CreateView):
+class CreateGroupView(CreateView):
     '''generic class based view for
-    creating a course'''
-    model = Course
-    form_class = CreateCourseForm
-    template_name = 'dashboard/create_course.html'
+    creating a group'''
+    model = Group
+    form_class = CreateGroupForm
+    template_name = 'dashboard/create_group.html'
     success_url = '/'
 
     def form_valid(self, request):
-        f = CreateCourseForm(self.request.POST)
-        new_course = f.save(commit=False)
+        f = CreateGroupForm(self.request.POST)
+        new_group = f.save(commit=False)
         creator = User.objects.get(pk=self.request.user.pk)
         profile = UserProfile.objects.get(user=creator)
         school = School.objects.get(pk=profile.school.pk)
-        new_course.creator = creator
-        new_course.school = school
-        new_course.save()
+        new_group.creator = creator
+        new_group.school = school
+        new_group.save()
         # why do I need to return an HTTPResponse explicitly?
         # Should happen automatically no?
         return HttpResponseRedirect('/')
 
 
-class AddCourse(CreateView):
+class AddGroup(CreateView):
     '''generic class based view for
-    creating a course'''
-    model = Course
-    form_class = CreateCourseForm
-    template_name = 'new_course.html'
+    creating a group'''
+    model = Group
+    form_class = CreateGroupForm
+    template_name = 'new_group.html'
     success_url = '/'
 
     def form_valid(self, request):
-        f = CreateCourseForm(self.request.POST)
-        new_course = f.save(commit=False)
+        f = CreateGroupForm(self.request.POST)
+        new_group = f.save(commit=False)
         creator = User.objects.get(pk=self.request.user.pk)
         profile = UserProfile.objects.get(user=creator)
         school = School.objects.get(pk=profile.school.pk)
-        new_course.creator = creator
-        new_course.school = school
-        new_course.save()
+        new_group.creator = creator
+        new_group.school = school
+        new_group.save()
         # why do I need to return an HTTPResponse explicitly?
         # Should happen automatically no?
         return HttpResponseRedirect('/')
 
 
-class UpdateCourseView(UpdateView):
+class UpdateGroupView(UpdateView):
     '''generic class based view for
-    editing a course'''
-    model = Course
-    template_name = 'dashboard/create_course.html'
+    editing a group'''
+    model = Group
+    template_name = 'dashboard/create_group.html'
     success_url = '/'
-    form_class = CreateCourseForm
+    form_class = CreateGroupForm
 
 
 
-class CourseDetail(DetailView):
+class GroupDetail(DetailView):
     '''generic class based view for
-    see course details - students etc'''
-    model = Course
-    template_name = 'dashboard/course_details.html'
+    see group details - students etc'''
+    model = Group
+    template_name = 'dashboard/group_details.html'
     success_url = '/'
 
     def get_students_in_progress(self):
@@ -510,7 +510,7 @@ class CourseDetail(DetailView):
         return done
     
     def get_context_data(self, **kwargs):
-        context = super(CourseDetail, self).get_context_data(**kwargs)
+        context = super(GroupDetail, self).get_context_data(**kwargs)
         context['user_profile'] = UserProfile.objects.get(
             user=self.request.user.pk)
         context['students'] = self.object.userprofile_set.all()
@@ -547,12 +547,12 @@ class ContactView(FormView):
         return super(ContactView, self).form_valid(form)
 
 
-class DeleteCourseView(DeleteView):
-    model = Course
+class DeleteGroupView(DeleteView):
+    model = Group
     success_url = reverse_lazy('home')
 
     def dispatch(self, *args, **kwargs):
-        resp = super(DeleteCourseView, self).dispatch(*args, **kwargs)
+        resp = super(DeleteGroupView, self).dispatch(*args, **kwargs)
         if self.request.is_ajax():
             response_data = {"result": "ok"}
             return HttpResponse(json.dumps(response_data),
@@ -565,13 +565,13 @@ class DeleteCourseView(DeleteView):
 class StudentClassStatView(DetailView):
     '''This view is for students to see their progress,
     should be included in main base template.'''
-    model = Course
-    template_name = 'view_course_stats.html'
+    model = Group
+    template_name = 'view_group_stats.html'
     success_url = reverse_lazy('home')
 
     def get_context_data(self, **kwargs):
         if self.request.is_ajax():
-            module = self.course.__module
+            module = self.group.__module
             user = User.objects.get(pk=self.request.user.pk)
             profile = UserProfile.objects.get(user=user)
             return {'module': module, 'user': user, 'profile': profile}

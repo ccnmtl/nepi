@@ -7,16 +7,16 @@ from django.views.generic import TemplateView
 import os.path
 admin.autodiscover()
 import staticmedia
-from nepi.main.views import (CreateCourseView, UpdateCourseView,
-                             DeleteCourseView, StudentClassStatView,
-                             GetSchoolCourses, CreateSchoolView,
+from nepi.main.views import (CreateGroupView, UpdateGroupView,
+                             DeleteGroupView, StudentClassStatView,
+                             GetSchoolGroups, CreateSchoolView,
                              UpdateSchoolView, ContactView,
                              RegistrationView, GetCountries,
-                             StudentDashboard, JoinCourse,
+                             StudentDashboard, JoinGroup,
                              GetCountrySchools, FacultyDashboard,
-                             ICAPDashboard, Home, AddCourse,
+                             ICAPDashboard, Home, AddGroup,
                              UpdateProfileView, FacultyCountries,
-                             FacultyCountrySchools, ThankYou, CourseDetail)
+                             FacultyCountrySchools, ThankYou, GroupDetail)
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -56,7 +56,7 @@ urlpatterns += patterns(
 
     # flat and universally accessible pages
     (r'^contact/$', ContactView.as_view()),
-    (r'^thanks_course/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_course'),
+    (r'^thanks_group/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_group'),
     
 #     '''ThankYou View --> want to indicate what we are thanking user for,
 #     and have one single modal/alert thanking them for whatever it is they
@@ -84,38 +84,38 @@ urlpatterns += patterns(
     url(r'^icap-dashboard/$',
         ICAPDashboard.as_view(), name='icap-dashboard'),
 
-    # functionality to join a course
-    url(r'^join_course/$', JoinCourse.as_view(), name='join-course'),
+    # functionality to join a group
+    url(r'^join_group/$', JoinGroup.as_view(), name='join-group'),
     url(r'^get_countries/$', GetCountries.as_view()),
     url(r'^get_schools/$', GetCountrySchools.as_view()),
     url(r'^get_schools/(?P<pk>\d+)/$',
         GetCountrySchools.as_view(), name='get-country-schools'),
-    url(r'^get_courses/$', GetSchoolCourses.as_view()),
+    url(r'^get_groups/$', GetSchoolGroups.as_view()),
 
     # need custom yet almost identical templates for requesting faculty access
     url(r'^faculty_countries/$', FacultyCountries.as_view()),
     url(r'^faculty_schools/$', FacultyCountrySchools.as_view()),
 
-    # functionality for teacher create a course
-    url(r'^add_course/$',
-        AddCourse.as_view(), name='add-course'),
-    (r'^create_course/$', CreateCourseView.as_view()),
-    (r'^edit_course/(?P<pk>\d+)/$', UpdateCourseView.as_view()),
-    url(r'^delete_course/(?P<pk>\d+)/$', DeleteCourseView.as_view(),
-        name='delete-course'),
-    url(r'^course_details/(?P<pk>\d+)/$',
-        CourseDetail.as_view(), name='course-details'),
+    # functionality for teacher create a group
+    url(r'^add_group/$',
+        AddGroup.as_view(), name='add-group'),
+    (r'^create_group/$', CreateGroupView.as_view()),
+    (r'^edit_group/(?P<pk>\d+)/$', UpdateGroupView.as_view()),
+    url(r'^delete_group/(?P<pk>\d+)/$', DeleteGroupView.as_view(),
+        name='delete-group'),
+    url(r'^group_details/(?P<pk>\d+)/$',
+        GroupDetail.as_view(), name='group-details'),
     (r'^remove_student/$', 'nepi.main.views.remove_student'),
-    #(r'^course_results/$', 'nepi.main.views.course_results'),
+    #(r'^group_results/$', 'nepi.main.views.group_results'),
 
     # ICAP related pages
     (r'^add_school/$', CreateSchoolView.as_view()),
-    url(r'^view_course_stats/(?P<pk>\d+)/', StudentClassStatView.as_view(),
-        name='view-course-stats'),
+    url(r'^view_group_stats/(?P<pk>\d+)/', StudentClassStatView.as_view(),
+        name='view-group-stats'),
     (r'^edit_school/(?P<pk>\d+)/$', UpdateSchoolView.as_view()),
     # Teacher related pages
     #(r'^view_students/$', 'nepi.main.views.view_students'),
-    #'nepi.main.views.create_course'),
+    #'nepi.main.views.create_group'),
 
     (r'^accessible/(?P<section_slug>.*)/$',
      'is_accessible', {}, 'is-accessible'),
