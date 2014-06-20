@@ -16,7 +16,7 @@ from nepi.main.views import (CreateCourseView, UpdateCourseView,
                              GetCountrySchools, FacultyDashboard,
                              ICAPDashboard, Home, AddCourse,
                              UpdateProfileView, FacultyCountries,
-                             FacultyCountrySchools, ThankYou)
+                             FacultyCountrySchools, ThankYou, CourseDetail)
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -103,7 +103,8 @@ urlpatterns += patterns(
     (r'^edit_course/(?P<pk>\d+)/$', UpdateCourseView.as_view()),
     url(r'^delete_course/(?P<pk>\d+)/$', DeleteCourseView.as_view(),
         name='delete-course'),
-    (r'^course_students/$', 'nepi.main.views.course_students'),
+    url(r'^course_details/(?P<pk>\d+)/$',
+        CourseDetail.as_view(), name='course-details'),
     (r'^remove_student/$', 'nepi.main.views.remove_student'),
     #(r'^course_results/$', 'nepi.main.views.course_results'),
 
