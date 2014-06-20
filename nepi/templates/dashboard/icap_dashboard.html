@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block js %}
+
 <script>
 
     var join_btn = jQuery('#join_course_button');
@@ -53,6 +54,8 @@
 {% endblock %}
 
 {% block content %}
+
+<script src="/site_media/js/dashboard.js"></script>
 <input type="hidden" value={{user.pk}}>
 
     {% block actualtabs %}
