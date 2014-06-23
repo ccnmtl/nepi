@@ -299,6 +299,7 @@ class JoinGroup(LoggedInMixin, View):
 
     def post(self, request):
         if self.request.is_ajax():
+            print user_id
             user_id = request.user.pk
             user_profile = UserProfile.objects.get(user=user_id)
             user_profile.country = Country.objects.get(
@@ -420,7 +421,7 @@ class CreateSchoolView(CreateView):
     success_url = '/'
 
 
-class UpdateSchoolView(UpdateView):
+class UpdateSchoolView(LoggedInMixin, UpdateView):
     '''generic class based view for
     editing a school'''
     model = School
@@ -429,7 +430,7 @@ class UpdateSchoolView(UpdateView):
 
 
 # LoggedInMixin,
-class CreateGroupView(CreateView):
+class CreateGroupView(LoggedInMixin, CreateView):
     '''generic class based view for
     creating a group'''
     model = Group
@@ -451,7 +452,7 @@ class CreateGroupView(CreateView):
         return HttpResponseRedirect('/')
 
 
-class AddGroup(CreateView):
+class AddGroup(LoggedInMixin, CreateView):
     '''generic class based view for
     creating a group'''
     model = Group
