@@ -2,30 +2,10 @@
 {% block js %}
 
 <script>
-
-    var join_btn = jQuery('#join_course_button');
-    join_btn.click(
-        function()
-        {
-            jQuery('#join_course').load('/get_countries/');
-        });
-    
-    var add_btn = jQuery('#add_course_button');
-    add_btn.click(function(){jQuery('#add_course_div').load('/dashboard/add_course/');});
-    
-    
-    
-    
-    
-    var edit_btn = jQuery('#edit_course_button');
-    edit_btn.click(function(){jQuery('#edit_course_div').load('/dashboard/edit_course/');});
-    
     jQuery('#report_form').load('/dashboard/get_countries/');
     
     var profilebtn = jQuery('#user-profile-button');
     profilebtn.click(function(){jQuery('#new_profile').load('/dashboard/update_profile/{{user_profile.pk}}/');});
-    
-    
     
     var onDelete = function()
     {
@@ -33,7 +13,7 @@
             {   
                 if (data.result == "ok")
                 {
-                    alert("Course deleted successfully");
+                    alert("Group deleted successfully");
                     location.reload();
                 } else
                 {

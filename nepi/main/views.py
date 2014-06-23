@@ -14,6 +14,7 @@ from django.views.generic.edit import FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.core.mail import send_mail
 import json
+from pagetree.models import Hierarchy
 from django.views.generic import View
 from django.core.urlresolvers import reverse
 from django.views.generic.detail import DetailView
@@ -132,53 +133,27 @@ class Home(View):
             return HttpResponseRedirect(reverse('register'))
 
 
-class ICAPDashboard(LoggedInMixin, ListView):
-    model = Group
-    template_name = 'dashboard/icap_dashboard.html'
+class StudentDashboard(LoggedInMixin, DetailView):
+    '''For the first tab of the dashboard we are showing
+    groups that the user belongs to, and if they do not belong to any
+    we are giving the the option to affiliate with one'''
+    model = UserProfile
+    template_name = 'dashboard/student_dashboard.html'
     success_url = '/'
 
-    def get_students_in_progress(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        in_progress = 0
-        for each in find_students:
-            if each.percent_complete() != 0 and each.percent_complete() != 100:
-                in_progress = in_progress + 1
-        return in_progress
-
-    def get_students_incomplete(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        incomplete = 0
-        for each in find_students:
-            if each.percent_complete() != 0 and each.percent_complete() != 100:
-                incomplete = incomplete + 1
-            return incomplete
-
-    def get_students_done(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        done = 0
-        for each in find_students:
-            if each.percent_complete() == 100:
-                done = done + 1
-        return done
-
     def get_context_data(self, **kwargs):
-        context = super(ICAPDashboard, self).get_context_data(**kwargs)
+        context = super(StudentDashboard, self).get_context_data(**kwargs)
+        profile = UserProfile.objects.get(user=self.request.user.pk)
         context['user_profile'] = UserProfile.objects.get(
             user=self.request.user.pk)
-        context['pending_teachers'] = PendingTeachers.objects.filter(
-            user_profile__profile_type='TE')
-        context['students'] = UserProfile.objects.filter(
-            profile_type="ST").count()
-        context['in_progress'] = self.get_students_in_progress()
-        context['incomplete'] = self.get_students_done()
-        context['done'] = self.get_students_incomplete()
-        context['created_groups'] = Group.objects.filter(
-            creator=User.objects.get(pk=self.request.user.pk))
+        context['modules'] = Hierarchy.objects.all()
+        context['user_modules'] = Hierarchy.objects.filter(userprofile=profile)
+        # from the two below which is better?
+        # context['student_groups'] = Group.objects.filter(userprofile=profile)
         context['joined_groups'] = UserProfile.objects.get(
             user=self.request.user.pk).group.all()
-#             user=self.request.user.pk)
-        # context['create_group'] = CreateGroup.as_view()
-        return context
+        context['modules'] = Hierarchy.objects.all()
+        # context['student_groups'] = profiles.group.all()
 
 
 class FacultyDashboard(LoggedInMixin, ListView):
@@ -250,23 +225,53 @@ class FacultyDashboard(LoggedInMixin, ListView):
 #         # context['create_group'] = CreateGroup.as_view()
 #        return context
 
-class StudentDashboard(LoggedInMixin, DetailView):
-    '''For the first tab of the dashboard we are showing
-    groups that the user belongs to, and if they do not belong to any
-    we are giving the the option to affiliate with one'''
-    model = UserProfile
-    template_name = 'dashboard/student_dashboard.html'
+
+class ICAPDashboard(LoggedInMixin, ListView):
+    model = Group
+    template_name = 'dashboard/icap_dashboard.html'
     success_url = '/'
 
+    def get_students_in_progress(self):
+        find_students = UserProfile.objects.filter(profile_type="ST")
+        in_progress = 0
+        for each in find_students:
+            if each.percent_complete() != 0 and each.percent_complete() != 100:
+                in_progress = in_progress + 1
+        return in_progress
+
+    def get_students_incomplete(self):
+        find_students = UserProfile.objects.filter(profile_type="ST")
+        incomplete = 0
+        for each in find_students:
+            if each.percent_complete() != 0 and each.percent_complete() != 100:
+                incomplete = incomplete + 1
+            return incomplete
+
+    def get_students_done(self):
+        find_students = UserProfile.objects.filter(profile_type="ST")
+        done = 0
+        for each in find_students:
+            if each.percent_complete() == 100:
+                done = done + 1
+        return done
+
     def get_context_data(self, **kwargs):
-        context = super(StudentDashboard, self).get_context_data(**kwargs)
-        profile = UserProfile.objects.get(user=self.request.user.pk)
+        context = super(ICAPDashboard, self).get_context_data(**kwargs)
         context['user_profile'] = UserProfile.objects.get(
             user=self.request.user.pk)
+        context['pending_teachers'] = PendingTeachers.objects.filter(
+            user_profile__profile_type='TE')
+        context['students'] = UserProfile.objects.filter(
+            profile_type="ST").count()
+        context['in_progress'] = self.get_students_in_progress()
+        context['incomplete'] = self.get_students_done()
+        context['done'] = self.get_students_incomplete()
+        context['created_groups'] = Group.objects.filter(
+            creator=User.objects.get(pk=self.request.user.pk))
+        context['joined_groups'] = UserProfile.objects.get(
+            user=self.request.user.pk).group.all()
         context['modules'] = Hierarchy.objects.all()
-        context['user_modules'] = Hierarchy.objects.filter(userprofile=profile)
-        context['student_groups'] = Group.objects.filter(userprofile=profile)
-        # context['student_groups'] = profiles.group.all()
+        return context
 
 
 class GetReport(LoggedInMixin, View):
@@ -451,7 +456,7 @@ class AddGroup(CreateView):
     creating a group'''
     model = Group
     form_class = CreateGroupForm
-    template_name = 'new_group.html'
+    template_name = 'dashboard/new_group.html'
     success_url = '/'
 
     def form_valid(self, request):
@@ -475,7 +480,6 @@ class UpdateGroupView(UpdateView):
     template_name = 'dashboard/create_group.html'
     success_url = '/'
     form_class = CreateGroupForm
-
 
 
 class GroupDetail(DetailView):
@@ -519,8 +523,6 @@ class GroupDetail(DetailView):
         context['incomplete'] = self.get_students_done()
         context['done'] = self.get_students_incomplete()
         return context
-
-
 
 
 def remove_student(request, stud_id, cors_id):
@@ -604,7 +606,6 @@ class UpdateProfileView(UpdateView):
             return self.render_to_json_response(form.errors, status=400)
         else:
             return response
-
 
 
 class FacultyCountries(LoggedInMixin, ListView):

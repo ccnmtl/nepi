@@ -1,4 +1,3 @@
-
     <div id="school_list">
         <script>
         var school_change = jQuery('#id_school');
@@ -7,10 +6,10 @@
 
             function(){
                 jQuery.ajax({
-                    url: "/get_courses/",
+                    url: "/get_groups/",
                     data: { 'name' : jQuery('#id_school').val()},
                     success: function (data) {
-                        jQuery('#course_list').replaceWith(data)
+                        jQuery('#group_list').replaceWith(data)
                     },
                     error: function (data) {
                         alert(data);
