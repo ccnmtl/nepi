@@ -294,8 +294,7 @@ class GetReport(LoggedInMixin, View):
 
 
 class JoinGroup(LoggedInMixin, View):
-    template_name = 'student_dashboard.html'
-    #success_url = '/thank_you/'
+    template_name = 'dashboard/icap_dashboard.html'
 
     def post(self, request):
         if self.request.is_ajax():
