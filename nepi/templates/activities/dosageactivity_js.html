@@ -17,7 +17,7 @@ jQuery(document).ready(function(){
 
             }
 
-            if (value.length() > 2)  {
+            if (value.length > 2)  {
                 // runs till here but does not alert???
                 alert("Values should consist of one or two digits");
 
@@ -70,20 +70,19 @@ jQuery(document).ready(function(){
 
 		if (jQuery("#sub_nvp").attr('data-value') != jQuery("#user_nvp").attr('data-value'))
 		{
-				jQuery("#user_nvp").append("<div class='alert alert-error'><b>Incorrect</b></div>");
+				jQuery("#user_nvp").show('.alert alert-error');
 		}
 		if (jQuery("#sub_times_day").attr('data-value') != jQuery("#user_times_day").attr('data-value'))
 		{
-				jQuery("#user_times_day").append("<div class='alert alert-error'><b>Incorrect</b></div>");
+				jQuery("#user_times_day").show('.alert alert-error');
 		}
 		if (jQuery("#sub_weeks").attr('data-value') != jQuery("#user_weeks").attr('data-value'))
 		{
-				jQuery("#user_weeks").append("<div class='alert alert-error'><b>Incorrect</b></div>");
+				jQuery("#user_weeks").show('.alert alert-error');
 		}
 		if (jQuery("#sub_nvp").attr('data-value') == jQuery("#user_nvp").attr('data-value'))
 		{
-				jQuery("#user_nvp").append("<div class='alert alert-success'><b>Correct</b></div>");
-				//jQuery("#user_nvp").replace("<div class='alert alert-success'><b>Correct</b></div>");
+				jQuery("#user_nvp").show('.alert alert-success');
 		}
 		if (jQuery("#sub_times_day").attr('data-value') == jQuery("#user_times_day").attr('data-value'))
 		{
