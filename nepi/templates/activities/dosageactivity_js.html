@@ -2,60 +2,56 @@
 jQuery(document).ready(function(){
 
        jQuery('form').submit(function(e) {
-       
-       var inputs = jQuery(e.currentTarget).find("input[type='text']");
-       // returns array of all inputs from form of type text
-       
-       for (var i=0; i < inputs.length; i++)
-       {
-           var value = jQuery(inputs[i]).val();
+
+        var check1 = false; 
+        var check2 = false;
+		var check3 = false;
+
+        var inputs = jQuery(e.currentTarget).find("input[type='text']");
+        
+        for (var i=0; i < inputs.length; i++)
+        {
+            var value = jQuery(inputs[i]).val();
            
-           if (value == null || value == "") {
-
-                alert("All values must be filled out");
-
-                rc = false;
-
+            if (value === null || value === "") {
+                 alert("All values must be filled out");
+                 check1 = false;
+             }
+			
+            if (value !== null || value !== "") {
+                 check1 = true;
+             }
+			
+             if (value.length > 2)  {
+                 alert("Values should consist of one or two digits 1");
+                 check2 = false;
+             }
+			
+             if (value.length <= 2)  {
+                 check2 = true;
+             }
+            
+             if (! /^[0-9]{1,2}$/.test(value))
+             {
+                 alert("Values should consist of one or two digits 3");
+                 check3 = false;
+             }
+            
+            if(/^[0-9]{1,2}$/.test(value))
+            {
+                 check3 = true;
             }
 
-            if (value.length > 2)  {
-                // runs till here but does not alert???
-                alert("Values should consist of one or two digits");
-
-                rc = false;
-
-            }
-
-            if (parseInt(value) == "")  {
-
-                alert("Values should consist of one or two digits");
-
-                rc = false;
-
-            }
-
-
-            if (!rc) {
-
-                e.preventDefault();
-
-                return false;
-
-            } else {
-
-                return rc;
-
-            }
-           
-           
-       }
+        }// end of for
        
-      //return false;
+        if (check1 && check2 && check3) {
+                 e.preventDefault();
+                 return true;
+             } else {
+                 return false;
+        }
        });
           
-
-
-
 	jQuery("#clipboard-button").on("click",
 		function()
 		{ 
@@ -67,8 +63,6 @@ jQuery(document).ready(function(){
 		{ 
 			jQuery("#clipboard").hide();		
 		});
-		
-
 		if (jQuery("#sub_nvp").attr('data-value') != jQuery("#user_nvp").attr('data-value'))
 		{
 				jQuery("#user_nvp").show('.alert alert-error');
@@ -93,8 +87,5 @@ jQuery(document).ready(function(){
 		{
 				jQuery("#user_weeks").show('.alert alert-success');
 		}
-
-
-
 });
 </script>
