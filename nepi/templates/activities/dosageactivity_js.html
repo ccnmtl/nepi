@@ -6,7 +6,8 @@ jQuery(document).ready(function(){
        var inputs = jQuery(e.currentTarget).find("input[type='text']");
        // returns array of all inputs from form of type text
        
-       for (var i=0; i < inputs.length; i++){
+       for (var i=0; i < inputs.length; i++)
+       {
            var value = jQuery(inputs[i]).val();
            
            if (value == null || value == "") {
@@ -86,11 +87,11 @@ jQuery(document).ready(function(){
 		}
 		if (jQuery("#sub_times_day").attr('data-value') == jQuery("#user_times_day").attr('data-value'))
 		{
-				jQuery("#user_times_day").append("<div class='alert alert-success'><b>Correct</b></div>");
+				jQuery("#user_times_day").show('.alert alert-success');
 		}
 		if (jQuery("#sub_weeks").attr('data-value') == jQuery("#user_weeks").attr('data-value'))
 		{
-				jQuery("#user_weeks").append("<div class='alert alert-success'><b>Correct</b></div>");
+				jQuery("#user_weeks").show('.alert alert-success');
 		}
 
 
