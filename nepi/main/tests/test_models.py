@@ -1,9 +1,9 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from nepi.main.models import UserProfile, Country, School
-from nepi.main.models import Course
+from nepi.main.models import Group
 from datetime import datetime
-from factories import CountryFactory, SchoolFactory, CourseFactory
+from factories import CountryFactory, SchoolFactory, GroupFactory
 
 
 class TestCountry(TestCase):
@@ -18,10 +18,10 @@ class TestSchool(TestCase):
         self.assertEqual(str(s), "Test School")
 
 
-class TestCourse(TestCase):
+class TestGroup(TestCase):
     def test_unicode(self):
-        c = CourseFactory()
-        self.assertEqual(str(c), "A Course")
+        c = GroupFactory()
+        self.assertEqual(str(c), "A Group")
 
 
 class TestUserProfile(TestCase):
@@ -46,11 +46,11 @@ class TestUserProfile(TestCase):
         self.country1.save()
         self.school = School(country=self.country1, name='School 1')
         self.school.save()
-        self.course = Course(school=self.school,
-                             name="Course",
+        self.group = Group(school=self.school,
+                             name="Group",
                              start_date=datetime.now(),
                              end_date=datetime.now())
-        self.course.save()
+        self.group.save()
         self.student_profile = UserProfile(
             user=self.student, profile_type='ST', country=self.country1,
             school=self.school)
