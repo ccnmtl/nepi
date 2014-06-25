@@ -16,7 +16,7 @@ from nepi.main.views import (CreateGroupView, UpdateGroupView,
                              GetCountrySchools, FacultyDashboard,
                              ICAPDashboard, Home, AddGroup,
                              UpdateProfileView, FacultyCountries,
-                             FacultyCountrySchools, ThankYou, GroupDetail)
+                             FacultyCountrySchools, GroupDetail)
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -57,21 +57,6 @@ urlpatterns += patterns(
     # flat and universally accessible pages
     (r'^contact/$', ContactView.as_view()),
     (r'^thanks_group/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_group'),
-    
-#     '''ThankYou View --> want to indicate what we are thanking user for,
-#     and have one single modal/alert thanking them for whatever it is they
-#     have done, may later extend to take argument to direct them back to
-#     the tab they were on/active
-#     Situations:
-#     1. Registering for site
-#     2. Joining Group
-#     3. Creating Group
-#     '''
-    #(r'^thank_you/$', ThankYou.as_view(), name="thank-you-reg"),
-    # (r'^thanks_you_j/(?P<grp_id>\d+)/$', ThankYou.as_view(), name="thank-you-join"),
-    # (r'^thanks_you_c/(?P<grp_id>\d+)/$', ThankYou.as_view(), name="thank-you-create"),
-    
-    # profile related views
     url(r'^register/$', RegistrationView.as_view(), name='register'),
     url(r'^update_profile/(?P<pk>\d+)/$', UpdateProfileView.as_view(),
         name='update-profile'),

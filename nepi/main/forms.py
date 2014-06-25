@@ -146,7 +146,7 @@ class UpdateProfileForm(forms.ModelForm):
         if (self.cleaned_data.get('password1')
                 and self.cleaned_data.get('password2')):
             self.instance.user.last_name = \
-            self.cleaned_data.get('password1')
+                self.cleaned_data.get('password1')
         self.instance.user.save()
         return super(UpdateProfileForm, self).save(*args, **kwargs)
 
