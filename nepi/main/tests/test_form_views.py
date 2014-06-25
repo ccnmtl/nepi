@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from nepi.main.models import Country, School
 from nepi.main.models import Group
 from nepi.main.views import CreateSchoolView
-from nepi.main.views import CreateGroupView
 from datetime import datetime
 from factories import UserFactory
 
@@ -17,9 +16,9 @@ class TestFormViews(TestCase):
         self.school = School(country=self.country, name='School 1')
         self.school.save()
         self.group = Group(school=self.school,
-                             name="Group",
-                             start_date=datetime.now(),
-                             end_date=datetime.now())
+                           name="Group",
+                           start_date=datetime.now(),
+                           end_date=datetime.now())
         self.student = User(first_name="student", last_name="student",
                             username="student", email="student@email.com",
                             password="student")

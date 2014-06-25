@@ -47,9 +47,9 @@ class TestUserProfile(TestCase):
         self.school = School(country=self.country1, name='School 1')
         self.school.save()
         self.group = Group(school=self.school,
-                             name="Group",
-                             start_date=datetime.now(),
-                             end_date=datetime.now())
+                           name="Group",
+                           start_date=datetime.now(),
+                           end_date=datetime.now())
         self.group.save()
         self.student_profile = UserProfile(
             user=self.student, profile_type='ST', country=self.country1,
