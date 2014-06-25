@@ -138,16 +138,17 @@ class UpdateProfileForm(forms.ModelForm):
         return form
 
     def save(self, *args, **kwargs):
-        '''to save attributes from another model must explicitly save the extra fields of the form'''
+        '''to save attributes from another model must explicitly
+        save the extra fields of the form'''
         self.instance.user.first_name = self.cleaned_data.get('first_name')
         self.instance.user.last_name = self.cleaned_data.get('last_name')
         self.instance.user.email = self.cleaned_data.get('email')
-        if self.cleaned_data.get('password1') and self.cleaned_data.get('password2'):
-            self.instance.user.last_name = self.cleaned_data.get('password1')
+        if (self.cleaned_data.get('password1')
+            and self.cleaned_data.get('password2')):
+                self.instance.user.last_name = \
+                self.cleaned_data.get('password1')
         self.instance.user.save()
         return super(UpdateProfileForm, self).save(*args, **kwargs)
-
-
 
 
 class CreateGroupForm(forms.ModelForm):

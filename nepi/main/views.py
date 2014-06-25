@@ -19,7 +19,6 @@ from django.views.generic import View
 from django.core.urlresolvers import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from pagetree.models import Hierarchy
 from nepi.main.forms import CreateGroupForm
 from django.views.generic.edit import DeleteView
 from django.core.urlresolvers import reverse_lazy
@@ -91,7 +90,10 @@ class InstructorPage(LoggedInMixinStaff, InstructorView):
     hierarchy_base = "/pages/main/"
 
 # should make a class to say thank you for... and give appropriate statement.
-class ThankYou(View):
+
+
+class ThankYou(LoggedInMixin, View):
+
     def get(self, request):
         '''not entirely sure how thise will be called yet...
         need to determine how we will indicate what the situation is...'''
@@ -105,13 +107,12 @@ class ThankYou(View):
         pass
 
 
-
 def thanks_group(request, group_id):
     """Returns thanks for joining group page."""
     return render(request, 'student/thanks_group.html')
 
 
-class Home(View):
+class Home(LoggedInMixin, View):
     '''redoing so that it simply redirects people where they need to be'''
 
     def get(self, request):
@@ -298,7 +299,6 @@ class JoinGroup(LoggedInMixin, View):
 
     def post(self, request):
         if self.request.is_ajax():
-            print user_id
             user_id = request.user.pk
             user_profile = UserProfile.objects.get(user=user_id)
             user_profile.country = Country.objects.get(
@@ -512,7 +512,7 @@ class GroupDetail(DetailView):
             if each.percent_complete() == 100:
                 done = done + 1
         return done
-    
+
     def get_context_data(self, **kwargs):
         context = super(GroupDetail, self).get_context_data(**kwargs)
         context['user_profile'] = UserProfile.objects.get(
@@ -543,7 +543,8 @@ class ContactView(FormView):
         sender = form_data['sender'],
         subject = form_data['subject'],
         message = form_data['message'],
-        recipients = ['nepi@nepi.ccnmtl.columbia.edu']#["u'cdunlop@columbia.edu'"]
+        recipients = ['nepi@nepi.ccnmtl.columbia.edu']
+        # ["u'cdunlop@columbia.edu'"]
         send_mail(subject, message, sender, 'nepi@nepi.ccnmtl.columbia.edu')
         form.send_email(recipients)
         return super(ContactView, self).form_valid(form)
@@ -586,7 +587,7 @@ class UpdateProfileView(UpdateView):
     success_url = '/'
 
     def form_valid(self, form):
-        response = super(UpdateProfileView, self).form_valid(form)
+        # response = super(UpdateProfileView, self).form_valid(form)
         form_data = form.cleaned_data
         if form_data['faculty_access']:
             subject = "Facutly Access Requeted"
@@ -599,7 +600,7 @@ class UpdateProfileView(UpdateView):
             send_mail(subject, message, sender, recipients)
         # not clear to me what validation is done for you
         form_data.save()
-            
+
     def form_invalid(self, form):
         response = super(UpdateProfileView, self).form_invalid(form)
         if self.request.is_ajax():
