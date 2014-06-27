@@ -95,18 +95,17 @@ def thanks_course(request, course_id):
     return render(request, 'student/thanks_course.html')
 
 
-class Home(View):
+class Home(LoggedInMixin, View):
     '''redoing so that it simply redirects people where they need to be'''
 
     def get(self, request):
         try:
             user_profile = UserProfile.objects.get(user=request.user.pk)
-        except User.DoesNotExist:
+        except UserProfile.DoesNotExist:
             return HttpResponseRedirect(reverse('register'))
+
         if user_profile.profile_type == 'ST':
             return HttpResponseRedirect(reverse('student-dashboard'))
-            # return HttpResponseRedirect(reverse('student-dashboard',
-            #    {'pk' : profile.pk}))
         elif user_profile.profile_type == 'TE':
             return HttpResponseRedirect(reverse('faculty-dashboard'))
         elif user_profile.profile_type == 'IC':
