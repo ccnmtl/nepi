@@ -7,14 +7,16 @@ from django.views.generic import TemplateView
 import os.path
 admin.autodiscover()
 import staticmedia
-from nepi.main.views import (CreateCourseView, UpdateCourseView,
-                             DeleteCourseView, StudentClassStatView,
-                             GetSchoolCourses, CreateSchoolView,
+from nepi.main.views import (CreateGroupView, UpdateGroupView,
+                             DeleteGroupView, StudentClassStatView,
+                             GetSchoolGroups, CreateSchoolView,
                              UpdateSchoolView, ContactView,
                              RegistrationView, GetCountries,
-                             StudentDashboard, JoinCourse,
+                             StudentDashboard, JoinGroup,
                              GetCountrySchools, FacultyDashboard,
-                             ICAPDashboard, Home, AddCourse)
+                             ICAPDashboard, Home, AddGroup,
+                             UpdateProfileView, FacultyCountries,
+                             FacultyCountrySchools, GroupDetail)
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -54,49 +56,61 @@ urlpatterns += patterns(
 
     # flat and universally accessible pages
     (r'^contact/$', ContactView.as_view()),
+    (r'^thanks_group/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_group'),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
+    url(r'^update_profile/(?P<pk>\d+)/$', UpdateProfileView.as_view(),
+        name='update-profile'),
+
+    # dashboard base views
     url(r'^student-dashboard/$',
         StudentDashboard.as_view(), name='student-dashboard'),
     url(r'^faculty-dashboard/$',
         FacultyDashboard.as_view(), name='faculty-dashboard'),
     url(r'^icap-dashboard/$',
         ICAPDashboard.as_view(), name='icap-dashboard'),
-    url(r'^join_course/$', JoinCourse.as_view(), name='join-course'),
+
+    # functionality to join a group
+    url(r'^join_group/$', JoinGroup.as_view(), name='join-group'),
     url(r'^get_countries/$', GetCountries.as_view()),
     url(r'^get_schools/$', GetCountrySchools.as_view()),
     url(r'^get_schools/(?P<pk>\d+)/$',
         GetCountrySchools.as_view(), name='get-country-schools'),
-    url(r'^get_courses/$', GetSchoolCourses.as_view()),
-    url(r'^get_courses/(?P<pk>\d+)/$', GetSchoolCourses.as_view()),
-    url(r'^join_course/(?P<pk>\d+)/$',
-        JoinCourse.as_view(), name='join-course'),
-    url(r'^add_course/$',
-        AddCourse.as_view(), name='add-course'),
-    (r'^accessible/(?P<section_slug>.*)/$',
-     'is_accessible', {}, 'is-accessible'),
+    url(r'^get_groups/$', GetSchoolGroups.as_view()),
+
+    # need custom yet almost identical templates for requesting faculty access
+    url(r'^faculty_countries/$', FacultyCountries.as_view()),
+    url(r'^faculty_schools/$', FacultyCountrySchools.as_view()),
+
+    # functionality for teacher create a group
+    url(r'^add_group/$',
+        AddGroup.as_view(), name='add-group'),
+    url(r'^create_group/$',
+        CreateGroupView.as_view(),
+        name='create-group'),
+    (r'^edit_group/(?P<pk>\d+)/$',
+     UpdateGroupView.as_view()),
+    url(r'^delete_group/(?P<pk>\d+)/$',
+        DeleteGroupView.as_view(),
+        name='delete-group'),
+    url(r'^group_details/(?P<pk>\d+)/$',
+        GroupDetail.as_view(), name='group-details'),
+    (r'^remove_student/$', 'nepi.main.views.remove_student'),
+    #(r'^group_results/$', 'nepi.main.views.group_results'),
 
     # ICAP related pages
     (r'^add_school/$', CreateSchoolView.as_view()),
-    url(r'^view_course_stats/(?P<pk>\d+)/', StudentClassStatView.as_view(),
-        name='view-course-stats'),
+    url(r'^view_group_stats/(?P<pk>\d+)/', StudentClassStatView.as_view(),
+        name='view-group-stats'),
     (r'^edit_school/(?P<pk>\d+)/$', UpdateSchoolView.as_view()),
-
     # Teacher related pages
     #(r'^view_students/$', 'nepi.main.views.view_students'),
-    #'nepi.main.views.create_course'),
-    (r'^create_course/$', CreateCourseView.as_view()),
-    (r'^edit_course/(?P<pk>\d+)/$', UpdateCourseView.as_view()),
-    url(r'^delete_course/(?P<pk>\d+)/$', DeleteCourseView.as_view(),
-        name='delete-course'),
-    (r'^course_students/$', 'nepi.main.views.course_students'),
-    #(r'^teacher_courses/$', 'nepi.main.views.current_courses'),
-    (r'^remove_student/$', 'nepi.main.views.remove_student'),
-    #(r'^course_results/$', 'nepi.main.views.course_results'),
+    #'nepi.main.views.create_group'),
+
+    (r'^accessible/(?P<section_slug>.*)/$',
+     'is_accessible', {}, 'is-accessible'),
 
     url(r'^captcha/', include('captcha.urls')),
     (r'^activities/', include('nepi.activities.urls')),
-    # Student related pages
-    (r'^thanks_course/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_course'),
 
     url(r'^_impersonate/', include('impersonate.urls')),
     (r'^stats/$', TemplateView.as_view(template_name="stats.html")),

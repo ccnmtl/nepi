@@ -4,7 +4,7 @@ from nepi.main.models import Country, School
 from nepi.main.models import PendingTeachers
 # from nepi.main.views import RegistrationView
 from django.test.client import Client
-from factories import CourseFactory
+from factories import GroupFactory
 
 
 class TestRegistration(TestCase):
@@ -15,7 +15,7 @@ class TestRegistration(TestCase):
         self.country.save()
         self.school = School(country=self.country, name='School 1')
         self.school.save()
-        self.course = CourseFactory()
+        self.group = GroupFactory()
 
 #         self.student = User(first_name="student", last_name="student",
 #                             username="student", email="student@email.com",

@@ -22,28 +22,42 @@
    <tr><td> MLVP:</td><td>
    		{% if dosager %}
    			<div id="user_nvp" name="usernvp" data-value="{{dosager.ml_nvp}}" value="{{dosager.ml_nvp}}">{{dosager.ml_nvp}}</div>
+   			<div style="display:none;" class='alert alert-error'><b>Incorrect</b></div>
+            <div style="display:none;" class='alert alert-success'><b>Correct</b></div>
    		{% else %}
    			<input type="text" id="nvp_input" name="pageblock-{{block.pageblock.id}}-mlnvp" value="">
+   			<div style="display:none;" class='alert alert-error'><b>Incorrect</b></div>
+            <div style="display:none;" class='alert alert-success'><b>Correct</b></div>
    		{% endif %}
    	</td></tr>
    
    <tr><td>Number of Times per Day:</td><td>
    		{% if dosager %}
    			<div id="user_times_day" data-value="{{dosager.times_day}}" value="{{dosager.times_day}}">{{dosager.times_day}}</div>
+   			<div style="display:none;" class='alert alert-error'><b>Incorrect</b></div>
+            <div style="display:none;" class='alert alert-success'><b>Correct</b></div>
    		{% else %}
    			<input type="text" id="times_day_input" name="pageblock-{{block.pageblock.id}}-times_day" value="">
+   			<div style="display:none;" class='alert alert-error'><b>Incorrect</b></div>
+            <div style="display:none;" class='alert alert-success'><b>Correct</b></div>
    		{% endif %}
    		</td></tr>
 
    <tr><td>Number of Weeks:</td><td>
 	   {% if dosager %}
 	   		<div id="user_weeks" data-value="{{dosager.weeks}}" value="{{dosager.weeks}}">{{dosager.weeks}}</div>
+	   		<div style="display:none;" class='alert alert-error'><b>Incorrect</b></div>
+           <div style="display:none;" class='alert alert-success'><b>Correct</b></div>
 	   {% else %}
 		   <input type="text" id="week_input" name="pageblock-{{block.pageblock.id}}-weeks" value="">
+		   <div style="display:none;" class='alert alert-error'><b>Incorrect</b></div>
+           <div style="display:none;" class='alert alert-success'><b>Correct</b></div>
 	   {% endif %}
 	   </td></tr>
 	   {% if dosager %}
-	   <div id="explanation">{{block.explanation}}</div>
+	       <div id="explanation">{{block.explanation}}</div>
+	       <div style="display:none;" class='alert alert-error'><b>Incorrect</b></div>
+           <div style="display:none;" class='alert alert-success'><b>Correct</b></div>
 	   {% endif %}
 	   
 </table>

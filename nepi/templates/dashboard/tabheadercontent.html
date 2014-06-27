@@ -1,0 +1,36 @@
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="#user-modules" data-toggle="tab">
+            Option B+
+        </a>
+    </li>
+
+    <li>
+        <a href="#user-groups" data-toggle="tab">
+            Groups
+        </a>
+    </li>
+
+    {% if user_profile.profile_type == "IC" or user_profile.profile_type == "TE" %}
+    <li>
+        <a href="#user-reports" data-toggle="tab">
+            Reports
+        </a>
+    </li>
+    {% endif %}
+
+    <li>
+        <a href="#user-profile" data-toggle="tab">
+            Profile
+        </a>
+    </li>
+    
+    {% if user_profile.profile_type == "IC" %}
+    <li>
+        <a href="#pending-teachers" data-toggle="tab">
+            Pending Teachers
+        </a>
+    </li>
+    {% endif %}
+    
+</ul>

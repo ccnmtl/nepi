@@ -1,7 +1,7 @@
 from django import forms
 from choices import COUNTRY_CHOICES
 from captcha.fields import CaptchaField
-from nepi.main.models import Country, Course, School
+from nepi.main.models import Country, Group, School, UserProfile
 
 
 class LoginForm(forms.Form):
@@ -61,19 +61,19 @@ class CreateAccountForm(forms.Form):
 a better way to do this dynamically?'''
 
 
-class CountryCourseForm(forms.Form):
+class CountryGroupForm(forms.Form):
     country = forms.ChoiceField(required=True,
                                 label="What country do you reside in?",
                                 choices=COUNTRY_CHOICES)
     school = forms.ModelChoiceField(queryset=Country.objects.all())
 
 
-class SchoolCourseForm(forms.Form):
+class SchoolGroupForm(forms.Form):
     country = forms.ChoiceField(required=True,
                                 label="What country do you reside in?",
                                 choices=COUNTRY_CHOICES)
     school = forms.ModelChoiceField(queryset=Country.objects.all())
-    course = forms.ModelChoiceField(queryset=Course.objects.all())
+    group = forms.ModelChoiceField(queryset=Group.objects.all())
 
 
 class ContactForm(forms.Form):
@@ -89,32 +89,69 @@ class ContactForm(forms.Form):
 class ICAPForm(forms.Form):
     countries = forms.ModelChoiceField(queryset=Country.objects.all())
     schools = forms.ModelChoiceField(queryset=School.objects.all())
-    groups = forms.ModelChoiceField(queryset=Course.objects.all())
+    countrys = forms.ModelChoiceField(queryset=Group.objects.all())
 
 
-class ProfileForm(forms.Form):
+class UpdateProfileForm(forms.ModelForm):
     first_name = forms.CharField(max_length=100, required=True,
                                  label="First Name")
     last_name = forms.CharField(max_length=100, required=True,
                                 label="Last Name")
-    username = forms.CharField(max_length=100, required=True,
-                               label="Username")
+    faculty_access = forms.BooleanField(
+        required=False, label="Request Faculty Access")
+    email = forms.EmailField(required=False, label="Email(not required):")
     password1 = forms.CharField(max_length=100, required=False,
                                 label="Leave blank if you" +
                                 "wish to leave the same")
     password2 = forms.CharField(max_length=100, required=False,
                                 label="Leave blank if you wish" +
                                 "to leave the same")
-    icap_affil = forms.BooleanField(required=False, label="ICAP Affiliated")
-    user_country = forms.ChoiceField(required=True,
-                                     label="Country of Residence: ",
-                                     choices=COUNTRY_CHOICES)
-    email = forms.EmailField(required=False, label="Email(not required):")
-    faculty_access = forms.BooleanField(
-        required=False, label="Request Faculty Access")
 
+    def __init__(self, *args, **kwargs):
+        super(UpdateProfileForm, self).__init__(*args, **kwargs)
+        passed_profile = kwargs.get('instance')
+        #print passed_profile
+        self.fields['first_name'].initial = passed_profile.user.first_name
+        self.fields['last_name'].initial = passed_profile.user.last_name
+        self.fields['email'].initial = passed_profile.user.email
 
-class CreateCourseForm(forms.ModelForm):
     class Meta:
-        model = Course
+        model = UserProfile
+        exclude = ['profile_type', 'group', 'school', 'user']
+
+    def clean(self):
+        form = super(UpdateProfileForm, self).clean()
+        faculty_access = form.get("faculty_access")
+        email = form.get("email")
+        password1 = form.get("password1")
+        password2 = form.get("password2")
+
+        if faculty_access and (email == ""):
+            self._errors["email"] = self.error_class(
+                ["If you are registering as an instructor " +
+                 "you must enter a valid email address"])
+        if password1 != password2:
+            self._errors["password1"] = self.error_class(
+                ["Passwords must match each other."])
+            self._errors["password2"] = self.error_class(
+                ["Passwords must match each other."])
+        return form
+
+    def save(self, *args, **kwargs):
+        '''to save attributes from another model must explicitly
+        save the extra fields of the form'''
+        self.instance.user.first_name = self.cleaned_data.get('first_name')
+        self.instance.user.last_name = self.cleaned_data.get('last_name')
+        self.instance.user.email = self.cleaned_data.get('email')
+        if (self.cleaned_data.get('password1')
+                and self.cleaned_data.get('password2')):
+            self.instance.user.last_name = \
+                self.cleaned_data.get('password1')
+        self.instance.user.save()
+        return super(UpdateProfileForm, self).save(*args, **kwargs)
+
+
+class CreateGroupForm(forms.ModelForm):
+    class Meta:
+        model = Group
         exclude = ("school", "creator")
