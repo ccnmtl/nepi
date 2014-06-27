@@ -1,6 +1,6 @@
     # Create your views here.
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
@@ -31,11 +31,12 @@ def ajax_required(func):
     wrap.__doc__ = func.__doc__
     wrap.__name__ = func.__name__
     return wrap
- 
+
+
 class JSONResponseMixin(object):
     @method_decorator(ajax_required)
     def dispatch(self, *args, **kwargs):
-         return super(JSONResponseMixin, self).dispatch(*args, **kwargs)
+        return super(JSONResponseMixin, self).dispatch(*args, **kwargs)
 
     def render_to_json_response(self, context, **response_kwargs):
         """
@@ -44,6 +45,7 @@ class JSONResponseMixin(object):
         return HttpResponse(json.dumps(context),
                             content_type='application/json',
                             **response_kwargs)
+
 
 # but I don't really need and ajax thanks view...
 class ThanksView(View):
@@ -125,8 +127,10 @@ class DeleteConversationView(DeleteView):
 
 class SaveResponse(View, JSONResponseMixin):
     def post(self, request):
-        scenario = get_object_or_404(ConversationScenario, pk=request.POST['scenario'])
-        conversation = get_object_or_404(Conversation, pk=request.POST['conversation'])
+        scenario = get_object_or_404(ConversationScenario,
+                                     pk=request.POST['scenario'])
+        conversation = get_object_or_404(Conversation,
+                                         pk=request.POST['conversation'])
         conclick = ConvClick.objects.create(conversation=conversation)
         conclick.save()
         current_user = User.objects.get(pk=request.user.pk)
@@ -147,7 +151,8 @@ class SaveResponse(View, JSONResponseMixin):
 
 class LastResponse(View, JSONResponseMixin):
     def post(request):
-        scenario = get_object_or_404(ConversationScenario, pk=request.POST['scenario'])
+        scenario = get_object_or_404(ConversationScenario,
+                                     pk=request.POST['scenario'])
         user = User.objects.get(pk=request.user.pk)
         print "inside last response"
         try:
