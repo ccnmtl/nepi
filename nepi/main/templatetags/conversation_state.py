@@ -12,7 +12,7 @@ class ConversationState(template.Node):
         b = context[self.cblock]
         u = context['request'].user
         context[self.scenario_response] = b.last_response(u)
-        return
+        return ''
 
 
 @register.tag('getresponse')
