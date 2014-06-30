@@ -5,7 +5,7 @@ from pagetree.models import PageBlock
 from datetime import datetime
 from django import forms
 from django.core.urlresolvers import reverse
-from django.db.models import Q
+
 
 CONV_CHOICES = (
     ('G', 'Good'),
@@ -23,7 +23,8 @@ class Conversation(models.Model):
     complete_dialog = models.TextField(max_length=255, null=True, blank=True)
 
     def __unicode__(self):
-#        scenario = ConversationScenario.objects.get(Q(good_conversation==self) | Q(bad_conversation==self))
+#        scenario = ConversationScenario.objects.get(Q(good_conversation==self)
+#  | Q(bad_conversation==self))
         return unicode(self.scenario_type)
 
 
@@ -174,7 +175,7 @@ class ConversationResponse(models.Model):
                                      null=True, blank=True)
     third_click = models.ForeignKey(ConvClick, related_name="third_click",
                                     null=True, blank=True)
-    
+
     def __unicode__(self):
         return("Response to " + (self.conv_scen))
 
