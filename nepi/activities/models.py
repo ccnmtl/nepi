@@ -176,7 +176,7 @@ class ConversationResponse(models.Model):
                                     null=True, blank=True)
     
     def __unicode__(self):
-        return("Response to " + str(self.conv_scen))
+        return("Response to " + (self.conv_scen))
 
 
 class ImageInteractive(models.Model):
