@@ -1,6 +1,7 @@
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
 from nepi.activities.models import ConversationScenario, ConversationResponse
+from nepi.activities.views import SaveResponse, LastResponse
 from nepi.main.tests.factories import UserFactory, \
     HierarchyFactory, UserProfileFactory
 from nepi.activities.test.factories import GoodConversationFactory, ConversationScenarioFactory, ConversationResponseFactory
@@ -52,7 +53,16 @@ class TestLoggedInViews(TestCase):
 #         self.assertEqual(r.status_code, 200)
 #         # self.assertTemplateUsed(response, 'hello-world.txt')
 
-
+    def test_details(self):
+        scenario = ConversationScenarioFactory()
+        conversation = GoodConversationFactory()
+        request = self.factory.post('/get_click/')
+        request.POST = {"scenario": scenario, "conversation": conversation}
+        request.user = self.user
+        # Test my_view() as if it were deployed at /customer/details
+        # view = LastResponse.post()
+        response = LastResponse.post(request)
+        # self.assertEqual(response.status_code, 200)
 
 #     def test_post_save_response_view_request_factory(self):
 #         scenario = ConversationScenarioFactory()
