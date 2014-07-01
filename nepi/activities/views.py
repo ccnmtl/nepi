@@ -139,22 +139,22 @@ class SaveResponse(View, JSONResponseMixin):
         if rs.first_click is None:
             rs.first_click = conclick
             rs.save()
-        if rs.first_click is not None and rs.second_click is None:
+        elif rs.first_click is not None and rs.second_click is None:
             rs.second_click = conclick
             rs.third_click = conclick
             rs.save()
-        if rs.second_click is not None:
+        elif rs.second_click is not None:
             rs.third_click = conclick
             rs.save()
         return render_to_json_response({'success': True})
 
 
 class LastResponse(View, JSONResponseMixin):
+    '''Should this be a create view?'''
     def post(request):
         scenario = get_object_or_404(ConversationScenario,
                                      pk=request.POST['scenario'])
         user = User.objects.get(pk=request.user.pk)
-        print "inside last response"
         try:
             cresp = ConversationResponse.objects.get(
                 user=user, scenario=scenario)
