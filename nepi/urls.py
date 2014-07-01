@@ -16,7 +16,8 @@ from nepi.main.views import (CreateGroupView, UpdateGroupView,
                              GetCountrySchools, FacultyDashboard,
                              ICAPDashboard, Home, AddGroup,
                              UpdateProfileView, FacultyCountries,
-                             FacultyCountrySchools, GroupDetail)
+                             FacultyCountrySchools, GroupDetail,
+                             RemoveStudent)
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -62,7 +63,7 @@ urlpatterns += patterns(
         name='update-profile'),
 
     # dashboard base views
-    url(r'^student-dashboard/$',
+    url(r'^student-dashboard/(?P<pk>\d+)/$',
         StudentDashboard.as_view(), name='student-dashboard'),
     url(r'^faculty-dashboard/$',
         FacultyDashboard.as_view(), name='faculty-dashboard'),
@@ -94,7 +95,7 @@ urlpatterns += patterns(
         name='delete-group'),
     url(r'^group_details/(?P<pk>\d+)/$',
         GroupDetail.as_view(), name='group-details'),
-    (r'^remove_student/$', 'nepi.main.views.remove_student'),
+    (r'^remove_student/$', RemoveStudent.as_view()),
     #(r'^group_results/$', 'nepi.main.views.group_results'),
 
     # ICAP related pages

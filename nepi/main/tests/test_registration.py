@@ -2,10 +2,9 @@
 from django.test import TestCase, RequestFactory
 from nepi.main.models import Country, School
 from nepi.main.models import PendingTeachers
-# from nepi.main.views import RegistrationView
+from nepi.main.views import RegistrationView
 from django.test.client import Client
-from factories import GroupFactory
-
+from factories import GroupFactory, UserProfileFactory
 
 class TestRegistration(TestCase):
     def setUp(self):
@@ -17,18 +16,26 @@ class TestRegistration(TestCase):
         self.school.save()
         self.group = GroupFactory()
 
-#         self.student = User(first_name="student", last_name="student",
-#                             username="student", email="student@email.com",
-#                             password="student")
-#         self.student.save()
-#         self.teacher = User(first_name="teacher", last_name="teacher",
-#                             username="teacher", email="teacher@email.com",
-#                             password="teacher")
-#         self.teacher.save()
+
+    def test_student_cbv_reg(self):
+        #hierarcy = HierarchyFactory()
+        #new_user = UserProfileFactory()
+        request = self.factory.post(
+            "/register/",
+            {"first_name": "regstudent", "last_name": "regstudent",
+             "username": "regstudent", "email": "test_email@email.com",
+             "password1": "regstudent", "password2": "regstudent",
+             "country": "LS", "profile_type": False,
+             "captcha": True})
+        request.user = self.user
+        response = RegistrationView.as_view()(request)
+#         #response = ConversationResponse.objects.create(request)
+#         self.assertEqual(response.status_code, 200)
+#         #self.assertTrue(response.needs_submit())
+#         #self.assertFalse(response.unlocked(request.user))
 
     def test_student_registration_and_login(self):
         '''when students are registered they should not be added to pending'''
-        #response = self.factory.post(   why did I have factory post here?
         response = self.c.post(
             '/register/',
             {"first_name": "regstudent", "last_name": "regstudent",
