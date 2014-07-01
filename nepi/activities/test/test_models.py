@@ -33,22 +33,21 @@ class TestConversationScenario(TestCase):
         self.assertEqual(response.first_click, click_one)
         self.assertEqual(response.second_click, click_two)
 
+#     def unlocked(self, user):
+#         '''We want to make sure the user has selected both dialogs
+#            from the conversation before they can proceed.'''
+#         response = ConversationResponse.objects.filter(
+#             conv_scen=self, user=user)
+#         if (len(response) == 1
+#                 and response[0].first_click is not None
+#                 and response[0].second_click is not None):
+#             return True
+#         else:
+#             return False
+# 
 
 
-#     def last_response(self, user):
-#         try:
-#             response = ConversationResponse.objects.get(
-#                 conv_scen=self, user=user)
-#             if (response.first_click is not None
-#                     and response.second_click is not None):
-#                 return response.third_click.conversation.scenario_type
-#             elif (response.first_click is not None
-#                     and response.second_click is None):
-#                 return response.first_click.conversation.scenario_type
-#         except ConversationResponse.DoesNotExist:
-#             return 0
-
-    def test_last_response(self):
+    def test_last_response_and_unlocked(self):
         '''testing assert click of response object'''
         user = UserFactory()
         scenario = ConversationScenarioFactory()
@@ -65,6 +64,7 @@ class TestConversationScenario(TestCase):
         self.assertEquals(click_one.conversation.scenario_type,
                           test_first.first_click.conversation.scenario_type)
         self.assertIsNone(test_first.second_click)
+        self.assertIsFalse(test_first.unlocked(user))
         test_second = ConversationResponse.objects.create(conv_scen=scenario,
                                                                    user=user,
                                                                    first_click=click_one,
@@ -72,6 +72,7 @@ class TestConversationScenario(TestCase):
         self.assertEquals(click_two.conversation.scenario_type,
                           test_second.second_click.conversation.scenario_type)
         self.assertIsNone(test_second.third_click)
+        self.assertIsTrue(test_second.unlocked(user))
         test_third = ConversationResponse.objects.create(conv_scen=scenario,
                                                                    user=user,
                                                                    first_click=click_one,
@@ -80,6 +81,7 @@ class TestConversationScenario(TestCase):
         self.assertEquals(click_three.conversation.scenario_type,
                           test_third.third_click.conversation.scenario_type)
         self.assertIsNotNone(test_third.third_click)
+        self.assertIsTrue(test_third.unlocked(user))
 
 
 
@@ -178,16 +180,5 @@ class TestConversationScenario(TestCase):
 #         not sure if this is ever called since there is no "submit"'''
 #         return True
 # 
-#     def unlocked(self, user):
-#         '''We want to make sure the user has selected both dialogs
-#            from the conversation before they can proceed.'''
-#         response = ConversationResponse.objects.filter(
-#             conv_scen=self, user=user)
-#         if (len(response) == 1
-#                 and response[0].first_click is not None
-#                 and response[0].second_click is not None):
-#             return True
-#         else:
-#             return False
-# 
+
 
