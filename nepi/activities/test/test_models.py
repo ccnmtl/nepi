@@ -58,30 +58,28 @@ class TestConversationScenario(TestCase):
         with self.assertRaises(ConversationResponse.DoesNotExist):
             ConversationResponse.objects.get(conv_scen=scenario, user=user)
             '''how to we test that the except returns 0?'''
-        test_first = ConversationResponse.objects.create(conv_scen=scenario,
-                                                               user=user,
-                                                               first_click=click_one)
+        '''Test first click'''
+        cr = ConversationResponse.objects.create(conv_scen=scenario,
+                                                 user=user,
+                                                 first_click=click_one)
         self.assertEquals(click_one.conversation.scenario_type,
-                          test_first.first_click.conversation.scenario_type)
-        self.assertIsNone(test_first.second_click)
-        self.assertIsFalse(test_first.unlocked(user))
-        test_second = ConversationResponse.objects.create(conv_scen=scenario,
-                                                                   user=user,
-                                                                   first_click=click_one,
-                                                                   second_click=click_two)
+                          cr.first_click.conversation.scenario_type)
+        self.assertIsNone(cr.second_click)
+        self.assertFalse(scenario.unlocked(user))
+        '''Test second click'''
+        cr.second_click = click_two
+        cr.save()
         self.assertEquals(click_two.conversation.scenario_type,
-                          test_second.second_click.conversation.scenario_type)
-        self.assertIsNone(test_second.third_click)
-        self.assertIsTrue(test_second.unlocked(user))
-        test_third = ConversationResponse.objects.create(conv_scen=scenario,
-                                                                   user=user,
-                                                                   first_click=click_one,
-                                                                   second_click=click_two,
-                                                                   third_click=click_three)
+                          cr.second_click.conversation.scenario_type)
+        self.assertIsNone(cr.third_click)
+        self.assertTrue(scenario.unlocked(user))
+        '''Test third click'''
+        cr.third_click=click_three
+        cr.save()
         self.assertEquals(click_three.conversation.scenario_type,
-                          test_third.third_click.conversation.scenario_type)
-        self.assertIsNotNone(test_third.third_click)
-        self.assertIsTrue(test_third.unlocked(user))
+                          cr.third_click.conversation.scenario_type)
+        self.assertIsNotNone(cr.third_click)
+        self.assertTrue(scenario.unlocked(user))
 
 
 
