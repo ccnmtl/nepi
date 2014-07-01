@@ -33,19 +33,6 @@ class TestConversationScenario(TestCase):
         self.assertEqual(response.first_click, click_one)
         self.assertEqual(response.second_click, click_two)
 
-#     def unlocked(self, user):
-#         '''We want to make sure the user has selected both dialogs
-#            from the conversation before they can proceed.'''
-#         response = ConversationResponse.objects.filter(
-#             conv_scen=self, user=user)
-#         if (len(response) == 1
-#                 and response[0].first_click is not None
-#                 and response[0].second_click is not None):
-#             return True
-#         else:
-#             return False
-# 
-
 
     def test_last_response_and_unlocked(self):
         '''testing assert click of response object'''
@@ -73,6 +60,7 @@ class TestConversationScenario(TestCase):
                           cr.second_click.conversation.scenario_type)
         self.assertIsNone(cr.third_click)
         self.assertTrue(scenario.unlocked(user))
+        self.assertTrue(scenario.needs_submit())
         '''Test third click'''
         cr.third_click=click_three
         cr.save()
