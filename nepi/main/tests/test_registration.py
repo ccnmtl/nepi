@@ -6,7 +6,7 @@ from nepi.main.views import RegistrationView
 from django.test.client import Client
 from factories import GroupFactory, UserProfileFactory
 
-class TestRegistration(TestCase):
+class TestRegistrationAndLogin(TestCase):
     def setUp(self):
         self.c = Client()
         self.factory = RequestFactory()
@@ -18,8 +18,6 @@ class TestRegistration(TestCase):
 
 
     def test_student_cbv_reg(self):
-        #hierarcy = HierarchyFactory()
-        #new_user = UserProfileFactory()
         request = self.factory.post(
             "/register/",
             {"first_name": "regstudent", "last_name": "regstudent",
@@ -27,12 +25,9 @@ class TestRegistration(TestCase):
              "password1": "regstudent", "password2": "regstudent",
              "country": "LS", "profile_type": False,
              "captcha": True})
-        request.user = self.user
         response = RegistrationView.as_view()(request)
-#         #response = ConversationResponse.objects.create(request)
-#         self.assertEqual(response.status_code, 200)
-#         #self.assertTrue(response.needs_submit())
-#         #self.assertFalse(response.unlocked(request.user))
+        self.assertEqual(response.status_code, 200) # should redirect, request factory can't follow linkes like client
+
 
     def test_student_registration_and_login(self):
         '''when students are registered they should not be added to pending'''
@@ -46,27 +41,35 @@ class TestRegistration(TestCase):
         self.assertEquals(response.status_code, 200)
         self.pending = PendingTeachers.objects.all()
         self.assertFalse(self.pending.count())
-        #self.assertEquals(response.redirect_chain,
-        #                  ('http://testserver/thank_you_reg/',
-        #                   302))
-        #self.assertTemplateUsed('flatpages/help.html')
-        #self.assertTrue()/thank_you_reg/
-        #RegistrationView.as_view()(request)
+        # apparently [] stands for root or '/'
+        self.assertEquals(response.redirect_chain, [])
+        self.assertTemplateUsed('dashboard/student_dashboard.html')
 
-    def test_teacher_registration_and_login(self):
+
+    def test_teacher_registration_and_login_request_factory(self):
         '''when teachers register they should
-        be added to the pending teachers table'''
-        response = self.c.post(
+        be added to the pending teachers table
+        - but dont know how to test for that.'''
+        request = RequestFactory().get('/register/')
+        view = RegistrationView.as_view()
+        response = view(request, data={"first_name": "reg_teacher", "last_name": "reg_teacher",
+            "username": "reg_teacher", "email": "test_email@email.com",
+            "password1": "reg_teacher", "password2": "reg_teacher",
+            "country": "LS", "profile_type": True,
+            "captcha": True})
+        self.assertEquals(response.status_code, 200)
+
+
+    def test_teacher_registration_client(self):
+        '''when teachers register they should
+        be added to the pending teachers table
+        - but dont know how to test for that.'''
+        request = self.c.post(
             '/register/',
             {"first_name": "reg_teacher", "last_name": "reg_teacher",
              "username": "reg_teacher", "email": "test_email@email.com",
              "password1": "reg_teacher", "password2": "reg_teacher",
              "country": "LS", "profile_type": True,
              "captcha": True}, follow=True)
-        self.assertEquals(response.status_code, 200)
-        # self.pending = PendingTeachers.objects.all()
-        # self.assertTrue(self.pending.count())
-        # I don't remember why I put this here
-        # RegistrationView.as_view()(request)
-        # new_teacher = User.objects.get(first_name="firstname")
-        # self.assertTrue(new_teacher)
+        self.assertEquals(request.status_code, 200)
+
