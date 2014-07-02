@@ -1,14 +1,8 @@
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
-from nepi.activities.models import ConversationScenario, \
-    ConversationResponse
-from nepi.activities.views import SaveResponse, LastResponse
+from nepi.activities.models import ConversationScenario
 from nepi.main.tests.factories import UserFactory, \
     HierarchyFactory, UserProfileFactory
-from nepi.activities.test.factories import GoodConversationFactory, \
-    ConversationScenarioFactory, ConversationResponseFactory, \
-    UserFactory
-
 
 
 class TestLoggedInViews(TestCase):
@@ -41,4 +35,3 @@ class TestLoggedInViews(TestCase):
         self.assertEqual(r.status_code, 200)
         self.assertTrue(conversation.needs_submit())
         self.assertFalse(conversation.unlocked(request.user))
-

@@ -17,8 +17,7 @@ from nepi.main.views import (CreateGroupView, UpdateGroupView,
                              ICAPDashboard, Home, AddGroup,
                              UpdateProfileView, FacultyCountries,
                              FacultyCountrySchools, GroupDetail,
-                             RemoveStudent, AlternativeICAPDashboard,
-                             AlternativeFacultyDashboard)
+                             RemoveStudent)
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -66,14 +65,10 @@ urlpatterns += patterns(
     # dashboard base views
     url(r'^student-dashboard/(?P<pk>\d+)/$',
         StudentDashboard.as_view(), name='student-dashboard'),
-    url(r'^faculty-dashboard/$',
+    url(r'^faculty-dashboard/(?P<pk>\d+)/$',
         FacultyDashboard.as_view(), name='faculty-dashboard'),
-    url(r'^icap-dashboard/$',
+    url(r'^icap-dashboard/(?P<pk>\d+)/$',
         ICAPDashboard.as_view(), name='icap-dashboard'),
-    url(r'^alternative-faculty-dashboard/(?P<pk>\d+)/$',
-        AlternativeFacultyDashboard.as_view(), name='alternative-faculty-dashboard'),
-    url(r'^alternative-icap-dashboard/(?P<pk>\d+)/$',
-        AlternativeICAPDashboard.as_view(), name='alternative-icap-dashboard'),
 
     # functionality to join a group
     url(r'^join_group/$', JoinGroup.as_view(), name='join-group'),

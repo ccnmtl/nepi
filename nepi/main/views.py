@@ -122,13 +122,16 @@ class Home(LoggedInMixin, View):
         except User.DoesNotExist:
             return HttpResponseRedirect(reverse('register'))
         if user_profile.profile_type == 'ST':
-            return HttpResponseRedirect(reverse('student-dashboard', kwargs={'pk' : user_profile.pk}))
+            return HttpResponseRedirect(reverse('student-dashboard',
+                                        kwargs={'pk': user_profile.pk}))
             # return HttpResponseRedirect(reverse('student-dashboard',
             #    {'pk' : profile.pk})) # {% url 'news-year-archive' yearvar %}"
         elif user_profile.profile_type == 'TE':
-            return HttpResponseRedirect(reverse('faculty-dashboard'))
+            return HttpResponseRedirect(reverse('faculty-dashboard',
+                                        kwargs={'pk': user_profile.pk}))
         elif user_profile.profile_type == 'IC':
-            return HttpResponseRedirect(reverse('icap-dashboard'))
+            return HttpResponseRedirect(reverse('icap-dashboard',
+                                        kwargs={'pk': user_profile.pk}))
         else:
             '''I assume it could be possible another
             app has a profile_type variable?'''
@@ -145,20 +148,18 @@ class StudentDashboard(LoggedInMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(StudentDashboard, self).get_context_data(**kwargs)
-        profile = UserProfile.objects.get(user=self.request.user.pk)
+        # profile = UserProfile.objects.get(user=self.request.user.pk)
         context['user_profile'] = UserProfile.objects.get(
             user=self.request.user.pk)
-        context['modules'] = Hierarchy.objects.all()
         # from the two below which is better?
         # context['student_groups'] = Group.objects.filter(userprofile=profile)
         context['joined_groups'] = UserProfile.objects.get(
             user=self.request.user.pk).group.all()
         context['modules'] = Hierarchy.objects.all()
+        return context
 
 
-class FacultyDashboard(LoggedInMixin, ListView):
-    '''Is this even do-able?'''
-    model = Group
+class FacultyDashboard(StudentDashboard):
     template_name = 'dashboard/icap_dashboard.html'
     success_url = '/'
 
@@ -203,99 +204,7 @@ class FacultyDashboard(LoggedInMixin, ListView):
         return context
 
 
-class ICAPDashboard(LoggedInMixin, ListView):
-    model = Group
-    template_name = 'dashboard/icap_dashboard.html'
-    success_url = '/'
-
-    def get_students_in_progress(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        in_progress = 0
-        for each in find_students:
-            if each.percent_complete() != 0 and each.percent_complete() != 100:
-                in_progress = in_progress + 1
-        return in_progress
-
-    def get_students_incomplete(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        incomplete = 0
-        for each in find_students:
-            if each.percent_complete() != 0 and each.percent_complete() != 100:
-                incomplete = incomplete + 1
-            return incomplete
-
-    def get_students_done(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        done = 0
-        for each in find_students:
-            if each.percent_complete() == 100:
-                done = done + 1
-        return done
-
-    def get_context_data(self, **kwargs):
-        context = super(ICAPDashboard, self).get_context_data(**kwargs)
-        context['user_profile'] = UserProfile.objects.get(
-            user=self.request.user.pk)
-        context['pending_teachers'] = PendingTeachers.objects.filter(
-            user_profile__profile_type='TE')
-        context['students'] = UserProfile.objects.filter(
-            profile_type="ST").count()
-        context['in_progress'] = self.get_students_in_progress()
-        context['incomplete'] = self.get_students_done()
-        context['done'] = self.get_students_incomplete()
-        context['created_groups'] = Group.objects.filter(
-            creator=User.objects.get(pk=self.request.user.pk))
-        context['joined_groups'] = UserProfile.objects.get(
-            user=self.request.user.pk).group.all()
-        context['modules'] = Hierarchy.objects.all()
-        return context
-
-
-class AlternativeFacultyDashboard(StudentDashboard):
-    template_name = 'dashboard/icap_dashboard.html'
-    success_url = '/'
-
-    def get_students_in_progress(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        in_progress = 0
-        for each in find_students:
-            if each.percent_complete() != 0 and each.percent_complete() != 100:
-                in_progress = in_progress + 1
-        return in_progress
-
-    def get_students_incomplete(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        incomplete = 0
-        for each in find_students:
-            if each.percent_complete() != 0 and each.percent_complete() != 100:
-                incomplete = incomplete + 1
-            return incomplete
-
-    def get_students_done(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        done = 0
-        for each in find_students:
-            if each.percent_complete() == 100:
-                done = done + 1
-        return done
-
-    def get_context_data(self, **kwargs):
-        context = super(FacultyDashboard, self).get_context_data(**kwargs)
-        context['user_profile'] = UserProfile.objects.get(
-            user=self.request.user.pk)
-        context['students'] = UserProfile.objects.filter(
-            profile_type="ST").count()
-        context['in_progress'] = self.get_students_in_progress()
-        context['incomplete'] = self.get_students_done()
-        context['done'] = self.get_students_incomplete()
-        context['created_groups'] = Group.objects.filter(
-            creator=User.objects.get(pk=self.request.user.pk))
-        context['joined_groups'] = UserProfile.objects.get(
-            user=self.request.user.pk).group.all()
-        context['modules'] = Hierarchy.objects.all()
-        return context
-
-class AlternativeICAPDashboard(AlternativeFacultyDashboard):
+class ICAPDashboard(FacultyDashboard):
     template_name = 'dashboard/icap_dashboard.html'
     success_url = '/'
 
@@ -316,7 +225,6 @@ class AlternativeICAPDashboard(AlternativeFacultyDashboard):
             user=self.request.user.pk).group.all()
         context['modules'] = Hierarchy.objects.all()
         return context
-
 
 
 class GetReport(LoggedInMixin, View):

@@ -4,7 +4,8 @@ from nepi.main.models import Country, School
 from nepi.main.models import PendingTeachers
 from nepi.main.views import RegistrationView
 from django.test.client import Client
-from factories import GroupFactory, UserProfileFactory
+from factories import GroupFactory
+
 
 class TestRegistrationAndLogin(TestCase):
     def setUp(self):
@@ -16,7 +17,6 @@ class TestRegistrationAndLogin(TestCase):
         self.school.save()
         self.group = GroupFactory()
 
-
     def test_student_cbv_reg(self):
         request = self.factory.post(
             "/register/",
@@ -26,8 +26,8 @@ class TestRegistrationAndLogin(TestCase):
              "country": "LS", "profile_type": False,
              "captcha": True})
         response = RegistrationView.as_view()(request)
-        self.assertEqual(response.status_code, 200) # should redirect, request factory can't follow linkes like client
-
+        self.assertEqual(response.status_code, 200)
+        # should redirect, request factory can't follow linkes like client
 
     def test_student_registration_and_login(self):
         '''when students are registered they should not be added to pending'''
@@ -45,20 +45,22 @@ class TestRegistrationAndLogin(TestCase):
         self.assertEquals(response.redirect_chain, [])
         self.assertTemplateUsed('dashboard/student_dashboard.html')
 
-
     def test_teacher_registration_and_login_request_factory(self):
         '''when teachers register they should
         be added to the pending teachers table
         - but dont know how to test for that.'''
         request = RequestFactory().get('/register/')
         view = RegistrationView.as_view()
-        response = view(request, data={"first_name": "reg_teacher", "last_name": "reg_teacher",
-            "username": "reg_teacher", "email": "test_email@email.com",
-            "password1": "reg_teacher", "password2": "reg_teacher",
-            "country": "LS", "profile_type": True,
-            "captcha": True})
+        response = view(request, data={"first_name": "reg_teacher",
+                                       "last_name": "reg_teacher",
+                                       "username": "reg_teacher",
+                                       "email": "test_email@email.com",
+                                       "password1": "reg_teacher",
+                                       "password2": "reg_teacher",
+                                       "country": "LS",
+                                       "profile_type": True,
+                                       "captcha": True})
         self.assertEquals(response.status_code, 200)
-
 
     def test_teacher_registration_client(self):
         '''when teachers register they should
@@ -72,4 +74,3 @@ class TestRegistrationAndLogin(TestCase):
              "country": "LS", "profile_type": True,
              "captcha": True}, follow=True)
         self.assertEquals(request.status_code, 200)
-

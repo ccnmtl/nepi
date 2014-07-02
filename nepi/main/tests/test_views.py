@@ -3,7 +3,7 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 from nepi.main.models import UserProfile, Country
 from factories import UserFactory, HierarchyFactory, \
-    UserProfileFactory, TeacherProfileFactory
+    UserProfileFactory, TeacherProfileFactory, ICAPProfileFactory
 
 
 class TestBasicViews(TestCase):
@@ -81,9 +81,10 @@ class TestStudentLoggedInViews(TestCase):
 
     def test_home(self):
         response = self.c.get("/", follow=True)
-        self.assertEquals(response.redirect_chain, [('http://testserver/student-dashboard/%d/' % self.u.pk, 302)]) # '/student-dashboard/%d/' % self.u.pk)
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/student-dashboard/%d/'
+                            % self.u.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/student_dashboard.html')
-
 
 
 class TestTeacherLoggedInViews(TestCase):
@@ -98,9 +99,29 @@ class TestTeacherLoggedInViews(TestCase):
         self.c = Client()
         self.c.login(username=self.u.username, password="test")
 
-    def test_edit_page_form(self):
-        r = self.c.get("/pages/%s/edit/%s/" % (self.h.name, self.s.slug))
+    def test_page(self):
+        r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
         self.assertEqual(r.status_code, 200)
+
+    def test_home(self):
+        response = self.c.get("/", follow=True)
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/faculty-dashboard/%d/'
+                            % self.u.pk, 302)])
+        self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+
+
+class TestICAPLoggedInViews(TestCase):
+    '''go through some of the views student sees'''
+    def setUp(self):
+        self.h = HierarchyFactory()
+        self.s = self.h.get_root().get_first_leaf()
+        self.u = UserFactory(is_superuser=True)
+        self.up = ICAPProfileFactory(user=self.u)
+        self.u.set_password("test")
+        self.u.save()
+        self.c = Client()
+        self.c.login(username=self.u.username, password="test")
 
     def test_page(self):
         r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
@@ -108,5 +129,7 @@ class TestTeacherLoggedInViews(TestCase):
 
     def test_home(self):
         response = self.c.get("/", follow=True)
-        self.assertEquals(response.redirect_chain, [('http://testserver/faculty_dashboard/%d/' % self.u.pk, 302)]) # '/student-dashboard/%d/' % self.u.pk)
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/icap-dashboard/%d/'
+                            % self.u.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')

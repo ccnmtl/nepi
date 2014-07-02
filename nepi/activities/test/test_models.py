@@ -36,9 +36,16 @@ class TestConversationScenario(TestCase):
         self.assertIsNone(cr.third_click)
         self.assertTrue(scenario.unlocked(user))
         '''Test third click'''
-        cr.third_click=click_three
+        cr.third_click = click_three
         cr.save()
         self.assertEquals(click_three.conversation.scenario_type,
                           cr.third_click.conversation.scenario_type)
         self.assertIsNotNone(cr.third_click)
         self.assertTrue(scenario.unlocked(user))
+
+
+# class TestCalendarActivity(TestCase):
+#     pass
+
+class TestDosageActivity(TestCase):
+    pass
