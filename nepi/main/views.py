@@ -143,7 +143,7 @@ class StudentDashboard(LoggedInMixin, DetailView):
     groups that the user belongs to, and if they do not belong to any
     we are giving the the option to affiliate with one'''
     model = UserProfile
-    template_name = 'dashboard/student_dashboard.html'
+    template_name = 'dashboard/icap_dashboard.html'
     success_url = '/'
 
     def get_context_data(self, **kwargs):
@@ -189,8 +189,8 @@ class FacultyDashboard(StudentDashboard):
 
     def get_context_data(self, **kwargs):
         context = super(FacultyDashboard, self).get_context_data(**kwargs)
-        context['user_profile'] = UserProfile.objects.get(
-            user=self.request.user.pk)
+        # context['user_profile'] = UserProfile.objects.get(
+        #     user=self.request.user.pk)
         context['students'] = UserProfile.objects.filter(
             profile_type="ST").count()
         context['in_progress'] = self.get_students_in_progress()
@@ -198,9 +198,23 @@ class FacultyDashboard(StudentDashboard):
         context['done'] = self.get_students_incomplete()
         context['created_groups'] = Group.objects.filter(
             creator=User.objects.get(pk=self.request.user.pk))
-        context['joined_groups'] = UserProfile.objects.get(
-            user=self.request.user.pk).group.all()
-        context['modules'] = Hierarchy.objects.all()
+        # context['joined_groups'] = UserProfile.objects.get(
+        #    user=self.request.user.pk).group.all()
+        # context['modules'] = Hierarchy.objects.all()
+        return context
+
+
+class CountryAdminDashboard(FacultyDashboard):
+    template_name = 'dashboard/icap_dashboard.html'
+    success_url = '/'
+
+    def get_context_data(self, **kwargs):
+        context = super(CountryAdminDashboard, self).get_context_data(**kwargs)
+        # is this necessary? or can I just reference object/userprofile?
+        profile = UserProfile.objects.get(user=self.request.user.pk)
+        context['country'] = Country.objects.get(pk=profile.country.pk)
+        # is this possible? guess we'll find out...
+        context['country_schools'] = School.objects.get(country=context['country'])
         return context
 
 
@@ -210,20 +224,18 @@ class ICAPDashboard(FacultyDashboard):
 
     def get_context_data(self, **kwargs):
         context = super(ICAPDashboard, self).get_context_data(**kwargs)
-        context['user_profile'] = UserProfile.objects.get(
-            user=self.request.user.pk)
         context['pending_teachers'] = PendingTeachers.objects.filter(
             user_profile__profile_type='TE')
-        context['students'] = UserProfile.objects.filter(
-            profile_type="ST").count()
-        context['in_progress'] = self.get_students_in_progress()
-        context['incomplete'] = self.get_students_done()
-        context['done'] = self.get_students_incomplete()
-        context['created_groups'] = Group.objects.filter(
-            creator=User.objects.get(pk=self.request.user.pk))
-        context['joined_groups'] = UserProfile.objects.get(
-            user=self.request.user.pk).group.all()
-        context['modules'] = Hierarchy.objects.all()
+        context['countries'] = Country.objects.all()
+#             profile_type="ST").count()
+#         context['in_progress'] = self.get_students_in_progress()
+#         context['incomplete'] = self.get_students_done()
+#         context['done'] = self.get_students_incomplete()
+        # context['created_groups'] = Group.objects.filter(
+        #     creator=User.objects.get(pk=self.request.user.pk))
+        # context['joined_groups'] = UserProfile.objects.get(
+        #     user=self.request.user.pk).group.all()
+        # context['modules'] = Hierarchy.objects.all()
         return context
 
 

@@ -85,7 +85,7 @@ class TestStudentLoggedInViews(TestCase):
         self.assertEquals(response.redirect_chain,
                           [('http://testserver/student-dashboard/%d/'
                             % self.u.pk, 302)])
-        self.assertTemplateUsed(response, 'dashboard/student_dashboard.html')
+        self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
 
 
 class TestTeacherLoggedInViews(TestCase):

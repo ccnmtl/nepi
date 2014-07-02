@@ -49,3 +49,27 @@ class ConversationResponseFactory(factory.DjangoModelFactory):
     FACTORY_FOR = ConversationResponse
     user = factory.SubFactory(UserFactory)
     conv_scen = factory.SubFactory(ConversationScenarioFactory)
+
+
+class ConversationPageblockHierarchyFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = Hierarchy
+    name = "conv_hierarchy"
+    base_url = "/"
+
+    @factory.post_generation
+    def populate(self, create, extracted, **kwargs):
+        self.get_root().add_child_section_from_dict(
+            {
+                'label': 'Testing ConversationScenario',
+                'slug': 'testing-conversationscenario',
+                'pageblocks': [
+                    {'label': 'Testing ConversationScenario',
+                     'css_extra': '',
+                     'block_type': 'activities.ConversationScenario',
+                     'body': 'You should now use the edit link to add content',
+                     },
+                ],
+                'children': [],
+            })
+
+
