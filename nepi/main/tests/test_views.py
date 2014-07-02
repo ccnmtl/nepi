@@ -2,6 +2,7 @@ from django.test import TestCase, RequestFactory
 from django.test.client import Client
 from django.contrib.auth.models import User
 from nepi.main.models import UserProfile, Country
+from nepi.main.views import ContactView
 from factories import UserFactory, HierarchyFactory, \
     UserProfileFactory, TeacherProfileFactory, ICAPProfileFactory
 
@@ -37,14 +38,14 @@ class TestBasicViews(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed('flatpages/help.html')
 
-#    def test_contact(self):
-#        request = self.factory.post('/contact/',
-#                                    {"subject": "new_student",
-#                                     "message": "new_student",
-#                                     "sender": "new_student",
-#                                     "recipients": "email@email.com"})
-#        response = contact(request)
-#        self.assertEqual(response.status_code, 200)
+    def test_contact(self):
+        request = self.factory.post('/contact/',
+                                    {"subject": "new_student",
+                                     "message": "new_student",
+                                     "sender": "new_student",
+                                     "recipients": "email@email.com"})
+        response = ContactView.as_view()(request)
+        self.assertEqual(response.status_code, 200)
 
     def test_smoketest(self):
         response = self.c.get("/smoketest/")
