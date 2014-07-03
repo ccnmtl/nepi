@@ -119,7 +119,7 @@ class Home(LoggedInMixin, View):
     def get(self, request):
         try:
             user_profile = UserProfile.objects.get(user=request.user.pk)
-        except User.DoesNotExist:
+        except UserProfile.DoesNotExist:
             return HttpResponseRedirect(reverse('register'))
         if user_profile.profile_type == 'ST':
             return HttpResponseRedirect(reverse('student-dashboard',
