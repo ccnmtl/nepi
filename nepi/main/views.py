@@ -214,7 +214,8 @@ class CountryAdminDashboard(FacultyDashboard):
         profile = UserProfile.objects.get(user=self.request.user.pk)
         context['country'] = Country.objects.get(pk=profile.country.pk)
         # is this possible? guess we'll find out...
-        context['country_schools'] = School.objects.get(country=context['country'])
+        context['country_schools'] = \
+            School.objects.get(country=context['country'])
         return context
 
 

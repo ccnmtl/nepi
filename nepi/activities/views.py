@@ -1,5 +1,4 @@
     # Create your views here.
-from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -158,11 +157,15 @@ class LastResponse(View, JSONResponseMixin):
                 user=request.user, conv_scen=scenario)
             if cresp.third_click is not None:
                 return render_to_json_response(
-                    {'success': True, 'last_conv': cresp.third_click.conversation.scenario_type})
+                    {'success': True,
+                     'last_conv':
+                     cresp.third_click.conversation.scenario_type})
             elif (cresp.first_click is not None
                   and cresp.second_click is None):
                     return render_to_json_response(
-                        {'success': True, 'last_conv': cresp.first_click.conversation.scenario_type})
+                        {'success': True,
+                         'last_conv':
+                         cresp.first_click.conversation.scenario_type})
 
         except ConversationResponse.DoesNotExist:
             return render_to_json_response({'success': False})

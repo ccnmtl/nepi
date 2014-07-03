@@ -13,6 +13,7 @@ class UserFactory(factory.DjangoModelFactory):
     username = factory.Sequence(lambda n: "user%d" % n)
     password = factory.PostGenerationMethodCall('set_password', 'test')
 
+
 class CountryFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Country
     name = "LS"
