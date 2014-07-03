@@ -3,25 +3,25 @@ jQuery(document).ready(function() {
 
     var exp = jQuery('#explanation_box');
     
-    jQuery(".body").on("click",
+    jQuery(".parts").on("click",
 
         function() {
 
             if (jQuery(this).data().part == "mouth")
             {
-                exp.html("Explanation for mouth here.");
+                exp.html(jQuery("#mouth").html());
             }
             if (jQuery(this).data().part == "eyes")
             {
-                exp.html("Explanation for eyes here.");
+                exp.html(jQuery("#eyes").html());
             }
             if (jQuery(this).data().part == "chair")
             {
-                exp.html("Explanation for chair here.");
+                exp.html(jQuery("#chair").html());
             }
             if (jQuery(this).data().part == "chart")
             {
-                exp.html("Explanation for chart here.");
+                exp.html(jQuery("#chart").html());
             }
 
    });

@@ -1,8 +1,12 @@
-{% extends "base.html" %}
 {% block content %}
-<div class="body" data-part="mouth">mouth</div>
-<div class="body" data-part="eyes">eyes</div>
-<div class="body" data-part="chair">chair</div>
-<div class="body" data-part="chart">chart</div>
-<div id="explanation_box" class="body">explanation</div>
+<div class="parts" data-part="mouth">mouth</div>
+<div class="parts" data-part="eyes">eyes</div>
+<div class="parts" data-part="chair">chair</div>
+<div class="parts" data-part="chart">chart</div>
+<div id="explanation_box" class="parts">explanation</div>
+
+<div style="display:none" id="mouth" class="body">"Explanation for mouth here."</div>
+<div style="display:none" id="eyes" class="body">"Explanation for eyes here."</div>
+<div style="display:none" id="chair" class="body">"Explanation for chair here."</div>
+<div style="display:none" id="chart" class="body">"Explanation for chart here."</div>
 {% endblock %}
