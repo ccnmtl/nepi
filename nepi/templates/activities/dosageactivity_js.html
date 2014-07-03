@@ -16,6 +16,7 @@ jQuery(document).ready(function(){
             if (value === null || value === "") {
                  alert("All values must be filled out");
                  check1 = false;
+                 break;
              }
 			
             if (value !== null || value !== "") {
@@ -23,8 +24,9 @@ jQuery(document).ready(function(){
              }
 			
              if (value.length > 2)  {
-                 alert("Values should consist of one or two digits 1");
+                 alert("Values should consist of one or two digits");
                  check2 = false;
+                 break;
              }
 			
              if (value.length <= 2)  {
@@ -33,8 +35,9 @@ jQuery(document).ready(function(){
             
              if (! /^[0-9]{1,2}$/.test(value))
              {
-                 alert("Values should consist of one or two digits 3");
+                 alert("Values should consist of one or two digits");
                  check3 = false;
+                 break;
              }
             
             if(/^[0-9]{1,2}$/.test(value))
@@ -45,7 +48,7 @@ jQuery(document).ready(function(){
         }// end of for
        
         if (check1 && check2 && check3) {
-                 e.preventDefault();
+                 // e.preventDefault();
                  return true;
              } else {
                  return false;
@@ -63,29 +66,39 @@ jQuery(document).ready(function(){
 		{ 
 			jQuery("#clipboard").hide();		
 		});
-		if (jQuery("#sub_nvp").attr('data-value') != jQuery("#user_nvp").attr('data-value'))
+		
+
+
+
+		if (jQuery('#sub_nvp').attr('data-value') != jQuery("#user_nvp").attr('data-value'))
 		{
-				jQuery("#user_nvp").show('.alert alert-error');
+				jQuery('#user_nvp #show_response').html(jQuery('#wrong').html());//.addClass('alert alert-error');
+				//jQuery('#user_nvp #show_response').css('alert', 'alert-error');
 		}
+		
 		if (jQuery("#sub_times_day").attr('data-value') != jQuery("#user_times_day").attr('data-value'))
 		{
-				jQuery("#user_times_day").show('.alert alert-error');
+				jQuery('#user_times_day #show_response').html(jQuery('#wrong').html());
 		}
+		
 		if (jQuery("#sub_weeks").attr('data-value') != jQuery("#user_weeks").attr('data-value'))
 		{
-				jQuery("#user_weeks").show('.alert alert-error');
+				jQuery('#user_weeks #show_response').html(jQuery('#wrong').html());
 		}
+
+
+
 		if (jQuery("#sub_nvp").attr('data-value') == jQuery("#user_nvp").attr('data-value'))
 		{
-				jQuery("#user_nvp").show('.alert alert-success');
+				jQuery('#user_nvp #show_response').html(jQuery('#right').html());
 		}
 		if (jQuery("#sub_times_day").attr('data-value') == jQuery("#user_times_day").attr('data-value'))
 		{
-				jQuery("#user_times_day").show('.alert alert-success');
+				jQuery('#user_times_day #show_response').html(jQuery('#right').html());
 		}
 		if (jQuery("#sub_weeks").attr('data-value') == jQuery("#user_weeks").attr('data-value'))
 		{
-				jQuery("#user_weeks").show('.alert alert-success');
+				jQuery('#user_weeks #show_response').html(jQuery('#right').html());
 		}
 });
 </script>
