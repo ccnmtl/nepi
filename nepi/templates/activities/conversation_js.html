@@ -31,15 +31,13 @@ jQuery(document).ready(function() {
     var bad_s = jQuery("#bad_conversation input[name='scenario']").val();
 
 
-    var frm =jQuery('form');
-
     jQuery("#starting_good").on("click", 
         function()
         {    
              jQuery.ajax(
              {
-                  type: frm.attr('method'),
                   url: "/activities/get_click/",
+                  type: "POST",
                   data: {'scenario' : good_s, 'conversation' : good_c },
                   success: function (data) 
                   {
@@ -67,8 +65,8 @@ jQuery(document).ready(function() {
       { 
              jQuery.ajax(
              {
-                  type: frm.attr('method'),
                   url: "/activities/get_click/",
+                  type: "POST",
                   data: {'scenario' : bad_s, 'conversation' : bad_c },
                   success: function (data) 
                   {

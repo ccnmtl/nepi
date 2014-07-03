@@ -133,9 +133,8 @@ class SaveResponse(View, JSONResponseMixin):
                                          pk=request.POST['conversation'])
         conclick = ConvClick.objects.create(conversation=conversation)
         conclick.save()
-        current_user = User.objects.get(pk=request.user.pk)
         rs, created = ConversationResponse.objects.get_or_create(
-            conv_scen=scenario, user=current_user)
+            conv_scen=scenario, user=request.user)
         if rs.first_click is None:
             rs.first_click = conclick
             rs.save()
@@ -151,20 +150,19 @@ class SaveResponse(View, JSONResponseMixin):
 
 class LastResponse(View, JSONResponseMixin):
     '''Should this be a create view?'''
-    def post(request):
+    def post(self, request):
         scenario = get_object_or_404(ConversationScenario,
                                      pk=request.POST['scenario'])
-        user = User.objects.get(pk=request.user.pk)
         try:
             cresp = ConversationResponse.objects.get(
-                user=user, scenario=scenario)
+                user=request.user, conv_scen=scenario)
             if cresp.third_click is not None:
                 return render_to_json_response(
-                    {'success': True, 'last_conv': cresp.third_click})
+                    {'success': True, 'last_conv': cresp.third_click.conversation.scenario_type})
             elif (cresp.first_click is not None
                   and cresp.second_click is None):
                     return render_to_json_response(
-                        {'success': True, 'last_conv': cresp.first_click})
+                        {'success': True, 'last_conv': cresp.first_click.conversation.scenario_type})
 
         except ConversationResponse.DoesNotExist:
             return render_to_json_response({'success': False})
