@@ -4,8 +4,9 @@ from nepi.activities.models import ConversationScenario, ConversationResponse
 from nepi.activities.views import SaveResponse, LastResponse
 from nepi.main.tests.factories import UserFactory, \
     HierarchyFactory, UserProfileFactory
-from nepi.activities.tests.factories import ConversationPageblockHierarchyFactory
+from nepi.activities.test.factories import ConversationPageblockHierarchyFactory, ConversationScenarioFactory
 import json
+
 
 class TestActivityViews(TestCase):
     '''Going through scenario of admin goes to admin panel:
@@ -38,51 +39,60 @@ class TestActivityViews(TestCase):
         self.assertTrue(conversation.needs_submit())
         self.assertFalse(conversation.unlocked(request.user))
 
-    def test_getting_scenario_via_get(self):
-        '''this isn't actually testing for a conversation scenario pageblock'''
-        hierarchy = ConversationPageblockHierarchyFactory()
-        section = self.hierarchy.get_root().get_first_leaf()
-        user = UserFactory(is_superuser=True)
-        user.set_password("test")
-        up = UserProfileFactory(user=self.user)
-        client = Client()
-        self.client.login(username=user.username, password="test")
-        request = self.client.get(
-            "/pages/%s/%s/" % (hierarchy.name, section.slug))
-        self.assertEqual(request.status_code, 200)
-
+#     def test_getting_scenario_via_get(self):
+#         '''this isn't actually testing for a conversation scenario pageblock'''
+#         hierarchy = ConversationPageblockHierarchyFactory()
+#         section = self.hierarchy.get_root().get_first_leaf()
+#         user = UserFactory(is_superuser=True)
+#         user.set_password("test")
+#         up = UserProfileFactory(user=self.user)
+#         client = Client()
+#         self.client.login(username=user.username, password="test")
+#         request = self.client.get(
+#             "/pages/%s/%s/" % (hierarchy.name, section.slug))
+#         self.assertEqual(request.status_code, 200)
 
     def test_save_resposne_and_last_response_via_post(self):
         cs = ConversationScenarioFactory()
         cs.save()  # do I need this?
         user = UserFactory(is_superuser=True)
         user.set_password("test")
+        user.save()
         up = UserProfileFactory(user=self.user)
+        up.save()
         client = Client()
         client.login(username=user.username, password="test")
         
         '''Make sure LastResposne returns correctly'''
-        request = self.client.post(
-            "/get_last/", data={ 'scenario': cs.pk}
-            )
-        response = LastResponse.as_view()(request)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response, {'success': False})
-        
+#         request = self.client.post(
+#             "/get_last/", data={ 'scenario': cs.pk},
+#             HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+#             )
+#         response = LastResponse.as_view()(request)
+#         self.assertEqual(response.status_code, 200)
+#         self.assertEqual(response, {'success': False})
+#         # the above worked now trying other way below
+#         the_json = json.loads(response.content)
+#         self.assertTrue(the_json['success'], Flase)
+
 
         request = self.client.post(
-            "/get_click/", data={ 'scenario': cs.pk, 'conversation': cs.good_conversation.pk}
+            "/get_click/",
+            data={'scenario': cs.pk,
+                  'conversation': cs.good_conversation.pk},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
             )
         response = SaveResponse.as_view()(request)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(ConversationResponse.objects.count())
-        self.assertTrue(ConversationResponse.objects.filter(conv_scen=cs, user=user))
+        self.assertTrue(ConversationResponse.objects.filter(conv_scen=cs,
+                                                            user=user))
         '''Make sure there is one click object for the resposne and click two
         and three are None.'''
         cr = ConversationResponse.objects.filter(conv_scen=cs, user=user)
         self.assertNotNone(cr.first_click)
-        self.assertNone(second_click)
-        self.assertNone(third_click)
+        self.assertNone(cr.second_click)
+        self.assertNone(cr.third_click)
         
         '''Now check that get last response works'''
         request = self.client.post(
@@ -91,20 +101,18 @@ class TestActivityViews(TestCase):
         response = LastResponse.as_view()(request)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response, {'success': True, 'last_conv': cresp.first_click})
-        
-        
-        
 
         '''Testing second click through POST method'''
         request = self.client.post(
-            "/get_click/", data={ 'scenario': cs.pk, 'conversation': cs.bad_conversation.pk}
+            "/get_click/", data={'scenario': cs.pk,
+                                 'conversation': cs.bad_conversation.pk}
             )
         response = SaveResponse.as_view()(request)
         self.assertEqual(response.status_code, 200)
         cr = ConversationResponse.objects.filter(conv_scen=cs, user=user)
         self.assertNotNone(cr.first_click)
-        self.assertNotNone(second_click)
-        self.assertNone(third_click)
+        self.assertNotNone(cr.second_click)
+        self.assertNone(cr.third_click)
         
         '''Check last response'''
         request = self.client.post(
@@ -112,27 +120,66 @@ class TestActivityViews(TestCase):
             )
         response = LastResponse.as_view()(request)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response, {'success': True, 'last_conv': cresp.second_click})
-
+        self.assertEqual(response, {'success': True,
+                                    'last_conv': cr.second_click})
 
         '''Testing third click through POST method'''
         request = self.client.post(
-            "/get_click/", data={ 'scenario': cs.pk, 'conversation': cs.bad_conversation.pk}
-            )
+            "/get_click/", data={'scenario': cs.pk,
+                                 'conversation': cs.bad_conversation.pk
+            })
         response = SaveResponse.as_view()(request)
         self.assertEqual(response.status_code, 200)
         cr = ConversationResponse.objects.filter(conv_scen=cs, user=user)
         self.assertNotNone(cr.first_click)
-        self.assertNotNone(second_click)
-        self.assertNotNone(third_click)
-
+        self.assertNotNone(cr.second_click)
+        self.assertNotNone(cr.third_click)
 
         request = self.client.post(
             "/get_last/", data={ 'scenario': cs.pk}
             )
         response = LastResponse.as_view()(request)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response, {'success': True, 'last_conv': cresp.third_click})
+        self.assertEqual(response, {'success': True,
+                                    'last_conv': cr.third_click})
+
+
+
+# ##        post_data = { 
+#     "jsonrpc" : "2.0", "method": method, "params" : params, "id" : id }
+# return client.post('/api/json/', 
+#                     json.dumps(post_data), "text/json",            
+#                     )
+
+
+
+# 
+#  162         response = self.client.post('/accounts/login/',
+# 163                                     {'username': self.user.username,
+# 164                                      'password': 'test'},
+# 165                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+# 166         self.assertEquals(response.status_code, 200)
+# 167         the_json = json.loads(response.content)
+# 168         self.assertTrue(the_json['next'], "/")
+# 169         self.assertTrue('error' not in the_json)
+# 170
+# 171     def test_login_participant(self):
+# 172         # participants cannot login through the /accounts/login mechanism
+# 173         # as the backend authenticators kick out inactive Users
+# 174         pwd = generate_password(self.participant.username)
+# 175         response = self.client.post('/accounts/login/',
+# 176                                     {'username': self.participant.username,
+# 177                                      'password': pwd},
+# 178                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+# 179         self.assertEquals(response.status_code, 200)
+# 180         the_json = json.loads(response.content)
+# 181         self.assertTrue(the_json['error'], True)
+
+
+
+
+
+
 
 #             return render_to_json_response()
 # 

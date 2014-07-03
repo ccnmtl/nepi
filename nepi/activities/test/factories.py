@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 import factory
 from nepi.activities.models import ConversationScenario, \
     Conversation, ConversationResponse, ConvClick
+from pagetree.models import Hierarchy
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -71,5 +72,3 @@ class ConversationPageblockHierarchyFactory(factory.DjangoModelFactory):
                 ],
                 'children': [],
             })
-
-
