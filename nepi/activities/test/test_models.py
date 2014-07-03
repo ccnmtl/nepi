@@ -1,36 +1,51 @@
-from factories import UserFactory, ConversationScenarioFactory
-from factories import ConversationResponseFactory
-from django.contrib.auth.models import User
+from factories import UserFactory, ConversationScenarioFactory, \
+    ConvClickFactory
 from django.test import TestCase
-from nepi.activities.models import ConversationScenario, \
-    Conversation, ConversationResponse, ConvClick
+from nepi.activities.models import ConversationResponse
 
 
 class TestConversationScenario(TestCase):
     '''We want to make sure we can create a conversation
      response associated with the user upon submission.'''
-    def test_submission(self):
-        user = User.objects.create_user(
-            'person', 'email@emailperson.com', 'personpassword')
-        user.save()
-        scenario = ConversationScenario.objects.create()
-        scenario.save()
-        conversation = Conversation.objects.create()
-        conversation.save()
-        click = ConvClick.objects.create(conversation=conversation)
-        click.save()
-        response = ConversationResponse.objects.create(
-            conv_scen=scenario, user=user, first_click=click)
-        response.save()
 
-    def test_first_submission(self):
-        # on first user submission - no
-        # conversation response has been created yet
-        ConversationScenarioFactory()
-        UserFactory()
-        ConversationResponseFactory()
+    def test_last_response_and_unlocked(self):
+        '''testing assert click of response object'''
+        user = UserFactory()
+        scenario = ConversationScenarioFactory()
+        click_one = ConvClickFactory()
+        click_two = ConvClickFactory()
+        click_three = ConvClickFactory()
+        '''go through conditionals'''
+        with self.assertRaises(ConversationResponse.DoesNotExist):
+            ConversationResponse.objects.get(conv_scen=scenario, user=user)
+            '''how to we test that the except returns 0?'''
+        '''Test first click'''
+        cr = ConversationResponse.objects.create(conv_scen=scenario,
+                                                 user=user,
+                                                 first_click=click_one)
+        self.assertEquals(click_one.conversation.scenario_type,
+                          cr.first_click.conversation.scenario_type)
+        self.assertIsNone(cr.second_click)
+        self.assertFalse(scenario.unlocked(user))
+        # self.assertTrue(scenario.needs_submit())
+        '''Test second click'''
+        cr.second_click = click_two
+        cr.save()
+        self.assertEquals(click_two.conversation.scenario_type,
+                          cr.second_click.conversation.scenario_type)
+        self.assertIsNone(cr.third_click)
+        self.assertTrue(scenario.unlocked(user))
+        '''Test third click'''
+        cr.third_click = click_three
+        cr.save()
+        self.assertEquals(click_three.conversation.scenario_type,
+                          cr.third_click.conversation.scenario_type)
+        self.assertIsNotNone(cr.third_click)
+        self.assertTrue(scenario.unlocked(user))
 
 
-class TestConversation(TestCase):
-    def test_unicode(self):
-        pass
+# class TestCalendarActivity(TestCase):
+#     pass
+
+class TestDosageActivity(TestCase):
+    pass

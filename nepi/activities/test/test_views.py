@@ -4,9 +4,6 @@ from nepi.activities.models import ConversationScenario
 from nepi.main.tests.factories import UserFactory, \
     HierarchyFactory, UserProfileFactory
 
-'''make sure logged in super user can
-create conversation scenario pageblocks'''
-
 
 class TestLoggedInViews(TestCase):
     '''Going through scenario of admin goes to admin panel:
@@ -38,11 +35,3 @@ class TestLoggedInViews(TestCase):
         self.assertEqual(r.status_code, 200)
         self.assertTrue(conversation.needs_submit())
         self.assertFalse(conversation.unlocked(request.user))
-        #new_request = self.factory.post(
-        #    "/pages/%s/edit/%s/" % (self.hierarchy.name, self.section.slug),
-        #    {"label": "new conversation label",
-        #     "description": "new conversation description"})
-        #new_request.user  = self.user
-        #data = ""
-        #conversation.edit(new_request, data)
-        #self.assertEqual(r.status_code, 200)
