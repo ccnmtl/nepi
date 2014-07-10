@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{% load compress %}
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>Tobacco Cessation: {% block title %}{% endblock %}</title>
+	<link rel="shortcut icon" href="/site_media/img/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/site_media/bootstrap/css/bootstrap.min.css" media="screen" />
+    <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css' />
+    
+    <script type="text/javascript" src="/site_media/js/jquery-1.10.1.min.js"></script>
+    <script type="text/javascript" src="/site_media/bootstrap/js/bootstrap.min.js"></script>
+    
+    {% compress css %}
+        <link rel="stylesheet" href="/site_media/css/main.css" media="screen" />
+        <link rel="stylesheet" href="/site_media/css/print.css" media="print" />
+    
+	    {% block css %}{% endblock %}
+    {% endcompress %}
+    
+    {% block extrahead %}{% endblock %}	
+</head>
+<body class="one_column {% block widthtype %}fluid{% endblock %}">
+    <div id="container">    
+        {% block masthead %}
+        	<!-- ###### Site banner ###### -->
+        	<div id="header">
+        	     <div id="standardnav">
+                    {% block standardnav %}
+                        <ul class="nav nav-pills">
+                            {% if user.is_authenticated %}
+                                <li><a href="/accounts/logout/">Log Out</a></li>
+                                {% if user.has_usable_password %}
+                                    <li><a href="/accounts/password/change/">Change Password</a></li>
+                                {% endif %}
+                            {% else %}
+                               <li><a href="/accounts/login/">Log In</a></li>
+                            {% endif %}
+                            <li><a href="/about/">About</a></li>
+                            <li><a href="/help/">Help</a></li>
+                            {% if user.is_authenticated %}
+                                <li><a href="/contact/">Contact</a></li>
+                            {% endif %}
+                            {% if user.is_superuser %}
+                                <li><a href="/admin/" title="Django admin (superusers only)">Admin</a></li>
+                            {% endif %}
+                        </ul>
+                    {% endblock %}
+                    <div class="visualclear"></div>
+                    
+               </div>
+               <div id="logos">               
+            		<!-- Project title/logo -->
+                    <a href="/" title="Tobacco Cessation" class="pull-left">
+                        <img src="/site_media/img/tc_logo_2014_web.png" alt="Tobacco Cessation Logo" id="tc_logo"/>
+                    </a>
+                    <!-- CCNMTL title/logo -->
+                    <a id="logo_dental" href="http://dental.columbia.edu" target="_blank" title="Columbia University College of Dental Medicine">
+                        <img src="/site_media/img/logo_dental.png" alt="Dental Medicine Logo" id="dental_logo" />
+                    </a>
+                    <a id="logo_ccnmtl" href="http://ccnmtl.columbia.edu" target="_blank" title="Columbia Center for New Media Teaching and Learning">
+                        <img src="/site_media/img/logo_ccnmtl.png" alt="CCNMTL Logo" id="ccnmtl_logo" />
+                    </a>
+                </div>
+             </div><!-- id="header" -->
+        {% endblock %}
+    
+    	<!-- ###### Don't touch this ###### -->
+    	<div class="visualclear"></div>
+    
+        {% block primarynav %}
+            {% if user.is_authenticated %}
+                <!-- ###### Primary navigation ###### -->
+                <div class="navbar">
+                  <div class="navbar-inner">
+                    <div class="container">
+                        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        
+                        <ul class="nav home">
+                          <li>
+                            <a href="/"><img src="/site_media/img/home.png" alt="Home Icon" /></a>
+                          </li>
+                        </ul>
+                        {% block extraprimarynav %}
+                        {% endblock %}
+                                        
+                        {% block primarynavtabs %}
+                        {% endblock %}
+                    </div>
+                  </div>
+                </div>
+            {% endif %}        
+        {% endblock %}
+    
+    	<!-- ###### Page: Sidebars and Content ###### -->
+    	<div id="pagebody">
+            <div id="shieldbox"></div>
+            
+    		<!-- ###### Page Content ###### -->
+    		<div id="content">
+    			<div id="squish"><!-- Don't touch this div -->
+    				<div class="block">
+    					{% block pagetitle %}{% endblock %}
+    				
+    					{% block content %}{% endblock %}
+    
+        				<!-- ###### Don't touch this ###### -->
+        				<div class="visualclear"></div><!-- id="visualclear" -->
+    				
+                        {% block contentnav %}
+                        {% endblock %}
+    
+    				</div><!-- class="block" -->
+    			</div><!-- id="squish" -->
+    		</div><!-- id="content" -->
+    
+    
+    		<!-- ###### Don't touch this ###### -->
+    		<div class="visualclear"></div>
+    	
+    	</div><!-- id="pagebody" -->
+        
+        {% block footer %}
+        	<!-- ###### Footer ###### -->
+        	<div id="footer">
+        	<p class="printonly"><br /><img src="/site_media/img/logo_ccnmtl_sidebar.gif" class="printonly" alt="sidebar" /></p>
+        	</div><!-- id="footer" -->
+        {% endblock %}
+    </div><!-- id="container" -->
+
+    <script type="text-javascript">
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-311226-45', 'columbia.edu');
+      ga('send', 'pageview');    
+    </script>
+    
+    {% compress js %}
+        <script  type="text/javascript" src="/site_media/js/browserdetect.js"></script>
+        <script  type="text/javascript" src="/site_media/js/shield.js"></script>
+        <script type="text/javascript">
+            jQuery(document).ready(function() {
+                /* Select from list: Chrome, Firefox, Safari, MSIE */
+                shieldbrowser({"Chrome": 1, "Firefox": 3.6, "Safari": 4, "MSIE": 8, "Mozilla": 11 });
+            });
+        </script>
+        {% block js %}{% endblock %}
+    {% endcompress %}
+    
+    {% block extrajs %}{% endblock %}
+    
+    {% if STAGING_ENV %}
+        <div class="alert alert-error"
+         style="position: fixed; bottom: 0px; background-color: #fee; border: #f00 solid 1px; padding: 5px;">
+            <b>STAGING SITE WARNING</b>: You are viewing a staging version of this site, not the production site. Last updated: {{STAGING_DEPLOY_TIME}}
+        </div>
+    {% endif %}
+</body>
+</html>

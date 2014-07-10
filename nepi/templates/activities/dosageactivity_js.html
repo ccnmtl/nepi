@@ -1,0 +1,100 @@
+<script type="text/javascript">
+jQuery(document).ready(function(){
+
+       jQuery('form').submit(function(e) {
+       
+       var inputs = jQuery(e.currentTarget).find("input[type='text']");
+       // returns array of all inputs from form of type text
+       
+       for (var i=0; i < inputs.length; i++){
+           var value = jQuery(inputs[i]).val();
+           
+           if (value == null || value == "") {
+
+                alert("All values must be filled out");
+
+                rc = false;
+
+            }
+
+            if (value.length() > 2)  {
+                // runs till here but does not alert???
+                alert("Values should consist of one or two digits");
+
+                rc = false;
+
+            }
+
+            if (parseInt(value) == "")  {
+
+                alert("Values should consist of one or two digits");
+
+                rc = false;
+
+            }
+
+
+            if (!rc) {
+
+                e.preventDefault();
+
+                return false;
+
+            } else {
+
+                return rc;
+
+            }
+           
+           
+       }
+       
+      //return false;
+       });
+          
+
+
+
+	jQuery("#clipboard-button").on("click",
+		function()
+		{ 
+			jQuery("#clipboard").show();
+		});
+
+	jQuery("#clipboard").on("click",
+		function()
+		{ 
+			jQuery("#clipboard").hide();		
+		});
+		
+
+		if (jQuery("#sub_nvp").attr('data-value') != jQuery("#user_nvp").attr('data-value'))
+		{
+				jQuery("#user_nvp").append("<div class='alert alert-error'><b>Incorrect</b></div>");
+		}
+		if (jQuery("#sub_times_day").attr('data-value') != jQuery("#user_times_day").attr('data-value'))
+		{
+				jQuery("#user_times_day").append("<div class='alert alert-error'><b>Incorrect</b></div>");
+		}
+		if (jQuery("#sub_weeks").attr('data-value') != jQuery("#user_weeks").attr('data-value'))
+		{
+				jQuery("#user_weeks").append("<div class='alert alert-error'><b>Incorrect</b></div>");
+		}
+		if (jQuery("#sub_nvp").attr('data-value') == jQuery("#user_nvp").attr('data-value'))
+		{
+				jQuery("#user_nvp").append("<div class='alert alert-success'><b>Correct</b></div>");
+				//jQuery("#user_nvp").replace("<div class='alert alert-success'><b>Correct</b></div>");
+		}
+		if (jQuery("#sub_times_day").attr('data-value') == jQuery("#user_times_day").attr('data-value'))
+		{
+				jQuery("#user_times_day").append("<div class='alert alert-success'><b>Correct</b></div>");
+		}
+		if (jQuery("#sub_weeks").attr('data-value') == jQuery("#user_weeks").attr('data-value'))
+		{
+				jQuery("#user_weeks").append("<div class='alert alert-success'><b>Correct</b></div>");
+		}
+
+
+
+});
+</script>

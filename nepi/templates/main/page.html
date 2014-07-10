@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load render %}
-
+{% load accessible %}
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript" src="/site_media/js/chapter_marker_player.js"></script>
     <script type="text/javascript" src="/site_media/js/json2.js"></script>
+    <script type="text/javascript" src="/site_media/js/util.js"></script>
     {% for block in section.pageblock_set.all %}
         {% renderjs block %}
     {% endfor %}
@@ -35,15 +35,14 @@
 {% endblock %}
 {% block pagetitle %}<h2 class="pagetitle">{{section.label}}</h2>{% endblock %}
 
+{% block primarynavtabs %}
+    {% if user.is_authenticated %}
+        {% include "project_primary_nav.html" %}
+    {% endif %}
+{% endblock %}
 
-    {% block primarynavtabs %}
-        {% if user.is_authenticated %}
-            {% include "project_primary_nav.html" %}
-        {% endif %}
-    {% endblock %}
-
-      {% block extraprimarynav %}
-    {% if user.is_staff %}
+{% block extraprimarynav %}
+    {% if user.is_authenticated %}
     <ul class="nav pull-right">
         <li><a href="{{section.get_edit_url}}">Edit Page</a></li>        
     </ul>
@@ -57,16 +56,6 @@
         {% endif %}
 {% endblock %}
 
-{% block primarynavrightextra %}
-    {% if user.is_staff %}
-        <ul class="nav pull-right">
-            <li><a href="{{section.get_edit_url}}">edit page</a></li>
-        </ul>
-    {% endif %}
-{% endblock %}
-
-
-
 {% block breadcrumbs %}
   <ul>
        {% for breadcrumb in path %}
@@ -76,10 +65,8 @@
   </ul>
 {% endblock breadcrumbs %}
 
-
-
 {% block content %}
-    <div id="content" class ="module-{{module.slug}}">
+    <div class="module-{{module.slug}}">
 
     {% if needs_submit %}
     {% if is_submitted %}
@@ -105,9 +92,18 @@
                     <input type="hidden" name="action" value="reset" />
                     <input type="submit" value="clear your answers and try again" class="btn" />
                     </form>
-                {% endif %}
+                {% else %}{% if user.is_superuser %}
+                    <form action="." method="post">
+                        <div>
+                            <input type="hidden" name="action" value="reset" />
+                            <input type="submit" id="generic-reset" value="Clear Responses (superuser only)" class="btn pull-right" />
+                            <div style="clear: both"></div>
+                        </div>
+                    </form>
+                {% endif %}{% endif %}
             {% else %}
-                <input type="submit" value="Submit" class="btn btn-primary" />
+                <input type="submit" value="Submit" class="btn btn-primary pull-right" />
+                <div style="clear: both"></div>
             </form>
             {% endif %}
         {% endif %}
@@ -115,24 +111,29 @@
 
 </div>
 
-    <div class="content-nav">
-        <ul class="pager">
-        {% if previous %}
-            <li class="previous">
-                <a href="{{previous.get_absolute_url}}" id="previous" class="pager_button"><b>&larr;</b> {{previous.label}}</a>
-            </li>
-        {% endif %}
-        {% if next %}
-            <li class="next">
-            {% if not next.is_root %}
-                {% comment %}{% if next_unlocked %}{% endcomment %}
-                    <a href="{{next.get_absolute_url}}" id="next" class="pager_button">{{next.label}} <b>&rarr;</b></a>
-                {% comment %}{% else %}
-                    <div id="next" class="pager_button">{{next.label}} <b>&rarr;</b></div>
-                {% endif %}{% endcomment %}
-            {% endif %}
-            </li>
-        {% endif %}
-        </ul>
-    </div><!-- div id="content-nav" -->
 {% endblock %}
+
+{% block contentnav %}
+{% with previous=section.get_previous next_section=section.get_next %}
+
+<ul class="pager">
+{% if not section.is_root %}
+{% if previous %}
+  <li class="previous">
+        <a href="{{ previous.get_absolute_url }}">&larr; {{previous.label}}</a>
+  </li>
+{% endif %}
+{% endif %}
+
+
+{% if next_section %}
+    {% ifaccessible next_section%}
+<li class="next"><a href="{{ next_section.get_absolute_url }}">{{next_section.label}} &rarr;</a></li>
+{% else %}
+<li>{{next_section.label}}</li>
+{% endifaccessible %}
+{% endif %}
+</ul>
+{% endwith %}
+{% endblock %}
+

@@ -2,8 +2,6 @@
 {% load bootstrap %}
 
 {% block css %}
-    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css" type="text/css" media="all" />
-
     <style type="text/css">
         .draghandle {float: left;}
         #questions {list-style-type: none; margin: 0; padding: 0;}
@@ -16,8 +14,12 @@
     </style>
 {% endblock %}
 
-{% block js %}
+{% block extrahead %}
+    <script type="text/javascript" src="/site_media/js/jquery-ui-1.10.3.min.js"></script>
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" /> 
+{% endblock %}
 
+{% block js %}
     <script type="text/javascript">
         var saveOrder = function() {
             var url = "{% url 'reorder-questions' quiz.id %}?";
@@ -50,21 +52,14 @@
 
 {% endblock %}
 
-{% block primarynavrightextra %}
-    <ul class="nav pull-right">
-        <li><a href="{{quiz.pageblock.section.get_absolute_url}}" >view page</a></li>
-    </ul>
-{% endblock %}
-
-
 {% block content %}
 
-    <ul class="breadcrumb">
-    	<li><a href="{{quiz.pageblock.section.get_edit_url}}">{{quiz.pageblock.section.label}}</a>
-    		<span class="divider">/</span>
-    	</li>
-    	<li>Edit Quiz</li>
-    </ul>
+<ul class="breadcrumb">
+	<li><a href="{{quiz.pageblock.get_edit_url}}">{{quiz.pageblock.section.label}}</a>
+		<span class="divider">/</span>
+	</li>
+	<li>Edit Quiz</li>
+</ul>
 
 
 <h2>{{quiz.pageblock.label}}</h2>
@@ -88,8 +83,6 @@
 
 {% endblock %}
 
-{% block sidenav %}
-{% with "/edit" as menu_base %}
-{% include "main/menu.html" %}
-{% endwith %}
+{% block primarynavrightextra %}
+    <li><a href="{{section.get_absolute_url}}">View</a></li>
 {% endblock %}

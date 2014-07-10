@@ -1,5 +1,4 @@
 from django import template
-from nepi.main.views import accessible as section_accessible
 
 register = template.Library()
 
@@ -16,7 +15,9 @@ class AccessibleNode(template.Node):
         if 'request' in context:
             r = context['request']
             u = r.user
-            if section_accessible(s, u):
+            visited, last_section = s.gate_check(u)
+
+            if s.get_previous().submitted(u):  # and visited:
                 return self.nodelist_true.render(context)
 
         return self.nodelist_false.render(context)

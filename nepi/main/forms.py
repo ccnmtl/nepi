@@ -1,8 +1,8 @@
 from django import forms
-from nepi.main.choices import COUNTRY_CHOICES
+from choices import COUNTRY_CHOICES
 from captcha.fields import CaptchaField
-from captcha.models import CaptchaStore
-from captcha.helpers import captcha_image_url
+from nepi.main.models import Country, Course, School
+
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=50, required=True)
@@ -10,15 +10,13 @@ class LoginForm(forms.Form):
                                max_length=50,
                                required=True)
 
+    def form_valid(self, form):
+        pass
+
 
 class CreateAccountForm(forms.Form):
     '''This is a form class that will be used
     to allow guest users to create guest accounts.'''
-
-    TEACHER_CHOICES = (
-        ('TE', 'Teacher'),
-        ('ST', 'Student'),
-    )
 
     first_name = forms.CharField(
         max_length=25, required=True, label="First Name")
@@ -26,38 +24,97 @@ class CreateAccountForm(forms.Form):
         max_length=25, required=True, label="Last Name")
     username = forms.CharField(
         max_length=25, required=True, label="Username")
+    email = forms.EmailField(required=False, label="Email(not required):")
+    country = forms.ChoiceField(required=True,
+                                label="What country do you reside in?",
+                                choices=COUNTRY_CHOICES)
+    nepi_affiliated = forms.BooleanField(required=False)
     password1 = forms.CharField(
         max_length=25, widget=forms.PasswordInput, required=True,
         label="Password")
     password2 = forms.CharField(
         max_length=25, widget=forms.PasswordInput, required=True,
         label="Confirm Password")
-    email = forms.EmailField()
-    country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=True)
+    profile_type = forms.BooleanField(
+        required=False, label="Are you a Teacher?")
     captcha = CaptchaField()
+
+    def clean(self):
+        form = super(CreateAccountForm, self).clean()
+        is_teacher = form.get("profile_type")
+        email = form.get("email")
+        password1 = form.get("password1")
+        password2 = form.get("password2")
+
+        if is_teacher and (email == ""):
+            self._errors["email"] = self.error_class(
+                ["If you are registering as an instructor " +
+                 "you must enter a valid email address"])
+        if password1 != password2:
+            self._errors["password1"] = self.error_class(
+                ["Passwords must match each other."])
+            self._errors["password2"] = self.error_class(
+                ["Passwords must match each other."])
+        return form
+
+'''Do I really need three forms or is their
+a better way to do this dynamically?'''
+
+
+class CountryCourseForm(forms.Form):
+    country = forms.ChoiceField(required=True,
+                                label="What country do you reside in?",
+                                choices=COUNTRY_CHOICES)
+    school = forms.ModelChoiceField(queryset=Country.objects.all())
+
+
+class SchoolCourseForm(forms.Form):
+    country = forms.ChoiceField(required=True,
+                                label="What country do you reside in?",
+                                choices=COUNTRY_CHOICES)
+    school = forms.ModelChoiceField(queryset=Country.objects.all())
+    course = forms.ModelChoiceField(queryset=Course.objects.all())
 
 
 class ContactForm(forms.Form):
     '''This is a form class that will be returned
     later in the contact form view.'''
+    sender = forms.EmailField(required=True)
     subject = forms.CharField(max_length=100, required=True)
     message = forms.CharField(max_length=500, required=True,
                               widget=forms.Textarea)
-    sender = forms.EmailField(required=True)
-
-
-class AddTeacher(forms.Form):
-    pass
-
-
-class AddSchoolForm(forms.Form):
-    name = forms.CharField(max_length=50, required=True, label="School Name")
-    country = forms.ChoiceField(choices=COUNTRY_CHOICES, required=True)
-
-
-class CaptchaTestForm(forms.Form):
     captcha = CaptchaField()
 
 
-class AjaxForm(forms.Form):
-    captcha = CaptchaField()
+class ICAPForm(forms.Form):
+    countries = forms.ModelChoiceField(queryset=Country.objects.all())
+    schools = forms.ModelChoiceField(queryset=School.objects.all())
+    groups = forms.ModelChoiceField(queryset=Course.objects.all())
+
+
+class ProfileForm(forms.Form):
+    first_name = forms.CharField(max_length=100, required=True,
+                                 label="First Name")
+    last_name = forms.CharField(max_length=100, required=True,
+                                label="Last Name")
+    username = forms.CharField(max_length=100, required=True,
+                               label="Username")
+    password1 = forms.CharField(max_length=100, required=False,
+                                label="Leave blank if you" +
+                                "wish to leave the same")
+    password2 = forms.CharField(max_length=100, required=False,
+                                label="Leave blank if you wish" +
+                                "to leave the same")
+    icap_affil = forms.BooleanField(required=False, label="ICAP Affiliated")
+    user_country = forms.ChoiceField(required=True,
+                                     label="Country of Residence: ",
+                                     choices=COUNTRY_CHOICES)
+    email = forms.EmailField(required=False, label="Email(not required):")
+    faculty_access = forms.BooleanField(
+        required=False, label="Request Faculty Access")
+
+
+class CreateCourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        exclude = ("school", "creator")

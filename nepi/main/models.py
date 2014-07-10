@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from nepi.main.choices import COUNTRY_CHOICES, PROFILE_CHOICES
+from choices import COUNTRY_CHOICES, PROFILE_CHOICES
 from pagetree.models import Section, Hierarchy, UserLocation, UserPageVisit
 
 
@@ -9,8 +9,9 @@ from pagetree.models import Section, Hierarchy, UserLocation, UserPageVisit
 
 
 class Country(models.Model):
-    name = models.CharField(max_length=2, choices=COUNTRY_CHOICES)
-    region = models.CharField(max_length=50)
+    '''Users can select counties from drop down menu,
+    countries are stored by their official 2 letter codes.'''
+    name = models.CharField(max_length=2, choices=COUNTRY_CHOICES, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -20,7 +21,7 @@ class School(models.Model):
     '''Some of the countries have fairly long names,
     assuming the schools may also have long names.'''
     country = models.ForeignKey(Country, blank=True, default=None)
-    name = models.CharField(null=True, max_length=50)
+    name = models.CharField(blank=True, max_length=50)
 
     def __unicode__(self):
         return self.name
@@ -28,22 +29,36 @@ class School(models.Model):
 
 class Course(models.Model):
     '''Allow association of course with module.'''
-    school = models.ForeignKey(School, blank=True, default=None)
-    semester = models.CharField(max_length=50, blank=True)
+    school = models.ForeignKey(School, null=True, default=None, blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
-    name = models.CharField(max_length=50, blank=True)
+    name = models.CharField(max_length=50)
+    creator = models.ForeignKey(User, related_name="created_by",
+                                null=True, default=None, blank=True)
+    module = models.ForeignKey(Hierarchy, null=True, default=None, blank=True)
 
     def __unicode__(self):
         return self.name
 
+    def created_by(self):
+        return self.creator
+
+
+'''ADD VALIDATION'''
+
 
 class UserProfile(models.Model):
+    '''UserProfile adds exta information to a user,
+    and associates the user with a course, school,
+    and counrty.'''
     user = models.ForeignKey(User, related_name="application_user")
     profile_type = models.CharField(max_length=2, choices=PROFILE_CHOICES)
-    country = models.ForeignKey(Country, null=True, blank=True)
-    school = models.ForeignKey(School, null=True, default=None)
-    course = models.ManyToManyField(Course, null=True, blank=True)
+    country = models.ForeignKey(Country, null=True, default=None, blank=True)
+    # not sure why we are saving this in user profile
+    icap_affil = models.BooleanField(default=False)
+    school = models.ForeignKey(School, null=True, default=None, blank=True)
+    course = models.ManyToManyField(
+        Course, null=True, default=None, blank=True)
 
     def __unicode__(self):
         return self.user.username
@@ -99,8 +114,11 @@ class UserProfile(models.Model):
         elif self.is_icap():
             return "icap"
 
+    def joined_courses(self):
+        return self.course.objects.all()
+
 
 class PendingTeachers(models.Model):
-    user_profile = models.ForeignKey(UserProfile, related_name="pending_teachers")
+    user_profile = models.ForeignKey(UserProfile,
+                                     related_name="pending_teachers")
     school = models.ForeignKey(School, null=True, default=None)
-

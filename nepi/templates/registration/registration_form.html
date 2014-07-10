@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load i18n admin_static %}
+{% block title %}Sign up for an account{% endblock %}
+
+<script type="type/javascript">
+jQuery(document).load(
+    function()
+    {
+        alert("documetnready");
+    }
+);
+
+jQuery(document).ready(alert("documetnready");
+
+</script>
+
+{% block content %}
+		<div id="breadcrumbbar">
+		<span class="here">You are Here:</span>  
+				&gt; 	Create Account
+		</div>
+		
+		<div id="container">
+			<h2>	Create Account	</h2>
+			<form action="." method="post">{% csrf_token %}
+			    {{nepi.main.views.form.non_field_errors}}
+                <fieldset>
+				<legend>Account Information</legend>
+
+                    <div class="fieldWrapper">
+                    {{ form.username.errors }}
+					<label for="username">	Username:</label>
+					{{ nepi.main.views.form.username}}
+					<br/><br/>
+					</div>
+
+                    <div class="fieldWrapper">
+                    {{ nepi.main.views.form.email.errors }}
+					<label for="email">	Email:</label>
+					{{ nepi.main.views.form.email}}
+					<br/><br/>
+					</div>
+
+                    <div class="fieldWrapper">
+                    {{ nepi.main.views.form.first_name.errors }}
+					<label for="first_name">	First Name:</label>
+					{{ nepi.main.views.form.first_name}}
+					<br/><br/>
+                    </div>
+
+                    <div class="fieldWrapper">
+                    {{ nepi.main.views.form.last_name.errors }}
+					<label for="last_name">	Last Name:</label>
+					{{ nepi.main.views.form.last_name}}
+					<br/><br/>
+					</div>
+
+                    <div class="fieldWrapper">
+                    {{ nepi.main.views.form.password1.errors }}
+					<label for="password1">	Password:</label>
+					{{nepi.main.views.form.password1}}
+					<br/><br/>
+                    {{ nepi.main.views.form.password2.errors }}
+					<label for="password2">	Password:</label>
+					{{nepi.main.views.form.password2}}
+					<br/><br/>
+					</div>
+
+                    <div class="fieldWrapper">
+                    {{ nepi.main.views.form.country.errors }}
+					<label for="country">	Country:</label>
+					{{nepi.main.views.form.country}}
+					<br/><br/>
+					</div>
+
+					<div class="fieldWrapper">
+                    {{ nepi.main.views.form.school.errors }}
+					<label for="school">	School:</label>
+					{{ nepi.main.views.form.school }}
+					<br/><br/>
+					</div>
+
+					<br/><br/>
+					<label for="createaccount">	</label>
+					<input id="createaccount" type="submit" value="Create Account" />
+				</fieldset>
+			</form>
+			
+		</div>
+    <div class="p">
+    If you already have a username or password, but have forgotten either,
+        <a href="/register/">reset them here</a>.
+    </div>
+	
+{% endblock %}
+
+
+

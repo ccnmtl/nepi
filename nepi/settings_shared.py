@@ -1,7 +1,6 @@
 # Django settings for nepi project.
 import os.path
 import sys
-#requirements/src/quizblock-tobaccocessation.tar.gz
 
 
 DEBUG = True
@@ -52,7 +51,7 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_pyflakes',
 )
 PROJECT_APPS = [
-    'nepi.main',
+    'nepi.main', 'nepi.activities',
 ]
 
 ALLOWED_HOSTS = ['localhost', '.ccnmtl.columbia.edu']
@@ -75,8 +74,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
-    'django.core.context_processors.media',  # why this?
-    'django.core.context_processors.static',  # again why?
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
     'stagingcontext.staging_processor',
@@ -95,6 +94,7 @@ MIDDLEWARE_CLASSES = (
     'impersonate.middleware.ImpersonateMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'waffle.middleware.WaffleMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware'
 )
 
 ROOT_URLCONF = 'nepi.urls'
@@ -134,12 +134,8 @@ INSTALLED_APPS = [
     'quizblock',
     'registration',
     'captcha',
-    'activities',
+    'nepi.activities',
 ]
-
-LETTUCE_APPS = (
-    'nepi.main',
-)
 
 INTERNAL_IPS = ('127.0.0.1', )
 DEBUG_TOOLBAR_PANELS = (
@@ -161,6 +157,7 @@ STATSD_PORT = 8125
 STATSD_PATCHES = ['django_statsd.patches.db', ]
 
 THUMBNAIL_SUBDIR = "thumbs"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_SUBJECT_PREFIX = "[nepi] "
 EMAIL_HOST = 'localhost'
 SERVER_EMAIL = "nepi@ccnmtl.columbia.edu"
@@ -183,8 +180,9 @@ COMPRESS_ROOT = "media/"
 
 # WIND settings
 
-AUTHENTICATION_BACKENDS = ('djangowind.auth.WindAuthBackend',
-                           'django.contrib.auth.backends.ModelBackend', )
+AUTHENTICATION_BACKENDS = (
+    'djangowind.auth.WindAuthBackend',
+    'django.contrib.auth.backends.ModelBackend', )
 WIND_BASE = "https://wind.columbia.edu/"
 WIND_SERVICE = "cnmtl_full_np"
 WIND_PROFILE_HANDLERS = ['djangowind.auth.CDAPProfileHandler']
@@ -205,7 +203,11 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
               'pageblocks.HTMLBlock',
               'pageblocks.ImageBlock',
-              'quizblock.Quiz']
+              'quizblock.Quiz',
+              'activities.ConversationScenario',
+              'activities.ImageInteractive',
+              'activities.CalendarChart',
+              'activities.DosageActivity']
 
 AUTH_PROFILE_MODULE = 'nepi.main.UserProfile'
 

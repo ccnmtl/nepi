@@ -1,8 +1,7 @@
-
 {% extends "admin/base_site.html" %}
-{% load i18n %}
+{% load i18n admin_static %}
 
-{% block stylesheet %}media/css/admin.css{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/login.css" %}" />{% endblock %}
 
 {% block bodyclass %}login{% endblock %}
 
@@ -24,7 +23,7 @@ login through WIND with it</p>
 </form>
 <p>otherwise: </p>
 
-<form action="{{ app_path }}" method="post" id="login-form">
+<form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
   <div class="form-row">
     <label for="id_username">{% trans 'Username:' %}</label> <input type="text" name="username" id="id_username" />
   </div>

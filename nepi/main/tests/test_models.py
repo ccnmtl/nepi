@@ -4,8 +4,6 @@ from nepi.main.models import UserProfile, Country, School
 from nepi.main.models import Course
 from datetime import datetime
 from factories import CountryFactory, SchoolFactory, CourseFactory
-from factories import UserProfileFactory, TeacherProfileFactory
-from factories import ICAPProfileFactory, HierarchyFactory
 
 
 class TestCountry(TestCase):
@@ -40,23 +38,22 @@ class TestUserProfile(TestCase):
                          username="icapp", email="icapp@email.com",
                          password="icapp")
         self.icap.save()
-        self.country1 = Country(name='LS', region='Region 1')
+        self.country1 = Country(name='LS')
         self.country1.save()
-        self.country2 = Country(name='GM', region='Region 1')
+        self.country2 = Country(name='GM')
         self.country1.save()
-        self.country3 = Country(name='TG', region='Region 1')
+        self.country3 = Country(name='TG')
         self.country1.save()
         self.school = School(country=self.country1, name='School 1')
         self.school.save()
         self.course = Course(school=self.school,
-                             semester="Fall 2018", name="Course",
+                             name="Course",
                              start_date=datetime.now(),
                              end_date=datetime.now())
         self.course.save()
         self.student_profile = UserProfile(
             user=self.student, profile_type='ST', country=self.country1,
             school=self.school)
-
         self.student_profile.save()
         self.teacher_profile = UserProfile(
             user=self.teacher, profile_type='TE', country=self.country1,

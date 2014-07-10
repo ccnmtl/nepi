@@ -2,8 +2,6 @@
 {% load bootstrap %}
 
 {% block css %}
-    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css" type="text/css" media="all" />
-
     <style type="text/css">
         .draghandle {float: left;}
         #answers {list-style-type: none; margin: 0; padding: 0;}
@@ -14,7 +12,11 @@
         #answers li span { position: absolute; margin-left: -1.3em; }
         .dragging {border: #f60 solid 1px;}
     </style>
-    
+{% endblock %}
+
+{% block extrahead %}
+    <script type="text/javascript" src="/site_media/js/jquery-ui-1.10.3.min.js"></script>
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" /> 
 {% endblock %}
 
 {% block js %}
@@ -46,15 +48,9 @@
             jQuery("#answers").disableSelection();
         });
     </script>
+
+
 {% endblock %}
-
-{% block primarynavrightextra %}
-    <ul class="nav pull-right">
-        <li><a href="{{question.quiz.pageblock.section.get_absolute_url}}" >view page</a></li>
-    </ul>
-{% endblock %}
-
-
 {% block content %}
 
 <ul class="breadcrumb">

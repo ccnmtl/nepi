@@ -1,7 +1,6 @@
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
 from django.contrib.auth.models import User
-from nepi.main.views import contact
 from nepi.main.models import UserProfile, Country
 from factories import UserFactory, HierarchyFactory, UserProfileFactory
 
@@ -15,16 +14,17 @@ class TestBasicViews(TestCase):
         self.icap_user = User.objects.create_user(
             'icap_user', 'icap@icap.com', 'icap_user')
         self.icap_user.save()
-        self.country = Country(name='AO', region="region")
+        self.country = Country(name='AO')
         self.country.save()
         self.user_profile = UserProfile(
             user=self.icap_user, profile_type='IC', country=self.country)
         self.user_profile.save()
-
-    def test_root(self):
-        response = self.c.get("/")
-        self.assertEquals(response.status_code, 302)
-        self.assertTemplateUsed('flatpages/index.html')
+#     def test_home(self):
+#         response = self.c.get("/", follow=True)
+#         self.assertEqual(response.status_code, 200)
+#         self.assertEquals(response.redirect_chain[0],
+#                           ('http://testserver/accounts/login/?next=/',
+#                            302))
 
     def test_about(self):
         response = self.c.get("/about/")
@@ -36,30 +36,18 @@ class TestBasicViews(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed('flatpages/help.html')
 
-    def test_contact(self):
-        request = self.factory.post('/contact/',
-                                    {"subject": "new_student",
-                                     "message": "new_student",
-                                     "sender": "new_student",
-                                     "recipients": "email@email.com"})
-        response = contact(request)
-        self.assertEqual(response.status_code, 200)
+#    def test_contact(self):
+#        request = self.factory.post('/contact/',
+#                                    {"subject": "new_student",
+#                                     "message": "new_student",
+#                                     "sender": "new_student",
+#                                     "recipients": "email@email.com"})
+#        response = contact(request)
+#        self.assertEqual(response.status_code, 200)
 
     def test_smoketest(self):
         response = self.c.get("/smoketest/")
         self.assertEquals(response.status_code, 200)
-
-    def test_test_view(self):
-        r = self.c.get("/test_view/")
-        self.assertEqual(r.status_code, 200)
-
-    def test_captcha(self):
-        r = self.c.get("/captchatest/")
-        self.assertEqual(r.status_code, 200)
-
-    def test_captcha_submit(self):
-        r = self.c.post("/captchatest/", dict())
-        self.assertEqual(r.status_code, 200)
 
     def test_register_form(self):
         r = self.c.get("/register/")
@@ -89,10 +77,6 @@ class TestLoggedInViews(TestCase):
         r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
         self.assertEqual(r.status_code, 200)
 
-    def test_root(self):
-        r = self.c.get("/pages/%s/" % (self.h.name))
-        self.assertEqual(r.status_code, 200)
-
-    def test_home(self):
-        r = self.c.get("/home/")
-        self.assertEqual(r.status_code, 200)
+#    def test_home(self):
+#        response = self.c.get("/")
+#        # self.assertEqual(response.status_code, 200)

@@ -20,7 +20,6 @@
           <p>{{question.explanation|markdown}}</p>
         </div>
       </div>
-{% else %}
-    is_correct
-  <p>{{question.explanation|markdown}}</p>
-{% endif %}
+{% else %}{% if question.explanation %}
+    <p>{{question.explanation|markdown}}</p>
+{% endif %}{% endif %}

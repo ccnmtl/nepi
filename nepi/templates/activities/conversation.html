@@ -1,0 +1,74 @@
+{% load markup %}
+{% load conversation_state %}
+
+{% if block.label %}<h3>{{block.label}}</h3>{% endif %}
+{{block.description|markdown}}
+
+</br></br>{% getresponse block as response %}
+
+<div id="last_click" value="{{response}}"> {{response}} </div>
+
+
+
+
+<div id="good_conversation">
+  <form id="good" action="/activities/get_click/" method="post"> {% csrf_token %}
+    <input type="hidden" name="clicked_on" value="good_conversation"/> 
+    <input type="hidden" name="conversation" value="{{block.good_conversation.pk}}"/>
+    <input type="hidden" name="scenario" value="{{block.pk}}"/>
+  </form>
+  <ul>
+      <ol>
+        <div id="starting_good">
+          <p>{{block.good_conversation.text_one}}</p>
+        </div></br>
+        <div class="patient_good_conversation" style="display: none">
+          <p>{{block.good_conversation.response_one}}</p>
+        </div></br>
+        <div class="patient_good_conversation" style="display: none">
+          <p>{{block.good_conversation.response_two}}</p>
+        </div></br>
+        <div class="patient_good_conversation" style="display: none">
+          <p>{{block.good_conversation.response_three}}</p>
+        </div></br>
+        <div class="patient_good_conversation" style="display: none">
+          <p>{{block.good_conversation.complete_dialog}}</p>
+        </div></br>
+     </ol>
+</div>
+
+<div id="bad_conversation">
+  <form id="bad" action="/activities/get_click/" method="post"> {% csrf_token %}
+    <input type="hidden" name="clicked_on" value="bad_conversation"> 
+    <input type="hidden" name="conversation" value="{{block.bad_conversation.pk}}">
+    <input type="hidden" name="scenario" value="{{block.pk}}">
+    <input type="hidden" id="last_click" name="last_click" value="" />
+  </form>
+  <ul>
+      <ol>
+        <div id="starting_bad">
+          <p>{{block.bad_conversation.text_one}}</p>
+        </div></br>
+        <div class="patient_bad_conversation" style="display: none">
+          <p>{{block.bad_conversation.response_one}}</p>
+        </div></br>
+        <div class="patient_bad_conversation" style="display: none">
+          <p>{{block.bad_conversation.response_two}}</p>
+        </div></br>
+        <div class="patient_bad_conversation" style="display: none">
+          <p>{{block.bad_conversation.response_three}}</p>
+        </div></br>
+
+        <div class="patient_bad_conversation" style="visibility: hidden">
+          <p>{{block.bad_conversation.complete_dialog}}</p>
+        </div></br>
+     </ol>
+</div>
+</ul>
+
+
+
+</br></br></br></br></br></br>
+
+
+

@@ -2,12 +2,19 @@ from django.conf.urls.defaults import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.conf import settings
+import nepi.main.views
 from django.views.generic import TemplateView
 import os.path
 admin.autodiscover()
 import staticmedia
-from nepi.main.views import CreateCourseView, UpdateCourseView
-from nepi.main.views import CreateSchoolView, UpdateSchoolView
+from nepi.main.views import (CreateCourseView, UpdateCourseView,
+                             DeleteCourseView, StudentClassStatView,
+                             GetSchoolCourses, CreateSchoolView,
+                             UpdateSchoolView, ContactView,
+                             RegistrationView, GetCountries,
+                             StudentDashboard, JoinCourse,
+                             GetCountrySchools, FacultyDashboard,
+                             ICAPDashboard, Home, AddCourse)
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -23,7 +30,7 @@ if hasattr(settings, 'WIND_BASE'):
     logout_page = (
         r'^accounts/logout/$',
         'djangowind.views.logout',
-        {'next_page': redirect_after_logout})
+        {'next_page': '/'})
 
 urlpatterns = patterns(
     '',
@@ -38,49 +45,58 @@ urlpatterns = patterns(
 )
 
 
-
-
 urlpatterns += patterns(
     '',
     auth_urls,
     logout_page,
-    url(r'^$', 'nepi.main.views.index', name="index"),
+    url(r'^$', Home.as_view(), name="home"),
     (r'^admin/', include(admin.site.urls)),
 
-    #login/logout
-    (r'^login/$', 'nepi.main.views.nepi_login'),
-    (r'^logout/$', 'nepi.main.views.logout_view'),
-
     # flat and universally accessible pages
-    (r'^home/$', 'nepi.main.views.home'),
-    (r'^contact/$', 'nepi.main.views.contact'),
-    (r'^register/$', 'nepi.main.views.register'),
+    (r'^contact/$', ContactView.as_view()),
+    url(r'^register/$', RegistrationView.as_view(), name='register'),
+    url(r'^student-dashboard/$',
+        StudentDashboard.as_view(), name='student-dashboard'),
+    url(r'^faculty-dashboard/$',
+        FacultyDashboard.as_view(), name='faculty-dashboard'),
+    url(r'^icap-dashboard/$',
+        ICAPDashboard.as_view(), name='icap-dashboard'),
+    url(r'^join_course/$', JoinCourse.as_view(), name='join-course'),
+    url(r'^get_countries/$', GetCountries.as_view()),
+    url(r'^get_schools/$', GetCountrySchools.as_view()),
+    url(r'^get_schools/(?P<pk>\d+)/$',
+        GetCountrySchools.as_view(), name='get-country-schools'),
+    url(r'^get_courses/$', GetSchoolCourses.as_view()),
+    url(r'^get_courses/(?P<pk>\d+)/$', GetSchoolCourses.as_view()),
+    url(r'^join_course/(?P<pk>\d+)/$',
+        JoinCourse.as_view(), name='join-course'),
+    url(r'^add_course/$',
+        AddCourse.as_view(), name='add-course'),
+    (r'^accessible/(?P<section_slug>.*)/$',
+     'is_accessible', {}, 'is-accessible'),
 
     # ICAP related pages
-    (r'^view_schools/$', 'nepi.main.views.view_schools'),
-    (r'^add_school/$',  CreateSchoolView.as_view()),
+    (r'^add_school/$', CreateSchoolView.as_view()),
+    url(r'^view_course_stats/(?P<pk>\d+)/', StudentClassStatView.as_view(),
+        name='view-course-stats'),
     (r'^edit_school/(?P<pk>\d+)/$', UpdateSchoolView.as_view()),
-    (r'^icapp_view_students/$', 'nepi.main.views.icapp_view_students'),
 
     # Teacher related pages
-    #(r'^view_students/$', 'nepi.main.views.view_students'), #'nepi.main.views.create_course'),
-    url(r'^create_course/$', CreateCourseView.as_view()),
+    #(r'^view_students/$', 'nepi.main.views.view_students'),
+    #'nepi.main.views.create_course'),
+    (r'^create_course/$', CreateCourseView.as_view()),
     (r'^edit_course/(?P<pk>\d+)/$', UpdateCourseView.as_view()),
+    url(r'^delete_course/(?P<pk>\d+)/$', DeleteCourseView.as_view(),
+        name='delete-course'),
     (r'^course_students/$', 'nepi.main.views.course_students'),
     #(r'^teacher_courses/$', 'nepi.main.views.current_courses'),
     (r'^remove_student/$', 'nepi.main.views.remove_student'),
-    (r'^course_results/$', 'nepi.main.views.course_results'),
+    #(r'^course_results/$', 'nepi.main.views.course_results'),
 
     url(r'^captcha/', include('captcha.urls')),
-    (r'^captchatest/$', 'nepi.main.views.captchatest'),
-    (r'^test_view/$', 'nepi.main.views.test_view'),
-
+    (r'^activities/', include('nepi.activities.urls')),
     # Student related pages
     (r'^thanks_course/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_course'),
-    (r'^view_courses/(?P<schl_id>\d+)/$', 'nepi.main.views.view_courses'),
-    (r'^join_course/$', 'nepi.main.views.join_course'),
-    (r'^view_courses/(?P<schl_id>\d+)/$', 'nepi.main.views.view_courses'),
-
 
     url(r'^_impersonate/', include('impersonate.urls')),
     (r'^stats/$', TemplateView.as_view(template_name="stats.html")),
@@ -93,16 +109,16 @@ urlpatterns += patterns(
     (r'^quizblock/', include('quizblock.urls')),
     (r'^pagetree/', include('pagetree.urls')),
 
+    (r'^pages/main/edit/(?P<path>.*)$',
+     nepi.main.views.EditPage.as_view(),
+     {}, 'edit-page'),
 
+    (r'^pages/activities/edit/(?P<path>.*)$',
+     nepi.main.views.EditPage.as_view(),
+     {}, 'edit-page'),
 
-    #(r'^activity_test/', 'nepi.main.views.activity_test'),
-    # very important that this stays last and in this order
-    #(r'^pages/(?P<hierarchy>\w+)/edit/(?P<section_id>\d+)/$',
-    # 'nepi.main.views.edit_page_by_id'),
-    (r'^pages/(?P<hierarchy>\w+)/edit/(?P<path>.*)$',
-     'nepi.main.views.edit_page'),
-    (r'^pages/(?P<hierarchy>\w+)/(?P<path>.*)$',
-     'nepi.main.views.page'),
+    (r'^pages/main/(?P<path>.*)$', nepi.main.views.ViewPage.as_view()),
+
 
 ) + staticmedia.serve()
 
