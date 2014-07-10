@@ -2,7 +2,7 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from nepi.main.models import (Country,
                               School,
-                              Course,
+                              Group,
                               UserProfile)
 from pagetree.models import Hierarchy
 import factory
@@ -11,6 +11,7 @@ import factory
 class UserFactory(factory.DjangoModelFactory):
     FACTORY_FOR = User
     username = factory.Sequence(lambda n: "user%d" % n)
+    password = factory.PostGenerationMethodCall('set_password', 'test')
 
 
 class CountryFactory(factory.DjangoModelFactory):
@@ -24,11 +25,11 @@ class SchoolFactory(factory.DjangoModelFactory):
     name = "Test School"
 
 
-class CourseFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Course
+class GroupFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = Group
     school = factory.SubFactory(SchoolFactory)
     creator = factory.SubFactory(UserFactory)
-    name = "A Course"
+    name = "A Group"
     start_date = datetime.now()
     end_date = datetime.now()
 

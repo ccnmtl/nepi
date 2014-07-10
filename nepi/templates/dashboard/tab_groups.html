@@ -1,0 +1,125 @@
+{% block tabcontent %}
+    <div class="tab-pane" id="user-groups">
+        <div id="pane-content">
+        {% block tabtitle %}
+            Your Groups
+        {% endblock %}
+    
+        {% block tabbody %}
+
+            {% if user_profile.profile_type == "IC" or user_profile.profile_type == "TE"%}
+                {% block groupscreated %}
+                    <div id="groups_created">
+                        <b><p>Groups You've Created: </p></b>
+                            <table width="100%" class="table table-striped table-condensed"> 
+                                {% for cc in created_groups %}
+                                <tr>
+                                    <td>
+                                        <a href="{{cc.module.get_absolute_url}}">
+                                            {{cc.name}}
+                                        </a>
+                                        <space>
+                                        <a href="/group_details/{{cc.pk}}/">
+                                            {{cc.name}} Information
+                                        </a>
+                                        <space>
+                                        <a href="/view_group_stats/{{cc.pk}}/">
+                                            {{cc.name}} Group Stats
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="/edit_group/{{cc.pk}}">
+                                            Edit
+                                        </a>
+                                    </td>
+                                    <td>
+                                         <a href="/archive_group/{{cc.pk}}">
+                                             Archive
+                                         </a>
+                                     </td>
+                                     {% if cc.userprofile_set.count == 0 %}
+                                         <td>
+                                             <div>
+                                                 <a href="{% url 'delete-group' cc.id %}" class="delete_link">
+                                                     Delete Group
+                                                 </a>
+                                             </div>
+                                         </td>
+                                     {% endif %}
+                                 </tr>
+                                 {% empty %}
+                                 <tr>
+                                     <td>
+                                         <p>You have not created any groups yet.</p>
+                                     </td>
+                                 </tr>
+                                 {% endfor %}
+                             </table>
+                             
+                             
+                             <div id="add_group_div">
+                                 <button id="add_group_button">Add Group - Ajax</button>
+                             </div>
+                             <a href="{% url 'create-group' %}">Create Group - non Ajax</a>
+
+                             
+                         </div>    
+                {% endblock %}
+            {% endif %}
+            
+            {% block usergroups %}
+            
+                <div id="groups_joined">
+                    <b><p>Groups You've Joined: </p></b>
+                    {% for uc in joined_groups %}
+                        <tr>
+                            <td><a href="{{uc.get_absolute_url}}">{{uc.name}}</a></td>
+                            <td><a href="/view_group_stats/uc.pk/">see progress</a></td><button id="progress_button">See Progress</button>
+                        </tr>
+                    {% empty %}
+                        <div name="instruction-div">
+                            <tr>
+                                <td>
+                                    There should be an instruction div of some sorts here to tell first timers what to do.
+                                </td>
+                            </tr>
+                          </div>
+                        <div>
+                          <tr>
+                              <td>
+                                  <p>You have not joined any groups yet.</p>
+                              </td>
+                          </tr>
+                        </div> 
+                  {% endfor %}
+                  <div id="join_group">
+                      <button id="join_group_button">Join Group</button>
+                  </div> 
+            {% endblock %}
+ 
+ 
+              </div>
+
+             
+        </div>
+    </div>
+    
+            {% block extrajs %}
+                <script>
+                    var join_btn = jQuery('#join_group_button');
+                    join_btn.click(
+                    function()
+                    {
+                        jQuery('#join_group').load('/get_countries/');
+                    });
+                    
+                    var add_btn = jQuery('#add_group_button');
+                    add_btn.click(function(){jQuery('#add_group_div').load('/add_group/');});
+                    
+                    var edit_btn = jQuery('#edit_group_button');
+                    edit_btn.click(function(){jQuery('#edit_group_div').load('/edit_group/');});
+                </script>
+    {% endblock %}
+        {% endblock %}
+{% endblock %}
+

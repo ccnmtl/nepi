@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block js %}
+
+<script>
+    //jQuery('#report_form').load('/get_countries/');
+    
+    var profilebtn = jQuery('#user-profile-button');
+    profilebtn.click(function(){jQuery('#new_profile').load('/dashboard/update_profile/{{user_profile.pk}}/');});
+    
+    var onDelete = function()
+    {
+            jQuery.post(this.href, function(data)
+            {   
+                if (data.result == "ok")
+                {
+                    alert("Group deleted successfully");
+                    location.reload();
+                } else
+                {
+                    // handle error processed by server here
+                    alert("smth goes wrong");
+                }
+            }).fail(function()
+            {
+                // handle unexpected error here
+                alert("error");
+            });
+            return false;
+    };//end of on delete
+
+    jQuery(".delete_link").click(onDelete);
+    
+</script>
+{% endblock %}
+
+{% block content %}
+
+<script src="/site_media/js/dashboard.js"></script>
+<input type="hidden" value={{user.pk}}>
+
+    {% block actualtabs %}
+        {% block tabheaders %}
+            {% include "dashboard/tabheadercontent.html" %}
+        {% endblock%}
+
+        {% block optionb %}
+            {% include "dashboard/tab_optionb.html" %}
+        {% endblock %}
+
+        {% block groups %}
+            {% include "dashboard/tab_groups.html" %}
+        {% endblock %}
+
+        {% block reports %}
+            {% if user_profile.profile_type == "TE" %}
+                {% include "dashboard/tab_teacher_reports.html" %}
+            {% endif %}
+            {% if user_profile.profile_type == "CA" %}
+                {% include "dashboard/tab_ca_reports.html" %}
+            {% endif %}
+            {% if user_profile.profile_type == "IC" %}
+                {% include "dashboard/tab_icap_reports.html" %}
+            {% endif %}
+        {% endblock %}
+
+        {% block profile %}
+            {% include "dashboard/tab_profile.html" %}
+        {% endblock %}
+    
+        {% comment %}
+        {% block pending_teachers %}
+            {% if user_profile.profile_type == "IC" %}
+                {% include "dashboard/tab_pending_teachers.html" %}
+            {% endif %}
+        {% endblock %}
+        {% endcomment %}
+
+        {% comment %}
+        {% block formmodal%}
+            {% include "dashboard/form_modal.html" %}
+        {% endblock %}
+        {% endcomment %}
+
+        {% comment %}
+        {% block thanksmodal%}
+            {% include "dashboard/thank_you_modal.html" %}
+        {% endblock %}
+        {% endcomment %}
+    {% endblock %}       
+    
+{% endblock%}

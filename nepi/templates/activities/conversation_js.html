@@ -1,9 +1,8 @@
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script>
 
 jQuery(document).ready(function() {
     
-    if(jQuery('#last_click').attr('value') == "B")
+    if(jQuery('#last_click').text() == "B")
     {
          jQuery("#starting_bad").addClass( "wrong-selected" )
          jQuery(".patient_bad_conversation").addClass( "wrong-selected" ).show();
@@ -14,7 +13,7 @@ jQuery(document).ready(function() {
     }
     
     
-    if(jQuery('#last_click').attr('value') == "G")
+    if(jQuery('#last_click').text() == "G")
     {
          jQuery("#starting_good").addClass( "right-selected" )
          jQuery(".patient_good_conversation").addClass( "right-selected" ).show();
@@ -23,80 +22,73 @@ jQuery(document).ready(function() {
          jQuery("#starting_bad").removeClass( "wrong-selected" );
 
     }
-    
-    
-    
-    var gfrm = jQuery('#good');
-    var bfrm = jQuery('#bad');
+
+
+    var good_c = jQuery("#good_conversation input[name='conversation']").val();
+    var good_s = jQuery("#good_conversation input[name='scenario']").val();
+
+    var bad_c = jQuery("#bad_conversation input[name='conversation']").val();
+    var bad_s = jQuery("#bad_conversation input[name='scenario']").val();
+
+
     jQuery("#starting_good").on("click", 
         function()
-        { 
+        {    
              jQuery.ajax(
              {
-                  type: gfrm.attr('method'),
-                  url: gfrm.attr('action'),
-                  data: gfrm.serialize(),
+                  url: "/activities/get_click/",
+                  type: "POST",
+                  data: {'scenario' : good_s, 'conversation' : good_c },
                   success: function (data) 
                   {
-                      //alert(gfrm.serialize());
-                        //alert("This is a form submission.");
+                      jQuery("#starting_good").addClass( "right-selected" )
+                      jQuery(".patient_good_conversation").addClass( "right-selected" ).show();
+
+                      jQuery(".patient_bad_conversation").hide();
+                      jQuery("#starting_bad").removeClass( "wrong-selected" );
+
+                      goodvar = goodvar + 1;
+                      
+                      if (goodvar > 0 && badvar > 0){location.reload(true);};
                   },
+                  
                   error: function(data) 
                   {
-                         //alert("There was an error submitting your form.");
+                      alert("There was an error submitting your form.");
                   }
                 });//end of ajax
-
-         jQuery("#starting_good").addClass( "right-selected" )
-         jQuery(".patient_good_conversation").addClass( "right-selected" ).show();
-
-         jQuery(".patient_bad_conversation").hide();
-         jQuery("#starting_bad").removeClass( "wrong-selected" );
-
-         goodvar = goodvar + 1;
-         if (goodvar > 0 && badvar > 0){location.reload(true);};
-
       });
 
    
    jQuery("#starting_bad").on("click", 
       function()
       { 
-
              jQuery.ajax(
              {
-                  type: bfrm.attr('method'),
-                  url: bfrm.attr('action'),
-                  data: bfrm.serialize(),
+                  url: "/activities/get_click/",
+                  type: "POST",
+                  data: {'scenario' : bad_s, 'conversation' : bad_c },
                   success: function (data) 
                   {
-                      //alert(bfrm.serialize());
-                        //alert("This is a form submission.");
+                      jQuery("#starting_bad").addClass( "wrong-selected" )
+                      jQuery(".patient_bad_conversation").addClass( "wrong-selected" ).show();
+
+                      jQuery(".patient_good_conversation").hide();
+                      jQuery("#starting_good").removeClass( "right-selected" ).show();
+
+                      badvar = badvar + 1;
+
+                     if (goodvar > 0 && badvar > 0)
+                     {
+                          location.reload(true);
+                     };
                   },
                   error: function(data) 
                   {
-                         //alert("There was an error submitting your form.");
+                      alert("There was an error submitting your form.");
                   }
                 });//end of ajax
-
-
-
-         jQuery("#starting_bad").addClass( "wrong-selected" )
-         jQuery(".patient_bad_conversation").addClass( "wrong-selected" ).show();
-
-         jQuery(".patient_good_conversation").hide();
-         jQuery("#starting_good").removeClass( "right-selected" ).show();
-
-         badvar = badvar + 1;
-
-        if (goodvar > 0 && badvar > 0)
-        {
-             location.reload(true);//refresh()
-        };
-
-
       });
-
 });
 
 

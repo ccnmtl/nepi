@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block js %}
+{% endblock %}
+
+{% block tabheaders %}
+    {% include "dashboard/tabheadercontent.html" %}
+{% endblock %}
+
+{% block actualtabs %}
+
+    {% block optionb %}
+        {% include "dashboard/tab_optionb.html" %}
+    {% endblock %}
+    {% block groups %}
+        {% include "dashboard/tab_groups.html" %}
+    {% endblock %}
+    {% block reports %}
+        {% if user_profile.profile_type == "TE" %}
+            {% include "dashboard/tab_teacher_reports.html" %}
+        {% endif %}
+        {% if user_profile.profile_type == "CA" %}
+            {% include "dashboard/tab_ca_reports.html" %}
+        {% endif %}
+        {% if user_profile.profile_type == "IC" %}
+            {% include "dashboard/tab_icap_reports.html" %}
+        {% endif %}
+    {% endblock %}
+    {% block profile %}
+        {% include "dashboard/tab_profile.html" %}
+    {% endblock %}
+
+
+    {% block genericmodal%}
+    <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onClick=refresh_page();>
+                     x 
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        Join Course
+                    </h4>
+                </div>
+                
+                <div class="modal-body">
+                    <form id="create_course" action="/create_new_course/" method="post">{% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="submit" value="Submit"/>
+                    </form>
+                </div>
+                
+                <div class="modal-footer">
+                    <button id="refresh" type="button" class="btn btn-primary">
+                        Save changes
+                    </button>
+                </div>
+        </div>
+    </div>
+    
+</div>{% comment %} Although there is no starting div, this is necessary to end all of the tabs...{% endcomment %}
+{% endblock %}
+{% endblock%}

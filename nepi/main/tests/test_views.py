@@ -2,7 +2,9 @@ from django.test import TestCase, RequestFactory
 from django.test.client import Client
 from django.contrib.auth.models import User
 from nepi.main.models import UserProfile, Country
-from factories import UserFactory, HierarchyFactory, UserProfileFactory
+from nepi.main.views import ContactView
+from factories import UserFactory, HierarchyFactory, \
+    UserProfileFactory, TeacherProfileFactory, ICAPProfileFactory
 
 
 class TestBasicViews(TestCase):
@@ -36,14 +38,14 @@ class TestBasicViews(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed('flatpages/help.html')
 
-#    def test_contact(self):
-#        request = self.factory.post('/contact/',
-#                                    {"subject": "new_student",
-#                                     "message": "new_student",
-#                                     "sender": "new_student",
-#                                     "recipients": "email@email.com"})
-#        response = contact(request)
-#        self.assertEqual(response.status_code, 200)
+    def test_contact(self):
+        request = self.factory.post('/contact/',
+                                    {"subject": "new_student",
+                                     "message": "new_student",
+                                     "sender": "new_student",
+                                     "recipients": "email@email.com"})
+        response = ContactView.as_view()(request)
+        self.assertEqual(response.status_code, 200)
 
     def test_smoketest(self):
         response = self.c.get("/smoketest/")
@@ -58,7 +60,8 @@ class TestBasicViews(TestCase):
         self.assertEqual(r.status_code, 200)
 
 
-class TestLoggedInViews(TestCase):
+class TestStudentLoggedInViews(TestCase):
+    '''go through some of the views student sees'''
     def setUp(self):
         self.h = HierarchyFactory()
         self.s = self.h.get_root().get_first_leaf()
@@ -77,6 +80,57 @@ class TestLoggedInViews(TestCase):
         r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
         self.assertEqual(r.status_code, 200)
 
-#    def test_home(self):
-#        response = self.c.get("/")
-#        # self.assertEqual(response.status_code, 200)
+    def test_home(self):
+        response = self.c.get("/", follow=True)
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/student-dashboard/%d/'
+                            % self.u.pk, 302)])
+        self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+
+
+class TestTeacherLoggedInViews(TestCase):
+    '''go through some of the views student sees'''
+    def setUp(self):
+        self.h = HierarchyFactory()
+        self.s = self.h.get_root().get_first_leaf()
+        self.u = UserFactory(is_superuser=True)
+        self.up = TeacherProfileFactory(user=self.u)
+        self.u.set_password("test")
+        self.u.save()
+        self.c = Client()
+        self.c.login(username=self.u.username, password="test")
+
+    def test_page(self):
+        r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
+        self.assertEqual(r.status_code, 200)
+
+    def test_home(self):
+        response = self.c.get("/", follow=True)
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/faculty-dashboard/%d/'
+                            % self.u.pk, 302)])
+        self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+
+
+class TestICAPLoggedInViews(TestCase):
+    '''go through some of the views student sees'''
+    def setUp(self):
+        self.h = HierarchyFactory()
+        self.s = self.h.get_root().get_first_leaf()
+        self.u = UserFactory(is_superuser=True)
+        self.up = ICAPProfileFactory(user=self.u)
+        self.u.set_password("test")
+        self.u.save()
+        self.c = Client()
+        self.c.login(username=self.u.username, password="test")
+
+    def test_page(self):
+        r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
+        self.assertEqual(r.status_code, 200)
+
+    def test_home(self):
+        response = self.c.get("/", follow=True)
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/icap-dashboard/%d/'
+                            % self.u.pk, 302)])
+        self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')

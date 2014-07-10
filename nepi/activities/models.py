@@ -22,6 +22,11 @@ class Conversation(models.Model):
     response_three = models.CharField(max_length=255, null=True, blank=True)
     complete_dialog = models.TextField(max_length=255, null=True, blank=True)
 
+    def __unicode__(self):
+#        scenario = ConversationScenario.objects.get(Q(good_conversation==self)
+#  | Q(bad_conversation==self))
+        return unicode(self.scenario_type)
+
 
 class ConversationScenario(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
@@ -170,6 +175,9 @@ class ConversationResponse(models.Model):
                                      null=True, blank=True)
     third_click = models.ForeignKey(ConvClick, related_name="third_click",
                                     null=True, blank=True)
+
+    def __unicode__(self):
+        return("Response to " + (self.conv_scen))
 
 
 class ImageInteractive(models.Model):

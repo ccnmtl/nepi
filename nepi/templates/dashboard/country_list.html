@@ -20,7 +20,8 @@
             });
         </script>
         
-        <form id="join_course" action="/join_course/" method="post">{% csrf_token %}
+        <form id="join_group" action="/join_group/" method="post">{% csrf_token %}
+        <input type="hidden" value={{request.user.pk}}>
         <div id="country_list">
             <select id="id_country" name="country" >
                 <option value="blank">------</option>
@@ -32,9 +33,6 @@
             </select>
         </div>
         <div id="school_list"></div>
-        <div id="course_list"></div>
-
-
-
+        <div id="group_list"></div>
 
 

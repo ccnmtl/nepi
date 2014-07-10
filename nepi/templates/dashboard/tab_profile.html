@@ -1,0 +1,69 @@
+
+
+{% block tabcontent %}
+<div class="tab-pane" id="user-profile">
+   {% block tabtitle %}Your Profile{% endblock %}
+   {% block tabbody %}{% endblock %}
+{% endblock %}
+
+    <div class="tab-pane" id="reports">
+        <div id="pane-content">
+             <table width="100%" class="table table-striped table-condensed">
+                  <b><p>Your Groups</p></b>
+                  {% for uc in user_courses %}
+                      <tr>
+                      <td><a href="{{uc.get_absolute_url}}">{{uc.name}}</a></td>
+                      </tr>
+                  {% empty %}
+                      <div name="instruction-div"><tr> There should be an instruction div of somesorts here to tell first timers what to do.</tr></div>
+                      <tr><p>You have not joined any groups yet.</p>
+                      <button id="join_course_button">Join Course</button>
+                      <a href="/join_course/">Join Course</a></tr>
+                  {% endfor %}
+             </table><button data-toggle="modal" data-target="#basicModal" class="btn btn-sm btn-success" type="button"> Add Course </button></br>
+        </div>
+    </div>
+        <b>{{user_profile}}</b><b>{{user.username}}</b>
+        <table width="100%" class="table table-striped table-condensed">
+        <tr>
+            <td>
+                First Name: {{user.first_name}}
+            </td>
+            <td>
+                Last Name: {{user.last_name}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Country: {{user_profile.country}}
+            </td>
+            <td>
+                ICAP Affiliation: {{user_profile.icap_affil}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                First Name: {{user.first_name}}
+            </td>
+            <td>
+                Last Name: {{user.last_name}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                First Name: {{user.first_name}}
+            </td>
+            <td>
+                Last Name: {{user.last_name}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                First Name: {{user.first_name}}
+            </td>
+            <td>
+                Last Name: {{user.last_name}}
+            </td>
+        </tr>
+        </table>
+    </div>

@@ -1,22 +1,53 @@
     # Create your views here.
-from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 import json
 from nepi.activities.models import (
     Conversation, ConversationScenario,
     ConvClick, ConversationResponse,
     ConversationForm)
-from nepi.main.views import AjaxableResponseMixin
 from django.views.generic import View
+from django.utils.decorators import method_decorator
+
+
+def ajax_required(func):
+    """
+    AJAX request required decorator
+    use it in your views:
+    @ajax_required
+    def my_view(request):
+    """
+
+    def wrap(request, *args, **kwargs):
+        if not request.is_ajax():
+            return HttpResponseNotAllowed("")
+        return func(request, *args, **kwargs)
+
+    wrap.__doc__ = func.__doc__
+    wrap.__name__ = func.__name__
+    return wrap
+
+
+class JSONResponseMixin(object):
+    @method_decorator(ajax_required)
+    def dispatch(self, *args, **kwargs):
+        return super(JSONResponseMixin, self).dispatch(*args, **kwargs)
+
+    def render_to_json_response(self, context, **response_kwargs):
+        """
+        Returns a JSON response, transforming 'context' to make the payload.
+        """
+        return HttpResponse(json.dumps(context),
+                            content_type='application/json',
+                            **response_kwargs)
 
 
 # but I don't really need and ajax thanks view...
-class ThanksView(AjaxableResponseMixin, View):
+class ThanksView(View):
     '''We need a generic thanks view to pop up
     when appropriate and then refresh the page.'''
     def get(self, request):
@@ -93,56 +124,51 @@ class DeleteConversationView(DeleteView):
     success_url = '../../../activities/classview_scenariolist/'
 
 
-class SaveResponse(View):
+class SaveResponse(View, JSONResponseMixin):
     def post(self, request):
-        if request.is_ajax():
-            scenario = ConversationScenario.objects.get(
-                pk=request.POST['scenario'])
-            conversation = Conversation.objects.get(
-                pk=request.POST['conversation'])
-            conclick = ConvClick.objects.create(conversation=conversation)
-            conclick.save()
-            current_user = User.objects.get(pk=request.user.pk)
-            rs, created = ConversationResponse.objects.get_or_create(
-                conv_scen=scenario, user=current_user)
+        scenario = get_object_or_404(ConversationScenario,
+                                     pk=request.POST['scenario'])
+        conversation = get_object_or_404(Conversation,
+                                         pk=request.POST['conversation'])
+        conclick = ConvClick.objects.create(conversation=conversation)
+        conclick.save()
+        rs, created = ConversationResponse.objects.get_or_create(
+            conv_scen=scenario, user=request.user)
+        if rs.first_click is None:
+            rs.first_click = conclick
             rs.save()
-            if rs.first_click is None:
-                conclick.save()
-                rs.first_click = conclick
-                rs.save()
-            if rs.first_click is not None and rs.second_click is None:
-                conclick.save()
-                rs.second_click = conclick
-                rs.third_click = conclick
-                rs.save()
-            if rs.second_click is not None:
-                conclick.save()
-                rs.third_click = conclick
-                rs.save()
-            return render_to_json_response({'success': True})
-        else:
-            return render_to_json_response({'success': False})
+        elif rs.first_click is not None and rs.second_click is None:
+            rs.second_click = conclick
+            rs.third_click = conclick
+            rs.save()
+        elif rs.second_click is not None:
+            rs.third_click = conclick
+            rs.save()
+        return render_to_json_response({'success': True})
 
 
-class LastResponse(View):
-    def post(request):
-        if request.method == 'POST' and request.is_ajax():
-            scenario = ConversationScenario.objects.get(
-                pk=request.POST['scenario'])
-            user = User.objects.get(pk=request.user.pk)
-            try:
-                cresp = ConversationResponse.objects.get(
-                    user=user, scenario=scenario)
-                if cresp.third_click is not None:
+class LastResponse(View, JSONResponseMixin):
+    '''Should this be a create view?'''
+    def post(self, request):
+        scenario = get_object_or_404(ConversationScenario,
+                                     pk=request.POST['scenario'])
+        try:
+            cresp = ConversationResponse.objects.get(
+                user=request.user, conv_scen=scenario)
+            if cresp.third_click is not None:
+                return render_to_json_response(
+                    {'success': True,
+                     'last_conv':
+                     cresp.third_click.conversation.scenario_type})
+            elif (cresp.first_click is not None
+                  and cresp.second_click is None):
                     return render_to_json_response(
-                        {'success': True, 'last_conv': cresp.third_click})
-                elif (cresp.first_click is not None
-                      and cresp.second_click is None):
-                        return render_to_json_response(
-                            {'success': True, 'last_conv': cresp.first_click})
+                        {'success': True,
+                         'last_conv':
+                         cresp.first_click.conversation.scenario_type})
 
-            except ConversationResponse.DoesNotExist:
-                return render_to_json_response({'success': False})
+        except ConversationResponse.DoesNotExist:
+            return render_to_json_response({'success': False})
 
 
 class CreateCalendar(CreateView):
