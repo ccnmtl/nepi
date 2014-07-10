@@ -11,71 +11,12 @@ from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country
 from nepi.main.models import School, PendingTeachers
 from django.views.generic.edit import FormView
-from django.views.generic.edit import CreateView, UpdateView
 from django.core.mail import send_mail
 import json
 from pagetree.models import Hierarchy
 from django.views.generic import View
 from django.core.urlresolvers import reverse
-<<<<<<< HEAD
-from django.views.generic.base import View
 from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic.edit import DeleteView
-
-
-@user_passes_test(lambda u: u.is_superuser)
-@render_to('main/edit_page.html')
-def edit_page(request, hierarchy, path):
-    section = get_section_from_path(path, hierarchy)
-    first_leaf = section.hierarchy.get_first_leaf(section)
-
-    return dict(section=section,
-                module=get_module(section),
-                root=section.hierarchy.get_root(),
-                leftnav=_get_left_parent(first_leaf),
-                prev=first_leaf.get_previous(),
-                next=first_leaf.get_next())
-
-
-@login_required
-@render_to('main/page.html')
-def page(request, hierarchy, path):
-    section = get_section_from_path(path, hierarchy)
-    return _response(request, section, path)
-
-
-def _get_left_parent(first_leaf):
-    leftnav = first_leaf
-    if first_leaf.depth == 4:
-        leftnav = first_leaf.get_parent()
-    elif first_leaf.depth == 5:
-        leftnav = first_leaf.get_parent().get_parent()
-    return leftnav
-
-
-def _response(request, section, path):
-    h = section.hierarchy
-    if request.method == "POST":
-        # user has submitted a form. deal with it
-        proceed = True
-        for p in section.pageblock_set.all():
-            if hasattr(p.block(), 'needs_submit'):
-                if p.block().needs_submit():
-                    prefix = "pageblock-%d-" % p.id
-                    data = dict()
-                    for k in request.POST.keys():
-                        if k.startswith(prefix):
-                            data[k[len(prefix):]] = request.POST[k]
-                    p.block().submit(request.user, data)
-                    if hasattr(p.block(), 'redirect_to_self_on_submit'):
-                        proceed = not p.block().redirect_to_self_on_submit()
-
-        if request.is_ajax():
-            j = json.dumps({'submitted': 'True'})
-            return HttpResponse(j, 'application/json')
-        elif proceed:
-            return HttpResponseRedirect(section.get_next().get_absolute_url())
-=======
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from nepi.main.forms import CreateGroupForm
@@ -99,7 +40,6 @@ class AjaxableResponseMixin(object):
         response = super(AjaxableResponseMixin, self).form_invalid(form)
         if self.request.is_ajax():
             return self.render_to_json_response(form.errors, status=400)
->>>>>>> 3486f6b60c405b60a51ca6245d4f84fc4995a5dd
         else:
             return response
 
