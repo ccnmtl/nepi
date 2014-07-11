@@ -207,7 +207,9 @@ PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
               'activities.ConversationScenario',
               'activities.ImageInteractive',
               'activities.CalendarChart',
-              'activities.DosageActivity']
+              'activities.DosageActivity',
+              'activities.ARTCard',
+              'activities.RetentionRateCard']
 
 AUTH_PROFILE_MODULE = 'nepi.main.UserProfile'
 
