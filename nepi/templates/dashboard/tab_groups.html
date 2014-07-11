@@ -71,8 +71,12 @@
             
                 <div id="groups_joined">
                     <b><p>Groups You've Joined: </p></b>
-                    {% for uc in joined_groups %}
+                    {{object.country}}
+                    {{object.profile_type}}
+                    {{object.group.count}}
+                    {% for uc in object.group.all %}
                         <tr>
+                            <td>{{uc.name}}</td>
                             <td><a href="{{uc.get_absolute_url}}">{{uc.name}}</a></td>
                             <td><a href="/view_group_stats/uc.pk/">see progress</a></td><button id="progress_button">See Progress</button>
                         </tr>

@@ -5,23 +5,21 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
+from pagetree.models import Hierarchy
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
-from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
-from nepi.main.models import Group, UserProfile, Country
-from nepi.main.models import School, PendingTeachers
-from django.views.generic.edit import FormView
-from django.views.generic.edit import CreateView, UpdateView
+from django.shortcuts import render, get_object_or_404
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.mail import send_mail
 import json
-from pagetree.models import Hierarchy
 from django.views.generic import View
-from django.core.urlresolvers import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from nepi.main.forms import CreateGroupForm
-from django.views.generic.edit import DeleteView
-from django.core.urlresolvers import reverse_lazy
+from django.views.generic.edit import DeleteView, FormView, CreateView, \
+    UpdateView
+from nepi.main.models import Group, UserProfile, Country, School, \
+    PendingTeachers
+from nepi.main.forms import CreateAccountForm, ContactForm, \
+    UpdateProfileForm, CreateGroupForm
 from nepi.activities.views import JSONResponseMixin
 
 
@@ -148,13 +146,6 @@ class StudentDashboard(LoggedInMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(StudentDashboard, self).get_context_data(**kwargs)
-        # profile = UserProfile.objects.get(user=self.request.user.pk)
-        context['user_profile'] = UserProfile.objects.get(
-            user=self.request.user.pk)
-        # from the two below which is better?
-        # context['student_groups'] = Group.objects.filter(userprofile=profile)
-        context['joined_groups'] = UserProfile.objects.get(
-            user=self.request.user.pk).group.all()
         context['modules'] = Hierarchy.objects.all()
         return context
 
@@ -189,8 +180,6 @@ class FacultyDashboard(StudentDashboard):
 
     def get_context_data(self, **kwargs):
         context = super(FacultyDashboard, self).get_context_data(**kwargs)
-        # context['user_profile'] = UserProfile.objects.get(
-        #     user=self.request.user.pk)
         context['students'] = UserProfile.objects.filter(
             profile_type="ST").count()
         context['in_progress'] = self.get_students_in_progress()
@@ -198,9 +187,6 @@ class FacultyDashboard(StudentDashboard):
         context['done'] = self.get_students_incomplete()
         context['created_groups'] = Group.objects.filter(
             creator=User.objects.get(pk=self.request.user.pk))
-        # context['joined_groups'] = UserProfile.objects.get(
-        #    user=self.request.user.pk).group.all()
-        # context['modules'] = Hierarchy.objects.all()
         return context
 
 
@@ -259,23 +245,24 @@ class GetReport(LoggedInMixin, View):
             return self.request
 
 
-class JoinGroup(LoggedInMixin, View):
+class JoinGroup(LoggedInMixin, JSONResponseMixin, View):
     template_name = 'dashboard/icap_dashboard.html'
 
     def post(self, request):
-        if self.request.is_ajax():
-            user_id = request.user.pk
-            user_profile = UserProfile.objects.get(user=user_id)
-            user_profile.country = Country.objects.get(
-                pk=self.request.POST.__getitem__('country'))
-            user_profile.school = School.objects.get(
-                pk=self.request.POST.__getitem__('school'))
-            user_profile.group = Group.objects.filter(
-                pk=self.request.POST.__getitem__('group'))
-            user_profile.save()
-            return self.render_to_json_response(user_profile)
-        else:
-            return self.request
+        user_id = request.user.pk
+        user_profile = UserProfile.objects.get(user__id=user_id)
+        # print Group.objects.count()
+        print "user profile group count"
+        print user_profile.group.count()
+        add_group = Group.objects.get(pk=request.POST['group'])
+        # print add_group
+        user_profile.group.add(add_group)
+        # print user_profile.group.count()
+        print "user profile group count"
+        print user_profile.group.count()
+        for each in user_profile.group.all():
+            print each.name
+        return self.render_to_json_response({'success': True})
 
 
 class GetCountries(LoggedInMixin, ListView):
@@ -377,7 +364,7 @@ class RegistrationView(FormView):
         return super(RegistrationView, self).form_valid(form)
 
 
-class CreateSchoolView(CreateView):
+class CreateSchoolView(LoggedInMixin, CreateView):
     '''generic class based view for
     adding a school'''
     model = School
@@ -438,7 +425,7 @@ class AddGroup(LoggedInMixin, CreateView):
         return HttpResponseRedirect('/')
 
 
-class UpdateGroupView(UpdateView):
+class UpdateGroupView(LoggedInMixin, UpdateView):
     '''generic class based view for
     editing a group'''
     model = Group
@@ -447,7 +434,7 @@ class UpdateGroupView(UpdateView):
     form_class = CreateGroupForm
 
 
-class GroupDetail(DetailView):
+class GroupDetail(LoggedInMixin, DetailView):
     '''generic class based view for
     see group details - students etc'''
     model = Group
@@ -490,7 +477,7 @@ class GroupDetail(DetailView):
         return context
 
 
-class RemoveStudent(View, JSONResponseMixin):
+class RemoveStudent(LoggedInMixin, View, JSONResponseMixin):
     def post(self, request, stud_id, cors_id):
         pass
 
@@ -515,7 +502,7 @@ class ContactView(FormView):
         return super(ContactView, self).form_valid(form)
 
 
-class DeleteGroupView(DeleteView):
+class DeleteGroupView(LoggedInMixin, DeleteView):
     model = Group
     success_url = reverse_lazy('home')
 
@@ -530,7 +517,7 @@ class DeleteGroupView(DeleteView):
             return resp
 
 
-class StudentClassStatView(DetailView):
+class StudentClassStatView(LoggedInMixin, DetailView):
     '''This view is for students to see their progress,
     should be included in main base template.'''
     model = Group
@@ -545,7 +532,7 @@ class StudentClassStatView(DetailView):
             return {'module': module, 'user': user, 'profile': profile}
 
 
-class UpdateProfileView(UpdateView):
+class UpdateProfileView(LoggedInMixin, UpdateView):
     model = UserProfile
     template_name = 'profile_tab.html'
     form_class = UpdateProfileForm

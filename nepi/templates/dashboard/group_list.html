@@ -1,11 +1,5 @@
   <div id="group_list">
 
-
-
-
-
-
-
        <select id="id_group" name="group" >
             <option value="blank">------</option>
             {% for group in group_list %}
@@ -15,35 +9,30 @@
             {% endfor %}
        </select>
   </div>
+
+
+<input type="submit" value="Submit" />
   <script>
     var frm = jQuery('#join_group');
-    alert(frm);
-   
     
      frm.submit(
        function () {
          jQuery.ajax({
-             type: frm.attr('method'),
-             url: frm.attr('action'),
-             data: frm.serialize(),
-             success: function (data) {
+             url: "/join_group/",
+             type: "POST",
+             data: {'country': jQuery('#id_country').val(), 'school' : jQuery('#id_school').val(), 'group': jQuery('#id_group').val()},
+             success: function (data)
+             {
                  alert("success");
-                 alert(frm.attr('method'));
-                 alert(frm.attr('action'));
-                 //jQuery(".modal-body").html("You successfully joined the group!");
              },
-             error: function(data) {
-                 alert("error");
-                 //jQuery(".modal-body").html("Something went wrong!");
+             error: function(data)
+             {
+                 alert("error at group");
              }
-         }
-
-         );
+         });
 
      return false;
      });
 
 </script>
-        <input type="submit" value="Submit" />
-        </form>
-
+</form>
