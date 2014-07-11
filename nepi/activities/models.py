@@ -223,6 +223,49 @@ class ImageInteractiveForm(forms.ModelForm):
         model = ImageInteractive
 
 
+class ARTCard(models.Model):
+    pageblocks = generic.GenericRelation(PageBlock)
+    template_file = "activities/artcard.html"
+    js_template_file = "activities/artcard_js.html"
+    css_template_file = "activities/artcard_css.html"
+    display_name = "ART Card"
+    intro_text = models.TextField(default='')
+
+    def pageblock(self):
+        return self.pageblocks.all()[0]
+
+    def __unicode__(self):
+        return unicode(self.pageblock())
+
+    def needs_submit(self):
+        return False
+
+    @classmethod
+    def add_form(self):
+        return ARTCardForm()
+
+    def edit_form(self):
+        return ARTCardForm(instance=self)
+
+    @classmethod
+    def create(self, request):
+        form = ARTCardForm(request.POST)
+        return form.save()
+
+    def edit(self, vals, files):
+        form = ARTCardForm(data=vals, files=files, instance=self)
+        if form.is_valid():
+            form.save()
+
+    def unlocked(self, user):
+        return True
+
+
+class ARTCardForm(forms.ModelForm):
+    class Meta:
+        model = ARTCard
+
+
 class CalendarChart(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
     template_file = "activities/calendarchart.html"
