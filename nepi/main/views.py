@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
 from pagetree.models import Hierarchy
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render  # , get_object_or_404
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.mail import send_mail
 import json
