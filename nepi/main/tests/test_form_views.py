@@ -36,6 +36,7 @@ class TestFormViews(TestCase):
             {"name": "School Needs Name",
              "creator": u,
              "country": self.country})
+        request.user = u
         CreateSchoolView.as_view()(request)
 
     # def test_create_group(self):
