@@ -9,7 +9,8 @@ import json
 from nepi.activities.models import (
     Conversation, ConversationScenario,
     ConvClick, ConversationResponse,
-    ConversationForm)
+    ConversationForm, RetentionRateCard,
+    RetentionClick, RetentionResponse)
 from django.views.generic import View
 from django.utils.decorators import method_decorator
 
@@ -178,23 +179,74 @@ class CreateCalendar(CreateView):
 
 
 class SaveRetentionResponse(View, JSONResponseMixin):
+    '''There must be a way to make a simple short generic method'''
     def post(self, request):
-        scenario = get_object_or_404(ConversationScenario,
-                                     pk=request.POST['scenario'])
-        conversation = get_object_or_404(Conversation,
-                                         pk=request.POST['conversation'])
-        conclick = ConvClick.objects.create(conversation=conversation)
-        conclick.save()
-        rs, created = ConversationResponse.objects.get_or_create(
-            conv_scen=scenario, user=request.user)
-        if rs.first_click is None:
-            rs.first_click = conclick
-            rs.save()
-        elif rs.first_click is not None and rs.second_click is None:
-            rs.second_click = conclick
-            rs.third_click = conclick
-            rs.save()
-        elif rs.second_click is not None:
-            rs.third_click = conclick
-            rs.save()
-        return render_to_json_response({'success': True})
+        print request.POST['click_string']
+        print request.POST['retention_id']
+        retention = get_object_or_404(RetentionRateCard,
+                                     pk=request.POST['retention_id'])
+        click_string = request.POST['click_string']        
+        retentionclick = RetentionClick.objects.create(click_string=click_string)
+        rr, created = RetentionResponse.objects.get_or_create(
+            retentionrate=retention, user=request.user)
+        if rr.cohort_click is None and click_string == "cohort":
+            rr.cohort_click = retentionclick
+            # I am saving both together because we do not need to store extra un-needed clicks
+            retentionclick.save()
+            rr.save()
+            return render_to_json_response({'success': True})
+        if rr.start_date_click is None and click_string == "startdate":
+            rr.start_date_click = retentionclick
+            retentionclick.save()
+            rr.save()
+            return render_to_json_response({'success': True})
+        if rr.eligible_click is None and click_string == "eligible":
+            rr.eligible_click = retentionclick
+            retentionclick.save()
+            rr.save()
+            return render_to_json_response({'success': True})
+        if rr.delivery_date_click is None and click_string == "delivery-date":
+            rr.delivery_date_click = retentionclick
+            retentionclick.save()
+            rr.save()
+            return render_to_json_response({'success': True})
+        if rr.dec_click is None and click_string == "dec0":
+            rr.dec_click = retentionclick
+            retentionclick.save()
+            rr.save()
+            return render_to_json_response({'success': True})
+        if rr.jan_click is None and click_string == "jan1":
+            rr.jan_click = retentionclick
+            retentionclick.save()
+            rr.save()
+            return render_to_json_response({'success': True})
+        if rr.feb_click is None and click_string == "feb2":
+            rr.feb_click = retentionclick
+            retentionclick.save()
+            rr.save()
+            return render_to_json_response({'success': True})
+        if rr.mar_click is None and click_string == "mar3":
+            rr.mar_click = retentionclick
+            retentionclick.save()
+            rr.save()
+            return render_to_json_response({'success': True})
+        if rr.apr_click is None and click_string == "apr4":
+            rr.apr_click = retentionclick
+            retentionclick.save()
+            rr.save()
+            return render_to_json_response({'success': True})
+        if rr.may_click is None and click_string == "may5":
+            rr.may_click = retentionclick
+            retentionclick.save()
+            rr.save()
+            return render_to_json_response({'success': True})
+        if rr.jun_click is None and click_string == "june6":
+            rr.jun_click = retentionclick
+            retentionclick.save()
+            rr.save()
+            return render_to_json_response({'success': True})
+        else:
+            '''We assume that the user clicked on an area that was already
+            recorded and therefore we can simply disgard the information - no
+            need to store many times'''
+            return render_to_json_response({'success': True})

@@ -332,40 +332,45 @@ class RetentionRateCardForm(forms.ModelForm):
         model = RetentionRateCard
 
 
+class RetentionClick(models.Model):
+    created = models.DateTimeField(default=datetime.now)
+    click_string = models.CharField(max_length=50)
+
+
 class RetentionResponse(models.Model):
     retentionrate = models.ForeignKey(RetentionRateCard, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
-    cohort_click = models.ForeignKey(ConvClick,
+    cohort_click = models.ForeignKey(RetentionClick,
                                     related_name="retention_cohort_click",
                                     null=True, blank=True) 
-    start_date_click  = models.ForeignKey(ConvClick,
+    start_date_click  = models.ForeignKey(RetentionClick,
                                     related_name="retention_start_date_click",
                                     null=True, blank=True)
-    eligible_click  = models.ForeignKey(ConvClick,
+    eligible_click  = models.ForeignKey(RetentionClick,
                                     related_name="retention_eligible_click",
                                     null=True, blank=True)
-    delivery_date_click  = models.ForeignKey(ConvClick,
+    delivery_date_click  = models.ForeignKey(RetentionClick,
                                     related_name="retention_delivery_date_click",
                                     null=True, blank=True)
-    dec_click  = models.ForeignKey(ConvClick,
+    dec_click  = models.ForeignKey(RetentionClick,
                                     related_name="retention_dec_click",
                                     null=True, blank=True)
-    jan_click  = models.ForeignKey(ConvClick,
+    jan_click  = models.ForeignKey(RetentionClick,
                                     related_name="retention_jan_click",
                                     null=True, blank=True)
-    feb_click  = models.ForeignKey(ConvClick,
+    feb_click  = models.ForeignKey(RetentionClick,
                                     related_name="retention_feb_click",
                                     null=True, blank=True)
-    mar_click  = models.ForeignKey(ConvClick,
+    mar_click  = models.ForeignKey(RetentionClick,
                                     related_name="retention_mar_click",
                                     null=True, blank=True)
-    apr_click  = models.ForeignKey(ConvClick,
+    apr_click  = models.ForeignKey(RetentionClick,
                                     related_name="retention_apr_click",
                                     null=True, blank=True)
-    may_click  = models.ForeignKey(ConvClick,
+    may_click  = models.ForeignKey(RetentionClick,
                                     related_name="retention_may_click",
                                     null=True, blank=True)
-    jun_click  = models.ForeignKey(ConvClick,
+    jun_click  = models.ForeignKey(RetentionClick,
                                     related_name="retention_jun_click",
                                     null=True, blank=True)
 
