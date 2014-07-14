@@ -377,7 +377,7 @@ class RetentionResponse(models.Model):
                                   null=True, blank=True)
 
     def __unicode__(self):
-        return("Response to " + (self.retentionrate))
+        return("Response to " + str(self.retentionrate))
 
 
 class CalendarChart(models.Model):
