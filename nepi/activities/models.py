@@ -341,38 +341,40 @@ class RetentionResponse(models.Model):
     retentionrate = models.ForeignKey(RetentionRateCard, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
     cohort_click = models.ForeignKey(RetentionClick,
-                                    related_name="retention_cohort_click",
-                                    null=True, blank=True) 
-    start_date_click  = models.ForeignKey(RetentionClick,
-                                    related_name="retention_start_date_click",
-                                    null=True, blank=True)
-    eligible_click  = models.ForeignKey(RetentionClick,
-                                    related_name="retention_eligible_click",
-                                    null=True, blank=True)
-    delivery_date_click  = models.ForeignKey(RetentionClick,
-                                    related_name="retention_delivery_date_click",
-                                    null=True, blank=True)
-    dec_click  = models.ForeignKey(RetentionClick,
-                                    related_name="retention_dec_click",
-                                    null=True, blank=True)
-    jan_click  = models.ForeignKey(RetentionClick,
-                                    related_name="retention_jan_click",
-                                    null=True, blank=True)
-    feb_click  = models.ForeignKey(RetentionClick,
-                                    related_name="retention_feb_click",
-                                    null=True, blank=True)
-    mar_click  = models.ForeignKey(RetentionClick,
-                                    related_name="retention_mar_click",
-                                    null=True, blank=True)
-    apr_click  = models.ForeignKey(RetentionClick,
-                                    related_name="retention_apr_click",
-                                    null=True, blank=True)
-    may_click  = models.ForeignKey(RetentionClick,
-                                    related_name="retention_may_click",
-                                    null=True, blank=True)
-    jun_click  = models.ForeignKey(RetentionClick,
-                                    related_name="retention_jun_click",
-                                    null=True, blank=True)
+                                     related_name="retention_cohort_click",
+                                     null=True, blank=True)
+    start_date_click = models.ForeignKey(
+        RetentionClick,
+        related_name="retention_start_date_click",
+        null=True, blank=True)
+    eligible_click = models.ForeignKey(RetentionClick,
+                                       related_name="retention_eligible_click",
+                                       null=True, blank=True)
+    delivery_date_click = models.ForeignKey(
+        RetentionClick,
+        related_name="retention_delivery_date_click",
+        null=True, blank=True)
+    dec_click = models.ForeignKey(RetentionClick,
+                                  related_name="retention_dec_click",
+                                  null=True, blank=True)
+    jan_click = models.ForeignKey(RetentionClick,
+                                  related_name="retention_jan_click",
+                                  null=True, blank=True)
+    feb_click = models.ForeignKey(RetentionClick,
+                                  related_name="retention_feb_click",
+                                  null=True, blank=True)
+    mar_click = models.ForeignKey(RetentionClick,
+                                  related_name="retention_mar_click",
+                                  null=True, blank=True)
+    apr_click = models.ForeignKey(RetentionClick,
+                                  related_name="retention_apr_click",
+                                  null=True, blank=True)
+    may_click = models.ForeignKey(RetentionClick,
+                                  related_name="retention_may_click",
+                                  null=True, blank=True)
+    jun_click = models.ForeignKey(RetentionClick,
+                                  related_name="retention_jun_click",
+                                  null=True, blank=True)
 
     def __unicode__(self):
         return("Response to " + (self.retentionrate))

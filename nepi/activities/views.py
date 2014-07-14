@@ -180,18 +180,21 @@ class CreateCalendar(CreateView):
 
 class SaveRetentionResponse(View, JSONResponseMixin):
     '''There must be a way to make a simple short generic method'''
+    def compare_strings(self, rr_ref, hold_string):
+        pass
+
     def post(self, request):
-        print request.POST['click_string']
-        print request.POST['retention_id']
         retention = get_object_or_404(RetentionRateCard,
-                                     pk=request.POST['retention_id'])
-        click_string = request.POST['click_string']        
-        retentionclick = RetentionClick.objects.create(click_string=click_string)
+                                      pk=request.POST['retention_id'])
+        click_string = request.POST['click_string']
+        retentionclick = RetentionClick.objects.create(
+            click_string=click_string)
         rr, created = RetentionResponse.objects.get_or_create(
             retentionrate=retention, user=request.user)
         if rr.cohort_click is None and click_string == "cohort":
             rr.cohort_click = retentionclick
-            # I am saving both together because we do not need to store extra un-needed clicks
+            # I am saving both together because
+            # we do not need to store extra un-needed clicks
             retentionclick.save()
             rr.save()
             return render_to_json_response({'success': True})
