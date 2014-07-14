@@ -1,27 +1,80 @@
 <script type="text/javascript" language="javascript">
+    function send_click(click_string)
+    {
+        alert(click_string);
+    }
 jQuery(document).ready(function() {
+
+
+//        jQuery.ajax(
+//        {
+//            url: "/activities/retention_click/",
+//            type: "POST",
+//            data: {'click' : clickvar},
+//            success: function (data) 
+//            {
+//                alert("success!");
+//                //jQuery("#starting_good").addClass( "right-selected" )
+//                //jQuery(".patient_good_conversation").addClass( "right-selected" ).show();
+//            },
+//
+//            error: function(data) 
+//            {
+//                alert("There was an error submitting your form.");
+//            }
+//        });//end of ajax
+//    }//end of function
 
     var exp = jQuery('#explanation_box');
     
-    jQuery(".artcard").on("click",
+    jQuery(".artregister").on("click",
 
         function() {
 
-            if (jQuery(this).data().part == "followup")
+            if (jQuery(this).data().part == "cohort")
             {
-                exp.html(jQuery("#followup").html());
+                exp.html(jQuery("#cohort").html());
+                send_click("cohort");
             }
-            if (jQuery(this).data().part == "adherence")
+            if (jQuery(this).data().part == "startdate")
             {
-                exp.html(jQuery("#adherence").html());
+                exp.html(jQuery("#startdate").html());
             }
-            if (jQuery(this).data().part == "why")
+            if (jQuery(this).data().part == "eligible")
             {
-                exp.html(jQuery("#why").html());
+                exp.html(jQuery("#eligible").html());
             }
-            if (jQuery(this).data().part == "regimen")
+            if (jQuery(this).data().part == "delivery-date")
             {
-                exp.html(jQuery("#regimen").html());
+                exp.html(jQuery("#delivery-date").html());
+            }
+            if (jQuery(this).data().part == "dec0")
+            {
+                exp.html(jQuery("#dec0").html());
+            }
+            if (jQuery(this).data().part == "jan1")
+            {
+                exp.html(jQuery("#jan1").html());
+            }
+            if (jQuery(this).data().part == "feb2")
+            {
+                exp.html(jQuery("#feb2").html());
+            }
+            if (jQuery(this).data().part == "mar3")
+            {
+                exp.html(jQuery("#mar3").html());
+            }
+            if (jQuery(this).data().part == "apr4")
+            {
+                exp.html(jQuery("#apr4").html());
+            }
+            if (jQuery(this).data().part == "may5")
+            {
+                exp.html(jQuery("#may5").html());
+            }
+            if (jQuery(this).data().part == "june6")
+            {
+                exp.html(jQuery("#june6").html());
             }
 
    });

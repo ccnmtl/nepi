@@ -51,7 +51,7 @@ class ConversationScenario(models.Model):
     def needs_submit(self):
         '''Pageblock will see that block has needs
         submit and then check the conditions defined
-        in "unlocked to determine if it is unlocked or not."'''
+        in "unlocked" to determine if it is unlocked or not.'''
         return True
 
     @classmethod
@@ -281,7 +281,7 @@ class RetentionRateCard(models.Model):
         return unicode(self.pageblock())
 
     def needs_submit(self):
-        return False
+        return True
 
     @classmethod
     def add_form(self):
@@ -300,13 +300,77 @@ class RetentionRateCard(models.Model):
         if form.is_valid():
             form.save()
 
-    def unlocked(self, user):
+    def redirect_to_self_on_submit(self):
+        '''Show student feedback before proceeding,
+        not sure if this is ever called since there is no "submit"'''
         return True
+
+    def unlocked(self, user):
+        '''We want to make sure the user has selected all clickable
+           parts of the table before they are allowed to proceed.'''
+        response = RetentionResponse.objects.filter(
+            conv_scen=self, user=user)
+        if (len(response) == 1
+                and response[0].cohort_click is not None
+                and response[0].start_date_click is not None
+                and response[0].eligible_click is not None
+                and response[0].delivery_date_click is not None
+                and response[0].dec_click is not None
+                and response[0].jan_click is not None
+                and response[0].feb_click is not None
+                and response[0].mar_click is not None
+                and response[0].apr_click is not None
+                and response[0].may_click is not None
+                and response[0].jun_click is not None):
+            return True
+        else:
+            return False
 
 
 class RetentionRateCardForm(forms.ModelForm):
     class Meta:
         model = RetentionRateCard
+
+
+class RetentionResponse(models.Model):
+    retentionrate = models.ForeignKey(RetentionRateCard, null=True, blank=True)
+    user = models.ForeignKey(User, null=True, blank=True)
+    cohort_click = models.ForeignKey(ConvClick,
+                                    related_name="retention_cohort_click",
+                                    null=True, blank=True) 
+    start_date_click  = models.ForeignKey(ConvClick,
+                                    related_name="retention_start_date_click",
+                                    null=True, blank=True)
+    eligible_click  = models.ForeignKey(ConvClick,
+                                    related_name="retention_eligible_click",
+                                    null=True, blank=True)
+    delivery_date_click  = models.ForeignKey(ConvClick,
+                                    related_name="retention_delivery_date_click",
+                                    null=True, blank=True)
+    dec_click  = models.ForeignKey(ConvClick,
+                                    related_name="retention_dec_click",
+                                    null=True, blank=True)
+    jan_click  = models.ForeignKey(ConvClick,
+                                    related_name="retention_jan_click",
+                                    null=True, blank=True)
+    feb_click  = models.ForeignKey(ConvClick,
+                                    related_name="retention_feb_click",
+                                    null=True, blank=True)
+    mar_click  = models.ForeignKey(ConvClick,
+                                    related_name="retention_mar_click",
+                                    null=True, blank=True)
+    apr_click  = models.ForeignKey(ConvClick,
+                                    related_name="retention_apr_click",
+                                    null=True, blank=True)
+    may_click  = models.ForeignKey(ConvClick,
+                                    related_name="retention_may_click",
+                                    null=True, blank=True)
+    jun_click  = models.ForeignKey(ConvClick,
+                                    related_name="retention_jun_click",
+                                    null=True, blank=True)
+
+    def __unicode__(self):
+        return("Response to " + (self.retentionrate))
 
 
 class CalendarChart(models.Model):

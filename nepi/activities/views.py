@@ -175,3 +175,26 @@ class CreateCalendar(CreateView):
     model = Conversation
     template_name = 'activities/add_conversation.html'
     success_url = '/pages/main/edit/'
+
+
+class SaveRetentionResponse(View, JSONResponseMixin):
+    def post(self, request):
+        scenario = get_object_or_404(ConversationScenario,
+                                     pk=request.POST['scenario'])
+        conversation = get_object_or_404(Conversation,
+                                         pk=request.POST['conversation'])
+        conclick = ConvClick.objects.create(conversation=conversation)
+        conclick.save()
+        rs, created = ConversationResponse.objects.get_or_create(
+            conv_scen=scenario, user=request.user)
+        if rs.first_click is None:
+            rs.first_click = conclick
+            rs.save()
+        elif rs.first_click is not None and rs.second_click is None:
+            rs.second_click = conclick
+            rs.third_click = conclick
+            rs.save()
+        elif rs.second_click is not None:
+            rs.third_click = conclick
+            rs.save()
+        return render_to_json_response({'success': True})
