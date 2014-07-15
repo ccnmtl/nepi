@@ -169,6 +169,7 @@ class ConvClick(models.Model):
     def __unicode__(self):
         return "%s Click" % self.conversation.scenario_type
 
+
 class ConversationResponse(models.Model):
     conv_scen = models.ForeignKey(ConversationScenario, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
@@ -180,7 +181,7 @@ class ConversationResponse(models.Model):
                                     null=True, blank=True)
 
     def __unicode__(self):
-        return "Response to %s" %  self.conv_scen
+        return "Response to %s" % self.conv_scen
 
 
 class ImageInteractive(models.Model):
