@@ -1,71 +1,91 @@
 <script>
-
-jQuery(document).ready(function() {
-    
-    if(jQuery('#last_click').text() == "B")
-    {
-         jQuery("#starting_bad").addClass( "wrong-selected" )
-         jQuery(".patient_bad_conversation").addClass( "wrong-selected" ).show();
-
-         jQuery(".patient_good_conversation").hide();
-         jQuery("#starting_good").removeClass( "right-selected" ).show();
-
-    }
+    jQuery(document).ready(function() {
+   
+        jQuery("#page-submit").hide();
+     
+            var goodvar = false;
+            var badvar = false;
     
     
-    if(jQuery('#last_click').text() == "G")
-    {
-         jQuery("#starting_good").addClass( "right-selected" )
-         jQuery(".patient_good_conversation").addClass( "right-selected" ).show();
+            var good_c = jQuery("#good_conversation input[name='conversation']").val();
+            var good_s = jQuery("#good_conversation input[name='scenario']").val();
+ 
+            var bad_c = jQuery("#bad_conversation input[name='conversation']").val();
+            var bad_s = jQuery("#bad_conversation input[name='scenario']").val();
+    
+    
+            function maybeActivateNextButton() {
+                if (goodvar && badvar) {
+                    jQuery("li.next a").removeClass("disabled");
+                } else {
+                    jQuery("li.next a").addClass("disabled");
+                }
+            }
+    
+            if(jQuery('#last_click').text() == "B")
+            {
+            
+                badvar = true;
+            
+                jQuery("#starting_bad").addClass( "wrong-selected" )
+                jQuery(".patient_bad_conversation").addClass( "wrong-selected" ).show();
 
-         jQuery(".patient_bad_conversation").hide();
-         jQuery("#starting_bad").removeClass( "wrong-selected" );
+                jQuery(".patient_good_conversation").hide();
+                jQuery("#starting_good").removeClass( "right-selected" ).show();
 
-    }
+            }
+    
+    
+            if(jQuery('#last_click').text() == "G")
+            {
+            
+                goodvar = true;
+            
+                jQuery("#starting_good").addClass( "right-selected" )
+                jQuery(".patient_good_conversation").addClass( "right-selected" ).show();
+
+                jQuery(".patient_bad_conversation").hide();
+                jQuery("#starting_bad").removeClass( "wrong-selected" );
+
+            }
+    
 
 
-    var good_c = jQuery("#good_conversation input[name='conversation']").val();
-    var good_s = jQuery("#good_conversation input[name='scenario']").val();
+            jQuery("#starting_good").on("click", 
+            function()
+            {    
+                jQuery.ajax(
+                {
+                    url: "/activities/get_click/",
+                    type: "POST",
+                    data: {'scenario' : good_s, 'conversation' : good_c },
+                    success: function (data) 
+                    {
+                        jQuery("#starting_good").addClass( "right-selected" )
+                        jQuery(".patient_good_conversation").addClass( "right-selected" ).show();
 
-    var bad_c = jQuery("#bad_conversation input[name='conversation']").val();
-    var bad_s = jQuery("#bad_conversation input[name='scenario']").val();
+                        jQuery(".patient_bad_conversation").hide();
+                        jQuery("#starting_bad").removeClass( "wrong-selected" );
 
-
-    jQuery("#starting_good").on("click", 
-        function()
-        {    
-             jQuery.ajax(
-             {
-                  url: "/activities/get_click/",
-                  type: "POST",
-                  data: {'scenario' : good_s, 'conversation' : good_c },
-                  success: function (data) 
-                  {
-                      jQuery("#starting_good").addClass( "right-selected" )
-                      jQuery(".patient_good_conversation").addClass( "right-selected" ).show();
-
-                      jQuery(".patient_bad_conversation").hide();
-                      jQuery("#starting_bad").removeClass( "wrong-selected" );
-
-                      goodvar = goodvar + 1;
+                        goodvar = true;
                       
-                      if (goodvar > 0 && badvar > 0){location.reload(true);};
-                  },
+                        maybeActivateNextButton();
+                    },
                   
-                  error: function(data) 
-                  {
-                      alert("There was an error submitting your form.");
-                  }
-                });//end of ajax
-      });
+                    error: function(data) 
+                    {
+                        alert("There was an error submitting your form.");
+                    }
+                });
+            });
 
    
-   jQuery("#starting_bad").on("click", 
-      function()
-      { 
-             jQuery.ajax(
-             {
-                  url: "/activities/get_click/",
+        jQuery("#starting_bad").on("click", 
+        function()
+        { 
+            jQuery.ajax(
+            {
+              url: "/activities/get_click/",
                   type: "POST",
                   data: {'scenario' : bad_s, 'conversation' : bad_c },
                   success: function (data) 
@@ -76,21 +96,16 @@ jQuery(document).ready(function() {
                       jQuery(".patient_good_conversation").hide();
                       jQuery("#starting_good").removeClass( "right-selected" ).show();
 
-                      badvar = badvar + 1;
+                      badvar = true;
+                      maybeActivateNextButton();
 
-                     if (goodvar > 0 && badvar > 0)
-                     {
-                          location.reload(true);
-                     };
                   },
                   error: function(data) 
                   {
                       alert("There was an error submitting your form.");
                   }
-                });//end of ajax
-      });
-});
-
-
+            });
+        });
+    });
 </script>
 

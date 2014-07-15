@@ -32,7 +32,11 @@ function is_form_complete(form) {
     return complete;
 }
 
-jQuery(document).ready(function () {            
+jQuery(document).ready(function () {
+    jQuery("body").delegate('a.disabled', 'click', function()
+    {
+	    return false;  // call preventDefault and stopPropagation by default
+	});
     jQuery("form").submit(function(evt) {
         if (!is_form_complete(this)) {
             evt.stopImmediatePropagation();

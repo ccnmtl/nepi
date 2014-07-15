@@ -319,6 +319,16 @@ html input[disabled] {
   cursor: default;
 }
 
+ul.pager li.next a.disabled {
+    color: #999;
+    cursor: not-allowed;
+}
+
+ul.pager li.next a.disabled:hover {
+    background-color: white;
+}
+
+
 /**
  * Remove inner padding and border in Firefox 4+.
  */

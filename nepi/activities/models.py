@@ -23,8 +23,6 @@ class Conversation(models.Model):
     complete_dialog = models.TextField(max_length=255, null=True, blank=True)
 
     def __unicode__(self):
-#        scenario = ConversationScenario.objects.get(Q(good_conversation==self)
-#  | Q(bad_conversation==self))
         return unicode(self.scenario_type)
 
 
@@ -53,6 +51,9 @@ class ConversationScenario(models.Model):
         submit and then check the conditions defined
         in "unlocked" to determine if it is unlocked or not.'''
         return True
+
+    def clear_user_submissions(self, user):
+        ConversationResponse.objects.filter(user=user, conv_scen=self).delete()
 
     @classmethod
     def add_form(self):
@@ -165,6 +166,8 @@ class ConvClick(models.Model):
     created = models.DateTimeField(default=datetime.now)
     conversation = models.ForeignKey(Conversation, null=True, blank=True)
 
+    def __unicode__(self):
+        return "%s Click" % self.conversation.scenario_type
 
 class ConversationResponse(models.Model):
     conv_scen = models.ForeignKey(ConversationScenario, null=True, blank=True)
@@ -177,7 +180,7 @@ class ConversationResponse(models.Model):
                                     null=True, blank=True)
 
     def __unicode__(self):
-        return("Response to " + (self.conv_scen))
+        return "Response to %s" %  self.conv_scen
 
 
 class ImageInteractive(models.Model):
