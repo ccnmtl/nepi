@@ -7,7 +7,7 @@
     
         {% block tabbody %}
 
-            {% if user_profile.profile_type == "IC" or user_profile.profile_type == "TE"%}
+            {% if object.profile_type == "IC" or object.profile_type == "CA" or object.profile_type == "TE"%}
                 {% block groupscreated %}
                     <div id="groups_created">
                         <b><p>Groups You've Created: </p></b>
