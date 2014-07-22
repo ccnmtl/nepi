@@ -7,7 +7,7 @@
  */
 
 html {
-  font-family: sans-serif; /* 1 */
+  font-family: Arial, Helvetica, sans-serif; /* 1 */
   -ms-text-size-adjust: 100%; /* 2 */
   -webkit-text-size-adjust: 100%; /* 2 */
 }
@@ -521,13 +521,23 @@ body  {
 	font-size: 12px;
 }
 
+.pageblock {
+	line-height: 22px;
+}
+
+h4.pagetitle {
+	margin-top: -5px;
+	margin-bottom: 30px;
+}
 
 	/*Content Styles*/
 	
+
 .container #content {
 	background-color: #fff;
+	max-width: 1110px;
+	padding: 30px;
 }
-
 
 
 	/* Basic survey styles */
@@ -585,10 +595,6 @@ body  {
     width: 116px;
 }
 
-.container #content {
-   background-color: #fff;
-   padding: 10px;
-}
 
 .dosage {
 }

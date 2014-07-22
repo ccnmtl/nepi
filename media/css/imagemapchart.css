@@ -1,0 +1,21 @@
+.act_desc {
+	padding: 20px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	background-color: #eee;
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.pageblock.s2_act1 {
+	text-align: center;
+}
+
+.parts {
+	background-color: #fff;
+	border-radius: 10px;
+	border: solid 1px #000;
+	float: left;
+	padding: 20px;
+}
