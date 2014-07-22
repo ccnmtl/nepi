@@ -1,6 +1,7 @@
 import factory
 from nepi.activities.models import ConversationScenario, \
-    Conversation, ConvClick
+    Conversation, ConvClick  # , ConversationResponse
+# from nepi.main.tests.factories import UserFactory
 from pagetree.models import Hierarchy
 
 
@@ -42,8 +43,9 @@ class ConvClickFactory(factory.DjangoModelFactory):
 
 # class ConversationResponseFactory(factory.DjangoModelFactory):
 #     FACTORY_FOR = ConversationResponse
-#     user = factory.SubFactory(UserFactory)
+#     first_click = factory.SubFactory(ConvClickFactory)
 #     conv_scen = factory.SubFactory(ConversationScenarioFactory)
+#     user = factory.SubFactory(UserFactory)
 
 
 class ConversationPageblockHierarchyFactory(factory.DjangoModelFactory):
