@@ -15,7 +15,24 @@
 .parts {
 	background-color: #fff;
 	border-radius: 10px;
-	border: solid 1px #000;
+	color: #888;
+	border: solid 4px #80b6e6;
 	float: left;
-	padding: 20px;
+	padding: 10px;
+	cursor: pointer;
+	font-weight: 600;
+	font-size: 1.5em;
+}
+
+.parts.mouth {
+	position: relative;
+	top: -370px;
+	left: 570px;
+}
+
+.parts:hover {
+	background-color: #80b6e6;
+	color: #fff;
+	border: solid 4px #80b6e6;
+	
 }
