@@ -59,4 +59,10 @@
 	float: left;
 	clear: both;
 	min-width: 100%;
+	padding: 10px;
+	border: solid 1px #eee;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
 }
+
