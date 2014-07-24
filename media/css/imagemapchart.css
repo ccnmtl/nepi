@@ -56,13 +56,10 @@
 }
 
 #explanation_box {
-	float: left;
 	clear: both;
-	min-width: 100%;
+	width: 500px;
+	min-height: 45px;
 	padding: 10px;
-	border: solid 1px #eee;
-	border-radius: 10px;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
+	margin: 0 auto 35px auto;
 }
 
