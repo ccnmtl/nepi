@@ -606,4 +606,18 @@ h4.pagetitle {
 }
 
 
+/* Overall activity styles*/
+.imgcenter {
+	text-align:center;
+}
+
+.act_desc {
+	padding: 20px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	background-color: #eee;
+	text-align: center;
+	margin-bottom: 20px;
+}
 
