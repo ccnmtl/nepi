@@ -113,7 +113,7 @@
     <ul class="pager">
         {% if not section.is_root and previous%}
           <li class="previous">
-                <a href="{{ previous.get_absolute_url }}">&larr; {{previous.label}}</a>
+                <a href="{{ previous.get_absolute_url }}">&larr; Previous</a>
           </li>
         {% endif %}
         
@@ -121,7 +121,7 @@
             <li class="next">
                 <a href="{{ next_section.get_absolute_url }}"
                  class="{% ifaccessible next_section%}{% else %}disabled{%endifaccessible%}">
-                    {{next_section.label}} &rarr;
+                    Next &rarr;
                 </a>
             </li>
         {% endif %}
