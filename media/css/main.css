@@ -687,11 +687,18 @@ h4.pagetitle {
     margin-left: 40px;
 }
 
-.slide-out-menu a.primary-menu-5 {
-    margin-left: 60px;
+/* Overall activity styles*/
+.imgcenter {
+	text-align:center;
 }
 
-.slide-out-menu a.primary-menu-6 {
-    margin-left: 80px;
+.act_desc {
+	padding: 20px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	background-color: #eee;
+	text-align: center;
+	margin-bottom: 20px;
 }
 
