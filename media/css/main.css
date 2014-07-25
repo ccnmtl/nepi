@@ -687,6 +687,14 @@ h4.pagetitle {
     margin-left: 40px;
 }
 
+.slide-out-menu a.primary-menu-5 {
+    margin-left: 60px;
+}
+
+.slide-out-menu a.primary-menu-6 {
+    margin-left: 80px;
+}
+
 /* Overall activity styles*/
 .imgcenter {
 	text-align:center;
