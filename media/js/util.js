@@ -33,10 +33,16 @@ function is_form_complete(form) {
 }
 
 jQuery(document).ready(function () {
-    jQuery("body").delegate('a.disabled', 'click', function()
-    {
+    jQuery("body").delegate('a.disabled', 'click', function() {
 	    return false;  // call preventDefault and stopPropagation by default
 	});
+    jQuery("body").delegate('.toggle-primary-toc', 'click', function() {
+        jQuery('.slide-out-menu').toggleClass('open');
+    });
+    jQuery("body").delegate('.slide-out-menu a', 'click', function() {
+        jQuery('.slide-out-menu').toggleClass('open');
+        window.location = jQuery(this).attr(href);
+    });
     jQuery("form").submit(function(evt) {
         if (!is_form_complete(this)) {
             evt.stopImmediatePropagation();

@@ -36,33 +36,29 @@
             <div id="titlebar">
                 <a href="./" title="nepi"><img src="/site_media/img/icap-nursing-elearning.png" alt="nepi-logo"></a>
         		{% block usernav %}
-        			<div class="pull-right small-text">
-        			{% if not request.user.is_anonymous %}
-              		    Logged in as {{request.user.first_name}} {{request.user.last_name}}
-        			    {% if request.user.is_superuser %}
-              		    <a href="{% url "impersonate-list" %}">[impersonate]</a>
-        			    {% endif %}
-              		    <a href="/accounts/logout/?next=/" class="btn btn-inverse">logout</a>
-              		{% endif %}
+                    <div class="pull-right small-text">
+        			    {% if not request.user.is_anonymous %}
+              		        {{request.user.first_name}} {{request.user.last_name}}
+                            
+                            {% block usernav_extra %}
+                            {% endblock %}
+                            
+                            {% if request.user.is_superuser %}
+              		            <a href="{% url "impersonate-list" %}">[impersonate]</a>
+        			        {% endif %}
+              		        <a href="/accounts/logout/?next=/" class="btn btn-inverse">logout</a>
+              		    {% endif %}
         			</div>
         		{% endblock %}
             </div>
     
         	{% block primarynav %}
-                    <div class="navbar" id="primarynav">
-                      <div class="navbar-inner">
-                        <div class="container">
-        
-                          {% block extraprimarynav %}{% endblock %}
-                          {% block primarynavtabs %}{% endblock %}
-                
-                        </div>
-                      </div>
-                    </div>
-            {% endblock %}    
+            {% endblock %}
         
         {% endblock %}
     
+        {% block toc %}{% endblock %}
+        
         <div class="container" id="content">
             <div class="row-fluid">
                 <div class="span12">

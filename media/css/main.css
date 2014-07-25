@@ -605,5 +605,93 @@ h4.pagetitle {
 .bloodspot {
 }
 
+/* slide out menu */
+.slide-out-menu {
+    position: fixed;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    left: -420px;
+    height: 90%;
+    z-index: 1000;
+}
 
+.slide-out-menu .toggle-primary-toc {
+    padding: 5px 7px 9px 5px;
+    
+    -webkit-border-bottom-right-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -moz-border-radius-topright: 5px;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+
+    background: rgba(0,0,0,0.2);
+    cursor: pointer;
+    display: inline-block;
+    width: 40px;
+    height: 30px;    
+}
+
+.slide-out-menu .toggle-primary-toc .bar {
+    background: white;
+    border-radius: 5px;
+    width: 40px;
+    height: 5px;
+    margin: 5px 0 0 0;
+}
+
+.slide-out-menu.open {
+    left: 0px;
+}
+
+.slide-out-menu div.primary-toc {
+    background: #47a3da;
+    height: 90%;
+    overflow-y: auto;
+    width: 400px;
+    padding: 10px;
+}
+
+.slide-out-menu a {
+    display: block;
+    color: #fff;
+    font-weight: 300;
+}
+
+.slide-out-menu a:hover {
+    background: #258ecd;
+    text-decoration: none;
+}
+ 
+.slide-out-menu a:active {
+    background: #afdefa;
+    color: #47a3da;
+}
+
+.slide-out-menu a.disabled {
+    color: lightgray;
+    cursor: not-allowed;
+}
+
+.slide-out-menu a.disabled:hover {
+    background: none;
+    text-decoration: none;
+}
+
+.slide-out-menu a.primary-menu-3 {
+    margin-left: 20px;
+}
+
+.slide-out-menu a.primary-menu-4 {
+    margin-left: 40px;
+}
+
+.slide-out-menu a.primary-menu-5 {
+    margin-left: 60px;
+}
+
+.slide-out-menu a.primary-menu-6 {
+    margin-left: 80px;
+}
 

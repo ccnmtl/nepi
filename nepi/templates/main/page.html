@@ -33,27 +33,21 @@
         {% renderjs block %}
     {% endfor %}
 {% endblock %}
-{% block pagetitle %}<h4 class="pagetitle">{{section.label}}</h4>{% endblock %}
 
-{% block primarynavtabs %}
+{% block toc %}
     {% if user.is_authenticated %}
         {% include "project_primary_nav.html" %}
     {% endif %}
 {% endblock %}
 
-{% block extraprimarynav %}
-    {% if user.is_authenticated %}
-    <ul class="nav pull-right">
-        <li><a href="{{section.get_edit_url}}">Edit Page</a></li>        
-    </ul>
-    {% endif %}
+{% block pagetitle %}
+    <h4 class="pagetitle">{{section.label}}</h4>
 {% endblock %}
 
-{% block sidenav %}
-        <!-- ###### Secondary Navigation ###### -->
-        {% if module.get_children %}
-        {% include "main/menu.html" %}
-        {% endif %}
+{% block usernav_extra %}
+    {% if user.is_superuser %}
+        <a href="{{section.get_edit_url}}">Edit Page</a>        
+    {% endif %}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -66,6 +60,7 @@
 {% endblock breadcrumbs %}
 
 {% block content %}
+
     <div class="module-{{module.slug}}">
 
     {% if needs_submit %}
