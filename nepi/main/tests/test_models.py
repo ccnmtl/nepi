@@ -1,9 +1,10 @@
-from django.test import TestCase
-from django.contrib.auth.models import User
-from nepi.main.models import UserProfile, Country, School
-from nepi.main.models import Group
 from datetime import datetime
+from django.contrib.auth.models import User
+from django.test import TestCase
 from factories import CountryFactory, SchoolFactory, GroupFactory
+from nepi.main.models import Group, UserProfile, Country, School, \
+    AggregateQuizScore
+from nepi.main.tests.factories import HierarchyFactory
 
 
 class TestCountry(TestCase):
@@ -68,3 +69,58 @@ class TestUserProfile(TestCase):
         self.assertEquals(unicode(self.student), "student")
         self.assertEquals(unicode(self.teacher), "teacher")
         self.assertEquals(unicode(self.icap), "icapp")
+
+
+class TestAggregateQuizScore(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(username="testuser")
+
+        hierarchy = HierarchyFactory()
+
+        hierarchy.get_root().add_child_section_from_dict({
+            'label': 'Page One',
+            'slug': 'page-one',
+            'pageblocks': [{
+                'label': 'pretest page one',
+                'css_extra': 'foo',
+                'block_type': 'Quiz',
+                'rhetorical': False,
+                'description': 'the first quiz',
+                'questions': []},
+            ],
+            'children': [],
+        })
+        hierarchy.get_root().add_child_section_from_dict({
+            'label': 'Page Two',
+            'slug': 'page-two',
+            'pageblocks': [{
+                'label': 'pretest page two',
+                'css_extra': 'foo',
+                'block_type': 'Quiz',
+                'rhetorical': False,
+                'description': 'the second quiz',
+                'questions': []},
+            ],
+            'children': [],
+        })
+        hierarchy.get_root().add_child_section_from_dict({
+            'label': 'Page Three',
+            'slug': 'page-three',
+            'pageblocks': [{
+                'label': 'pretest page three',
+                'css_extra': 'bar',
+                'block_type': 'Quiz',
+                'rhetorical': False,
+                'description': 'the third quiz',
+                'questions': []},
+            ],
+            'children': [],
+        })
+
+    def test_quizzes(self):
+        quizzes = AggregateQuizScore(quiz_class='foo').quizzes().order_by(
+            'description')
+        self.assertEquals(quizzes.count(), 2)
+
+        self.assertEquals(quizzes[0].description, 'the first quiz')
+        self.assertEquals(quizzes[1].description, 'the second quiz')

@@ -511,8 +511,7 @@ class DosageActivity(models.Model):
 
     def clear_user_submissions(self, user):
         DosageActivityResponse.objects.filter(user=user,
-                                              dosage_activity=
-                                              self).delete()
+                                              dosage_activity=self).delete()
 
     def dosage_response(self, user):
         try:

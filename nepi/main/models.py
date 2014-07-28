@@ -1,7 +1,12 @@
-from django.contrib.auth.models import User
-from django.db import models
 from choices import COUNTRY_CHOICES, PROFILE_CHOICES
-from pagetree.models import Section, Hierarchy, UserLocation, UserPageVisit
+from django import forms
+from django.contrib.auth.models import User
+from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.models import ContentType
+from django.db import models
+from pagetree.models import Section, Hierarchy, UserLocation, UserPageVisit, \
+    PageBlock
+from quizblock.models import Quiz
 
 
 '''Add change delete are by default for each django model.
@@ -127,3 +132,52 @@ class PendingTeachers(models.Model):
     user_profile = models.ForeignKey(UserProfile,
                                      related_name="pending_teachers")
     school = models.ForeignKey(School, null=True, default=None)
+
+
+class AggregateQuizScore(models.Model):
+    pageblocks = generic.GenericRelation(
+        PageBlock, related_name="aggregate_quiz_score")
+    quiz_class = models.TextField()
+    display_name = 'Aggregate Quiz Score'
+    template_file = "main/aggregate_quiz_score.html"
+
+    def pageblock(self):
+        return self.pageblocks.all()[0]
+
+    def __unicode__(self):
+        return "%s -- %s" % (unicode(self.pageblock()), self.quiz_category)
+
+    @classmethod
+    def add_form(self):
+        return AggregateQuizScoreForm()
+
+    def edit_form(self):
+        return AggregateQuizScoreForm(instance=self)
+
+    @classmethod
+    def create(self, request):
+        form = AggregateQuizScoreForm(request.POST)
+        return form.save()
+
+    def edit(self, vals, files):
+        form = AggregateQuizScoreForm(data=vals, files=files, instance=self)
+        if form.is_valid():
+            form.save()
+
+    def needs_submit(self):
+        return False
+
+    def unlocked(self, user):
+        return True
+
+    def quizzes(self):
+        ctype = ContentType.objects.get_for_model(Quiz)
+        blocks = PageBlock.objects.filter(content_type__pk=ctype.pk,
+                                          css_extra__contains=self.quiz_class)
+        ids = blocks.values_list('object_id', flat=True)
+        return Quiz.objects.filter(id__in=ids)
+
+
+class AggregateQuizScoreForm(forms.ModelForm):
+    class Meta:
+        model = AggregateQuizScore
