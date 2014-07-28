@@ -4,11 +4,8 @@
   <textarea rows="10" name="question{{question.id}}" ></textarea>
 {% else %}
   {% if response %}
-    {% if block.allow_redo %}
-    <textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}" >{{response.value}}</textarea>
-    {% else %}
-    <p class="yours">{{response.value|markdown}}</p>
-    {% endif %}
+    <textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+        {% if not block.allow_redo %}disabled='disabled'{% endif %}>{{response.value}}</textarea>
   {% else %}
     <textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}" ></textarea>
   {% endif %}
