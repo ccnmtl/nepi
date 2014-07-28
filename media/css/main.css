@@ -551,6 +551,18 @@ div.pageblock.show-correct li.incorrect:after {
     content: url('/site_media/img/incorrect.png');
 }
 
+/* aggregate quiz score */
+.quizscore {
+    border: 1px solid black;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    width: 100px;
+    padding: 5px;
+    text-align: center;
+}
+
 
 /* Basic survey styles */
 .survey {
@@ -655,6 +667,11 @@ div.pageblock.show-correct li.incorrect:after {
     display: block;
     color: #fff;
     font-weight: 300;
+}
+
+.slide-out-menu a.current {
+    color: navy;
+    font-weight: bold;
 }
 
 .slide-out-menu a:hover {

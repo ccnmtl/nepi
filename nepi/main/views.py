@@ -57,6 +57,7 @@ class ViewPage(LoggedInMixin, PageView):
         for section in self.root.get_descendants():
             unlocked = section.id in visit_ids
             item = {
+                'id': section.id,
                 'url': section.get_absolute_url(),
                 'label': section.label,
                 'depth': section.depth,
