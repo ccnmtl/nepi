@@ -477,7 +477,7 @@ class ContactView(FormView):
     generic class based view'''
     template_name = 'main/contact.html'
     form_class = ContactForm
-    success_url = '/thanks/'
+    success_url = '/email_sent/'
 
     def form_valid(self, form):
         '''should this be in the form instead?'''
