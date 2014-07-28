@@ -234,11 +234,6 @@ pre {
     float: right;
 }
 
-.right-selected p {
-    border:4px solid #006699;
-    top:0;left:0;
-    margin:0; padding:3;}
-
 
 code,
 kbd,
