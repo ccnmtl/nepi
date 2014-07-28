@@ -11,7 +11,7 @@
         <b>{{object}}</b><br />
         <table width="100%" class="table table-striped table-condensed">
             <tr>
-                <b>Your name is:</b>
+                <td><b>Your name is:</b>
             </tr>
             <tr>
                 <td>
@@ -22,22 +22,22 @@
                 </td>
             </tr>
             <tr>
-                <b>Your username is:</b>
+                <td><b>Your username is:</b></td>
             </tr>
-            <tr>{{request.user.username}}</tr>
-            <tr><b>You are in:</b></tr>
-            <tr>{{object.country}}</tr>
+            <tr><td>{{request.user.username}}</td></tr>
+            <tr><td><b>You are in:</b></td></tr>
+            <tr><td>{{object.country}}</td></tr>
             <tr>
             <td>
                 {{object.icap_affil}}
             </td>
             <td><b>I am ICAP Affiliated</b></td>
             </tr>
-            <tr><b>Your email:</b></tr>
-            <tr>{{request.user.email}}</tr>
+            <tr><td><b>Your email:</b></td></tr>
+            <tr><td>{{request.user.email}}</td></tr>
 
-            <tr><b>Faculty Access:</b></tr>
-            <tr>{{object.profile_type}}</tr>
+            <tr><td><b>Faculty Access:</b></td></tr>
+            <tr><td>{{object.profile_type}}</td></tr>
         </table>
         </div>
         {% endblock %}

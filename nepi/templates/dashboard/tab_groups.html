@@ -76,7 +76,7 @@
                             <td>{{uc.name}}</td>
                             <td><a href="{{uc.get_absolute_url}}">{{uc.name}}</a></td>
                             <td><a href="/view_group_stats/uc.pk/">see progress</a></td><button id="progress_button">See Progress</button>
-                            <td><a href="/leave_group/uc.pk/">leave group</a></td><button id="progress_button">Leave Group</button>
+                            <td><a href="/leave_group/{{uc.pk}}/">leave group</a></td><button id="leave_group_btn">Leave Group</button>
                         </tr>
                     {% empty %}
                         <div name="instruction-div">
@@ -120,6 +120,39 @@
                     
                     var edit_btn = jQuery('#edit_group_button');
                     edit_btn.click(function(){jQuery('#edit_group_div').load('/edit_group/');});
+
+                    
+                    jQuery("#leave_group_btn").on("click", 
+                            function()
+                            {    
+                                jQuery.ajax(
+                                {
+                                    url: "/leave_group/",
+                                    type: "POST",
+                                    data: {'scenario' : good_s, 'conversation' : good_c },
+                                    success: function (data) 
+                                    {
+                                        jQuery("#correct_open").addClass( "right-selected" )
+                                        jQuery(".correct_answer1, .correct_answer2, .correct_answer3, .correct_answer4").addClass( "right-selected" ).show();
+
+                                        jQuery(".wrong_answer1, .wrong_answer2, .wrong_answer3, .wrong_answer4").hide();
+                                        jQuery("#wrong_open").removeClass( "wrong-selected" );
+
+                                        goodvar = true;
+                                      
+                                        maybeActivateNextButton();
+                                    },
+                                  
+                                    error: function(data) 
+                                    {
+                                        alert("There was an error submitting your form.");
+                                    }
+                                });
+                            });
+                    
+                    
+                    
+                    
                 </script>
     {% endblock %}
         {% endblock %}
