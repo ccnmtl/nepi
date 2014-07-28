@@ -21,12 +21,13 @@ class TestBasicViews(TestCase):
         self.user_profile = UserProfile(
             user=self.icap_user, profile_type='IC', country=self.country)
         self.user_profile.save()
-#     def test_home(self):
-#         response = self.c.get("/", follow=True)
-#         self.assertEqual(response.status_code, 200)
-#         self.assertEquals(response.redirect_chain[0],
-#                           ('http://testserver/accounts/login/?next=/',
-#                            302))
+
+    def test_home(self):
+        response = self.c.get("/", follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEquals(response.redirect_chain[0],
+                          ('http://testserver/accounts/login/?next=/',
+                           302))
 
     def test_about(self):
         response = self.c.get("/about/")
@@ -84,7 +85,7 @@ class TestStudentLoggedInViews(TestCase):
         response = self.c.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
                           [('http://testserver/student-dashboard/%d/'
-                            % self.u.pk, 302)])
+                            % self.up.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
 
 
@@ -108,7 +109,7 @@ class TestTeacherLoggedInViews(TestCase):
         response = self.c.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
                           [('http://testserver/faculty-dashboard/%d/'
-                            % self.u.pk, 302)])
+                            % self.up.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
 
 
@@ -132,5 +133,5 @@ class TestICAPLoggedInViews(TestCase):
         response = self.c.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
                           [('http://testserver/icap-dashboard/%d/'
-                            % self.u.pk, 302)])
+                            % self.up.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')

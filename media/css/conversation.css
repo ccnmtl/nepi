@@ -4,7 +4,7 @@
 	float: left;
 	position: relative;
 	top: -300px;
-	margin-bottom: -300px;
+
 }
 
 #bad_con {
@@ -12,7 +12,7 @@
 	float: left;
 	position: relative;
 	top: -300px;
-	margin-bottom: -300px;
+
 }
 
 .correct_answer1, .correct_answer2, .correct_answer3, .correct_answer4 {
@@ -49,54 +49,53 @@
 
 /* Pt2: Open-Ended Questions */ 
 
-#correct_open {
+.s2_act_02 #correct_open {
 	position: relative;
-top: -50px;
-left: 35px;
+	top: -65px;
+	left: 35px;
 }
+
+.s2_act_02 #wrong_open {
+	position: relative;
+	top: 85px;
+	left: -520px;
+}
+
 .s2_act_02 .correct_answer1 {
 	position: relative;
-top: -190px;
-left: 820px;
+	top: -205px;
+	left: 820px;
 	border-radius: 90px;
 	padding: 30px;
 	width: 124px;	
 }
 .s2_act_02 .correct_answer2 {
 	position: relative;
-top: -160px;
-left: 820px;
+	top: -180px;
+	left: 845px;
 }
 .s2_act_02 .correct_answer3 {
 	border: none;
 }
 .s2_act_02 .correct_answer4 {
-	
 	position: relative;
+	width: 150%;
+	left: 100px;
 }
 
-#wrong_open .wrong_selected {
-position: relative;
-top: 335px;
-left: -500px;
-}
-
-#wrong_open  {
-	left: 400px;
-}
 
 .s2_act_02 .wrong_answer1 {
-	position: relative;
-	top: -30px;
-	left: 50px;
+position: relative;
+top: -150px;
+left: 265px;
 	border-radius: 90px;
 	padding: 30px;
 	width: 124px;	
 }
 .s2_act_02 .wrong_answer2 {
-	position: relative;
-	top: -40px;
-	left: 30px;
+position: relative;
+top: -130px;
+left: 270px;
 }
 	
 
@@ -106,5 +105,5 @@ left: -500px;
 }
 .s2_act_02 .wrong_answer4 {
 	position: relative;
-	border: none;
+	
 }
