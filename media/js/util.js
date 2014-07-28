@@ -42,27 +42,3 @@ function validate_numeric_input(evt) {
       if(theEvent.preventDefault) theEvent.preventDefault();
     }
 }
-
-jQuery(document).ready(function () {
-    jQuery("body").delegate('a.disabled', 'click', function() {
-	    return false;  // call preventDefault and stopPropagation by default
-	});
-    jQuery("body").delegate('.toggle-primary-toc', 'click', function() {
-        jQuery('.slide-out-menu').toggleClass('open');
-    });
-    jQuery("body").delegate('.slide-out-menu a', 'click', function() {
-        jQuery('.slide-out-menu').toggleClass('open');
-        window.location = jQuery(this).attr(href);
-    });
-    jQuery("body").delegate("div.pageblock.numeric-only input[type='text']",
-            'keypress', validate_numeric_input);
-    jQuery("form").submit(function(evt) {
-        if (!is_form_complete(this)) {
-            evt.stopImmediatePropagation();
-            alert("Please complete all form fields before continuing.");
-            return false;
-        } else {
-            return true;
-        }
-    });
-});

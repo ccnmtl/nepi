@@ -669,6 +669,11 @@ div.pageblock.show-correct li.incorrect:after {
     font-weight: 300;
 }
 
+.slide-out-menu a.current {
+    color: navy;
+    font-weight: bold;
+}
+
 .slide-out-menu a:hover {
     background: #258ecd;
     text-decoration: none;
