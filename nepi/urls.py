@@ -45,6 +45,8 @@ urlpatterns = patterns(
      TemplateView.as_view(template_name="flatpages/registration_thanks.html")),
     (r'^thank_you_school/',
      TemplateView.as_view(template_name="flatpages/school_added.html")),
+    (r'^account_created/',
+     TemplateView.as_view(template_name="flatpages/account_created.html"))
 )
 
 
