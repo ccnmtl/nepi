@@ -542,8 +542,13 @@ h4.pagetitle {
 	padding: 30px;
 }
 
+/* All quiz styling */
+ol.caseanswers, ul.caseanswers {
+    list-style-type: none;
+}
 
-	/* Basic survey styles */
+
+/* Basic survey styles */
 .survey {
     min-width: 970px;
 }
@@ -554,10 +559,6 @@ h4.pagetitle {
 
 .survey .casetitle {
     display: none;
-}
-
-.survey .cases .casequestion ol.caseanswers {
-    list-style-type: none;
 }
 
 .survey .cases .casequestion textarea {
@@ -596,13 +597,6 @@ h4.pagetitle {
 .likert ol.caseanswers li {
     float: left;
     width: 116px;
-}
-
-
-.dosage {
-}
-
-.bloodspot {
 }
 
 /* slide out menu */
