@@ -71,9 +71,6 @@
             
                 <div id="groups_joined">
                     <b><p>Groups You've Joined: </p></b>
-                    {{object.country}}
-                    {{object.profile_type}}
-                    {{object.group.count}}
                     {% for uc in object.group.all %}
                         <tr>
                             <td>{{uc.name}}</td>
