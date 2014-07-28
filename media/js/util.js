@@ -32,11 +32,30 @@ function is_form_complete(form) {
     return complete;
 }
 
+function validate_numeric_input(evt) {
+    var theEvent = evt || window.event;
+    var key = theEvent.keyCode || theEvent.which;
+    key = String.fromCharCode( key );
+    var regex = /[0-9]|\./;
+    if( !regex.test(key) ) {
+      theEvent.returnValue = false;
+      if(theEvent.preventDefault) theEvent.preventDefault();
+    }
+}
+
 jQuery(document).ready(function () {
-    jQuery("body").delegate('a.disabled', 'click', function()
-    {
+    jQuery("body").delegate('a.disabled', 'click', function() {
 	    return false;  // call preventDefault and stopPropagation by default
 	});
+    jQuery("body").delegate('.toggle-primary-toc', 'click', function() {
+        jQuery('.slide-out-menu').toggleClass('open');
+    });
+    jQuery("body").delegate('.slide-out-menu a', 'click', function() {
+        jQuery('.slide-out-menu').toggleClass('open');
+        window.location = jQuery(this).attr(href);
+    });
+    jQuery("body").delegate("div.pageblock.numeric-only input[type='text']",
+            'keypress', validate_numeric_input);
     jQuery("form").submit(function(evt) {
         if (!is_form_complete(this)) {
             evt.stopImmediatePropagation();

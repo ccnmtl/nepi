@@ -3,53 +3,24 @@ into smaller pieces.'''
 from django import forms
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
-from django.utils.decorators import method_decorator
-from pagetree.generic.views import PageView, EditView, InstructorView
-from pagetree.models import Hierarchy
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render  # , get_object_or_404
-from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.mail import send_mail
-import json
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render
+from django.utils.decorators import method_decorator
 from django.views.generic import View
 from django.views.generic.detail import DetailView
-from django.views.generic.list import ListView
 from django.views.generic.edit import DeleteView, FormView, CreateView, \
     UpdateView
-from nepi.main.models import Group, UserProfile, Country, School, \
-    PendingTeachers
+from django.views.generic.list import ListView
+from nepi.activities.views import JSONResponseMixin
 from nepi.main.forms import CreateAccountForm, ContactForm, \
     UpdateProfileForm, CreateGroupForm
-from nepi.activities.views import JSONResponseMixin
-
-
-class AjaxableResponseMixin(object):
-    """
-    Taken from Django Website
-    Mixin to add AJAX support to a form.
-    Must be used with an object-based FormView (e.g. CreateView)
-    """
-    def render_to_json_response(self, context, **response_kwargs):
-        data = json.dumps(context)
-        response_kwargs['content_type'] = 'application/json'
-        return HttpResponse(data, **response_kwargs)
-
-    def form_invalid(self, form):
-        response = super(AjaxableResponseMixin, self).form_invalid(form)
-        if self.request.is_ajax():
-            return self.render_to_json_response(form.errors, status=400)
-        else:
-            return response
-
-    def form_valid(self, form):
-        response = super(AjaxableResponseMixin, self).form_valid(form)
-        if self.request.is_ajax():
-            data = {
-                'pk': self.object.pk,
-            }
-            return self.render_to_json_response(data)
-        else:
-            return response
+from nepi.main.models import Group, UserProfile, Country, School, \
+    PendingTeachers
+from pagetree.generic.views import PageView, EditView, InstructorView
+from pagetree.models import Hierarchy, UserPageVisit
+import json
 
 
 class LoggedInMixin(object):
@@ -75,6 +46,26 @@ class ViewPage(LoggedInMixin, PageView):
     hierarchy_name = "main"
     hierarchy_base = "/pages/main/"
     gated = False
+
+    def get_extra_context(self):
+        menu = []
+        visits = UserPageVisit.objects.filter(user=self.request.user,
+                                              status='complete')
+        visit_ids = visits.values_list('section__id', flat=True)
+
+        previous_unlocked = True
+        for section in self.root.get_descendants():
+            unlocked = section.id in visit_ids
+            item = {
+                'url': section.get_absolute_url(),
+                'label': section.label,
+                'depth': section.depth,
+                'disabled': not(previous_unlocked or section.id in visit_ids)
+            }
+            menu.append(item)
+            previous_unlocked = unlocked
+
+        return {'menu': menu}
 
 
 class EditPage(LoggedInMixinSuperuser, EditView):

@@ -2,6 +2,8 @@
 {% load bootstrap %}
 
 {% block css %}
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" />
+
     <style type="text/css">
         .draghandle {float: left;}
         #answers {list-style-type: none; margin: 0; padding: 0;}
@@ -12,14 +14,13 @@
         #answers li span { position: absolute; margin-left: -1.3em; }
         .dragging {border: #f60 solid 1px;}
     </style>
-{% endblock %}
-
-{% block extrahead %}
-    <script type="text/javascript" src="/site_media/js/jquery-ui-1.10.3.min.js"></script>
-    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" /> 
+    
 {% endblock %}
 
 {% block js %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" ></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js" type="text/javascript"></script>
+
     <script type="text/javascript">
         var saveOrder = function() {
             var url = "{% url 'reorder-answer' question.id %}?";
@@ -54,8 +55,7 @@
 {% block content %}
 
 <ul class="breadcrumb">
-<li><a href="{{question.quiz.pageblock.section.get_edit_url}}">{{question.quiz.pageblock.section.label}}</a>
-<span class="divider">/</span></li>
+<li><a href="{{question.quiz.pageblock.section.get_edit_url}}">{{question.quiz.pageblock.section.label}}</a><span class="divider">/</span></li>
 <li><a href="{% url 'edit-quiz' question.quiz.id %}">Edit Quiz</a><span class="divider">/</span></li>
 <li>Edit Question</li>
 </ul>

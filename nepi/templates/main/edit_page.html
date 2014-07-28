@@ -12,7 +12,20 @@
              background-color: #ddd; 
        } 
        #children li span { position: absolute; margin-left: -1.3em; } 
-       .dragging {background-color: #fee;} 
+       .dragging {background-color: #fee;}
+       
+       .edit-menu-3 {
+           margin-left: 20px;
+       } 
+       .edit-menu-4 {
+           margin-left: 40px;
+       } 
+       .edit-menu-5 {
+           margin-left: 60px;
+       } 
+       .edit-menu-6 {
+           margin-left: 80px;
+       } 
  </style>
  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" />
 {% endblock %} 
@@ -76,10 +89,16 @@
     </script>
 {% endblock %}
    
-{% block extraprimarynav %}
-<ul class="nav pull-right">
-      <li><a href="{{section.get_absolute_url}}">View Page</a></li>
- </ul>
+{% block primarynav %}
+    <div class="navbar" id="primarynav">
+        <div class="navbar-inner">
+            <div class="container">
+                <ul class="nav pull-right">
+                    <li><a href="{{section.get_absolute_url}}">View Page</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 {% endblock %}
  
 {% block content %}
@@ -106,28 +125,15 @@
          {% with section.hierarchy as hierarchy %}
          <div style="margin-top: 5px; margin-left: 5px;">
             <h3>{{hierarchy.name}}</h3>
-
-             <a href="{{root.get_edit_url}}"><b>{{hierarchy.get_root.name}}</b></a>
-             
-                  {% for s in hierarchy.get_root.get_descendants %}                 
-                       <li class="menu" style="list-style: none; line-height: 150%">
-                          <a href="{{s.get_edit_url}}">{{s.label}}{% ifequal s section %} <i class="icon-hand-left"></i>{% endifequal %}</a>
-       
-                        {% if s.get_children %}
-                            <ul>
-                        {% else %}{% if s.is_last_child %}
-                           {% for lc in s.closing_children %}
-                                </ul>
-                            {% endfor %}
-                        {% endif %}{% endif %}     
-                     </li>
-                 {% endfor %}
-               </ul>
-           </div>
-           {% endwith %}
-     </div>        
-
-
+            <a href="{{root.get_edit_url}}"><b>{{hierarchy.get_root.name}}</b></a>
+                {% for s in hierarchy.get_root.get_descendants %}
+                    <div class="edit-menu-{{s.depth}}">             
+                        <a href="{{s.get_edit_url}}">{{s.label}}{% ifequal s section %} <i class="icon-hand-left"></i>{% endifequal %}</a>
+                    </div>
+                {% endfor %}
+         </div>
+         {% endwith %}
+    </div>        
 
  <div id="edit-blocks-tab" class="tab-pane {% if not section.is_root %}active{% endif%}"/>
   {% if section.pageblock_set.count %}

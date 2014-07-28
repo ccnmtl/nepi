@@ -5,56 +5,51 @@
 {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
 {% if block.description %}{{block.description|markdown}}{% endif %}
 
-<br /><br />
 
-<p>This should record the last click...</p>
 <div id="last_click" style="display: none">{{convres}}</div>
 
-<div id="good_conversation">
+<div id="good_con">
     <input type="hidden" name="conversation" value="{{block.good_conversation.pk}}"/>
     <input type="hidden" name="scenario" value="{{block.pk}}"/>
-        <div id="starting_good">
+        <div id="correct_open">
           <p>{{block.good_conversation.text_one}}</p>
-        </div><br />
-        <div class="patient_good_conversation" style="display: none">
+        </div>
+        <div class="correct_answer" style="display: none">
           <p>{{block.good_conversation.response_one}}</p>
-        </div><br />
-        <div class="patient_good_conversation" style="display: none">
+        </div>
+        <div class="correct_answer" style="display: none">
           <p>{{block.good_conversation.response_two}}</p>
-        </div><br />
-        <div class="patient_good_conversation" style="display: none">
+        </div>
+        <div class="correct_answer" style="display: none">
           <p>{{block.good_conversation.response_three}}</p>
-        </div><br />
-        <div class="patient_good_conversation" style="display: none">
+        </div>
+        <div class="correct_answer" style="display: none">
           <p>{{block.good_conversation.complete_dialog}}</p>
-        </div><br />
-
+        </div>
 </div>
 
-<div id="bad_conversation">
+<div id="bad_con">
     <input type="hidden" name="conversation" value="{{block.bad_conversation.pk}}">
     <input type="hidden" name="scenario" value="{{block.pk}}">
-        <div id="starting_bad">
+        <div id="wrong_open">
           <p>{{block.bad_conversation.text_one}}</p>
-        </div><br />
-        <div class="patient_bad_conversation" style="display: none">
+        </div>
+        <div class="wrong_answer" style="display: none">
           <p>{{block.bad_conversation.response_one}}</p>
-        </div><br />
-        <div class="patient_bad_conversation" style="display: none">
+        </div>
+        <div class="wrong_answer" style="display: none">
           <p>{{block.bad_conversation.response_two}}</p>
-        </div><br />
-        <div class="patient_bad_conversation" style="display: none">
+        </div>
+        <div class="wrong_answer" style="display: none">
           <p>{{block.bad_conversation.response_three}}</p>
-        </div><br />
+        </div>
 
-        <div class="patient_bad_conversation" style="display: none">
+        <div class="wrong_answer" style="display: none">
           <p>{{block.bad_conversation.complete_dialog}}</p>
-        </div><br />
+        </div>
 </div>
 
 
-
-<br /><br /><br /><br /><br /><br />
 
 
 
