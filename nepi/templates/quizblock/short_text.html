@@ -1,13 +1,9 @@
 {% load markup %}
 
-{% if block.rhetorical %}
-  <input type="text" name="question{{question.id}}" />
-{% else %}
-  {% if response %}
+{% if response %}
     <input type="text" name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
         disabled='disabled' value="{{response.value}}" />
-  {% else %}
+{% else %}
     <input type="text" name="pageblock-{{block.pageblock.id}}-question{{question.id}}" />
-  {% endif %}
 {% endif %}
   

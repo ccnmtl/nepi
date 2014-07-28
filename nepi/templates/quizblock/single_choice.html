@@ -5,9 +5,6 @@
     {% for answer in question.answer_set.all %}
         <li class="{% if 'show-correct' in block.pageblock.css_extra and response %}
          {% if answer.correct %}correct{% else %}incorrect{% endif %}{% endif %}">
-        {% if block.rhetorical %}
-            <input name="question{{question.id}}" value="{{answer.label}}" type="radio" />{{answer.label|safe}}
-        {% else %}
             <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
                    value="{{answer.value}}" type="radio"
                    {% if response %}
@@ -17,7 +14,6 @@
                        {% endifequal %}
                    {% endif %} />
                 &nbsp;{{answer.label|safe}}
-        {% endif %}
         </li>
     {% endfor %}
 </ol>

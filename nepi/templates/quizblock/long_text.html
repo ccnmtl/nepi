@@ -1,12 +1,8 @@
 {% load markup %}
 
-{% if block.rhetorical %}
-  <textarea rows="10" name="question{{question.id}}" ></textarea>
+{% if response %}
+<textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+    {% if not block.allow_redo %}disabled='disabled'{% endif %}>{{response.value}}</textarea>
 {% else %}
-  {% if response %}
-    <textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
-        {% if not block.allow_redo %}disabled='disabled'{% endif %}>{{response.value}}</textarea>
-  {% else %}
-    <textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}" ></textarea>
-  {% endif %}
+<textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}" ></textarea>
 {% endif %}
