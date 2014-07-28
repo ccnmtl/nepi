@@ -292,7 +292,7 @@ class RegistrationView(FormView):
     '''changing registration view to form'''
     template_name = 'registration_form.html'
     form_class = CreateAccountForm
-    success_url = '/'
+    success_url = '/account_created/'
 
     def register_user(self):
         pass
@@ -342,7 +342,6 @@ class RegistrationView(FormView):
                 send_mail(subject, message, sender, recipients)
             recipients = ["nepi@nepi.ccnmtl.columbia.edu"]
             if form_data['profile_type']:
-                print form_data['profile_type']
                 subject = "[Teacher] Account Requested"
                 message = form_data['first_name'] + \
                     " " + form_data['last_name'] + \
@@ -478,7 +477,7 @@ class ContactView(FormView):
     generic class based view'''
     template_name = 'main/contact.html'
     form_class = ContactForm
-    success_url = '/thanks/'
+    success_url = '/email_sent/'
 
     def form_valid(self, form):
         '''should this be in the form instead?'''
