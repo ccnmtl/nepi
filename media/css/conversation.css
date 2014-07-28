@@ -255,20 +255,21 @@ left: 80px;
 .s2_act_05 #correct_open {
 	position: relative;
 	top: -200px;
-	left: 833px;
+	left: 813px;
 }
 
 .s2_act_05 #wrong_open {
 position: relative;
-top: 5px;
+top: -15px;
 left: 275px;
 
 }
 
 .s2_act_05 .correct_answer1 {
 position: relative;
+background-color: #fff;
 top: -205px;
-left: 100px;
+left: 70px;
 border-radius: 90px;
 padding: 30px;
 width: 124px;
@@ -286,11 +287,12 @@ width: 124px;
 
 .s2_act_05 .wrong_answer1 {
 position: relative;
-top: -150px;
-left: -450px;
+background-color: #fff;
+top: -120px;
+left: -490px;
 border-radius: 90px;
 padding: 30px;
-width: 124px;	
+width: 124px;
 }
 .s2_act_05 .wrong_answer2 {
 	border: none;
@@ -303,3 +305,74 @@ width: 124px;
 .s2_act_05 .wrong_answer4 {
 	border: none;
 }
+
+
+/* Pt6: Empathize */ 
+
+.pageblock.pre-con {
+border: solid 4px #80b6e6;
+border-radius: 10px;
+padding: 10px;
+text-align: center;
+position: relative;
+top: -400px;
+width: 200px;
+left: 80px;
+
+}
+
+
+.s2_act_06 #correct_open {
+	position: relative;
+	top: -200px;
+	left: 813px;
+}
+
+.s2_act_06 #wrong_open {
+position: relative;
+top: 0;
+left: 275px;
+
+}
+
+.s2_act_06 .correct_answer1 {
+position: relative;
+background-color: #fff;
+top: -245px;
+left: 91px;
+border-radius: 90px;
+padding: 30px;
+width: 124px;
+}
+.s2_act_06 .correct_answer2 {
+	border: none;
+}
+.s2_act_06 .correct_answer3 {
+	border: none;
+}
+.s2_act_06 .correct_answer4 {
+	border: none;
+}
+
+
+.s2_act_06 .wrong_answer1 {
+position: relative;
+background-color: #fff;
+top: -160px;
+left: -460px;
+border-radius: 90px;
+padding: 30px;
+width: 124px;
+}
+.s2_act_06 .wrong_answer2 {
+	border: none;
+}
+	
+.s2_act_06 .wrong_answer3 {
+	position: relative;
+	border: none;
+}
+.s2_act_06 .wrong_answer4 {
+	border: none;
+}
+
