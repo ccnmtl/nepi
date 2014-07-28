@@ -708,3 +708,8 @@ div.pageblock.show-correct li.incorrect:after {
 	margin-bottom: 20px;
 }
 
+input#generic-reset {
+	float: left;
+	clear: both;
+	margin: 10px 0;
+}

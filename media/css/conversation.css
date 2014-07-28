@@ -1,0 +1,98 @@
+/* Universal Counseling Activity Styles */
+#good_con {
+	width: 50%;
+	float: left;
+}
+
+#bad_con {
+	width: 50%;
+	float: left;
+}
+
+.correct_answer1, .correct_answer2, .correct_answer3, .correct_answer4 {
+	border: solid 4px #80b6e6;
+	border-radius: 10px;
+	padding: 10px;
+	text-align: center;
+}
+
+.correct_answer1, .correct_answer2, .correct_answer3 {
+	width: 200px;
+}
+
+.wrong_answer1, .wrong_answer2, .wrong_answer3, .wrong_answer4 {
+	border: solid 4px #f5463a;
+	border-radius: 10px;
+	padding: 10px;
+	text-align: center;
+}
+
+.wrong_answer1, .wrong_answer2, .wrong_answer3 {
+	width: 200px;
+}
+
+#correct_open, #wrong_open {
+	border: solid 4px #ccc;
+	border-radius: 10px;
+	padding: 10px;	 
+	color: #aaa;
+	cursor: pointer;
+	width: 200px;
+	text-align: center;
+}
+
+/* Pt2: Open-Ended Questions */ 
+#correct_open {
+	position: relative;
+	top: -400px;
+	left: 35px;
+}
+.s2_act_02 .correct_answer1 {
+	position: relative;
+	top: -520px;
+	left: 820px;
+	border-radius: 90px;
+	padding: 30px;
+	width: 124px;	
+}
+.s2_act_02 .correct_answer2 {
+	position: relative;
+	top: -500px;
+	left: 850px;
+}
+.s2_act_02 .correct_answer3 {
+	border: none;
+}
+.s2_act_02 .correct_answer4 {
+	
+	position: relative;
+}
+
+#wrong_open {
+	position: relative;
+	top: -240px;
+	left: -520px;
+}
+.s2_act_02 .wrong_answer1 {
+	position: relative;
+	top: -430px;
+	left: 250px;
+	border-radius: 90px;
+	padding: 30px;
+	width: 124px;	
+}
+.s2_act_02 .wrong_answer2 {
+	position: relative;
+	top: -400px;
+	left: 300px;
+}
+	
+
+.s2_act_02 .wrong_answer3 {
+	position: relative;
+	border: none;
+}
+.s2_act_02 .wrong_answer4 {
+	position: relative;
+	border: none;
+}

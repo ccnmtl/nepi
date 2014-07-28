@@ -12,19 +12,19 @@
     <input type="hidden" name="conversation" value="{{block.good_conversation.pk}}"/>
     <input type="hidden" name="scenario" value="{{block.pk}}"/>
         <div id="correct_open">
-          <p>{{block.good_conversation.text_one}}</p>
+          {{block.good_conversation.text_one}}
         </div>
-        <div class="correct_answer" style="display: none">
-          <p>{{block.good_conversation.response_one}}</p>
+        <div class="correct_answer1" style="display: none">
+          {{block.good_conversation.response_one}}
         </div>
-        <div class="correct_answer" style="display: none">
-          <p>{{block.good_conversation.response_two}}</p>
+        <div class="correct_answer2" style="display: none">
+          {{block.good_conversation.response_two}}
         </div>
-        <div class="correct_answer" style="display: none">
-          <p>{{block.good_conversation.response_three}}</p>
+        <div class="correct_answer3" style="display: none">
+          {{block.good_conversation.response_three}}
         </div>
-        <div class="correct_answer" style="display: none">
-          <p>{{block.good_conversation.complete_dialog}}</p>
+        <div class="correct_answer4" style="display: none">
+          {{block.good_conversation.complete_dialog}}
         </div>
 </div>
 
@@ -32,20 +32,19 @@
     <input type="hidden" name="conversation" value="{{block.bad_conversation.pk}}">
     <input type="hidden" name="scenario" value="{{block.pk}}">
         <div id="wrong_open">
-          <p>{{block.bad_conversation.text_one}}</p>
+          {{block.bad_conversation.text_one}}
         </div>
-        <div class="wrong_answer" style="display: none">
-          <p>{{block.bad_conversation.response_one}}</p>
+        <div class="wrong_answer1" style="display: none">
+          {{block.bad_conversation.response_one}}
         </div>
-        <div class="wrong_answer" style="display: none">
-          <p>{{block.bad_conversation.response_two}}</p>
+        <div class="wrong_answer2" style="display: none">
+          {{block.bad_conversation.response_two}}
         </div>
-        <div class="wrong_answer" style="display: none">
-          <p>{{block.bad_conversation.response_three}}</p>
+        <div class="wrong_answer3" style="display: none">
+          {{block.bad_conversation.response_three}}
         </div>
-
-        <div class="wrong_answer" style="display: none">
-          <p>{{block.bad_conversation.complete_dialog}}</p>
+        <div class="wrong_answer4" style="display: none">
+          {{block.bad_conversation.complete_dialog}}
         </div>
 </div>
 
