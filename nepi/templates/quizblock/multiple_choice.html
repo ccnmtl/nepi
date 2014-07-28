@@ -5,12 +5,11 @@
     <ul class="caseanswers">
     {% if response %}
         {% for answer in question.answer_set.all %}
-            <li>
+            <li class="{% if 'show-correct' in block.pageblock.css_extra %}
+                {% if answer.correct %}correct{% else %}incorrect{% endif %}{% endif %}">
                 <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"                        
                     value="{{answer.value}}" type="checkbox" disabled="disabled"
-                    {% ifanswerin response answer %}checked="checked"{%else%}{% endifanswerin %} 
-                    class="{% if 'show_correct' in block.pageblock.css_extra %}
-                           {% if answer.correct %}correct{% else %}incorrect{% endif %}{% endif %}"/> &nbsp;{{answer.label|safe}}
+                    {% ifanswerin response answer %}checked="checked"{%else%}{% endifanswerin %} "/>&nbsp;{{answer.label|safe}}
             </li>
         {% endfor %}
     {% else %}

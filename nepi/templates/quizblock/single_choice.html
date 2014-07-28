@@ -1,27 +1,25 @@
 {% load markup %}
 
+{% spaceless %}
 <ol class="caseanswers">
-{% for answer in question.answer_set.all %}
-    {% if block.rhetorical %}
-        <li><input name="question{{question.id}}" value="{{answer.label}}" type="radio" /> {{answer.label|safe}}</li>
-    {% else %}
-        <li>
-            {% spaceless %}
+    {% for answer in question.answer_set.all %}
+        <li class="{% if 'show-correct' in block.pageblock.css_extra and response %}
+         {% if answer.correct %}correct{% else %}incorrect{% endif %}{% endif %}">
+        {% if block.rhetorical %}
+            <input name="question{{question.id}}" value="{{answer.label}}" type="radio" />{{answer.label|safe}}
+        {% else %}
             <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
                    value="{{answer.value}}" type="radio"
                    {% if response %}
                        disabled="disabled"
-                       {% ifequal response.value answer.value %}checked="checked"{% endifequal %}
-                       class="
-                       {% if 'show_correct' in block.pageblock.css_extra %}
-                           {% if answer.correct %}correct{% else %}incorrect{% endif %}
-                       {% endif %}
-                       "
+                       {% ifequal response.value answer.value %}
+                           checked="checked"
+                       {% endifequal %}
                    {% endif %} />
                 &nbsp;{{answer.label|safe}}
-            {% endspaceless %}
+        {% endif %}
         </li>
-    {% endif %}
-{% endfor %}
+    {% endfor %}
 </ol>
+{% endspaceless %}
 <div class="visualclear"></div>

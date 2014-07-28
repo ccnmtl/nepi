@@ -547,6 +547,15 @@ ol.caseanswers, ul.caseanswers {
     list-style-type: none;
 }
 
+/* quizzes that show "correct" answers */
+div.pageblock.show-correct li.correct:after {
+    content: url('/site_media/img/correct.png');
+}
+
+div.pageblock.show-correct li.incorrect:after {
+    content: url('/site_media/img/incorrect.png');
+}
+
 
 /* Basic survey styles */
 .survey {
