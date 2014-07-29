@@ -151,7 +151,7 @@
         {% if next_section %}
             <li class="next">
                 <a href="{{ next_section.get_absolute_url }}"
-                 class="{% ifaccessible next_section%}{% else %}disabled{%endifaccessible%}">
+                 class="{% ifsubmitted section %}{% else %}disabled{%endifsubmitted%}">
                     Next &rarr;
                 </a>
             </li>
