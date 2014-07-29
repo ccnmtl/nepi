@@ -462,6 +462,8 @@ class GroupDetail(LoggedInMixin, DetailView):
 
 
 class RemoveStudent(LoggedInMixin, JSONResponseMixin, View):
+    template_name = 'dashboard/view_group.html'
+
     '''Remove the student from a course.'''
     def post(self, request):
         group = get_object_or_404(Group,
@@ -519,15 +521,17 @@ class StudentClassStatView(LoggedInMixin, DetailView):
     '''This view is for students to see their progress,
     should be included in main base template.'''
     model = Group
-    template_name = 'view_group_stats.html'
+    template_name = 'dashboard/view_group.html'
     success_url = reverse_lazy('home')
 
     def get_context_data(self, **kwargs):
-        if self.request.is_ajax():
-            module = self.group.__module
-            user = User.objects.get(pk=self.request.user.pk)
-            profile = UserProfile.objects.get(user=user)
-            return {'module': module, 'user': user, 'profile': profile}
+        students = UserProfile.objects.filter(group__pk=self.object.pk)
+        #.exclude(group__created_by=)
+        # print students
+        # Article.objects.filter(publications__pk=1)
+        # .exclude(created_by=userprofile__user)
+        return {'object': self.object, 'students': students}
+        #  'module': module, 'user': user, 'profile': profile}
 
 
 class UpdateProfileView(LoggedInMixin, UpdateView):

@@ -106,8 +106,8 @@ urlpatterns += patterns(
 
     # ICAP related pages
     (r'^add_school/$', CreateSchoolView.as_view()),
-    url(r'^view_group_stats/(?P<pk>\d+)/', StudentClassStatView.as_view(),
-        name='view-group-stats'),
+    url(r'^view_group/(?P<pk>\d+)/', StudentClassStatView.as_view(),
+        name='view-group'),
     (r'^edit_school/(?P<pk>\d+)/$', UpdateSchoolView.as_view()),
     # Teacher related pages
     #(r'^view_students/$', 'nepi.main.views.view_students'),
