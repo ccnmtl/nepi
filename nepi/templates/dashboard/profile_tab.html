@@ -1,21 +1,8 @@
+{% extends 'base.html' %}
 {% block content %}
-        <script>
-            var faculty_access = jQuery('#id_faculty_access');
-            
-            
-            faculty_access.change(
-                function()
-                {
-                    if(jQuery(this).is(":checked"))
-                    {
-                       jQuery("#faculty").load('/faculty_countries/');
-                    }
-                }
-            );
-            
-        </script>
 
- <div> <p>some text here</p>
+
+<div> <p>some text here</p>
 
       <form action="/update_profile/{{object.pk}}/" method="post">{% csrf_token %}
         {{ form.as_p }}
@@ -25,4 +12,20 @@
       </form>
 
 </div>
+
+<script>
+    var faculty_access = jQuery('#id_faculty_access');
+            
+            
+        faculty_access.change(
+        function()
+        {
+            if(jQuery(this).is(":checked"))
+            {
+                jQuery("#faculty").load('/get_countries/');
+            }
+        }
+        );
+            
+</script>
 {% endblock %}

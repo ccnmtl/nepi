@@ -532,7 +532,7 @@ class StudentClassStatView(LoggedInMixin, DetailView):
 
 class UpdateProfileView(LoggedInMixin, UpdateView):
     model = UserProfile
-    template_name = 'profile_tab.html'
+    template_name = 'dashboard/profile_tab.html'
     form_class = UpdateProfileForm
     success_url = '/'
 
@@ -543,8 +543,8 @@ class UpdateProfileView(LoggedInMixin, UpdateView):
             subject = "Facutly Access Requeted"
             message = "The user, " + form_data['first_name'] + \
                 " " + form_data['last_name'] + " from " + \
-                form_data['country'] + " has requested faculty " + \
-                "faculty access at " + form_data['school'] + ".\n\n"
+                str(form_data['country']) + " has requested faculty " + \
+                "faculty access at " + str(form_data['school']) + ".\n\n"
             sender = "nepi@nepi.ccnmtl.columbia.edu"
             recipients = "cdunlop@columbia.edu"
             send_mail(subject, message, sender, recipients)
@@ -557,22 +557,3 @@ class UpdateProfileView(LoggedInMixin, UpdateView):
             return self.render_to_json_response(form.errors, status=400)
         else:
             return response
-
-
-class FacultyCountries(LoggedInMixin, ListView):
-    model = Country
-    template_name = 'faculty/country_list.html'
-    success_url = '/'
-
-
-class FacultyCountrySchools(LoggedInMixin, ListView):
-    model = School
-    template_name = 'faculty/school_list.html'
-    success_url = '/'
-
-    def get_context_data(self, **kwargs):
-        if self.request.is_ajax():
-            country_key = self.request.GET.__getitem__('name')
-            country = Country.objects.get(pk=country_key)
-            s = School.objects.filter(country=country)
-            return {'school_list': s}

@@ -101,11 +101,11 @@ class UpdateProfileForm(forms.ModelForm):
         required=False, label="Request Faculty Access")
     email = forms.EmailField(required=False, label="Email(not required):")
     password1 = forms.CharField(max_length=100, required=False,
-                                label="Leave blank if you" +
-                                "wish to leave the same")
+                                label="Password - Leave blank if you" +
+                                " wish to leave the same")
     password2 = forms.CharField(max_length=100, required=False,
-                                label="Leave blank if you wish" +
-                                "to leave the same")
+                                label="Password - Leave blank if you wish" +
+                                " to leave the same")
 
     def __init__(self, *args, **kwargs):
         super(UpdateProfileForm, self).__init__(*args, **kwargs)
