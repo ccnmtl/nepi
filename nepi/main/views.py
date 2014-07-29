@@ -9,7 +9,7 @@ from pagetree.models import Hierarchy
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render  # , get_object_or_404
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.core.mail import send_mail
+from django.core.mail import send_mail, BadHeaderError
 import json
 from django.views.generic import View
 from django.views.generic.detail import DetailView
@@ -497,9 +497,26 @@ class ContactView(FormView):
         message = form_data['message'],
         recipients = ['nepi@nepi.ccnmtl.columbia.edu']
         # ["u'cdunlop@columbia.edu'"]
-        send_mail(subject, message, sender, 'nepi@nepi.ccnmtl.columbia.edu')
+        send_mail(subject, message, sender, recipients)
         form.send_email(recipients)
         return super(ContactView, self).form_valid(form)
+
+# send_mail('Subject', 'Message.', 'from@example.com',
+#     ['john@example.com', 'jane@example.com'])
+# def send_email(request):
+#     subject = request.POST.get('subject', '')
+#     message = request.POST.get('message', '')
+#     from_email = request.POST.get('from_email', '')
+#     if subject and message and from_email:
+#         try:
+#             send_mail(subject, message, from_email, ['admin@example.com'])
+#         except BadHeaderError:
+#             return HttpResponse('Invalid header found.')
+#         return HttpResponseRedirect('/contact/thanks/')
+#     else:
+#         # In reality we'd use a form class
+#         # to get proper validation errors.
+#         return HttpResponse('Make sure all fields are entered and valid.')
 
 
 class DeleteGroupView(LoggedInMixin, DeleteView):
