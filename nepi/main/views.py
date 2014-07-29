@@ -3,22 +3,14 @@ into smaller pieces.'''
 from django import forms
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
-<<<<<<< HEAD
 from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
 from pagetree.models import Hierarchy
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render  # , get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.mail import send_mail, BadHeaderError
 import json
-=======
-from django.core.mail import send_mail
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
-from django.utils.decorators import method_decorator
->>>>>>> 35ed0a1f253504815cdc8a56cc31f0d9f5efa3e4
 from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, FormView, CreateView, \
@@ -90,8 +82,6 @@ class EditPage(LoggedInMixinSuperuser, EditView):
 class InstructorPage(LoggedInMixinStaff, InstructorView):
     hierarchy_name = "main"
     hierarchy_base = "/pages/main/"
-
-# should make a class to say thank you for... and give appropriate statement.
 
 
 class ThankYou(LoggedInMixin, View):
