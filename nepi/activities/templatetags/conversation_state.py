@@ -2,7 +2,7 @@ from django import template
 register = template.Library()
 
 
-class ConversationState(template.Node):
+class ConversationStateNode(template.Node):
 
     def __init__(self, cblock, scenario_response):
         self.cblock = cblock
@@ -19,4 +19,4 @@ class ConversationState(template.Node):
 def get_response(parser, token):
     cblock = token.split_contents()[1:][0]
     scenario_response = token.split_contents()[1:][2]
-    return ConversationState(cblock, scenario_response)
+    return ConversationStateNode(cblock, scenario_response)

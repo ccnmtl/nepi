@@ -146,6 +146,8 @@ class ConversationScenario(models.Model):
             elif (response.first_click is not None
                     and response.second_click is None):
                 return response.first_click.conversation.scenario_type
+            else:
+                return 0
         except ConversationResponse.DoesNotExist:
             return 0
 

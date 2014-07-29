@@ -2,7 +2,7 @@ from django import template
 register = template.Library()
 
 
-class DosageState(template.Node):
+class DosageStateNode(template.Node):
 
     def __init__(self, cblock, dosage_response):
         self.cblock = cblock
@@ -12,11 +12,11 @@ class DosageState(template.Node):
         b = context[self.cblock]
         u = context['request'].user
         context[self.dosage_response] = b.dosage_response(u)
-        return
+        return ''
 
 
 @register.tag('getdosageresponse')
 def get_response(parser, token):
     cblock = token.split_contents()[1:][0]
     dosage_response = token.split_contents()[1:][2]
-    return DosageState(cblock, dosage_response)
+    return DosageStateNode(cblock, dosage_response)
