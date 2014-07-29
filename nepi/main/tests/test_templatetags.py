@@ -204,14 +204,14 @@ class TestAggregateQuizScoreFilter(TestCase):
 
 
 # class TestAccessible(TestCase):
-# 
+#
 #     def setUp(self):
 #         self.user = User.objects.create(username="testuser")
-# 
+#
 #     def assert_render_true(self):
 #         nl1 = MockNodeList()
 #         nl2 = MockNodeList()
-# 
+#
 #         node = AccessibleNode('quiz', nl1, nl2)
 #         self.request.user = self.user
 #         context = dict(request=self.request, quiz=self.quiz)
@@ -219,7 +219,7 @@ class TestAggregateQuizScoreFilter(TestCase):
 #         self.assertEqual(out, None)
 #         self.assertTrue(nl1.rendered)
 #         self.assertFalse(nl2.rendered)
-# 
+#
 #     def assert_render_false(self):
 #         nl1 = MockNodeList()
 #         nl2 = MockNodeList()
@@ -230,14 +230,14 @@ class TestAggregateQuizScoreFilter(TestCase):
 #         self.assertEqual(out, None)
 #         self.assertFalse(nl1.rendered)
 #         self.assertTrue(nl2.rendered)
-# 
+#
 #     def test_quiz_complete(self):
 #         ques1 = Question.objects.create(quiz=self.quiz, text="question_one",
 #                                         question_type="single choice")
 #         Answer.objects.create(question=ques1, label="a",
 #                               value="a", correct=True)
 #         Answer.objects.create(question=ques1, label="b", value="b")
-# 
+#
 #         ques2 = Question.objects.create(quiz=self.quiz, text="question_two",
 #                                         question_type="multiple choice")
 #         Answer.objects.create(question=ques2, label="a",
@@ -245,7 +245,6 @@ class TestAggregateQuizScoreFilter(TestCase):
 #         Answer.objects.create(question=ques2, label="b", value="b")
 #         Answer.objects.create(question=ques2, label="c",
 #                               value="c", correct=True)
-# 
+#
 #         # No submission
 #         self.assert_render_false()
-
