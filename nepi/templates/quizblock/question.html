@@ -10,7 +10,7 @@
         <div class="casequestion">
             <div class="casequestiontext">{{question.text|safe}}</div>
             
-            {% if response and 'show-feedback' in block.pageblock.css_extra and question.explanation %}
+            {% if response and question.explanation and 'show-feedback' in block.pageblock.css_extra %}
                 <div class="caseuserfeedback">{{question.explanation|safe}}</div>
             {% endif %}
             

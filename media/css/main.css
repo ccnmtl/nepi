@@ -566,7 +566,7 @@ div.pageblock.show-correct li.incorrect:after {
 
 /* Basic survey styles */
 .survey {
-    min-width: 970px;
+    width: 970px;
 }
 
 .survey .alert.alert-error {
