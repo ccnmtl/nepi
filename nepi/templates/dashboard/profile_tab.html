@@ -13,19 +13,4 @@
 
 </div>
 
-<script>
-    var faculty_access = jQuery('#id_faculty_access');
-            
-            
-        faculty_access.change(
-        function()
-        {
-            if(jQuery(this).is(":checked"))
-            {
-                jQuery("#faculty").load('/faculty_countries/');
-            }
-        }
-        );
-            
-</script>
 {% endblock %}

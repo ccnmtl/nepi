@@ -537,26 +537,38 @@ class UpdateProfileView(LoggedInMixin, UpdateView):
     success_url = '/'
 
     def form_valid(self, form):
-        # response = super(UpdateProfileView, self).form_valid(form)
         form_data = form.cleaned_data
+        u_user = User.objects.get(pk=self.request.user.pk)
+        u_user.password = form_data['password1']
+        u_user.email = form_data['email']
+        u_user.first_name = form_data['first_name']
+        u_user.last_name = form_data['last_name']
+        u_user.save()
+        up = UserProfile.objects.get(user=u_user)
+        '''IF THIS HAS TO GO IN FORM CLEAN TO KEEP IT
+        FROM BLOWING UP - DOES IT NEED TO BE HERE'''
+        try:
+            up.country = Country.objects.get(
+                name=form_data['country'])
+            up.save()
+        except Country.DoesNotExist:
+            new_country = Country.objects.create(name=form_data['country'])
+            new_country.save()
+            #up.country = new_country
+            #up.save()
         if form_data['faculty_access']:
             subject = "Facutly Access Requeted"
-            message = "The user, " + form_data['first_name'] + \
-                " " + form_data['last_name'] + " from " + \
+            message = "The user, " + str(form_data['first_name']) + \
+                " " + str(form_data['last_name']) + " from " + \
                 str(form_data['country']) + " has requested faculty " + \
-                "faculty access at " + str(form_data['school']) + ".\n\n"
+                "faculty access.\n\n"
             sender = "nepi@nepi.ccnmtl.columbia.edu"
-            recipients = "cdunlop@columbia.edu"
+            recipients = ["cdunlop@columbia.edu"]
             send_mail(subject, message, sender, recipients)
-        # not clear to me what validation is done for you
-        form_data.save()
-
-    def form_invalid(self, form):
-        response = super(UpdateProfileView, self).form_invalid(form)
-        if self.request.is_ajax():
-            return self.render_to_json_response(form.errors, status=400)
-        else:
-            return response
+            pending = PendingTeachers.objects.create(
+                user_profile=up)
+            pending.save()
+        return super(UpdateProfileView, self).form_valid(form)
 
 
 class GetFacultyCountries(LoggedInMixin, ListView):
