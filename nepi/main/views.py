@@ -496,27 +496,8 @@ class ContactView(FormView):
         subject = form_data['subject'],
         message = form_data['message'],
         recipients = ['nepi@nepi.ccnmtl.columbia.edu']
-        # ["u'cdunlop@columbia.edu'"]
-        send_mail(subject, message, sender, recipients)
-        form.send_email(recipients)
+        send_mail(str(subject), str(message), str(sender), recipients)
         return super(ContactView, self).form_valid(form)
-
-# send_mail('Subject', 'Message.', 'from@example.com',
-#     ['john@example.com', 'jane@example.com'])
-# def send_email(request):
-#     subject = request.POST.get('subject', '')
-#     message = request.POST.get('message', '')
-#     from_email = request.POST.get('from_email', '')
-#     if subject and message and from_email:
-#         try:
-#             send_mail(subject, message, from_email, ['admin@example.com'])
-#         except BadHeaderError:
-#             return HttpResponse('Invalid header found.')
-#         return HttpResponseRedirect('/contact/thanks/')
-#     else:
-#         # In reality we'd use a form class
-#         # to get proper validation errors.
-#         return HttpResponse('Make sure all fields are entered and valid.')
 
 
 class DeleteGroupView(LoggedInMixin, DeleteView):
