@@ -20,7 +20,7 @@ from nepi.activities.views import JSONResponseMixin
 from nepi.main.forms import CreateAccountForm, ContactForm, \
     UpdateProfileForm, CreateGroupForm
 from nepi.main.models import Group, UserProfile, Country, School, \
-    PendingTeachers, Student
+    PendingTeachers
 
 
 class LoggedInMixin(object):
@@ -466,7 +466,7 @@ class RemoveStudent(LoggedInMixin, JSONResponseMixin, View):
     def post(self, request):
         group = get_object_or_404(Group,
                                   pk=request.POST['group'])
-        student = get_object_or_404(Student,
+        student = get_object_or_404(UserProfile,
                                     pk=request.POST['student'])
         group.userprofile_set.remove(student)
         return self.render_to_json_response({'success': True})
