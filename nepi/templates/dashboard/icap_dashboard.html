@@ -72,6 +72,21 @@
             {% endif %}
         {% endblock %}
 
+        {% block resources %}
+            {% if object.profile_type == "ST" %}
+                {% include "dashboard/tab_student_resources.html" %}
+            {% endif %}
+            {% if object.profile_type == "TE" %}
+                {% include "dashboard/tab_teacher_resources.html" %}
+            {% endif %}
+            {% if object.profile_type == "CA" %}
+                {% include "dashboard/tab_ca_resources.html" %}
+            {% endif %}
+            {% if object.profile_type == "IC" %}
+                {% include "dashboard/tab_icap_resources.html" %}
+            {% endif %}
+        {% endblock %}
+
         {% comment %}
         {% block formmodal%}
             {% include "dashboard/form_modal.html" %}
