@@ -243,15 +243,8 @@ class JoinGroup(LoggedInMixin, JSONResponseMixin, View):
     def post(self, request):
         user_id = request.user.pk
         user_profile = UserProfile.objects.get(user__id=user_id)
-        # print Group.objects.count()
-        print "user profile group count"
-        print user_profile.group.count()
         add_group = Group.objects.get(pk=request.POST['group'])
-        # print add_group
         user_profile.group.add(add_group)
-        # print user_profile.group.count()
-        print "user profile group count"
-        print user_profile.group.count()
         for each in user_profile.group.all():
             print each.name
         return self.render_to_json_response({'success': True})
@@ -372,6 +365,8 @@ class UpdateSchoolView(LoggedInMixin, UpdateView):
 
 
 # LoggedInMixin,
+
+
 class CreateGroupView(LoggedInMixin, CreateView):
     '''generic class based view for
     creating a group'''
@@ -468,9 +463,57 @@ class GroupDetail(LoggedInMixin, DetailView):
         return context
 
 
-class RemoveStudent(LoggedInMixin, View, JSONResponseMixin):
-    def post(self, request, stud_id, cors_id):
-        pass
+class RemoveStudent(LoggedInMixin, JSONResponseMixin, View):
+    pass
+
+
+class LeaveGroup(LoggedInMixin, View):
+    template_name = 'dashboard/icap_dashboard.html'
+
+    def get(self, request, pk):
+        print request.user.pk
+        user_profile = UserProfile.objects.get(user__id=request.user.pk)
+        print user_profile
+        leave_group = Group.objects.get(pk=pk)
+        leave_group.userprofile_set.remove(user_profile)
+        # user_profile.__group_set.remove(leave_group)
+        return HttpResponseRedirect("/")
+
+# class LeaveGroup(LoggedInMixin, JSONResponseMixin, View):
+#     template_name = 'dashboard/icap_dashboard.html'
+#
+#     def post(self, request, grp_id):
+#         print request.user.pk
+#         user_profile = UserProfile.objects.get(user__id=request.user.pk)
+#         print user_profile
+#         leave_group = Group.objects.get(pk=grp_id)
+#         leave_group.userprofile_set.remove(user_profile)
+#         # user_profile.__group_set.remove(leave_group)
+#         return self.render_to_json_response({'success': True})
+# # b = Blog.objects.get(id=1)
+# >>> e = Entry.objects.get(id=234)
+# >>> b.entry_set.remove(e)
+#
+#     def post(self, request):
+#         scenario = get_object_or_404(ConversationScenario,
+#                                      pk=request.POST['scenario'])
+#         conversation = get_object_or_404(Conversation,
+#                                          pk=request.POST['conversation'])
+#         conclick = ConvClick.objects.create(conversation=conversation)
+#         conclick.save()
+#         rs, created = ConversationResponse.objects.get_or_create(
+#             conv_scen=scenario, user=request.user)
+#         if rs.first_click is None:
+#             rs.first_click = conclick
+#             rs.save()
+#         elif rs.first_click is not None and rs.second_click is None:
+#             rs.second_click = conclick
+#             rs.third_click = conclick
+#             rs.save()
+#         elif rs.second_click is not None:
+#             rs.third_click = conclick
+#             rs.save()
+#         return render_to_json_response({'success': True})
 
 
 class ContactView(FormView):
