@@ -25,7 +25,7 @@
         </a>
     </li>
     
-    {% if user_profile.profile_type == "IC" %}
+    {% if object.profile_type == "IC" or object.profile_type == "CA" %}
     <li>
         <a href="#pending-teachers" data-toggle="tab">
             Pending Teachers

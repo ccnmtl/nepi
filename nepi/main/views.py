@@ -5,11 +5,11 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
-from pagetree.models import Hierarchy
+from pagetree.models import Hierarchy, UserPageVisit
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.core.mail import send_mail, BadHeaderError
+from django.core.mail import send_mail  # , BadHeaderError
 import json
 from django.views.generic import View
 from django.views.generic.detail import DetailView
@@ -20,10 +20,7 @@ from nepi.activities.views import JSONResponseMixin
 from nepi.main.forms import CreateAccountForm, ContactForm, \
     UpdateProfileForm, CreateGroupForm
 from nepi.main.models import Group, UserProfile, Country, School, \
-    PendingTeachers
-from pagetree.generic.views import PageView, EditView, InstructorView
-from pagetree.models import Hierarchy, UserPageVisit
-import json
+    PendingTeachers, Student
 
 
 class LoggedInMixin(object):
@@ -468,12 +465,11 @@ class RemoveStudent(LoggedInMixin, JSONResponseMixin, View):
     '''Remove the student from a course.'''
     def post(self, request):
         group = get_object_or_404(Group,
-                                     pk=request.POST['group'])
+                                  pk=request.POST['group'])
         student = get_object_or_404(Student,
-                                         pk=request.POST['student'])
-        leave_group.userprofile_set.remove(student)
-        return render_to_json_response({'success': True})
-        
+                                    pk=request.POST['student'])
+        group.userprofile_set.remove(student)
+        return self.render_to_json_response({'success': True})
 
 
 class LeaveGroup(LoggedInMixin, View):
