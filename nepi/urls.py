@@ -17,7 +17,7 @@ from nepi.main.views import (CreateGroupView, UpdateGroupView,
                              ICAPDashboard, Home, AddGroup,
                              UpdateProfileView, FacultyCountries,
                              FacultyCountrySchools, GroupDetail,
-                             RemoveStudent)
+                             RemoveStudent, LeaveGroup)
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -45,6 +45,10 @@ urlpatterns = patterns(
      TemplateView.as_view(template_name="flatpages/registration_thanks.html")),
     (r'^thank_you_school/',
      TemplateView.as_view(template_name="flatpages/school_added.html")),
+    (r'^account_created/',
+     TemplateView.as_view(template_name="flatpages/account_created.html")),
+    (r'^email_sent/',
+     TemplateView.as_view(template_name="flatpages/email_sent.html"))
 )
 
 
@@ -72,6 +76,8 @@ urlpatterns += patterns(
 
     # functionality to join a group
     url(r'^join_group/$', JoinGroup.as_view(), name='join-group'),
+    url(r'^leave_group/(?P<pk>\d+)/$', LeaveGroup.as_view(),
+        name='leave-group'),
     url(r'^get_countries/$', GetCountries.as_view()),
     url(r'^get_schools/$', GetCountrySchools.as_view()),
     url(r'^get_schools/(?P<pk>\d+)/$',

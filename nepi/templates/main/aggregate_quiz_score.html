@@ -1,0 +1,5 @@
+{% load quizscore %}
+
+<div class="quizscore">
+    {{block.quizzes|aggregate_score:request.user}}%
+</div>

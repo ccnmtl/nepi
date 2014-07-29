@@ -1,0 +1,52 @@
+
+.parts.mouth, .parts.eyes, .parts.chair, .parts.chart {
+	background-color: #fff;
+	border-radius: 10px;
+	color: #888;
+	border: solid 4px #80b6e6;
+	float: left;
+	padding: 10px;
+	cursor: pointer;
+	font-weight: 600;
+	font-size: 1.5em;
+}
+
+.parts.mouth {
+	position: relative;
+	top: -370px;
+	left: 570px;
+}
+
+.parts.eyes {
+	position: relative;
+	top: -431px;
+	left: 522px;
+}
+
+.parts.chair {
+	position: relative;
+	top: -250px;
+	left: 670px;
+}
+
+.parts.chart {
+	position: relative;
+	top: -236px;
+	left: 272px;
+}
+
+.parts:hover {
+	background-color: #80b6e6;
+	color: #fff;
+	border: solid 4px #80b6e6;
+	
+}
+
+#explanation_box {
+	clear: both;
+	width: 500px;
+	min-height: 45px;
+	padding: 10px;
+	margin: 0 auto 35px auto;
+}
+

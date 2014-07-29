@@ -7,11 +7,11 @@
             var badvar = false;
     
     
-            var good_c = jQuery("#good_conversation input[name='conversation']").val();
-            var good_s = jQuery("#good_conversation input[name='scenario']").val();
+            var good_c = jQuery("#good_con input[name='conversation']").val();
+            var good_s = jQuery("#good_con input[name='scenario']").val();
  
-            var bad_c = jQuery("#bad_conversation input[name='conversation']").val();
-            var bad_s = jQuery("#bad_conversation input[name='scenario']").val();
+            var bad_c = jQuery("#bad_con input[name='conversation']").val();
+            var bad_s = jQuery("#bad_con input[name='scenario']").val();
     
     
             function maybeActivateNextButton() {
@@ -27,11 +27,11 @@
             
                 badvar = true;
             
-                jQuery("#starting_bad").addClass( "wrong-selected" )
-                jQuery(".patient_bad_conversation").addClass( "wrong-selected" ).show();
+                jQuery("#wrong_open").addClass( "wrong-selected" )
+                jQuery(".wrong_answer1, .wrong_answer2, .wrong_answer3, .wrong_answer4").addClass( "wrong-selected" ).show();
 
-                jQuery(".patient_good_conversation").hide();
-                jQuery("#starting_good").removeClass( "right-selected" ).show();
+                jQuery(".correct_answer1, .correct_answer2, .correct_answer3, .correct_answer4").hide();
+                jQuery("#correct_open").removeClass( "right-selected" ).show();
 
             }
     
@@ -41,17 +41,17 @@
             
                 goodvar = true;
             
-                jQuery("#starting_good").addClass( "right-selected" )
-                jQuery(".patient_good_conversation").addClass( "right-selected" ).show();
+                jQuery("#correct_open").addClass( "right-selected" )
+                jQuery(".correct_answer1, .correct_answer2, .correct_answer3, .correct_answer4").addClass( "right-selected" ).show();
 
-                jQuery(".patient_bad_conversation").hide();
-                jQuery("#starting_bad").removeClass( "wrong-selected" );
+                jQuery(".wrong_answer1, .wrong_answer2, .wrong_answer3, .wrong_answer4").hide();
+                jQuery("#wrong_open").removeClass( "wrong-selected" );
 
             }
     
 
 
-            jQuery("#starting_good").on("click", 
+            jQuery("#correct_open").on("click", 
             function()
             {    
                 jQuery.ajax(
@@ -61,11 +61,11 @@
                     data: {'scenario' : good_s, 'conversation' : good_c },
                     success: function (data) 
                     {
-                        jQuery("#starting_good").addClass( "right-selected" )
-                        jQuery(".patient_good_conversation").addClass( "right-selected" ).show();
+                        jQuery("#correct_open").addClass( "right-selected" )
+                        jQuery(".correct_answer1, .correct_answer2, .correct_answer3, .correct_answer4").addClass( "right-selected" ).show();
 
-                        jQuery(".patient_bad_conversation").hide();
-                        jQuery("#starting_bad").removeClass( "wrong-selected" );
+                        jQuery(".wrong_answer1, .wrong_answer2, .wrong_answer3, .wrong_answer4").hide();
+                        jQuery("#wrong_open").removeClass( "wrong-selected" );
 
                         goodvar = true;
                       
@@ -80,7 +80,7 @@
             });
 
    
-        jQuery("#starting_bad").on("click", 
+        jQuery("#wrong_open").on("click", 
         function()
         { 
             jQuery.ajax(
@@ -90,11 +90,11 @@
                   data: {'scenario' : bad_s, 'conversation' : bad_c },
                   success: function (data) 
                   {
-                      jQuery("#starting_bad").addClass( "wrong-selected" )
-                      jQuery(".patient_bad_conversation").addClass( "wrong-selected" ).show();
+                      jQuery("#wrong_open").addClass( "wrong-selected" )
+                      jQuery(".wrong_answer1, .wrong_answer2, .wrong_answer3, .wrong_answer4").addClass( "wrong-selected" ).show();
 
-                      jQuery(".patient_good_conversation").hide();
-                      jQuery("#starting_good").removeClass( "right-selected" ).show();
+                      jQuery(".correct_answer1, .correct_answer2, .correct_answer3, .correct_answer4").hide();
+                      jQuery("#correct_open").removeClass( "right-selected" ).show();
 
                       badvar = true;
                       maybeActivateNextButton();

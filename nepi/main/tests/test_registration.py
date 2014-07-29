@@ -5,6 +5,7 @@ from nepi.main.models import PendingTeachers
 from nepi.main.views import RegistrationView
 from django.test.client import Client
 from factories import GroupFactory
+# from django.core.exceptions import ValidationError
 
 
 class TestRegistrationAndLogin(TestCase):
@@ -74,3 +75,15 @@ class TestRegistrationAndLogin(TestCase):
              "country": "LS", "profile_type": True,
              "captcha": True}, follow=True)
         self.assertEquals(request.status_code, 200)
+
+#     def test_teacher_registration_no_email(self):
+#         '''when teachers register but do not provide email
+#         an error should be thrown.'''
+#         request = self.c.post(
+#             '/register/',
+#             {"first_name": "reg_teacher", "last_name": "reg_teacher",
+#              "username": "reg_teacher", "email": "",
+#              "password1": "reg_teacher", "password2": "reg_teacher",
+#              "country": "LS", "profile_type": True,
+#              "captcha": True}, follow=True)
+#         self.assertRaises(ValidationError, request)

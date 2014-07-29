@@ -1,38 +1,21 @@
 {% load markup %}
 
+{% spaceless %}
 <ol class="caseanswers">
-{% for answer in question.answer_set.all %}
-    {% if block.rhetorical %}
-        <li><input name="question{{question.id}}" value="{{answer.label}}" type="radio" /> {{answer.label|safe}}</li>
-    {% else %}
-        <li><div class="radio">        
-            {% if response %}
-                {% ifequal response.value answer.value %}
-                    <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+    {% for answer in question.answer_set.all %}
+        <li class="{% if 'show-correct' in block.pageblock.css_extra and response %}
+         {% if answer.correct %}correct{% else %}incorrect{% endif %}{% endif %}">
+            <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+                   value="{{answer.value}}" type="radio"
+                   {% if response %}
+                       disabled="disabled"
+                       {% ifequal response.value answer.value %}
                            checked="checked"
-                           value="{{answer.value}}" type="radio"
-                           onclick="return showVideo(this);"></input>
-                {% else %}
-                    <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
-                           value="{{answer.value}}" type="radio"
-                           onclick="return showVideo(this);"></input>
-                {% endifequal %}
-                {% if answer.correct %}
-                    <div class="alert alert-success">
-                        <b>Correct</b>
-                    </div>
-                {% else %}
-                    <div class="alert alert-error">
-                        <b>Incorrect</b>
-                    </div>
-                {% endif %}
-            {% else %}
-                <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
-                       value="{{answer.value}}" type="radio" onclick="return showVideo(this);"/>
-            {% endif %}
-            {{answer.label|safe}}
-        </div></li>
-    {% endif %}
-{% endfor %}
+                       {% endifequal %}
+                   {% endif %} />
+                &nbsp;{{answer.label|safe}}
+        </li>
+    {% endfor %}
 </ol>
-<div class="visualclear"></div>
+{% endspaceless %}
+<div class="clearfix"></div>

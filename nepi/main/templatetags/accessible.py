@@ -3,7 +3,7 @@ from django import template
 register = template.Library()
 
 
-class AccessibleNode(template.Node):
+class SubmittedNode(template.Node):
     def __init__(self, section, nodelist_true, nodelist_false=None):
         self.nodelist_true = nodelist_true
         self.nodelist_false = nodelist_false
@@ -15,22 +15,21 @@ class AccessibleNode(template.Node):
         if 'request' in context:
             r = context['request']
             u = r.user
-            visited, last_section = s.gate_check(u)
 
-            if s.get_previous().submitted(u):  # and visited:
+            if s.submitted(u):
                 return self.nodelist_true.render(context)
 
         return self.nodelist_false.render(context)
 
 
-@register.tag('ifaccessible')
-def accessible(parser, token):
+@register.tag('ifsubmitted')
+def submitted(parser, token):
     section = token.split_contents()[1:][0]
-    nodelist_true = parser.parse(('else', 'endifaccessible'))
+    nodelist_true = parser.parse(('else', 'endifsubmitted'))
     token = parser.next_token()
     if token.contents == 'else':
-        nodelist_false = parser.parse(('endifaccessible',))
+        nodelist_false = parser.parse(('endifsubmitted',))
         parser.delete_first_token()
     else:
         nodelist_false = None
-    return AccessibleNode(section, nodelist_true, nodelist_false)
+    return SubmittedNode(section, nodelist_true, nodelist_false)

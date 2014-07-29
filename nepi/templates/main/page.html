@@ -8,6 +8,37 @@
     {% for block in section.pageblock_set.all %}
         {% renderjs block %}
     {% endfor %}
+    
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            jQuery("body").delegate('a.disabled', 'click', function() {
+                return false;  // call preventDefault and stopPropagation by default
+            });
+            jQuery("body").delegate('.toggle-primary-toc', 'click', function() {
+                jQuery('.slide-out-menu').toggleClass('open');
+            });
+            jQuery("body").delegate('.slide-out-menu a', 'click', function() {
+                jQuery('.slide-out-menu').toggleClass('open');
+                window.location = jQuery(this).attr(href);
+            });
+            jQuery("body").delegate("div.pageblock.numeric-only input[type='text']",
+                    'keypress', validate_numeric_input);
+            jQuery("form").submit(function(evt) {
+                if (!is_form_complete(this)) {
+                    evt.stopImmediatePropagation();
+                    alert("Please complete all form fields before continuing.");
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+            
+            // scroll to the current section in the toc
+            var elt = jQuery("a[data-id='{{section.id}}']")[0];
+            var top = jQuery(elt).position().top - 50;
+            jQuery(".slide-out-menu div.primary-toc").scrollTop(top);
+        });
+    </script>
 {% endblock %}
 
 {% block css %}
@@ -33,27 +64,21 @@
         {% renderjs block %}
     {% endfor %}
 {% endblock %}
-{% block pagetitle %}<h2 class="pagetitle">{{section.label}}</h2>{% endblock %}
 
-{% block primarynavtabs %}
+{% block toc %}
     {% if user.is_authenticated %}
         {% include "project_primary_nav.html" %}
     {% endif %}
 {% endblock %}
 
-{% block extraprimarynav %}
-    {% if user.is_authenticated %}
-    <ul class="nav pull-right">
-        <li><a href="{{section.get_edit_url}}">Edit Page</a></li>        
-    </ul>
-    {% endif %}
+{% block pagetitle %}
+    <h4 class="pagetitle">{{section.label}}</h4>
 {% endblock %}
 
-{% block sidenav %}
-        <!-- ###### Secondary Navigation ###### -->
-        {% if module.get_children %}
-        {% include "main/menu.html" %}
-        {% endif %}
+{% block usernav_extra %}
+    {% if user.is_superuser %}
+        <a href="{{section.get_edit_url}}">Edit Page</a>        
+    {% endif %}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -66,6 +91,7 @@
 {% endblock breadcrumbs %}
 
 {% block content %}
+
     <div class="module-{{module.slug}}">
 
     {% if needs_submit %}
@@ -96,7 +122,7 @@
                     <form action="." method="post">
                         <div>
                             <input type="hidden" name="action" value="reset" />
-                            <input type="submit" id="generic-reset" value="Clear Responses (superuser only)" class="btn pull-right" />
+                            <input type="submit" id="generic-reset" value="Clear Responses (superuser only)" />
                             <div style="clear: both"></div>
                         </div>
                     </form>
@@ -118,15 +144,15 @@
     <ul class="pager">
         {% if not section.is_root and previous%}
           <li class="previous">
-                <a href="{{ previous.get_absolute_url }}">&larr; {{previous.label}}</a>
+                <a href="{{ previous.get_absolute_url }}">&larr; Previous</a>
           </li>
         {% endif %}
         
         {% if next_section %}
             <li class="next">
                 <a href="{{ next_section.get_absolute_url }}"
-                 class="{% ifaccessible next_section%}{% else %}disabled{%endifaccessible%}">
-                    {{next_section.label}} &rarr;
+                 class="{% ifsubmitted section %}{% else %}disabled{%endifsubmitted%}">
+                    Next &rarr;
                 </a>
             </li>
         {% endif %}

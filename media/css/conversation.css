@@ -1,0 +1,378 @@
+/* Universal Counseling Activity Styles */
+#good_con {
+	width: 50%;
+	float: left;
+	position: relative;
+	top: -300px;
+
+}
+
+#bad_con {
+	width: 50%;
+	float: left;
+	position: relative;
+	top: -300px;
+
+}
+
+.correct_answer1, .correct_answer2, .correct_answer3, .correct_answer4 {
+	border: solid 4px #80b6e6;
+	border-radius: 10px;
+	padding: 10px;
+	text-align: center;
+}
+
+.correct_answer1, .correct_answer2, .correct_answer3 {
+	width: 200px;
+}
+
+.wrong_answer1, .wrong_answer2, .wrong_answer3, .wrong_answer4 {
+	border: solid 4px #f5463a;
+	border-radius: 10px;
+	padding: 10px;
+	text-align: center;
+}
+
+.wrong_answer1, .wrong_answer2, .wrong_answer3 {
+	width: 200px;
+}
+
+#correct_open, #wrong_open {
+	border: solid 4px #ccc;
+	border-radius: 10px;
+	padding: 10px;	 
+	color: #aaa;
+	cursor: pointer;
+	width: 200px;
+	text-align: center;
+}
+
+/* Pt2: Open-Ended Questions */ 
+
+.s2_act_02 #correct_open {
+	position: relative;
+	top: -65px;
+	left: 35px;
+}
+
+.s2_act_02 #wrong_open {
+	position: relative;
+	top: 85px;
+	left: -520px;
+}
+
+.s2_act_02 .correct_answer1 {
+	position: relative;
+	top: -205px;
+	left: 820px;
+	border-radius: 90px;
+	padding: 30px;
+	width: 124px;	
+}
+.s2_act_02 .correct_answer2 {
+	position: relative;
+	top: -180px;
+	left: 845px;
+}
+.s2_act_02 .correct_answer3 {
+	border: none;
+}
+.s2_act_02 .correct_answer4 {
+	position: relative;
+	width: 150%;
+	left: 100px;
+	top: -35px;
+}
+
+
+.s2_act_02 .wrong_answer1 {
+	position: relative;
+	top: -150px;
+	left: 265px;
+	border-radius: 90px;
+	padding: 30px;
+	width: 124px;	
+}
+.s2_act_02 .wrong_answer2 {
+	position: relative;
+	top: -130px;
+	left: 270px;
+}
+	
+
+.s2_act_02 .wrong_answer3 {
+	position: relative;
+	border: none;
+}
+.s2_act_02 .wrong_answer4 {
+	position: relative;
+	width: 150%;
+	left: -450px;
+	top: 50px;
+}
+
+/* Pt3: Non-judgmental words */ 
+
+.pageblock.pre-con {
+border: solid 4px #80b6e6;
+border-radius: 10px;
+padding: 10px;
+text-align: center;
+position: relative;
+top: -400px;
+width: 200px;
+left: 80px;
+
+}
+
+
+.s2_act_03 #correct_open {
+	position: relative;
+	top: -200px;
+	left: 833px;
+}
+
+.s2_act_03 #wrong_open {
+position: relative;
+top: 5px;
+left: 275px;
+
+}
+
+.s2_act_03 .correct_answer1 {
+position: relative;
+top: -205px;
+left: 100px;
+border-radius: 90px;
+padding: 30px;
+width: 124px;
+}
+.s2_act_03 .correct_answer2 {
+	border: none;
+}
+.s2_act_03 .correct_answer3 {
+	border: none;
+}
+.s2_act_03 .correct_answer4 {
+	border: none;
+}
+
+
+.s2_act_03 .wrong_answer1 {
+position: relative;
+top: -150px;
+left: -450px;
+border-radius: 90px;
+padding: 30px;
+width: 124px;	
+}
+.s2_act_03 .wrong_answer2 {
+	border: none;
+}
+	
+.s2_act_03 .wrong_answer3 {
+	position: relative;
+	border: none;
+}
+.s2_act_03 .wrong_answer4 {
+	border: none;
+}
+
+/* Pt4: Non-judgemental group */ 
+
+
+
+.s2_act_04 #correct_open {
+position: relative;
+top: -100px;
+left: 50px;
+
+}
+
+.s2_act_04 #wrong_open {
+position: relative;
+top: 65px;
+left: -505px;
+}
+
+.s2_act_04 .correct_answer1 {
+position: relative;
+background-color: #fff;
+top: -205px;
+left: 765px;
+border-radius: 90px;
+padding: 30px;
+width: 124px;
+}
+.s2_act_04 .correct_answer2 {
+	border: none;
+}
+.s2_act_04 .correct_answer3 {
+	border: none;
+}
+.s2_act_04 .correct_answer4 {
+	border: none;
+}
+
+
+.s2_act_04 .wrong_answer1 {
+position: relative;
+background-color: #fff;
+top: -250px;
+left: 200px;
+border-radius: 90px;
+padding: 30px;
+width: 124px;
+
+}
+.s2_act_04 .wrong_answer2 {
+	border: none;
+}
+	
+.s2_act_04 .wrong_answer3 {
+	position: relative;
+	border: none;
+}
+.s2_act_04 .wrong_answer4 {
+	border: none;
+}
+
+/* Pt5: Reflecting Back */ 
+
+.pageblock.pre-con {
+border: solid 4px #80b6e6;
+border-radius: 10px;
+padding: 10px;
+text-align: center;
+position: relative;
+top: -400px;
+width: 200px;
+left: 80px;
+
+}
+
+
+.s2_act_05 #correct_open {
+	position: relative;
+	top: -200px;
+	left: 813px;
+}
+
+.s2_act_05 #wrong_open {
+position: relative;
+top: -15px;
+left: 275px;
+
+}
+
+.s2_act_05 .correct_answer1 {
+position: relative;
+background-color: #fff;
+top: -205px;
+left: 70px;
+border-radius: 90px;
+padding: 30px;
+width: 124px;
+}
+.s2_act_05 .correct_answer2 {
+	border: none;
+}
+.s2_act_05 .correct_answer3 {
+	border: none;
+}
+.s2_act_05 .correct_answer4 {
+	border: none;
+}
+
+
+.s2_act_05 .wrong_answer1 {
+position: relative;
+background-color: #fff;
+top: -120px;
+left: -490px;
+border-radius: 90px;
+padding: 30px;
+width: 124px;
+}
+.s2_act_05 .wrong_answer2 {
+	border: none;
+}
+	
+.s2_act_05 .wrong_answer3 {
+	position: relative;
+	border: none;
+}
+.s2_act_05 .wrong_answer4 {
+	border: none;
+}
+
+
+/* Pt6: Empathize */ 
+
+.pageblock.pre-con {
+border: solid 4px #80b6e6;
+border-radius: 10px;
+padding: 10px;
+text-align: center;
+position: relative;
+top: -400px;
+width: 200px;
+left: 80px;
+
+}
+
+
+.s2_act_06 #correct_open {
+	position: relative;
+	top: -200px;
+	left: 813px;
+}
+
+.s2_act_06 #wrong_open {
+position: relative;
+top: 0;
+left: 275px;
+
+}
+
+.s2_act_06 .correct_answer1 {
+position: relative;
+background-color: #fff;
+top: -245px;
+left: 91px;
+border-radius: 90px;
+padding: 30px;
+width: 124px;
+}
+.s2_act_06 .correct_answer2 {
+	border: none;
+}
+.s2_act_06 .correct_answer3 {
+	border: none;
+}
+.s2_act_06 .correct_answer4 {
+	border: none;
+}
+
+
+.s2_act_06 .wrong_answer1 {
+position: relative;
+background-color: #fff;
+top: -160px;
+left: -460px;
+border-radius: 90px;
+padding: 30px;
+width: 124px;
+}
+.s2_act_06 .wrong_answer2 {
+	border: none;
+}
+	
+.s2_act_06 .wrong_answer3 {
+	position: relative;
+	border: none;
+}
+.s2_act_06 .wrong_answer4 {
+	border: none;
+}
+

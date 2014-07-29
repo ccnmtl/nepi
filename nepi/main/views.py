@@ -3,6 +3,7 @@ into smaller pieces.'''
 from django import forms
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
+<<<<<<< HEAD
 from django.utils.decorators import method_decorator
 from pagetree.generic.views import PageView, EditView, InstructorView
 from pagetree.models import Hierarchy
@@ -11,45 +12,26 @@ from django.shortcuts import render  # , get_object_or_404
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.mail import send_mail, BadHeaderError
 import json
+=======
+from django.core.mail import send_mail
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render
+from django.utils.decorators import method_decorator
+>>>>>>> 35ed0a1f253504815cdc8a56cc31f0d9f5efa3e4
 from django.views.generic import View
 from django.views.generic.detail import DetailView
-from django.views.generic.list import ListView
 from django.views.generic.edit import DeleteView, FormView, CreateView, \
     UpdateView
-from nepi.main.models import Group, UserProfile, Country, School, \
-    PendingTeachers
+from django.views.generic.list import ListView
+from nepi.activities.views import JSONResponseMixin
 from nepi.main.forms import CreateAccountForm, ContactForm, \
     UpdateProfileForm, CreateGroupForm
-from nepi.activities.views import JSONResponseMixin
-
-
-class AjaxableResponseMixin(object):
-    """
-    Taken from Django Website
-    Mixin to add AJAX support to a form.
-    Must be used with an object-based FormView (e.g. CreateView)
-    """
-    def render_to_json_response(self, context, **response_kwargs):
-        data = json.dumps(context)
-        response_kwargs['content_type'] = 'application/json'
-        return HttpResponse(data, **response_kwargs)
-
-    def form_invalid(self, form):
-        response = super(AjaxableResponseMixin, self).form_invalid(form)
-        if self.request.is_ajax():
-            return self.render_to_json_response(form.errors, status=400)
-        else:
-            return response
-
-    def form_valid(self, form):
-        response = super(AjaxableResponseMixin, self).form_valid(form)
-        if self.request.is_ajax():
-            data = {
-                'pk': self.object.pk,
-            }
-            return self.render_to_json_response(data)
-        else:
-            return response
+from nepi.main.models import Group, UserProfile, Country, School, \
+    PendingTeachers
+from pagetree.generic.views import PageView, EditView, InstructorView
+from pagetree.models import Hierarchy, UserPageVisit
+import json
 
 
 class LoggedInMixin(object):
@@ -75,6 +57,27 @@ class ViewPage(LoggedInMixin, PageView):
     hierarchy_name = "main"
     hierarchy_base = "/pages/main/"
     gated = False
+
+    def get_extra_context(self):
+        menu = []
+        visits = UserPageVisit.objects.filter(user=self.request.user,
+                                              status='complete')
+        visit_ids = visits.values_list('section__id', flat=True)
+
+        previous_unlocked = True
+        for section in self.root.get_descendants():
+            unlocked = section.id in visit_ids
+            item = {
+                'id': section.id,
+                'url': section.get_absolute_url(),
+                'label': section.label,
+                'depth': section.depth,
+                'disabled': not(previous_unlocked or section.id in visit_ids)
+            }
+            menu.append(item)
+            previous_unlocked = unlocked
+
+        return {'menu': menu}
 
 
 class EditPage(LoggedInMixinSuperuser, EditView):
@@ -251,15 +254,8 @@ class JoinGroup(LoggedInMixin, JSONResponseMixin, View):
     def post(self, request):
         user_id = request.user.pk
         user_profile = UserProfile.objects.get(user__id=user_id)
-        # print Group.objects.count()
-        print "user profile group count"
-        print user_profile.group.count()
         add_group = Group.objects.get(pk=request.POST['group'])
-        # print add_group
         user_profile.group.add(add_group)
-        # print user_profile.group.count()
-        print "user profile group count"
-        print user_profile.group.count()
         for each in user_profile.group.all():
             print each.name
         return self.render_to_json_response({'success': True})
@@ -301,7 +297,7 @@ class RegistrationView(FormView):
     '''changing registration view to form'''
     template_name = 'registration_form.html'
     form_class = CreateAccountForm
-    success_url = '/'
+    success_url = '/account_created/'
 
     def register_user(self):
         pass
@@ -351,7 +347,6 @@ class RegistrationView(FormView):
                 send_mail(subject, message, sender, recipients)
             recipients = ["nepi@nepi.ccnmtl.columbia.edu"]
             if form_data['profile_type']:
-                print form_data['profile_type']
                 subject = "[Teacher] Account Requested"
                 message = form_data['first_name'] + \
                     " " + form_data['last_name'] + \
@@ -381,6 +376,8 @@ class UpdateSchoolView(LoggedInMixin, UpdateView):
 
 
 # LoggedInMixin,
+
+
 class CreateGroupView(LoggedInMixin, CreateView):
     '''generic class based view for
     creating a group'''
@@ -477,9 +474,26 @@ class GroupDetail(LoggedInMixin, DetailView):
         return context
 
 
-class RemoveStudent(LoggedInMixin, View, JSONResponseMixin):
-    def post(self, request, stud_id, cors_id):
-        pass
+class RemoveStudent(LoggedInMixin, JSONResponseMixin, View):
+    '''Remove the student from a course.'''
+    def post(self, request):
+        group = get_object_or_404(Group,
+                                     pk=request.POST['group'])
+        student = get_object_or_404(Student,
+                                         pk=request.POST['student'])
+        leave_group.userprofile_set.remove(student)
+        return render_to_json_response({'success': True})
+        
+
+
+class LeaveGroup(LoggedInMixin, View):
+    template_name = 'dashboard/icap_dashboard.html'
+
+    def get(self, request, pk):
+        user_profile = UserProfile.objects.get(user__id=request.user.pk)
+        leave_group = Group.objects.get(pk=pk)
+        leave_group.userprofile_set.remove(user_profile)
+        return HttpResponseRedirect("/")
 
 
 class ContactView(FormView):
@@ -487,7 +501,7 @@ class ContactView(FormView):
     generic class based view'''
     template_name = 'main/contact.html'
     form_class = ContactForm
-    success_url = '/thanks/'
+    success_url = '/email_sent/'
 
     def form_valid(self, form):
         '''should this be in the form instead?'''
