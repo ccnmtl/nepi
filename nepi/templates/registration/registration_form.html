@@ -1,97 +1,140 @@
 {% extends "base.html" %}
 {% load i18n admin_static %}
-{% block title %}Sign up for an account{% endblock %}
+{% block title %}Create your account{% endblock %}
 
-<script type="type/javascript">
-jQuery(document).load(
-    function()
-    {
-        alert("documetnready");
-    }
-);
+{% block js %}
+    <script type="text/javascript">
+    jQuery('.js-captcha-refresh').click(function(){
+        var form = jQuery(this).parents('form');
+        
+        jQuery.getJSON("/captcha/refresh/", {}, function(json) {
+            jQuery(form).find('input[name="captcha_0"]').val(json.key);
+            jQuery(form).find('img.captcha').attr('src', json.image_url);
+        });
+    
+        return false;
+    });
+    </script>
+{% endblock %}
 
-jQuery(document).ready(alert("documetnready");
-
-</script>
 
 {% block content %}
-		<div id="breadcrumbbar">
-		<span class="here">You are Here:</span>  
-				&gt; 	Create Account
-		</div>
-		
-		<div id="container">
-			<h2>	Create Account	</h2>
-			<form action="." method="post">{% csrf_token %}
-			    {{nepi.main.views.form.non_field_errors}}
-                <fieldset>
-				<legend>Account Information</legend>
+<div class="user-registration">
+    <h1>Create your account</h1>
+    
+    <form action="." method="post">{% csrf_token %}
+        
+        {% if form.errors|length %}
+            <div class="alert alert-block alert-error">
+              <strong>Please correct errors before continuing</strong>
+              {% if form.non_field_errors %}
+                <div>{{ form.non_field_errors}}</div>
+              {% endif %}
+            </div>
+        {% endif %}
+        
+        <div class="fieldWrapper control-group {% if form.first_name.errors %}error{% endif %}">
+            <label for="id_first_name"><b>Your name is:</b></label>
+            <div class="controls">
+                <span>
+                    <input id="id_first_name" maxlength="25" name="first_name" type="text" placeholder="First Name">
+                </span>&nbsp;&nbsp;
+                <span>
+                    <input id="id_last_name" maxlength="25" name="last_name" type="text" placeholder="Last Name">
+                </span>
+                
+                {% if form.first_name.errors or form.last_name.errors %}
+                    <div class="help-inline">First and last name are required</div>
+                {% endif %}
+            </div>
+        </div>
 
-                    <div class="fieldWrapper">
-                    {{ form.username.errors }}
-					<label for="username">	Username:</label>
-					{{ nepi.main.views.form.username}}
-					<br/><br/>
-					</div>
+        <div class="fieldWrapper control-group {% if form.username.errors %}error{% endif %} wide">
+            <label for="id_username"><b>Your username:</b></label>
+            <div class="controls">
+                {{form.username}}
+                {% if form.username.errors %}
+                    <div class="help-inline">{{form.username.errors}}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="fieldWrapper control-group {% if form.password1.errors %}error{% endif %} wide">
+            <label for="id_password1"><b>Your password:</b></label>
+            <div class="controls">
+                {{form.password1}}
+                {% if form.password1.errors %}
+                    <div class="help-inline">{{form.password1.errors}}</div>
+                {% endif %}
+            </div>
+        </div>
 
-                    <div class="fieldWrapper">
-                    {{ nepi.main.views.form.email.errors }}
-					<label for="email">	Email:</label>
-					{{ nepi.main.views.form.email}}
-					<br/><br/>
-					</div>
+        <div class="fieldWrapper control-group {% if form.password2.errors %}error{% endif %} wide">
+            <label for="id_password2"><b>Confirm your password:</b></label>
+            <div class="controls">
+                {{form.password2}}
+                {% if form.password2.errors %}
+                    <div class="help-inline">{{form.password2.errors}}</div>
+                {% endif %}
+            </div>
+        </div>        
 
-                    <div class="fieldWrapper">
-                    {{ nepi.main.views.form.first_name.errors }}
-					<label for="first_name">	First Name:</label>
-					{{ nepi.main.views.form.first_name}}
-					<br/><br/>
-                    </div>
-
-                    <div class="fieldWrapper">
-                    {{ nepi.main.views.form.last_name.errors }}
-					<label for="last_name">	Last Name:</label>
-					{{ nepi.main.views.form.last_name}}
-					<br/><br/>
-					</div>
-
-                    <div class="fieldWrapper">
-                    {{ nepi.main.views.form.password1.errors }}
-					<label for="password1">	Password:</label>
-					{{nepi.main.views.form.password1}}
-					<br/><br/>
-                    {{ nepi.main.views.form.password2.errors }}
-					<label for="password2">	Password:</label>
-					{{nepi.main.views.form.password2}}
-					<br/><br/>
-					</div>
-
-                    <div class="fieldWrapper">
-                    {{ nepi.main.views.form.country.errors }}
-					<label for="country">	Country:</label>
-					{{nepi.main.views.form.country}}
-					<br/><br/>
-					</div>
-
-					<div class="fieldWrapper">
-                    {{ nepi.main.views.form.school.errors }}
-					<label for="school">	School:</label>
-					{{ nepi.main.views.form.school }}
-					<br/><br/>
-					</div>
-
-					<br/><br/>
-					<label for="createaccount">	</label>
-					<input id="createaccount" type="submit" value="Create Account" />
-				</fieldset>
-			</form>
-			
-		</div>
-    <div class="p">
-    If you already have a username or password, but have forgotten either,
-        <a href="/register/">reset them here</a>.
-    </div>
-	
+        <div class="fieldWrapper control-group {% if form.email.errors %}error{% endif %} wide">
+            <label for="id_email">Your email address:</label>
+            <div class="controls">
+                {{form.email}}
+                {% if form.email.errors %}
+                    <div class="help-inline">{{form.email.errors}}</div>
+                {% else %}
+                    <div class="help-inline">(optional for students)</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="fieldWrapper control-group {% if form.country.errors %}error{% endif %} wide">
+            <label for="id_country"><b>Which country are you in?</b></label>
+            <div class="controls">
+                {{form.country}}
+                {% if form.country.errors %}
+                    <div class="help-inline select">{{form.country.errors}}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <br />
+        <div class="fieldWrapper control-group">
+            <label class="checkbox">
+                {{form.nepi_affiliated}} <b>I am affiliated with ICAP</b>
+            </label>
+        </div>
+        
+        <div class="fieldWrapper control-group">
+            <label class="checkbox">
+                {{form.profile_type}} <b>I am requesting faculty-level access</b>
+            </label>
+            <div class="help-inline facultyaccess">
+                Checking this box will send this request to an ICAP administrator.<br />
+                You will be notified when your access level has been changed.
+            </div>
+        </div>
+        
+        <div class="fieldWrapper control-group {% if form.captcha.errors %}error{% endif %}">
+            <label for="id_captcha_0">
+                <div><b>Please verify you are a person:</b></div>
+            </label>
+            
+            <div class="controls">
+                {{form.captcha}} {% if form.captcha.errors %} <span class="help-inline">{{form.captcha.errors}}</span>{% endif %}
+            </div>
+        </div>
+        <div class="help-inline captcha">
+            Type the characters you see in the picture.<br />
+            <button class="btn btn-default js-captcha-refresh">Refresh the image</button> if you can't read the picture.<br />
+        </div>
+        
+        <button id="createaccount" class="btn btn-primary" type="submit">Create Account</button>
+    </form>
+</div>
 {% endblock %}
 
 

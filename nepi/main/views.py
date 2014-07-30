@@ -65,7 +65,7 @@ class ViewPage(LoggedInMixin, PageView):
                 'url': section.get_absolute_url(),
                 'label': section.label,
                 'depth': section.depth,
-                'disabled': not(previous_unlocked or section.id in visit_ids)
+                'disabled': not (previous_unlocked or section.id in visit_ids)
             }
             menu.append(item)
             previous_unlocked = unlocked
@@ -286,7 +286,7 @@ class GetSchoolGroups(LoggedInMixin, ListView):
 
 class RegistrationView(FormView):
     '''changing registration view to form'''
-    template_name = 'registration_form.html'
+    template_name = 'registration/registration_form.html'
     form_class = CreateAccountForm
     success_url = '/account_created/'
 

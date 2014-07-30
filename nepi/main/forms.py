@@ -45,6 +45,7 @@ class CreateAccountForm(forms.Form):
         email = form.get("email")
         password1 = form.get("password1")
         password2 = form.get("password2")
+        country = form.get("country")
 
         if is_teacher and (email == ""):
             self._errors["email"] = self.error_class(
@@ -55,6 +56,11 @@ class CreateAccountForm(forms.Form):
                 ["Passwords must match each other."])
             self._errors["password2"] = self.error_class(
                 ["Passwords must match each other."])
+
+        if country is None or country == '-----':
+            self._errors['country'] = self.error_class([
+                "This field is required"])
+
         return form
 
 '''Do I really need three forms or is their

@@ -48,12 +48,8 @@ urlpatterns = patterns(
     (r'^account_created/',
      TemplateView.as_view(template_name="flatpages/account_created.html")),
     (r'^email_sent/',
-     TemplateView.as_view(template_name="flatpages/email_sent.html"))
-)
+     TemplateView.as_view(template_name="flatpages/email_sent.html")),
 
-
-urlpatterns += patterns(
-    '',
     auth_urls,
     logout_page,
     url(r'^$', Home.as_view(), name="home"),
