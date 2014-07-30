@@ -56,11 +56,13 @@ button.on("click",
              data: {'country': jQuery('#id_country').val(), 'school' : jQuery('#id_school').val(), 'group': clicked_group },
              success: function (data)
              {
-                 alert("success");
+                 //alert("success");
+                 //jQuery("#pane-content").replaceWith('<div id="join_group"><button id="join_group_button">Join Group</button></div>');
+                 location.reload(); 
              },
              error: function(data)
              {
-                 alert("error at group");
+                 alert("error joining group");
              }
         }); //end of ajax
             

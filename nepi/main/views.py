@@ -247,8 +247,6 @@ class JoinGroup(LoggedInMixin, JSONResponseMixin, View):
         user_profile = UserProfile.objects.get(user__id=user_id)
         add_group = Group.objects.get(pk=request.POST['group'])
         user_profile.group.add(add_group)
-        for each in user_profile.group.all():
-            print each.name
         return self.render_to_json_response({'success': True})
 
 
