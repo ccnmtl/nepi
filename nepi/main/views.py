@@ -1,7 +1,6 @@
 '''Views for NEPI, should probably break up
 into smaller pieces.'''
 import json
-
 from django import forms
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.mail import send_mail  # , BadHeaderError
@@ -10,16 +9,13 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
-
 from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, FormView, CreateView, \
     UpdateView
 from django.views.generic.list import ListView
-
 from pagetree.generic.views import PageView, EditView, InstructorView
 from pagetree.models import Hierarchy, UserPageVisit
-
 from nepi.activities.views import JSONResponseMixin
 from nepi.main.forms import CreateAccountForm, ContactForm, \
     UpdateProfileForm, CreateGroupForm
@@ -145,6 +141,8 @@ class StudentDashboard(LoggedInMixin, DetailView):
 
 
 class FacultyDashboard(StudentDashboard):
+    '''Dashboard that Faculty sees, have the added ability to see
+    the students in their courses and their progress.'''
     template_name = 'dashboard/icap_dashboard.html'
     success_url = '/'
 
@@ -185,17 +183,18 @@ class FacultyDashboard(StudentDashboard):
 
 
 class CountryAdminDashboard(FacultyDashboard):
+    '''I guess were are assuming the country the associate themselves
+    with is the one they are the admin of? Do we change this in their
+    profile update capabilities?'''
     template_name = 'dashboard/icap_dashboard.html'
     success_url = '/'
 
     def get_context_data(self, **kwargs):
         context = super(CountryAdminDashboard, self).get_context_data(**kwargs)
-        # is this necessary? or can I just reference object/userprofile?
-        profile = UserProfile.objects.get(user=self.request.user.pk)
-        context['country'] = Country.objects.get(pk=profile.country.pk)
-        # is this possible? guess we'll find out...
-        context['country_schools'] = \
-            School.objects.get(country=context['country'])
+        '''Not sure if this is syntactically correct...'''
+        country_schools = School.objects.filter(
+            country__name=self.object.country)
+        context['country_schools'] = country_schools
         return context
 
 
