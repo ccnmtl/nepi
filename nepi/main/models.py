@@ -132,7 +132,14 @@ class PendingTeachers(models.Model):
                                      related_name="pending_teachers")
     school = models.ForeignKey(School, null=True, default=None)
 
-
+class PendingAdmins(models.Model):
+    user_profile = models.ForeignKey(UserProfile,
+                                     related_name="pending_administrators")
+    country = models.ForeignKey(Country,
+                                     related_name="country_of_administration")
+    
+    
+    
 class AggregateQuizScore(models.Model):
     pageblocks = generic.GenericRelation(
         PageBlock, related_name="aggregate_quiz_score")
