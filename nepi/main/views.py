@@ -462,6 +462,8 @@ class GroupDetail(LoggedInMixin, DetailView):
 
 
 class RemoveStudent(LoggedInMixin, JSONResponseMixin, View):
+    template_name = 'dashboard/view_group.html'
+
     '''Remove the student from a course.'''
     def post(self, request):
         group = get_object_or_404(Group,
@@ -519,15 +521,17 @@ class StudentClassStatView(LoggedInMixin, DetailView):
     '''This view is for students to see their progress,
     should be included in main base template.'''
     model = Group
-    template_name = 'view_group_stats.html'
+    template_name = 'dashboard/view_group.html'
     success_url = reverse_lazy('home')
 
     def get_context_data(self, **kwargs):
-        if self.request.is_ajax():
-            module = self.group.__module
-            user = User.objects.get(pk=self.request.user.pk)
-            profile = UserProfile.objects.get(user=user)
-            return {'module': module, 'user': user, 'profile': profile}
+        students = UserProfile.objects.filter(group__pk=self.object.pk)
+        #.exclude(group__created_by=)
+        # print students
+        # Article.objects.filter(publications__pk=1)
+        # .exclude(created_by=userprofile__user)
+        return {'object': self.object, 'students': students}
+        #  'module': module, 'user': user, 'profile': profile}
 
 
 class UpdateProfileView(LoggedInMixin, UpdateView):
@@ -537,23 +541,54 @@ class UpdateProfileView(LoggedInMixin, UpdateView):
     success_url = '/'
 
     def form_valid(self, form):
-        # response = super(UpdateProfileView, self).form_valid(form)
         form_data = form.cleaned_data
+        u_user = User.objects.get(pk=self.request.user.pk)
+        u_user.password = form_data['password1']
+        u_user.email = form_data['email']
+        u_user.first_name = form_data['first_name']
+        u_user.last_name = form_data['last_name']
+        u_user.save()
+        up = UserProfile.objects.get(user=u_user)
+        '''IF THIS HAS TO GO IN FORM CLEAN TO KEEP IT
+        FROM BLOWING UP - DOES IT NEED TO BE HERE'''
+        try:
+            up.country = Country.objects.get(
+                name=form_data['country'])
+            up.save()
+        except Country.DoesNotExist:
+            new_country = Country.objects.create(name=form_data['country'])
+            new_country.save()
+            #up.country = new_country
+            #up.save()
         if form_data['faculty_access']:
             subject = "Facutly Access Requeted"
-            message = "The user, " + form_data['first_name'] + \
-                " " + form_data['last_name'] + " from " + \
+            message = "The user, " + str(form_data['first_name']) + \
+                " " + str(form_data['last_name']) + " from " + \
                 str(form_data['country']) + " has requested faculty " + \
-                "faculty access at " + str(form_data['school']) + ".\n\n"
+                "faculty access.\n\n"
             sender = "nepi@nepi.ccnmtl.columbia.edu"
-            recipients = "cdunlop@columbia.edu"
+            recipients = ["cdunlop@columbia.edu"]
             send_mail(subject, message, sender, recipients)
-        # not clear to me what validation is done for you
-        form_data.save()
+            pending = PendingTeachers.objects.create(
+                user_profile=up)
+            pending.save()
+        return super(UpdateProfileView, self).form_valid(form)
 
-    def form_invalid(self, form):
-        response = super(UpdateProfileView, self).form_invalid(form)
+
+class GetFacultyCountries(LoggedInMixin, ListView):
+    model = Country
+    template_name = 'dashboard/faculty_country_list.html'
+    success_url = '/'
+
+
+class GetFacultyCountrySchools(LoggedInMixin, ListView):
+    model = School
+    template_name = 'dashboard/faculty_school_list.html'
+    success_url = '/'
+
+    def get_context_data(self, **kwargs):
         if self.request.is_ajax():
-            return self.render_to_json_response(form.errors, status=400)
-        else:
-            return response
+            country_key = self.request.GET.__getitem__('name')
+            country = Country.objects.get(pk=country_key)
+            s = School.objects.filter(country=country)
+            return {'school_list': s}

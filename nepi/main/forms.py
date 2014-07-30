@@ -99,6 +99,9 @@ class UpdateProfileForm(forms.ModelForm):
                                 label="Last Name")
     faculty_access = forms.BooleanField(
         required=False, label="Request Faculty Access")
+    country = forms.ChoiceField(required=True,
+                                label="What country do you reside in?",
+                                choices=COUNTRY_CHOICES)
     email = forms.EmailField(required=False, label="Email(not required):")
     password1 = forms.CharField(max_length=100, required=False,
                                 label="Password - Leave blank if you" +
@@ -114,6 +117,7 @@ class UpdateProfileForm(forms.ModelForm):
         self.fields['first_name'].initial = passed_profile.user.first_name
         self.fields['last_name'].initial = passed_profile.user.last_name
         self.fields['email'].initial = passed_profile.user.email
+        self.fields['country'].initial = passed_profile.country
 
     class Meta:
         model = UserProfile
@@ -125,7 +129,12 @@ class UpdateProfileForm(forms.ModelForm):
         email = form.get("email")
         password1 = form.get("password1")
         password2 = form.get("password2")
-
+        try:
+            new_country = Country.objects.get(name=form.get("country"))
+        except Country.DoesNotExist:
+            new_country = Country.objects.create(name=form.get("country"))
+            new_country.save()
+        # country = Country.objects.get(name=form.get("country"))
         if faculty_access and (email == ""):
             self._errors["email"] = self.error_class(
                 ["If you are registering as an instructor " +
@@ -143,6 +152,8 @@ class UpdateProfileForm(forms.ModelForm):
         self.instance.user.first_name = self.cleaned_data.get('first_name')
         self.instance.user.last_name = self.cleaned_data.get('last_name')
         self.instance.user.email = self.cleaned_data.get('email')
+        self.instance.user.country = Country.object.get(
+            name=self.cleaned_data.get('country'))
         if (self.cleaned_data.get('password1')
                 and self.cleaned_data.get('password2')):
             self.instance.user.last_name = \

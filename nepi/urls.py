@@ -15,7 +15,8 @@ from nepi.main.views import (CreateGroupView, UpdateGroupView,
                              StudentDashboard, JoinGroup,
                              GetCountrySchools, FacultyDashboard,
                              ICAPDashboard, Home, AddGroup,
-                             UpdateProfileView, GroupDetail,
+                             UpdateProfileView, GetFacultyCountries,
+                             GetFacultyCountrySchools, GroupDetail,
                              RemoveStudent, LeaveGroup)
 
 
@@ -83,6 +84,10 @@ urlpatterns += patterns(
         GetCountrySchools.as_view(), name='get-country-schools'),
     url(r'^get_groups/$', GetSchoolGroups.as_view()),
 
+    # need custom yet almost identical templates for requesting faculty access
+    url(r'^faculty_countries/$', GetFacultyCountries.as_view()),
+    url(r'^faculty_schools/$', GetFacultyCountrySchools.as_view()),
+
     # functionality for teacher create a group
     url(r'^add_group/$',
         AddGroup.as_view(), name='add-group'),
@@ -101,8 +106,8 @@ urlpatterns += patterns(
 
     # ICAP related pages
     (r'^add_school/$', CreateSchoolView.as_view()),
-    url(r'^view_group_stats/(?P<pk>\d+)/', StudentClassStatView.as_view(),
-        name='view-group-stats'),
+    url(r'^view_group/(?P<pk>\d+)/', StudentClassStatView.as_view(),
+        name='view-group'),
     (r'^edit_school/(?P<pk>\d+)/$', UpdateSchoolView.as_view()),
     # Teacher related pages
     #(r'^view_students/$', 'nepi.main.views.view_students'),
