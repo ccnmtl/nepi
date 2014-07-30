@@ -58,8 +58,7 @@ class UserProfile(models.Model):
     and counrty.'''
     user = models.ForeignKey(User, related_name="application_user")
     profile_type = models.CharField(max_length=2, choices=PROFILE_CHOICES)
-    country = models.ForeignKey(Country, null=True, default=None, blank=True)
-    # not sure why we are saving this in user profile
+    country = models.ForeignKey(Country)
     icap_affil = models.BooleanField(default=False)
     school = models.ForeignKey(School, null=True, default=None, blank=True)
     group = models.ManyToManyField(

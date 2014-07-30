@@ -730,3 +730,49 @@ input#generic-reset {
 	clear: both;
 	margin: 10px 0;
 }
+
+/* Registration */
+
+div.user-registration div.help-inline {
+    display: block;
+    padding-bottom: 10px;
+    margin-top: -5px;
+}
+
+div.user-registration div.help-inline.facultyaccess,
+div.user-registration div.help-inline.select {
+    margin-top: 5px;
+    font-size: 92%;
+}
+
+div.user-registration div.control-group.wide input {
+    width: 443px;
+}
+
+div.user-registration div.control-group.wide select {
+    width: 456px;
+}
+
+div.user-registration ul.errorlist {
+    list-style-type: none;
+    margin: 0 0 10px 5px;
+}
+
+button.js-captcha-refresh {
+    padding: 0;
+    color: #0088cc;
+    border: 0;
+    background: none;
+    margin: -4px 3px 00;
+    line-height: normal;
+    text-decoration: none;
+    box-shadow: none;
+}
+
+button.js-captcha-refresh:hover {
+    outline: none;
+    background-color: white;
+    border: 0;
+    text-decoration: underline;
+    color: #0088cc;
+}
