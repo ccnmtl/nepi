@@ -128,3 +128,26 @@ class TestRetentionResponseView(TestCase):
         self.assertEqual(1, RetentionResponse.objects.count())
         self.assertTrue(RetentionResponse.objects.filter(retentionrate=rf,
                                                          user=up.user))
+        the_json = json.loads(response.content)
+        self.assertEqual(the_json, {'success': True})
+
+        '''See what happens with unacceptable click'''
+        response = client.post(
+            "/activities/retention_click/",
+            data={'click_string': "weirdness_here",
+                  'retention_id': rf.pk}
+            )
+        self.assertEqual(response.status_code, 200)
+        the_json = json.loads(response.content)
+        self.assertEqual(the_json, {'success': False})
+
+        '''This is to check that ajax returns true if
+        user clicks on the same thing twice'''
+        response = client.post(
+            "/activities/retention_click/",
+            data={'click_string': "jan_click",
+                  'retention_id': rf.pk}
+            )
+        self.assertEqual(response.status_code, 200)
+        the_json = json.loads(response.content)
+        self.assertEqual(the_json, {'success': True})
