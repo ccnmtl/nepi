@@ -1,21 +1,24 @@
 '''Views for NEPI, should probably break up
 into smaller pieces.'''
+import json
+
 from django import forms
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth.models import User
-from django.utils.decorators import method_decorator
-from pagetree.generic.views import PageView, EditView, InstructorView
-from pagetree.models import Hierarchy, UserPageVisit
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.mail import send_mail  # , BadHeaderError
-import json
+from django.utils.decorators import method_decorator
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import User
 from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, FormView, CreateView, \
     UpdateView
 from django.views.generic.list import ListView
+
+from pagetree.generic.views import PageView, EditView, InstructorView
+from pagetree.models import Hierarchy, UserPageVisit
+
 from nepi.activities.views import JSONResponseMixin
 from nepi.main.forms import CreateAccountForm, ContactForm, \
     UpdateProfileForm, CreateGroupForm
