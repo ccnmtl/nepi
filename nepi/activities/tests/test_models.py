@@ -7,6 +7,7 @@ from factories import ConversationScenarioFactory, \
     ConvClickFactory, GoodConversationFactory, \
     ConversationPageblockHierarchyFactory
 
+
 class TestConvClick(TestCase):
     def test_unicode(self):
         c = ConvClickFactory()
@@ -25,17 +26,17 @@ class TestConversationScenario(TestCase):
         self.assertEqual(str(c), "conv_hierarchy")
 
 
-class TestConversationResponse(TestCase):
-    def test_unicode(self):
-        cr = ConversationResponse(conv_scen = ConversationScenarioFactory(),
-                                         user = UserFactory(),
-                                         first_click = ConvClickFactory(),
-                                         second_click = ConvClickFactory(),
-                                         third_click = ConvClickFactory())
-        # self.assertEqual(str(cr), conv_hierarchy)
-    
+# class TestConversationResponse(TestCase):
+#    def test_unicode(self):
+#        cr = ConversationResponse(conv_scen = ConversationScenarioFactory(),
+#                                         user = UserFactory(),
+#                                         first_click = ConvClickFactory(),
+#                                         second_click = ConvClickFactory(),
+#                                         third_click = ConvClickFactory())
+#        # self.assertEqual(str(cr), conv_hierarchy)
 
-class TestConversationScenario(TestCase):
+
+class TestLRConversationScenario(TestCase):
     '''We want to make sure we can create a conversation
      response associated with the user upon submission.'''
 

@@ -3,8 +3,6 @@ from nepi.activities.models import ConversationScenario, \
     Conversation, ConvClick, RetentionRateCard
 from pagetree.models import Hierarchy
 
-from nepi.main.tests.factories import UserFactory
-
 
 class GoodConversationFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Conversation
@@ -66,4 +64,3 @@ class ConversationPageblockHierarchyFactory(factory.DjangoModelFactory):
 
 class RetentionRateCardFactory(factory.DjangoModelFactory):
     FACTORY_FOR = RetentionRateCard
-
