@@ -8,13 +8,12 @@
 
     <div class="casecontent">
         <div class="casequestion">
-            <div class="casequestiontext">{{question.text|safe}}</div>
-            
             {% if response and question.explanation and 'show-feedback' in block.pageblock.css_extra %}
                 <div class="caseuserfeedback">{{question.explanation|safe}}</div>
             {% endif %}
+            <div class="casequestiontext">{{question.text|safe}}</div>
             
-            {% if question.answerable %}
+                {% if question.answerable %}
             	{% if question.is_single_choice %}
               	  {% include 'quizblock/single_choice.html' %}
             	{% endif %}
@@ -35,6 +34,9 @@
                   {% include 'quizblock/long_text.html' %}
                 {% endif %}
             {% endif %}
+            
+              
+            
         </div>
     </div>
 </div>
