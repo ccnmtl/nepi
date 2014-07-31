@@ -558,6 +558,14 @@ div.pageblock.show-correct li.incorrect:after {
     top: 3px;
 }
 
+#submit-btn {
+	text-align: center;
+}
+
+#submit-btn input {
+	margin: 30px auto;
+}
+
 /* aggregate quiz score */
 .quizscore {
     border: 1px solid black;
@@ -580,6 +588,10 @@ div.pageblock.show-correct li.incorrect:after {
 	margin: 20px auto 0 auto;
 	font-weight: bold;
 	font-color: #999;
+}
+
+.casequestion {
+	margin: 20px 0 0 0;
 }
 
 .casequestiontext {
@@ -614,19 +626,22 @@ div.pageblock.show-correct li.incorrect:after {
 
 .caseuserfeedback {
 	width: 90%;
-	margin: 0 auto;
+	margin: 30px auto;
 	padding: 20px;
-	color: #5d9bd1;
 	position: relative;
 	top: 3px;
+	background-color: #d9eaf5;
+	border-radius: 10px;
+	border: solid 2px #c7e3f5;
 }
 
 .cases .caseanswers li {
-	margin: 10px 0;
+	margin: 20px 10px;
+	line-height: 22px;
 }
 
 .cases .caseanswers li input {
-	margin: 0 5px 3px 0;
+	margin: 0 0px 4px 0;
 }
 
 .cases li.incorrect {

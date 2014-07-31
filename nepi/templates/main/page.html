@@ -109,6 +109,7 @@
         </div>
     {% endfor %}
 
+<div id="submit-btn">
     {% if needs_submit %}
         {% if request.user.is_anonymous %}
         {% else %}    
@@ -128,13 +129,13 @@
                     </form>
                 {% endif %}{% endif %}
             {% else %}
-                <input id="page-submit" type="submit" value="Submit" class="btn btn-primary pull-right" />
+                <input id="page-submit" type="submit" value="Submit" class="btn btn-primary" />
                 <div style="clear: both"></div>
             </form>
             {% endif %}
         {% endif %}
     {% endif %}
-
+</div>
 </div>
 
 {% endblock %}
