@@ -275,7 +275,7 @@ class ARTCardForm(forms.ModelForm):
 class AdherenceCard(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
     template_file = "activities/adherencecard.html"
-    js_template_file = "activities/adherence_js.html"
+    js_template_file = "activities/adherencecard_js.html"
     css_template_file = "activities/adherencecard_css.html"
     display_name = "Adherence Card"
     intro_text = models.TextField(default='')
