@@ -289,6 +289,8 @@ class AdherenceCard(models.Model):
         return unicode(self.pageblock())
 
     def needs_submit(self):
+        '''I believe all of the "needs submit" stuff is being taken
+        care of in the javascript...'''
         return False
 
     @classmethod
