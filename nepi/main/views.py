@@ -511,13 +511,15 @@ class ContactView(FormView):
     success_url = '/email_sent/'
 
     def form_valid(self, form):
-        '''should this be in the form instead?'''
         form_data = form.cleaned_data
-        sender = form_data['sender'],
-        subject = form_data['subject'],
-        message = form_data['message'],
+
+        sender = form_data['sender']
+        subject = form_data['subject']
+        message = "First name: %s\nLast name: %s\nMessage: %s" % (
+            form_data['first_name'], form_data['last_name'],
+            form_data['message'])
         recipients = [settings.NEPI_MAILING_LIST]
-        send_mail(str(subject), str(message), str(sender), recipients)
+        send_mail(subject, message, sender, recipients)
         return super(ContactView, self).form_valid(form)
 
 
