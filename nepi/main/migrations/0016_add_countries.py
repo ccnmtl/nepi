@@ -10,7 +10,7 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         for choice in COUNTRY_CHOICES:
-            if len(choice[0]) >= 2:
+            if len(choice[0]) > 2:
                 print choice[0]
                 continue
             try:
