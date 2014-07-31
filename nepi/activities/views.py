@@ -1,18 +1,20 @@
-    # Create your views here.
-from django.http import HttpResponse, HttpResponseNotAllowed
+import json
+
+from django.http import (HttpResponse,
+                         HttpResponseNotAllowed,
+                         HttpResponseRedirect)
+from django.utils.decorators import method_decorator
+from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-import json
+
 from nepi.activities.models import (
     Conversation, ConversationScenario,
     ConvClick, ConversationResponse,
     ConversationForm, RetentionRateCard,
     RetentionClick, RetentionResponse)
-from django.views.generic import View
-from django.utils.decorators import method_decorator
 
 
 def ajax_required(func):
@@ -184,13 +186,11 @@ class SaveRetentionResponse(View, JSONResponseMixin):
     def compare_strings(self, retresponse, click_string, click_reference):
         click_saved = getattr(retresponse, click_string)
         if click_saved is None:
-            print "click save is none"
             retresponse.click_saved = click_reference
             retresponse.click_saved.save()
             click_reference.save()
             return render_to_json_response({'success': True})
         elif click_saved is not None:
-            print "click_save is not none"
             '''We can assume that this attribute already has a value'''
             return render_to_json_response({'success': True})
 
