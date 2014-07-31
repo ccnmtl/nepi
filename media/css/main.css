@@ -563,6 +563,50 @@ div.pageblock.show-correct li.incorrect:after {
     text-align: center;
 }
 
+/* Case styles */
+.cases {
+	width: 95%;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.casequestiontext {
+	background-color: #f5f5f5;
+	width: 50%;
+	margin: 0 auto;
+	padding: 20px;
+	border-radius: 10px 10px 0 0;
+	border-left: solid 1px #ccc;
+border-right: solid 1px #ccc;
+border-top: solid 1px #ccc;
+border-bottom: none;
+	   -moz-box-sizing:    border-box;
+   -webkit-box-sizing: border-box;
+    box-sizing:        border-box;
+}
+
+.cases .caseanswers {
+width: 50%;
+margin: 0 auto;
+text-align: left;
+padding: 20px;
+border-radius: 0 0 10px 10px;
+border-left: solid 1px #ccc;
+border-right: solid 1px #ccc;
+border-bottom: solid 1px #ccc;
+border-top: none;
+   -moz-box-sizing:    border-box;
+   -webkit-box-sizing: border-box;
+    box-sizing:        border-box;
+}
+.cases .caseanswers li {
+	margin: 10px 0;
+}
+
+.cases .caseanswers li input {
+	margin: 0 5px 3px 0;
+}
+
 
 /* Basic survey styles */
 .survey {
@@ -614,6 +658,9 @@ div.pageblock.show-correct li.incorrect:after {
     float: left;
     width: 116px;
 }
+
+
+
 
 /* slide out menu */
 .slide-out-menu {
@@ -776,3 +823,98 @@ button.js-captcha-refresh:hover {
     text-decoration: underline;
     color: #0088cc;
 }
+
+
+
+/* resizable textarea styles */
+textarea.resizable {width: 90%; height: 90%;}
+
+.resize-handle {
+               cursor: se-resize;
+               position: absolute;
+               float: right;
+}
+
+
+/* styles for hs.js */
+.hs-show { display: block; }
+.hs-hide { display: none; }
+
+/* styles for tabber.js */
+
+/*--------------------------------------------------
+  REQUIRED to hide the non-active tab content.
+  But do not hide them in the print stylesheet!
+  --------------------------------------------------*/
+.tabberlive .tabbertabhide {
+ display:none;
+}
+
+/*--------------------------------------------------
+  .tabber = before the tabber interface is set up
+  .tabberlive = after the tabber interface is set up
+  --------------------------------------------------*/
+.tabber {
+}
+.tabberlive {
+ /*margin-top:1em;*/
+ margin: 0;
+}
+
+/*--------------------------------------------------
+  ul.tabbernav = the tab navigation list
+  li.tabberactive = the active tab
+  --------------------------------------------------*/
+ul.tabbernav
+{
+ margin:0;
+ padding: 3px 0;
+ border-bottom: 1px solid #778;
+        font-family: arial, helvetica, verdana, sans-serif;
+}
+
+ul.tabbernav li
+{
+ list-style: none;
+ margin: 0;
+ display: inline;
+}
+        
+ul.tabbernav li a
+{
+ padding: 3px 0.5em;
+ margin-left: 3px;
+ border: 1px solid #778;
+ border-bottom: none;
+ background: #DDE;
+ text-decoration: none;
+}
+ 
+ul.tabbernav li a:link { color: #448; }
+ul.tabbernav li a:visited { color: #667; }
+        
+ul.tabbernav li a:hover
+{
+ color: #000;
+ background: #AAE;
+ border-color: #227;
+}
+ul.tabbernav li.tabberactive a
+{
+ background-color: #fff;
+ border-bottom: 1px solid #fff;
+}
+
+ul.tabbernav li.tabberactive a:hover
+{
+ color: #000;
+ background: white;
+ border-bottom: 1px solid white;
+}
+
+.tabberlive .tabbertab {
+ margin: 0;
+ padding:0;
+ border: 0;
+}
+
