@@ -1,6 +1,15 @@
 <script type="text/javascript" language="javascript">
 jQuery(document).ready(function() {
 
+    function maybeActivateNextButton() {
+                if (goodvar && badvar) {
+                    jQuery("li.next a").removeClass("disabled");
+                } else {
+                    jQuery("li.next a").addClass("disabled");
+                }
+            }
+
+
     var exp = jQuery('#explanation_box');
     
     jQuery(".adherencecard").on("click",
