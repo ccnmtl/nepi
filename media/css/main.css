@@ -7,7 +7,7 @@
  */
 
 html {
-  font-family: Arial, Helvetica, sans-serif; /* 1 */
+ font-family: Georgia, Times, "Times New Roman", serif;
   -ms-text-size-adjust: 100%; /* 2 */
   -webkit-text-size-adjust: 100%; /* 2 */
 }
@@ -452,9 +452,12 @@ th {
 body  {
 	background-image: url(../img/bg-blue-stripe.png);
 	background-repeat: repeat;
-	font-family: Arial, 'Helvetica', sans-serif;
+	font-family: Georgia, Times, "Times New Roman", serif;
 }
 
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Arial', 'helvetica', sans-serif;
+}
 
 #titlebar {
 	padding: 25px 0 10px 0;
@@ -570,6 +573,12 @@ div.pageblock.show-correct li.incorrect:after {
 	text-align: center;
 }
 
+.cases>p {
+	margin: 10px 0 25px 0;
+	font-weight: bold;
+	font-color: #999;
+}
+
 .casequestiontext {
 	background-color: #f5f5f5;
 	width: 50%;
@@ -589,7 +598,7 @@ border-bottom: none;
 width: 50%;
 margin: 0 auto;
 text-align: left;
-padding: 20px;
+padding: 10px 20px 20px 20px;
 border-radius: 0 0 10px 10px;
 border-left: solid 1px #ccc;
 border-right: solid 1px #ccc;
