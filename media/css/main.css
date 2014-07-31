@@ -827,7 +827,16 @@ div.user-registration div.help-inline {
     margin-top: -5px;
 }
 
-div.user-registration div.help-inline.facultyaccess,
+div.user-registration div.help-inline.facultyaccess {
+    margin: 5px 0 0 20px;
+    font-size: 92%;
+    width: 397px;
+}
+
+div.user-registration div.help-inline.facultyaccess select {
+    width: 395px;
+}
+
 div.user-registration div.help-inline.select {
     margin-top: 5px;
     font-size: 92%;

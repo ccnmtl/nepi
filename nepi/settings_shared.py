@@ -218,3 +218,6 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
 }
+
+ICAP_MAILING_LIST = 'icap@ccnmtl.columbia.edu'
+NEPI_MAILING_LIST = 'nepi@ccnmtl.columbia.edu'

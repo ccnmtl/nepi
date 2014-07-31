@@ -1,22 +1,10 @@
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.test import TestCase
-from factories import CountryFactory, SchoolFactory, GroupFactory
+from factories import GroupFactory
 from nepi.main.models import Group, UserProfile, Country, School, \
     AggregateQuizScore
 from nepi.main.tests.factories import HierarchyFactory
-
-
-class TestCountry(TestCase):
-    def test_unicode(self):
-        c = CountryFactory()
-        self.assertEqual(str(c), "LS")
-
-
-class TestSchool(TestCase):
-    def test_unicode(self):
-        s = SchoolFactory()
-        self.assertEqual(str(s), "Test School")
 
 
 class TestGroup(TestCase):
