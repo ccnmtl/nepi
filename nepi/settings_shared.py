@@ -220,5 +220,5 @@ LOGGING = {
     'disable_existing_loggers': True,
 }
 
-ICAP_MAILING_LIST = 'icap@ccnmtl.columbia.edu'
-NEPI_MAILING_LIST = 'nepi@ccnmtl.columbia.edu'
+ICAP_MAILING_LIST = 'ccnmtl-icap@ccnmtl.columbia.edu'
+NEPI_MAILING_LIST = 'ccnmtl-nepi@ccnmtl.columbia.edu'

@@ -5,7 +5,7 @@ from django.test import TestCase, RequestFactory
 from django.test.client import Client
 from factories import UserFactory, HierarchyFactory, UserProfileFactory, \
     TeacherProfileFactory, ICAPProfileFactory
-from nepi.main.forms import CreateAccountForm
+from nepi.main.forms import CreateAccountForm, ContactForm
 from nepi.main.models import UserProfile, Country, PendingTeachers
 from nepi.main.tests.factories import SchoolFactory, CountryFactory
 from nepi.main.views import ContactView, ViewPage, RegistrationView
@@ -49,10 +49,21 @@ class TestBasicViews(TestCase):
         request = self.factory.post('/contact/',
                                     {"subject": "new_student",
                                      "message": "new_student",
-                                     "sender": "new_student",
-                                     "recipients": "email@email.com"})
+                                     "sender": "new_student"})
         response = ContactView.as_view()(request)
         self.assertEqual(response.status_code, 200)
+
+    def test_contact_form_valid(self):
+        form = ContactForm()
+        form.cleaned_data = {
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+            'sender': 'janedoe21@ccnmtl.columbia.edu',
+            'subject': 'Lorem Ipsum',
+            'message': 'Proin tristique volutpat purus sed accumsan.'
+        }
+        ContactView().form_valid(form)
+        self.assertEqual(len(mail.outbox), 1)
 
     def test_smoketest(self):
         response = self.c.get("/smoketest/")

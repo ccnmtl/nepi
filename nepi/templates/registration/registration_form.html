@@ -1,23 +1,16 @@
 {% extends "base.html" %}
 {% load i18n admin_static %}
-{% block title %}Create your account{% endblock %}
+
+{% block title %}
+    Create your account
+{% endblock %}
 
 {% block js %}
+    <script src="/site_media/js/captcha.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function () {
             var currentCountryName = "{{form.data.country}}";
             var currentSchoolId = "{{form.data.school}}";
-
-            jQuery('.js-captcha-refresh').click(function(){
-                var form = jQuery(this).parents('form');
-    
-                jQuery.getJSON("/captcha/refresh/", {}, function(json) {
-                    jQuery(form).find('input[name="captcha_0"]').val(json.key);
-                    jQuery(form).find('img.captcha').attr('src', json.image_url);
-                });
-    
-                return false;
-            });
             
             function resetSchoolChoice() {
                 jQuery("select[name='school']").find('option').remove();
@@ -115,11 +108,11 @@
             <label for="id_first_name"><b>Your name is:</b></label>
             <div class="controls">
                 <span>
-                    <input id="id_first_name" maxlength="25" name="first_name" type="text"
+                    <input id="id_first_name" maxlength="50" name="first_name" type="text"
                      value="{{form.data.first_name}}" placeholder="Given Name">
                 </span>&nbsp;&nbsp;
                 <span>
-                    <input id="id_last_name" maxlength="25" name="last_name"
+                    <input id="id_last_name" maxlength="50" name="last_name"
                      value="{{form.data.last_name}}"
                      type="text" placeholder="Surname">
                 </span>

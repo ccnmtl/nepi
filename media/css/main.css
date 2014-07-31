@@ -819,8 +819,9 @@ input#generic-reset {
 	margin: 10px 0;
 }
 
-/* Registration */
+/* Registration & Contact Forms*/
 
+div.contact-icap div.help-inline,
 div.user-registration div.help-inline {
     display: block;
     padding-bottom: 10px;
@@ -850,9 +851,14 @@ div.user-registration div.control-group.wide select {
     width: 456px;
 }
 
+div.contact-icap ul.errorlist,
 div.user-registration ul.errorlist {
     list-style-type: none;
     margin: 0 0 10px 5px;
+}
+
+div.contact-icap textarea {
+    margin-bottom: 10px;
 }
 
 button.js-captcha-refresh {
@@ -860,7 +866,7 @@ button.js-captcha-refresh {
     color: #0088cc;
     border: 0;
     background: none;
-    margin: -4px 3px 00;
+    margin: -4px 3px 0 0;
     line-height: normal;
     text-decoration: none;
     box-shadow: none;
@@ -874,6 +880,11 @@ button.js-captcha-refresh:hover {
     color: #0088cc;
 }
 
+/* contact form */
+
+div.contact-icap div.control-group.wide input {
+    width: 443px;
+}
 
 
 /* resizable textarea styles */

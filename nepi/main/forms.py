@@ -25,9 +25,9 @@ class CreateAccountForm(forms.Form):
     to allow guest users to create guest accounts.'''
 
     first_name = forms.CharField(
-        max_length=25, required=True, label="First Name")
+        max_length=50, required=True, label="First Name")
     last_name = forms.CharField(
-        max_length=25, required=True, label="Last Name")
+        max_length=50, required=True, label="Last Name")
     username = forms.CharField(
         max_length=25, required=True, label="Username")
     email = forms.EmailField(required=False, label="Email(not required):")
@@ -99,9 +99,13 @@ class SchoolGroupForm(forms.Form):
 class ContactForm(forms.Form):
     '''This is a form class that will be returned
     later in the contact form view.'''
-    sender = forms.EmailField(required=True)
+    first_name = forms.CharField(
+        max_length=50, required=True)
+    last_name = forms.CharField(
+        max_length=50, required=True)
+    sender = forms.EmailField(required=True, label="Your email is:")
     subject = forms.CharField(max_length=100, required=True)
-    message = forms.CharField(max_length=500, required=True,
+    message = forms.CharField(max_length=1024, required=True,
                               widget=forms.Textarea)
     captcha = CaptchaField()
 
