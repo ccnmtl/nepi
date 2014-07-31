@@ -1,0 +1,30 @@
+<script type="text/javascript" language="javascript">
+jQuery(document).ready(function() {
+
+    var exp = jQuery('#explanation_box');
+    
+    jQuery(".adherencecard").on("click",
+
+        function() {
+
+            if (jQuery(this).data().part == "followup")
+            {
+                exp.html(jQuery("#followup").html());
+            }
+            if (jQuery(this).data().part == "adherence")
+            {
+                exp.html(jQuery("#adherence").html());
+            }
+            if (jQuery(this).data().part == "why")
+            {
+                exp.html(jQuery("#why").html());
+            }
+            if (jQuery(this).data().part == "regimen")
+            {
+                exp.html(jQuery("#regimen").html());
+            }
+
+   });
+
+});
+</script>
