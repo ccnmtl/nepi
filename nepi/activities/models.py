@@ -5,6 +5,8 @@ from pagetree.models import PageBlock
 from datetime import datetime
 from django import forms
 from django.core.urlresolvers import reverse
+from quizblock.models import Quiz
+from django.contrib.contenttypes.models import ContentType
 
 
 CONV_CHOICES = (
@@ -308,6 +310,13 @@ class AdherenceCard(models.Model):
 
     def unlocked(self, user):
         return True
+
+    def quizzes(self):
+        ctype = ContentType.objects.get_for_model(Quiz)
+        blocks = PageBlock.objects.filter(content_type__pk=ctype.pk,
+                                          css_extra__contains=self.quiz_class)
+        ids = blocks.values_list('object_id', flat=True)
+        return Quiz.objects.filter(id__in=ids)
 
 
 class AdherenceCardForm(forms.ModelForm):
