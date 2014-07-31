@@ -3,7 +3,7 @@
 {% getresponse block as convres %}
 
 {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
-{% if block.description %}{{block.description|markdown}}{% endif %}
+{% if block.description %}{{block.description|safe}}{% endif %}
 
 
 <div id="last_click" style="display: none">{{convres}}</div>
@@ -12,19 +12,19 @@
     <input type="hidden" name="conversation" value="{{block.good_conversation.pk}}"/>
     <input type="hidden" name="scenario" value="{{block.pk}}"/>
         <div id="correct_open">
-          {{block.good_conversation.text_one}}
+          {{block.good_conversation.text_one|safe}}
         </div>
         <div class="correct_answer1" style="display: none">
-          {{block.good_conversation.response_one}}
+          {{block.good_conversation.response_one|safe}}
         </div>
         <div class="correct_answer2" style="display: none">
-          {{block.good_conversation.response_two}}
+          {{block.good_conversation.response_two|safe}}
         </div>
         <div class="correct_answer3" style="display: none">
-          {{block.good_conversation.response_three}}
+          {{block.good_conversation.response_three|safe}}
         </div>
         <div class="correct_answer4" style="display: none">
-          {{block.good_conversation.complete_dialog}}
+          {{block.good_conversation.complete_dialog|safe}}
         </div>
 </div>
 
@@ -32,19 +32,19 @@
     <input type="hidden" name="conversation" value="{{block.bad_conversation.pk}}">
     <input type="hidden" name="scenario" value="{{block.pk}}">
         <div id="wrong_open">
-          {{block.bad_conversation.text_one}}
+          {{block.bad_conversation.text_one|safe}}
         </div>
         <div class="wrong_answer1" style="display: none">
-          {{block.bad_conversation.response_one}}
+          {{block.bad_conversation.response_one|safe}}
         </div>
         <div class="wrong_answer2" style="display: none">
-          {{block.bad_conversation.response_two}}
+          {{block.bad_conversation.response_two|safe}}
         </div>
         <div class="wrong_answer3" style="display: none">
-          {{block.bad_conversation.response_three}}
+          {{block.bad_conversation.response_three|safe}}
         </div>
         <div class="wrong_answer4" style="display: none">
-          {{block.bad_conversation.complete_dialog}}
+          {{block.bad_conversation.complete_dialog|safe}}
         </div>
 </div>
 
