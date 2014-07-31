@@ -1,23 +1,19 @@
-from django.conf.urls.defaults import patterns, include, url
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.contrib import admin
 from django.conf import settings
-import nepi.main.views
+from django.conf.urls.defaults import patterns, include, url
+from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
+from nepi.main.views import CreateGroupView, UpdateGroupView, \
+    DeleteGroupView, StudentClassStatView, GetSchoolGroups, \
+    CreateSchoolView, UpdateSchoolView, ContactView, RegistrationView, \
+    GetCountries, StudentDashboard, JoinGroup, GetCountrySchools, \
+    FacultyDashboard, ICAPDashboard, Home, AddGroup, UpdateProfileView, \
+    GetFacultyCountries, GetFacultyCountrySchools, GroupDetail, \
+    RemoveStudent, LeaveGroup, SchoolChoiceView
+import nepi.main.views
 import os.path
-admin.autodiscover()
 import staticmedia
-from nepi.main.views import (CreateGroupView, UpdateGroupView,
-                             DeleteGroupView, StudentClassStatView,
-                             GetSchoolGroups, CreateSchoolView,
-                             UpdateSchoolView, ContactView,
-                             RegistrationView, GetCountries,
-                             StudentDashboard, JoinGroup,
-                             GetCountrySchools, FacultyDashboard,
-                             ICAPDashboard, Home, AddGroup,
-                             UpdateProfileView, GetFacultyCountries,
-                             GetFacultyCountrySchools, GroupDetail,
-                             RemoveStudent, LeaveGroup)
+admin.autodiscover()
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -58,6 +54,8 @@ urlpatterns = patterns(
     # flat and universally accessible pages
     (r'^contact/$', ContactView.as_view()),
     (r'^thanks_group/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_group'),
+    url(r'^schools/(?P<country_id>\w[^/]*)/$',
+        SchoolChoiceView.as_view(), name='school-choice'),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
     url(r'^update_profile/(?P<pk>\d+)/$', UpdateProfileView.as_view(),
         name='update-profile'),

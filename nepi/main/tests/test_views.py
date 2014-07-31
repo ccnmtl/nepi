@@ -1,11 +1,16 @@
 from django.contrib.auth.models import User
+from django.core import mail
+from django.core.exceptions import ValidationError
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
 from factories import UserFactory, HierarchyFactory, UserProfileFactory, \
     TeacherProfileFactory, ICAPProfileFactory
-from nepi.main.models import UserProfile, Country
-from nepi.main.views import ContactView, ViewPage
+from nepi.main.forms import CreateAccountForm
+from nepi.main.models import UserProfile, Country, PendingTeachers
+from nepi.main.tests.factories import SchoolFactory, CountryFactory
+from nepi.main.views import ContactView, ViewPage, RegistrationView
 from pagetree.models import UserPageVisit, Section
+import json
 
 
 class TestBasicViews(TestCase):
@@ -132,6 +137,80 @@ class TestICAPLoggedInViews(TestCase):
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
 
 
+class TestRegistrationView(TestCase):
+    def setUp(self):
+        self.view = RegistrationView()
+        self.existing_user = UserFactory()
+
+    def test_duplicate_user(self):
+        try:
+            form = CreateAccountForm()
+            form.cleaned_data = {
+                'username': self.existing_user.username
+            }
+            RegistrationView().form_valid(form)
+            self.fail("ValidationException expected")
+        except ValidationError:
+            pass
+
+    def test_form_valid_success_student(self):
+        form = CreateAccountForm()
+        form.cleaned_data = {
+            'username': 'janedoe21',
+            'email': 'janedoe21@ccnmtl.columbia.edu',
+            'password1': 'test',
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+            'country': 'BF'
+        }
+        RegistrationView().form_valid(form)
+        user = User.objects.get(username='janedoe21')
+        self.assertEquals(user.email, 'janedoe21@ccnmtl.columbia.edu')
+        self.assertEquals(user.profile.profile_type, 'ST')
+        self.assertEquals(user.first_name, 'Jane')
+        self.assertEquals(user.last_name, 'Doe')
+
+        country = Country.objects.get(name='BF')
+        self.assertEquals(user.profile.country, country)
+
+        self.assertTrue(Client().login(username='janedoe21', password="test"))
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject,
+                         'ICAP Nursing E-Learning Registration')
+
+    def test_form_valid_success_faculty(self):
+        form = CreateAccountForm()
+        form.cleaned_data = {
+            'username': 'janedoe21',
+            'email': 'janedoe21@ccnmtl.columbia.edu',
+            'password1': 'test',
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+            'country': 'BF',
+            'profile_type': True
+        }
+        RegistrationView().form_valid(form)
+        user = User.objects.get(username='janedoe21')
+        self.assertEquals(user.email, 'janedoe21@ccnmtl.columbia.edu')
+        self.assertEquals(user.profile.profile_type, 'ST')
+        self.assertEquals(user.first_name, 'Jane')
+        self.assertEquals(user.last_name, 'Doe')
+
+        country = Country.objects.get(name='BF')
+        self.assertEquals(user.profile.country, country)
+
+        self.assertTrue(Client().login(username='janedoe21', password="test"))
+
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertEqual(mail.outbox[0].subject,
+                         'ICAP Nursing E-Learning Registration')
+        self.assertEqual(mail.outbox[1].subject,
+                         'Nursing E-Learning: Faculty Access Request')
+
+        self.assertEquals(PendingTeachers.objects.all().count(), 1)
+
+
 class TestPageView(TestCase):
     def setUp(self):
         self.h = HierarchyFactory()
@@ -205,3 +284,47 @@ class TestPageView(TestCase):
         self.assertFalse(ctx['menu'][1]['disabled'])
         self.assertEquals(ctx['menu'][2]['id'], section_three.id)
         self.assertTrue(ctx['menu'][2]['disabled'])
+
+
+class TestSchoolView(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+        self.up = UserProfileFactory(user=self.user)
+        self.client = Client()
+        self.client.login(username=self.user.username, password="test")
+        self.country = CountryFactory()
+        self.school = SchoolFactory()
+
+    def test_ajax_only(self):
+        response = self.client.get('/schools/%s/' % self.school.country.name)
+        self.assertEquals(response.status_code, 405)
+
+    def test_get_country_not_found(self):
+        response = self.client.get('/schools/XY/',
+                                   {},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 404)
+
+    def test_get_no_schools(self):
+        response = self.client.get('/schools/%s/' % self.country.name,
+                                   {},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = json.loads(response.content)
+        self.assertEquals(len(the_json['schools']), 1)
+        self.assertEquals(the_json['schools'][0]['id'], '-----')
+        self.assertEquals(the_json['schools'][0]['name'], '-----')
+
+    def test_get_schools(self):
+        response = self.client.get('/schools/%s/' % self.school.country.name,
+                                   {},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = json.loads(response.content)
+        self.assertEquals(len(the_json['schools']), 2)
+
+        self.assertEquals(the_json['schools'][0]['id'], '-----')
+        self.assertEquals(the_json['schools'][0]['name'], '-----')
+        self.assertEquals(the_json['schools'][1]['id'], str(self.school.id))
+        self.assertEquals(the_json['schools'][1]['name'], self.school.name)

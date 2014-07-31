@@ -1,6 +1,7 @@
-from django import forms
-from choices import COUNTRY_CHOICES
 from captcha.fields import CaptchaField
+from choices import COUNTRY_CHOICES
+from django import forms
+from django.forms.fields import ChoiceField
 from nepi.main.models import Country, Group, School, UserProfile
 
 
@@ -12,6 +13,11 @@ class LoginForm(forms.Form):
 
     def form_valid(self, form):
         pass
+
+
+class ChoiceFieldNoValidation(ChoiceField):
+    def validate(self, value):
+        return True
 
 
 class CreateAccountForm(forms.Form):
@@ -28,6 +34,8 @@ class CreateAccountForm(forms.Form):
     country = forms.ChoiceField(required=True,
                                 label="What country do you reside in?",
                                 choices=COUNTRY_CHOICES)
+    school = ChoiceFieldNoValidation(required=False,
+                                     label="Please select your school")
     nepi_affiliated = forms.BooleanField(required=False)
     password1 = forms.CharField(
         max_length=25, widget=forms.PasswordInput, required=True,
@@ -43,14 +51,20 @@ class CreateAccountForm(forms.Form):
         form = super(CreateAccountForm, self).clean()
         is_teacher = form.get("profile_type")
         email = form.get("email")
+        school = form.get("school")
         password1 = form.get("password1")
         password2 = form.get("password2")
         country = form.get("country")
 
-        if is_teacher and (email == ""):
-            self._errors["email"] = self.error_class(
-                ["If you are registering as an instructor " +
-                 "you must enter a valid email address"])
+        if is_teacher:
+            if email == "":
+                self._errors["email"] = self.error_class(
+                    ["If you are registering as an instructor " +
+                     "you must enter a valid email address"])
+            if school == "" or school == "-----":
+                self._errors["school"] = self.error_class(
+                    ["If you are registering as an instructor " +
+                     "you must select a school"])
         if password1 != password2:
             self._errors["password1"] = self.error_class(
                 ["Passwords must match each other."])
