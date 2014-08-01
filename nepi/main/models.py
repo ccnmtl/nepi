@@ -90,12 +90,31 @@ class UserProfile(models.Model):
 
     def percent_complete(self):
         hierarchy = Hierarchy.get_hierarchy('main')
-        visits = UserPageVisit.objects.filter(section__hierarchy=hierarchy)
+        visits = UserPageVisit.objects.filter(user=self.user,
+                                              section__hierarchy=hierarchy)
         sections = Section.objects.filter(hierarchy=hierarchy)
         if len(sections) > 0:
             return len(visits) / float(len(sections)) * 100
         else:
             return 0
+
+    def percent_complete_module(self, module):
+        sections = module.get_descendants()
+        if len(sections) > 0:
+            ids = [s.id for s in sections]
+            visits = UserPageVisit.objects.filter(user=self.user,
+                                                  section__in=ids)
+            return len(visits) / float(len(sections)) * 100
+        else:
+            return 0
+
+    def sessions_completed(self):
+        hierarchy = Hierarchy.get_hierarchy('main')
+        complete = 0
+        for module in hierarchy.get_root().get_children():
+            if self.percent_complete_module(module) == 100:
+                complete += 1
+        return complete
 
     def display_name(self):
         return self.user.username
