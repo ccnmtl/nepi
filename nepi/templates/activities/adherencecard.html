@@ -1,3 +1,15 @@
+{% load markup %}
+{% load adherence_state %}
+{% getresponses block as resp %}
+
+{% if block.label %}<h3>{{block.label}}</h3>{% endif %}
+{% if block.description %}{{block.description|safe}}{% endif %}
+
+{{resp}}
+
+
+<div id="last_click" style="display: none">{{convres}}</div>
+
 {% block content %}
 <div class="adherencecard" data-part="1">1</div>
 <div class="adherencecard" data-part="2">2</div>

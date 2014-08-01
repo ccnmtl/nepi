@@ -66,7 +66,7 @@ class ViewPage(LoggedInMixin, PageView):
                 'url': section.get_absolute_url(),
                 'label': section.label,
                 'depth': section.depth,
-                'disabled': not (previous_unlocked or section.id in visit_ids)
+                'disabled': not(previous_unlocked or section.id in visit_ids)
             }
             menu.append(item)
             previous_unlocked = unlocked
@@ -125,13 +125,11 @@ class StudentDashboard(LoggedInMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(StudentDashboard, self).get_context_data(**kwargs)
-        context['modules'] = Hierarchy.objects.all()
+        context['hierarchy'] = Hierarchy.objects.get(name='main')
         return context
 
 
 class FacultyDashboard(StudentDashboard):
-    '''Dashboard that Faculty sees, have the added ability to see
-    the students in their courses and their progress.'''
     template_name = 'dashboard/icap_dashboard.html'
     success_url = '/'
 
@@ -172,18 +170,17 @@ class FacultyDashboard(StudentDashboard):
 
 
 class CountryAdminDashboard(FacultyDashboard):
-    '''I guess were are assuming the country the associate themselves
-    with is the one they are the admin of? Do we change this in their
-    profile update capabilities?'''
     template_name = 'dashboard/icap_dashboard.html'
     success_url = '/'
 
     def get_context_data(self, **kwargs):
         context = super(CountryAdminDashboard, self).get_context_data(**kwargs)
-        '''Not sure if this is syntactically correct...'''
-        country_schools = School.objects.filter(
-            country__name=self.object.country)
-        context['country_schools'] = country_schools
+        # is this necessary? or can I just reference object/userprofile?
+        profile = UserProfile.objects.get(user=self.request.user.pk)
+        context['country'] = Country.objects.get(pk=profile.country.pk)
+        # is this possible? guess we'll find out...
+        context['country_schools'] = \
+            School.objects.get(country=context['country'])
         return context
 
 
@@ -235,6 +232,8 @@ class JoinGroup(LoggedInMixin, JSONResponseMixin, View):
         user_profile = UserProfile.objects.get(user__id=user_id)
         add_group = Group.objects.get(pk=request.POST['group'])
         user_profile.group.add(add_group)
+        for each in user_profile.group.all():
+            print each.name
         return self.render_to_json_response({'success': True})
 
 
@@ -354,17 +353,22 @@ class RegistrationView(FormView):
 
 
 class CreateSchoolView(LoggedInMixin, CreateView):
-    '''generic class based view for adding a school'''
+    '''generic class based view for
+    adding a school'''
     model = School
     template_name = 'icap/add_school.html'
     success_url = '/'
 
 
 class UpdateSchoolView(LoggedInMixin, UpdateView):
-    '''generic class based view for editing a school'''
+    '''generic class based view for
+    editing a school'''
     model = School
     template_name = 'icap/add_school.html'
     success_url = '/'
+
+
+# LoggedInMixin,
 
 
 class CreateGroupView(LoggedInMixin, CreateView):
@@ -525,17 +529,15 @@ class StudentClassStatView(LoggedInMixin, DetailView):
     '''This view is for students to see their progress,
     should be included in main base template.'''
     model = Group
-    template_name = 'dashboard/view_group.html'
+    template_name = 'view_group_stats.html'
     success_url = reverse_lazy('home')
 
     def get_context_data(self, **kwargs):
-        students = UserProfile.objects.filter(group__pk=self.object.pk)
-        #.exclude(group__created_by=)
-        # print students
-        # Article.objects.filter(publications__pk=1)
-        # .exclude(created_by=userprofile__user)
-        return {'object': self.object, 'students': students}
-        #  'module': module, 'user': user, 'profile': profile}
+        if self.request.is_ajax():
+            module = self.group.__module
+            user = User.objects.get(pk=self.request.user.pk)
+            profile = UserProfile.objects.get(user=user)
+            return {'module': module, 'user': user, 'profile': profile}
 
 
 class UpdateProfileView(LoggedInMixin, UpdateView):
@@ -545,49 +547,37 @@ class UpdateProfileView(LoggedInMixin, UpdateView):
     success_url = '/'
 
     def form_valid(self, form):
+        # response = super(UpdateProfileView, self).form_valid(form)
         form_data = form.cleaned_data
-        u_user = User.objects.get(pk=self.request.user.pk)
-        u_user.password = form_data['password1']
-        u_user.email = form_data['email']
-        u_user.first_name = form_data['first_name']
-        u_user.last_name = form_data['last_name']
-        u_user.save()
-        up = UserProfile.objects.get(user=u_user)
-        '''IF THIS HAS TO GO IN FORM CLEAN TO KEEP IT
-        FROM BLOWING UP - DOES IT NEED TO BE HERE'''
-        try:
-            up.country = Country.objects.get(
-                name=form_data['country'])
-            up.save()
-        except Country.DoesNotExist:
-            new_country = Country.objects.create(name=form_data['country'])
-            new_country.save()
-            #up.country = new_country
-            #up.save()
         if form_data['faculty_access']:
-            subject = "Faculty Access Requested"
-            message = "The user, " + str(form_data['first_name']) + \
-                " " + str(form_data['last_name']) + " from " + \
-                str(form_data['country']) + " has requested faculty " + \
-                "faculty access.\n\n"
-            sender = settings.NEPI_MAILING_LIST
-            recipients = [settings.ICAP_MAILING_LIST]
+            subject = "Facutly Access Requeted"
+            message = "The user, " + form_data['first_name'] + \
+                " " + form_data['last_name'] + " from " + \
+                form_data['country'] + " has requested faculty " + \
+                "faculty access at " + form_data['school'] + ".\n\n"
+            sender = "nepi@nepi.ccnmtl.columbia.edu"
+            recipients = "cdunlop@columbia.edu"
             send_mail(subject, message, sender, recipients)
-            pending = PendingTeachers.objects.create(
-                user_profile=up)
-            pending.save()
-        return super(UpdateProfileView, self).form_valid(form)
+        # not clear to me what validation is done for you
+        form_data.save()
+
+    def form_invalid(self, form):
+        response = super(UpdateProfileView, self).form_invalid(form)
+        if self.request.is_ajax():
+            return self.render_to_json_response(form.errors, status=400)
+        else:
+            return response
 
 
-class GetFacultyCountries(LoggedInMixin, ListView):
+class FacultyCountries(LoggedInMixin, ListView):
     model = Country
-    template_name = 'dashboard/faculty_country_list.html'
+    template_name = 'faculty/country_list.html'
     success_url = '/'
 
 
-class GetFacultyCountrySchools(LoggedInMixin, ListView):
+class FacultyCountrySchools(LoggedInMixin, ListView):
     model = School
-    template_name = 'dashboard/faculty_school_list.html'
+    template_name = 'faculty/school_list.html'
     success_url = '/'
 
     def get_context_data(self, **kwargs):

@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from pagetree.models import Section, Hierarchy, UserLocation, UserPageVisit, \
+from pagetree.models import Section, Hierarchy, UserPageVisit, \
     PageBlock
 from quizblock.models import Quiz
 
@@ -78,33 +78,43 @@ class UserProfile(models.Model):
     class Meta:
         ordering = ["user"]
 
-    def get_has_visited(self, section):
-        return section.get_uservisit(self.user) is not None
+    def last_location(self):
+        hierarchy = Hierarchy.get_hierarchy('main')
+        visits = UserPageVisit.objects.filter(user=self.user)
 
-    def set_has_visited(self, sections):
-        for sect in sections:
-            sect.user_pagevisit(self.user, "complete")
-            sect.user_visit(self.user)
-
-    def last_location(self, hierarchy_name=None):
-        if hierarchy_name is None:
-            hierarchy_name = self.role()
-        hierarchy = Hierarchy.get_hierarchy(hierarchy_name)
-        try:
-            UserLocation.objects.get(user=self.user,
-                                     hierarchy=hierarchy)
-            return hierarchy.get_user_section(self.user)
-        except UserLocation.DoesNotExist:
+        if visits.count() < 1:
             return hierarchy.get_first_leaf(hierarchy.get_root())
+        else:
+            visits = visits.order_by('-last_visit')
+            return visits[0].section
 
     def percent_complete(self):
-        hierarchy = Hierarchy.get_hierarchy(self.role())
-        visits = UserPageVisit.objects.filter(section__hierarchy=hierarchy)
+        hierarchy = Hierarchy.get_hierarchy('main')
+        visits = UserPageVisit.objects.filter(user=self.user,
+                                              section__hierarchy=hierarchy)
         sections = Section.objects.filter(hierarchy=hierarchy)
         if len(sections) > 0:
-            return int(len(visits) / float(len(sections)) * 100)
+            return len(visits) / float(len(sections)) * 100
         else:
             return 0
+
+    def percent_complete_module(self, module):
+        sections = module.get_descendants()
+        if len(sections) > 0:
+            ids = [s.id for s in sections]
+            visits = UserPageVisit.objects.filter(user=self.user,
+                                                  section__in=ids)
+            return len(visits) / float(len(sections)) * 100
+        else:
+            return 0
+
+    def sessions_completed(self):
+        hierarchy = Hierarchy.get_hierarchy('main')
+        complete = 0
+        for module in hierarchy.get_root().get_children():
+            if self.percent_complete_module(module) == 100:
+                complete += 1
+        return complete
 
     def display_name(self):
         return self.user.username
