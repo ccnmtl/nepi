@@ -467,6 +467,17 @@ h1, h2, h3, h4, h5, h6 {
 	clear: both;
 }
 
+	/* Slide Out Navigation*/
+	
+.slide-out-menu.open {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: .875em;
+}
+
+.slide-out-menu a {
+	margin: 2px 0;
+}
+
 	/*Navigation*/
 
 .navbar-inner /*overwriting bootstrap*/ {
