@@ -104,22 +104,13 @@ class ICAPForm(forms.Form):
 
 
 class UpdateProfileForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=100, required=True,
-                                 label="First Name")
-    last_name = forms.CharField(max_length=100, required=True,
-                                label="Last Name")
-    faculty_access = forms.BooleanField(
-        required=False, label="Request Faculty Access")
-    country = forms.ChoiceField(required=True,
-                                label="What country do you reside in?",
-                                choices=COUNTRY_CHOICES)
-    email = forms.EmailField(required=False, label="Email(not required):")
-    password1 = forms.CharField(max_length=100, required=False,
-                                label="Password - Leave blank if you" +
-                                " wish to leave the same")
-    password2 = forms.CharField(max_length=100, required=False,
-                                label="Password - Leave blank if you wish" +
-                                " to leave the same")
+    first_name = forms.CharField(max_length=100, required=True)
+    last_name = forms.CharField(max_length=100, required=True)
+    faculty_access = forms.BooleanField(required=False)
+    country = forms.ChoiceField(required=True, choices=COUNTRY_CHOICES)
+    email = forms.EmailField(required=False)
+    password1 = forms.CharField(max_length=100, required=False)
+    password2 = forms.CharField(max_length=100, required=False)
 
     def __init__(self, *args, **kwargs):
         super(UpdateProfileForm, self).__init__(*args, **kwargs)

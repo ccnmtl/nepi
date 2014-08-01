@@ -1,15 +1,95 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<div>
 
-<div> <p>some text here</p>
-
-      <form action="/update_profile/{{object.pk}}/" method="post">{% csrf_token %}
+    <form action="/update_profile/{{object.pk}}/" method="post">{% csrf_token %}
         {{ form.as_p }}
-        <div id="faculty">
-        </div>
-        <input type="submit" value="Submit" />
-      </form>
+        <!--
+        <fieldset>
+            <div class="control-group">
+                <label>
+                    Your name is:
+                    <br />
+                    <input type="text" name="first_name" value="{{ user.first_name }}">
+                    <input type="text" name="last_name" value="{{ user.last_name }}">
+                </label>
+            </div>
+
+            <div class="control-group">
+                Your username:
+                <div>{{ user.username }}</div>
+            </div>
+
+            <div class="control-group">
+                <label>
+                    Your password:
+                    <br />
+                    <input type="password" name="password1">
+                    <span class="help-inline">
+                        Leave blank to keep the same password
+                    </span>
+                </label>
+                <label>
+                    Confirm your password:
+                    <br />
+                    <input type="password" name="password2">
+                    <span class="help-inline">
+                        Leave blank to keep the same password
+                    </span>
+                </label>
+            </div>
+
+            <div class="control-group">
+                <label class="checkbox">
+
+                    <input type="checkbox" name="icap_affil"
+                           {% if object.icap_affil %}
+                           checked="checked"
+                           {% endif %}
+                           >
+                    I am in ICAP program
+                </label>
+            </div>
+
+            <div class="control-group">
+                <label>
+                    You are in:
+                    <br />
+                    <select name="country">
+                        {% for choice in countries %}
+                        <option value="{{choice.0}}">{{choice.1}}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+
+            <div class="control-group">
+                <label>
+                    Your email:
+                    <br />
+                    <input type="email" name="email" value="{{user.email}}">
+                </label>
+            </div>
+
+            <div class="control-group">
+                <label class="checkbox">
+                    <input type="checkbox" name="faculty_access"
+                           {% if object.profile_type == 'TE' %}
+                           checked="checked"
+                           {% elif object.profile_type == 'CA' %}
+                           checked="checked"
+                           {% endif %}
+                           >
+                    Request faculty access
+                </label>
+            </div>
+
+        </fieldset>
+        -->
+
+        <button type="submit" class="btn">Save changes</button>
+    </form>
 
 </div>
 
