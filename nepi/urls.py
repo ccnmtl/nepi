@@ -4,12 +4,12 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 from nepi.main.views import CreateGroupView, UpdateGroupView, \
-    DeleteGroupView, StudentClassStatView, GetSchoolGroups, \
-    CreateSchoolView, UpdateSchoolView, ContactView, RegistrationView, \
-    GetCountries, StudentDashboard, JoinGroup, GetCountrySchools, \
-    FacultyDashboard, ICAPDashboard, Home, AddGroup, UpdateProfileView, \
-    GetFacultyCountries, GetFacultyCountrySchools, GroupDetail, \
-    RemoveStudent, LeaveGroup, SchoolChoiceView
+    DeleteGroupView, StudentClassStatView, GetSchoolGroups, CreateSchoolView, \
+    UpdateSchoolView, ContactView, RegistrationView, GetCountries, \
+    StudentDashboard, JoinGroup, GetCountrySchools, FacultyDashboard, \
+    ICAPDashboard, Home, AddGroup, UpdateProfileView, GetFacultyCountries, \
+    GetFacultyCountrySchools, GroupDetail, RemoveStudent, LeaveGroup, \
+    SchoolChoiceView, ThanksGroupView
 import nepi.main.views
 import os.path
 import staticmedia
@@ -53,7 +53,7 @@ urlpatterns = patterns(
 
     # flat and universally accessible pages
     (r'^contact/$', ContactView.as_view()),
-    (r'^thanks_group/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_group'),
+    (r'^thanks_group/(?P<crs_id>\d+)/$', ThanksGroupView.as_view()),
     url(r'^schools/(?P<country_id>\w[^/]*)/$',
         SchoolChoiceView.as_view(), name='school-choice'),
     url(r'^register/$', RegistrationView.as_view(), name='register'),

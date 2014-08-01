@@ -1,30 +1,31 @@
 '''Views for NEPI, should probably break up
 into smaller pieces.'''
-import json
 from django import forms
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.core.mail import send_mail  # , BadHeaderError
-from django.utils.decorators import method_decorator
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import get_object_or_404
+from django.template import loader
+from django.template.context import Context
+from django.utils.decorators import method_decorator
 from django.views.generic import View
+from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, FormView, CreateView, \
     UpdateView
 from django.views.generic.list import ListView
-from pagetree.generic.views import PageView, EditView, InstructorView
-from pagetree.models import Hierarchy, UserPageVisit
 from nepi.activities.views import JSONResponseMixin
 from nepi.main.choices import COUNTRY_CHOICES
 from nepi.main.forms import CreateAccountForm, ContactForm, \
     UpdateProfileForm, CreateGroupForm
 from nepi.main.models import Group, UserProfile, Country, School, \
     PendingTeachers
-from django.template import loader
-from django.conf import settings
-from django.template.context import Context
+from pagetree.generic.views import PageView, EditView, InstructorView
+from pagetree.models import Hierarchy, UserPageVisit
+import json
 
 
 class LoggedInMixin(object):
@@ -85,24 +86,8 @@ class InstructorPage(LoggedInMixinStaff, InstructorView):
     hierarchy_base = "/pages/main/"
 
 
-class ThankYou(LoggedInMixin, View):
-
-    def get(self, request):
-        '''not entirely sure how thise will be called yet...
-        need to determine how we will indicate what the situation is...'''
-        if request.is_ajax():
-            pass
-#             if get
-#             pk=self.request.POST.__getitem__('country'))
-
-    def post(self, request):
-        '''again not entirely sure how this is going to be called'''
-        pass
-
-
-def thanks_group(request, group_id):
-    """Returns thanks for joining group page."""
-    return render(request, 'student/thanks_group.html')
+class ThanksGroupView(LoggedInMixin, TemplateView):
+    template_name = 'student/thanks_group.html'
 
 
 class Home(LoggedInMixin, View):
@@ -349,21 +334,19 @@ class RegistrationView(FormView):
             new_profile = UserProfile(user=new_user)
             new_profile.profile_type = 'ST'
 
-            country = form_data['country']
-            try:
-                country = Country.objects.get(name=country)
-            except Country.DoesNotExist:
-                display_name = dict(COUNTRY_CHOICES)[form_data['country']]
-                country = Country.objects.create(
-                    name=form_data['country'], display_name=display_name)
+            if 'nepi_affiliated' in form_data:
+                new_profile.icap_affil = form_data['nepi_affiliated']
+
+            country = Country.objects.get(name=form_data['country'])
             new_profile.country = country
+
             new_profile.save()
 
             # send the user a success email
             if 'email' in form_data:
                 self.send_success_email(new_user)
 
-            if 'profile_type' in form_data:
+            if 'profile_type' in form_data and form_data['profile_type']:
                 PendingTeachers.objects.create(user_profile=new_profile)
                 self.send_teacher_notifiction(new_user)
 

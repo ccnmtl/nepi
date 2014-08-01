@@ -35,6 +35,8 @@ if 'test' in sys.argv or 'jenkins' in sys.argv:
         }
     }
 
+    CAPTCHA_TEST_MODE = True
+
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 SOUTH_TESTS_MIGRATE = False
 
