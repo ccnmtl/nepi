@@ -25,15 +25,13 @@ class CreateAccountForm(forms.Form):
     to allow guest users to create guest accounts.'''
 
     first_name = forms.CharField(
-        max_length=50, required=True, label="First Name")
+        max_length=50, required=True)
     last_name = forms.CharField(
-        max_length=50, required=True, label="Last Name")
+        max_length=50, required=True)
     username = forms.CharField(
-        max_length=25, required=True, label="Username")
-    email = forms.EmailField(required=False, label="Email(not required):")
-    country = forms.ChoiceField(required=True,
-                                label="What country do you reside in?",
-                                choices=COUNTRY_CHOICES)
+        max_length=25, required=True)
+    email = forms.EmailField(required=False)
+    country = forms.ChoiceField(required=True, choices=COUNTRY_CHOICES)
     school = ChoiceFieldNoValidation(required=False,
                                      label="Please select your school")
     nepi_affiliated = forms.BooleanField(required=False)
