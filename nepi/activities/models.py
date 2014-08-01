@@ -279,6 +279,7 @@ class AdherenceCard(models.Model):
     template_file = "activities/adherencecard.html"
     js_template_file = "activities/adherencecard_js.html"
     css_template_file = "activities/adherencecard_css.html"
+    quiz_class = models.TextField(default='')
     display_name = "Adherence Card"
     intro_text = models.TextField(default='')
 
@@ -316,20 +317,23 @@ class AdherenceCard(models.Model):
     def quizzes(self):
         # This is for generic relation?
         ctype = ContentType.objects.get_for_model(Quiz)
+        print ctype
         # Getting matching quiz blocks based on .css
         blocks = PageBlock.objects.filter(content_type__pk=ctype.pk,
                                           css_extra__contains=self.quiz_class)
+        print blocks
         # what does this do?
         ids = blocks.values_list('object_id', flat=True)
         return Quiz.objects.filter(id__in=ids)
 
-    def user_responses(self, user, quiz):
+    def user_responses(self, user):
         '''No idea if this is the right way to do this'''
-        quiz = self.quizzes(quiz)
+        quizzes = self.quizzes()
         user = User.objects.get(user=user)
         try:
-            user_submission = Submission.objects.get(user=user, quiz=quiz)
-            response = Response.objects.get(Submission=user_submission)
+            for quiz in quizzes:
+                user_submission = Submission.objects.get(user=user, quiz=quiz)
+                response = Response.objects.get(Submission=user_submission)
             return response.value
         except Submission.DoesNotExist:
             return None
