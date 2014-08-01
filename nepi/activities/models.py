@@ -5,7 +5,7 @@ from pagetree.models import PageBlock
 from datetime import datetime
 from django import forms
 from django.core.urlresolvers import reverse
-from quizblock.models import Quiz
+from quizblock.models import Quiz, Submission, Response
 from django.contrib.contenttypes.models import ContentType
 
 
@@ -289,6 +289,8 @@ class AdherenceCard(models.Model):
         return unicode(self.pageblock())
 
     def needs_submit(self):
+        '''I believe all of the "needs submit" stuff is being taken
+        care of in the javascript...'''
         return False
 
     @classmethod
@@ -312,11 +314,25 @@ class AdherenceCard(models.Model):
         return True
 
     def quizzes(self):
+        # This is for generic relation?
         ctype = ContentType.objects.get_for_model(Quiz)
+        # Getting matching quiz blocks based on .css
         blocks = PageBlock.objects.filter(content_type__pk=ctype.pk,
                                           css_extra__contains=self.quiz_class)
+        # what does this do?
         ids = blocks.values_list('object_id', flat=True)
         return Quiz.objects.filter(id__in=ids)
+
+    def user_responses(self, user, quiz):
+        '''No idea if this is the right way to do this'''
+        quiz = self.quizzes(quiz)
+        user = User.objects.get(user=user)
+        try:
+            user_submission = Submission.objects.get(user=user, quiz=quiz)
+            response = Response.objects.get(Submission=user_submission)
+            return response.value
+        except Submission.DoesNotExist:
+            return None
 
 
 class AdherenceCardForm(forms.ModelForm):
