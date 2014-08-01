@@ -40,35 +40,40 @@
 </div>
 
 <script>
- 
+
 var button = jQuery(".button");
 button.on("click",
-    
     function() {
-
             var clicked_group = jQuery(this).data().btn;
-            //alert(clicked_group);
-            //function () {
-         
              jQuery.ajax({
              url: "/join_group/",
              type: "POST",
              data: {'country': jQuery('#id_country').val(), 'school' : jQuery('#id_school').val(), 'group': clicked_group },
              success: function (data)
-             {
-                 //alert("success");
-                 //jQuery("#pane-content").replaceWith('<div id="join_group"><button id="join_group_button">Join Group</button></div>');
-                 location.reload(); 
+             {  
+                var school = jQuery('#id_school').find('option:selected').text();
+                jQuery('.modal-body').append('<p class="join-group-modal">You have just joined <b> ' + school + '</b></p>')
+                jQuery('.modal').modal();
              },
              error: function(data)
              {
                  alert("error joining group");
              }
         }); //end of ajax
-            
-            
 });// end of function after click
 
-
 </script>
-
+<div id="modal">
+<div class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">Group Join Succesfull</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
