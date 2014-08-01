@@ -16,68 +16,6 @@
 }
 
 
-== OVAL THOUGHT BUBBLE (more CSS3)
-** ============================================================================================================================ */
-
-.oval-thought {
-  position:relative;
-  width:270px;
-  padding:50px 40px;
-  margin:1em auto 80px;
-  text-align:center;
-  color:#fff;
-  background:#075698;
-  /* css3 */
-  background:-webkit-gradient(linear, 0 0, 0 100%, from(#2e88c4), to(#075698));
-  background:-moz-linear-gradient(#2e88c4, #075698);
-  background:-o-linear-gradient(#2e88c4, #075698);
-  background:linear-gradient(#2e88c4, #075698);
-  /*
-  NOTES:
-  -webkit-border-radius:220px 120px; // produces oval in safari 4 and chrome 4
-  -webkit-border-radius:220px / 120px; // produces oval in chrome 4 (again!) but not supported in safari 4
-  Not correct application of the current spec, therefore, using longhand to avoid future problems with webkit corrects this
-  */
-  -webkit-border-top-left-radius:220px 120px;
-  -webkit-border-top-right-radius:220px 120px;
-  -webkit-border-bottom-right-radius:220px 120px;
-  -webkit-border-bottom-left-radius:220px 120px;
-  -moz-border-radius:220px / 120px;
-  border-radius:220px / 120px;
-}
-
-.oval-thought p {font-size:1.25em;}
-
-/* creates the larger circle */
-.oval-thought:before {
-  content:"";
-  position:absolute;
-  bottom:-20px;
-  left:50px;
-  width:30px;
-  height:30px;
-  background:#075698;
-  /* css3 */
-  -webkit-border-radius:30px;
-  -moz-border-radius:30px;
-  border-radius:30px;
-}
-
-/* creates the smaller circle */
-.oval-thought:after {
-  content:"";
-  position:absolute;
-  bottom:-30px;
-  left:30px;
-  width:15px;
-  height:15px;
-  background:#075698;
-  /* css3 */
-  -webkit-border-radius:15px;
-  -moz-border-radius:15px;
-  border-radius:15px;
-}
-
 
 .correct_answer1, .correct_answer2, .correct_answer3, .correct_answer4 {
 	border: solid 4px #80b6e6;
@@ -96,8 +34,6 @@
 	padding: 10px;
 	text-align: center;
 }
-
-
 
 .wrong_answer1, .wrong_answer2, .wrong_answer3 {
 	width: 200px;
@@ -129,63 +65,49 @@
 
 .s2_act_02 .correct_answer1 {
 	position: relative;
-	top: -205px;
-	left: 820px;
-	 position:relative;
-  width:270px;
-  padding:50px 40px;
-  margin:1em auto 80px;
-  text-align:center;
-  color:#fff;
-  background:#075698;
-  /* css3 */
-  background:-webkit-gradient(linear, 0 0, 0 100%, from(#2e88c4), to(#075698));
-  background:-moz-linear-gradient(#2e88c4, #075698);
-  background:-o-linear-gradient(#2e88c4, #075698);
-  background:linear-gradient(#2e88c4, #075698);
-  /*
-  NOTES:
-  -webkit-border-radius:220px 120px; // produces oval in safari 4 and chrome 4
-  -webkit-border-radius:220px / 120px; // produces oval in chrome 4 (again!) but not supported in safari 4
-  Not correct application of the current spec, therefore, using longhand to avoid future problems with webkit corrects this
-  */
-  -webkit-border-top-left-radius:220px 120px;
-  -webkit-border-top-right-radius:220px 120px;
-  -webkit-border-bottom-right-radius:220px 120px;
-  -webkit-border-bottom-left-radius:220px 120px;
-  -moz-border-radius:220px / 120px;
-  border-radius:220px / 120px;
-	
+	top: -245px;
+	left: 680px;
+	position: relative;
+	width: 200px;
+	padding: 40px 30px;
+	margin: 1em auto 80px;
+	text-align: center;
+	-webkit-border-top-left-radius: 220px 120px;
+	-webkit-border-top-right-radius: 220px 120px;
+	-webkit-border-bottom-right-radius: 220px 120px;
+	-webkit-border-bottom-left-radius: 220px 120px;
+	-moz-border-radius: 220px / 120px;
+	border-radius: 220px / 120px;
 }
 
 /* creates the larger circle */
 .s2_act_02 .correct_answer1:before {
-  content:"";
-  position:absolute;
-  bottom:-20px;
-  left:50px;
-  width:30px;
-  height:30px;
-  background:#075698;
-  /* css3 */
-  -webkit-border-radius:30px;
-  -moz-border-radius:30px;
-  border-radius:30px;
+	content: "";
+	position: absolute;
+	bottom: -10px;
+	left: 20px;
+	width: 30px;
+	height: 30px;
+	border: solid 4px #80b6e6;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+	border-radius: 30px;
+	background-color: #fff;
+
 }
 
 /* creates the smaller circle */
 .s2_act_02 .correct_answer1:after {
-  content:"";
-  position:absolute;
-  bottom:-30px;
-  left:30px;
-  width:15px;
-  height:15px;
-  background:#075698;
-  /* css3 */
-  -webkit-border-radius:15px;
-  -moz-border-radius:15px;
-  border-radius:15px;
+	content: "";
+	position: absolute;
+	bottom: -20px;
+	left: 1px;
+	width: 15px;
+	height: 15px;
+	border: solid 4px #80b6e6;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
 }
 
 .s2_act_02 .correct_answer2 {
