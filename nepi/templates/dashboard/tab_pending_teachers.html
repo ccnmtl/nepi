@@ -1,24 +1,23 @@
-{% block tabcontent %}
-    <div class="tab-pane" id="pending-teachers">
-        <div id="pane-content">
-        {% block tabtitle %}
-            Pending Teachers
-        {% endblock %}
-        
-        
-		{% block tabbody %}
-            <table width="100%" class="table table-striped table-condensed">
-            <tr><td>Teacher Name </td><td> School </td><td> Country </td></tr>
-            {% for pt in pending_teachers %}
-                <tr>
-                      <td>{{pt.first_name}}{{pt.first_name}}</td><td>{{pt.school}}</td><td>{{pt.country}}</td>
-                </tr>
-                {% empty %}
-                 <tr><td><b><p>No instructors have self registered yet.</p></b></td></tr>
-                {% endfor %}
-            </table>
-           
-        {% endblock %}
-        </div>
+<div class="tab-pane" id="pending-teachers">
+    <div id="pane-content">
+    {% block tabtitle %}
+        Pending Teachers
+    {% endblock %}
+    
+    
+	{% block tabbody %}
+        <table width="100%" class="table table-striped table-condensed">
+        <tr><td>Teacher Name </td><td> School </td><td> Country </td></tr>
+        {% for pt in pending_teachers %}
+            <tr>
+                  <td>{{pt.first_name}}{{pt.first_name}}</td><td>{{pt.school}}</td><td>{{pt.country}}</td>
+            </tr>
+            {% empty %}
+             <tr><td><b><p>No instructors have self registered yet.</p></b></td></tr>
+            {% endfor %}
+        </table>
+       
+    {% endblock %}
     </div>
-{% endblock %}
+</div>
+

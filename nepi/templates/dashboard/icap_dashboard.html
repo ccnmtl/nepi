@@ -35,19 +35,17 @@
 
 <input type="hidden" value={{user.pk}}>
 
-    {% block actualtabs %}
-        {% block tabheaders %}
-            {% include "dashboard/tabheadercontent.html" %}
-        {% endblock%}
+    {% block tabheaders %}
+        {% include "dashboard/tabheadercontent.html" %}
+    {% endblock%}
 
-        {% block optionb %}
-            {% include "dashboard/tab_optionb.html" %}
-        {% endblock %}
-
+    <div class="tab-content">
+        {% include "dashboard/tab_optionb.html" %}
+    
         {% block groups %}
             {% include "dashboard/tab_groups.html" %}
         {% endblock %}
-
+    
         {% block reports %}
             {% if object.profile_type == "TE" %}
                 {% include "dashboard/tab_teacher_reports.html" %}
@@ -59,17 +57,17 @@
                 {% include "dashboard/tab_icap_reports.html" %}
             {% endif %}
         {% endblock %}
-
+    
         {% block profile %}
             {% include "dashboard/tab_profile.html" %}
         {% endblock %}
-
+    
         {% block pending_teachers %}
             {% if object.profile_type == "IC" or object.profile_type == "CA" %}
                 {% include "dashboard/tab_pending_teachers.html" %}
             {% endif %}
         {% endblock %}
-
+    
         {% block resources %}
             {% if object.profile_type == "ST" %}
                 {% include "dashboard/tab_student_resources.html" %}
@@ -84,18 +82,18 @@
                 {% include "dashboard/tab_icap_resources.html" %}
             {% endif %}
         {% endblock %}
-
+    
         {% comment %}
         {% block formmodal%}
             {% include "dashboard/form_modal.html" %}
         {% endblock %}
         {% endcomment %}
-
+    
         {% comment %}
         {% block thanksmodal%}
             {% include "dashboard/thank_you_modal.html" %}
         {% endblock %}
         {% endcomment %}
-    {% endblock %}       
+    </div>
     
 {% endblock%}
