@@ -1,6 +1,6 @@
 import factory
 from nepi.activities.models import ConversationScenario, \
-    Conversation, ConvClick
+    Conversation, ConvClick, RetentionRateCard
 from pagetree.models import Hierarchy
 
 
@@ -40,12 +40,6 @@ class ConvClickFactory(factory.DjangoModelFactory):
     conversation = factory.SubFactory(GoodConversationFactory)
 
 
-# class ConversationResponseFactory(factory.DjangoModelFactory):
-#     FACTORY_FOR = ConversationResponse
-#     user = factory.SubFactory(UserFactory)
-#     conv_scen = factory.SubFactory(ConversationScenarioFactory)
-
-
 class ConversationPageblockHierarchyFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Hierarchy
     name = "conv_hierarchy"
@@ -66,3 +60,7 @@ class ConversationPageblockHierarchyFactory(factory.DjangoModelFactory):
                 ],
                 'children': [],
             })
+
+
+class RetentionRateCardFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = RetentionRateCard

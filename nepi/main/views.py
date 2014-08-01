@@ -1,19 +1,24 @@
 '''Views for NEPI, should probably break up
 into smaller pieces.'''
 from django import forms
+from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
+from django.template import loader
+from django.template.context import Context
 from django.utils.decorators import method_decorator
 from django.views.generic import View
+from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, FormView, CreateView, \
     UpdateView
 from django.views.generic.list import ListView
 from nepi.activities.views import JSONResponseMixin
+from nepi.main.choices import COUNTRY_CHOICES
 from nepi.main.forms import CreateAccountForm, ContactForm, \
     UpdateProfileForm, CreateGroupForm
 from nepi.main.models import Group, UserProfile, Country, School, \
@@ -61,7 +66,7 @@ class ViewPage(LoggedInMixin, PageView):
                 'url': section.get_absolute_url(),
                 'label': section.label,
                 'depth': section.depth,
-                'disabled': not(previous_unlocked or section.id in visit_ids)
+                'disabled': not (previous_unlocked or section.id in visit_ids)
             }
             menu.append(item)
             previous_unlocked = unlocked
@@ -80,27 +85,9 @@ class InstructorPage(LoggedInMixinStaff, InstructorView):
     hierarchy_name = "main"
     hierarchy_base = "/pages/main/"
 
-# should make a class to say thank you for... and give appropriate statement.
 
-
-class ThankYou(LoggedInMixin, View):
-
-    def get(self, request):
-        '''not entirely sure how thise will be called yet...
-        need to determine how we will indicate what the situation is...'''
-        if request.is_ajax():
-            pass
-#             if get
-#             pk=self.request.POST.__getitem__('country'))
-
-    def post(self, request):
-        '''again not entirely sure how this is going to be called'''
-        pass
-
-
-def thanks_group(request, group_id):
-    """Returns thanks for joining group page."""
-    return render(request, 'student/thanks_group.html')
+class ThanksGroupView(LoggedInMixin, TemplateView):
+    template_name = 'student/thanks_group.html'
 
 
 class Home(LoggedInMixin, View):
@@ -143,6 +130,8 @@ class StudentDashboard(LoggedInMixin, DetailView):
 
 
 class FacultyDashboard(StudentDashboard):
+    '''Dashboard that Faculty sees, have the added ability to see
+    the students in their courses and their progress.'''
     template_name = 'dashboard/icap_dashboard.html'
     success_url = '/'
 
@@ -183,17 +172,18 @@ class FacultyDashboard(StudentDashboard):
 
 
 class CountryAdminDashboard(FacultyDashboard):
+    '''I guess were are assuming the country the associate themselves
+    with is the one they are the admin of? Do we change this in their
+    profile update capabilities?'''
     template_name = 'dashboard/icap_dashboard.html'
     success_url = '/'
 
     def get_context_data(self, **kwargs):
         context = super(CountryAdminDashboard, self).get_context_data(**kwargs)
-        # is this necessary? or can I just reference object/userprofile?
-        profile = UserProfile.objects.get(user=self.request.user.pk)
-        context['country'] = Country.objects.get(pk=profile.country.pk)
-        # is this possible? guess we'll find out...
-        context['country_schools'] = \
-            School.objects.get(country=context['country'])
+        '''Not sure if this is syntactically correct...'''
+        country_schools = School.objects.filter(
+            country__name=self.object.country)
+        context['country_schools'] = country_schools
         return context
 
 
@@ -245,8 +235,6 @@ class JoinGroup(LoggedInMixin, JSONResponseMixin, View):
         user_profile = UserProfile.objects.get(user__id=user_id)
         add_group = Group.objects.get(pk=request.POST['group'])
         user_profile.group.add(add_group)
-        for each in user_profile.group.all():
-            print each.name
         return self.render_to_json_response({'success': True})
 
 
@@ -282,29 +270,58 @@ class GetSchoolGroups(LoggedInMixin, ListView):
             return {'group_list': group_list}
 
 
+class SchoolChoiceView(JSONResponseMixin, View):
+
+    def get(self, *args, **kwargs):
+        country_id = kwargs.pop('country_id', None)
+        country = get_object_or_404(Country, name=country_id)
+
+        schools = [{'id': '-----', 'name': '-----'}]
+        for school in School.objects.filter(country=country):
+            schools.append({'id': str(school.id), 'name': school.name})
+
+        return self.render_to_json_response({'schools': schools})
+
+
 class RegistrationView(FormView):
     '''changing registration view to form'''
-    template_name = 'registration_form.html'
+    template_name = 'registration/registration_form.html'
     form_class = CreateAccountForm
     success_url = '/account_created/'
 
-    def register_user(self):
-        pass
+    def send_success_email(self, user):
+        template = loader.get_template(
+            'registration/registration_success_email.txt')
 
-    def register_profile(self):
-        pass
+        subject = "ICAP Nursing E-Learning Registration"
 
-    def send_student_email(self):
-        pass
+        ctx = Context({'user': user})
+        message = template.render(ctx)
 
-    def send_teacher_notifiction(self):
-        pass
+        sender = settings.NEPI_MAILING_LIST
+        recipients = [user.email]
+        send_mail(subject, message, sender, recipients)
+
+    def send_teacher_notifiction(self, user):
+        template = loader.get_template(
+            'registration/faculty_request_email.txt')
+
+        country = dict(COUNTRY_CHOICES)[user.profile.country.name]
+
+        subject = "Nursing E-Learning: Faculty Access Request"
+
+        ctx = Context({'user': user, 'country': country})
+        message = template.render(ctx)
+
+        sender = settings.NEPI_MAILING_LIST
+        recipients = [settings.ICAP_MAILING_LIST]
+        send_mail(subject, message, sender, recipients)
 
     def form_valid(self, form):
         form_data = form.cleaned_data
         try:
             User.objects.get(username=form_data['username'])
-            raise forms.ValidationError("this username already exists")
+            raise forms.ValidationError("This username already exists")
         except User.DoesNotExist:
             new_user = User.objects.create_user(
                 username=form_data['username'],
@@ -313,58 +330,41 @@ class RegistrationView(FormView):
             new_user.first_name = form_data['first_name']
             new_user.last_name = form_data['last_name']
             new_user.save()
+
             new_profile = UserProfile(user=new_user)
             new_profile.profile_type = 'ST'
-            try:
-                new_profile.country = Country.objects.get(
-                    name=form_data['country'])
-                new_profile.save()
-            except Country.DoesNotExist:
-                new_country = Country.objects.create(name=form_data['country'])
-                new_country.save()
-                new_profile.save()
-            if form_data['email']:
-                subject = "NEPI Registration"
-                message = "Congratulations! " + \
-                          "You've successfully registered to use NEPI.\n\n" + \
-                          "Your user information is " + \
-                          form_data['username'] + \
-                          ".\n\n" + \
-                          "You may now log in to your account."
-                sender = "nepi@nepi.ccnmtl.columbia.edu"
-                recipients = [form_data['email']]
-                send_mail(subject, message, sender, recipients)
-            recipients = ["nepi@nepi.ccnmtl.columbia.edu"]
-            if form_data['profile_type']:
-                subject = "[Teacher] Account Requested"
-                message = form_data['first_name'] + \
-                    " " + form_data['last_name'] + \
-                    "has requested teacher status in "
-                    # need to add country and schools here
-                pending = PendingTeachers.objects.create(
-                    user_profile=new_profile)
-                pending.save()
-                send_mail(subject, message, sender, recipients)
+
+            if 'nepi_affiliated' in form_data:
+                new_profile.icap_affil = form_data['nepi_affiliated']
+
+            country = Country.objects.get(name=form_data['country'])
+            new_profile.country = country
+
+            new_profile.save()
+
+            # send the user a success email
+            if 'email' in form_data:
+                self.send_success_email(new_user)
+
+            if 'profile_type' in form_data and form_data['profile_type']:
+                PendingTeachers.objects.create(user_profile=new_profile)
+                self.send_teacher_notifiction(new_user)
+
         return super(RegistrationView, self).form_valid(form)
 
 
 class CreateSchoolView(LoggedInMixin, CreateView):
-    '''generic class based view for
-    adding a school'''
+    '''generic class based view for adding a school'''
     model = School
     template_name = 'icap/add_school.html'
     success_url = '/'
 
 
 class UpdateSchoolView(LoggedInMixin, UpdateView):
-    '''generic class based view for
-    editing a school'''
+    '''generic class based view for editing a school'''
     model = School
     template_name = 'icap/add_school.html'
     success_url = '/'
-
-
-# LoggedInMixin,
 
 
 class CreateGroupView(LoggedInMixin, CreateView):
@@ -491,42 +491,6 @@ class LeaveGroup(LoggedInMixin, View):
         leave_group.userprofile_set.remove(user_profile)
         return HttpResponseRedirect("/")
 
-# class LeaveGroup(LoggedInMixin, JSONResponseMixin, View):
-#     template_name = 'dashboard/icap_dashboard.html'
-#
-#     def post(self, request, grp_id):
-#         print request.user.pk
-#         user_profile = UserProfile.objects.get(user__id=request.user.pk)
-#         print user_profile
-#         leave_group = Group.objects.get(pk=grp_id)
-#         leave_group.userprofile_set.remove(user_profile)
-#         # user_profile.__group_set.remove(leave_group)
-#         return self.render_to_json_response({'success': True})
-# # b = Blog.objects.get(id=1)
-# >>> e = Entry.objects.get(id=234)
-# >>> b.entry_set.remove(e)
-#
-#     def post(self, request):
-#         scenario = get_object_or_404(ConversationScenario,
-#                                      pk=request.POST['scenario'])
-#         conversation = get_object_or_404(Conversation,
-#                                          pk=request.POST['conversation'])
-#         conclick = ConvClick.objects.create(conversation=conversation)
-#         conclick.save()
-#         rs, created = ConversationResponse.objects.get_or_create(
-#             conv_scen=scenario, user=request.user)
-#         if rs.first_click is None:
-#             rs.first_click = conclick
-#             rs.save()
-#         elif rs.first_click is not None and rs.second_click is None:
-#             rs.second_click = conclick
-#             rs.third_click = conclick
-#             rs.save()
-#         elif rs.second_click is not None:
-#             rs.third_click = conclick
-#             rs.save()
-#         return render_to_json_response({'success': True})
-
 
 class ContactView(FormView):
     '''changed contact view function to
@@ -536,15 +500,15 @@ class ContactView(FormView):
     success_url = '/email_sent/'
 
     def form_valid(self, form):
-        '''should this be in the form instead?'''
         form_data = form.cleaned_data
-        sender = form_data['sender'],
-        subject = form_data['subject'],
-        message = form_data['message'],
-        recipients = ['nepi@nepi.ccnmtl.columbia.edu']
-        # ["u'cdunlop@columbia.edu'"]
-        send_mail(subject, message, sender, 'nepi@nepi.ccnmtl.columbia.edu')
-        form.send_email(recipients)
+
+        sender = form_data['sender']
+        subject = form_data['subject']
+        message = "First name: %s\nLast name: %s\nMessage: %s" % (
+            form_data['first_name'], form_data['last_name'],
+            form_data['message'])
+        recipients = [settings.NEPI_MAILING_LIST]
+        send_mail(subject, message, sender, recipients)
         return super(ContactView, self).form_valid(form)
 
 
@@ -567,55 +531,69 @@ class StudentClassStatView(LoggedInMixin, DetailView):
     '''This view is for students to see their progress,
     should be included in main base template.'''
     model = Group
-    template_name = 'view_group_stats.html'
+    template_name = 'dashboard/view_group.html'
     success_url = reverse_lazy('home')
 
     def get_context_data(self, **kwargs):
-        if self.request.is_ajax():
-            module = self.group.__module
-            user = User.objects.get(pk=self.request.user.pk)
-            profile = UserProfile.objects.get(user=user)
-            return {'module': module, 'user': user, 'profile': profile}
+        students = UserProfile.objects.filter(group__pk=self.object.pk)
+        #.exclude(group__created_by=)
+        # print students
+        # Article.objects.filter(publications__pk=1)
+        # .exclude(created_by=userprofile__user)
+        return {'object': self.object, 'students': students}
+        #  'module': module, 'user': user, 'profile': profile}
 
 
 class UpdateProfileView(LoggedInMixin, UpdateView):
     model = UserProfile
-    template_name = 'profile_tab.html'
+    template_name = 'dashboard/profile_tab.html'
     form_class = UpdateProfileForm
     success_url = '/'
 
     def form_valid(self, form):
-        # response = super(UpdateProfileView, self).form_valid(form)
         form_data = form.cleaned_data
+        u_user = User.objects.get(pk=self.request.user.pk)
+        u_user.password = form_data['password1']
+        u_user.email = form_data['email']
+        u_user.first_name = form_data['first_name']
+        u_user.last_name = form_data['last_name']
+        u_user.save()
+        up = UserProfile.objects.get(user=u_user)
+        '''IF THIS HAS TO GO IN FORM CLEAN TO KEEP IT
+        FROM BLOWING UP - DOES IT NEED TO BE HERE'''
+        try:
+            up.country = Country.objects.get(
+                name=form_data['country'])
+            up.save()
+        except Country.DoesNotExist:
+            new_country = Country.objects.create(name=form_data['country'])
+            new_country.save()
+            #up.country = new_country
+            #up.save()
         if form_data['faculty_access']:
-            subject = "Facutly Access Requeted"
-            message = "The user, " + form_data['first_name'] + \
-                " " + form_data['last_name'] + " from " + \
-                form_data['country'] + " has requested faculty " + \
-                "faculty access at " + form_data['school'] + ".\n\n"
-            sender = "nepi@nepi.ccnmtl.columbia.edu"
-            recipients = "cdunlop@columbia.edu"
+            subject = "Faculty Access Requested"
+            message = "The user, " + str(form_data['first_name']) + \
+                " " + str(form_data['last_name']) + " from " + \
+                str(form_data['country']) + " has requested faculty " + \
+                "faculty access.\n\n"
+            sender = settings.NEPI_MAILING_LIST
+            recipients = [settings.ICAP_MAILING_LIST]
             send_mail(subject, message, sender, recipients)
-        # not clear to me what validation is done for you
-        form_data.save()
-
-    def form_invalid(self, form):
-        response = super(UpdateProfileView, self).form_invalid(form)
-        if self.request.is_ajax():
-            return self.render_to_json_response(form.errors, status=400)
-        else:
-            return response
+            pending = PendingTeachers.objects.create(
+                user_profile=up)
+            pending.save()
+        return super(UpdateProfileView, self).form_valid(form)
 
 
-class FacultyCountries(LoggedInMixin, ListView):
+class GetFacultyCountries(LoggedInMixin, ListView):
     model = Country
-    template_name = 'faculty/country_list.html'
+    template_name = 'dashboard/faculty_country_list.html'
     success_url = '/'
 
 
-class FacultyCountrySchools(LoggedInMixin, ListView):
+class GetFacultyCountrySchools(LoggedInMixin, ListView):
     model = School
-    template_name = 'faculty/school_list.html'
+    template_name = 'dashboard/faculty_school_list.html'
     success_url = '/'
 
     def get_context_data(self, **kwargs):

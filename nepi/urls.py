@@ -1,23 +1,19 @@
-from django.conf.urls.defaults import patterns, include, url
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.contrib import admin
 from django.conf import settings
-import nepi.main.views
+from django.conf.urls.defaults import patterns, include, url
+from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
+from nepi.main.views import CreateGroupView, UpdateGroupView, \
+    DeleteGroupView, StudentClassStatView, GetSchoolGroups, CreateSchoolView, \
+    UpdateSchoolView, ContactView, RegistrationView, GetCountries, \
+    StudentDashboard, JoinGroup, GetCountrySchools, FacultyDashboard, \
+    ICAPDashboard, Home, AddGroup, UpdateProfileView, GetFacultyCountries, \
+    GetFacultyCountrySchools, GroupDetail, RemoveStudent, LeaveGroup, \
+    SchoolChoiceView, ThanksGroupView
+import nepi.main.views
 import os.path
-admin.autodiscover()
 import staticmedia
-from nepi.main.views import (CreateGroupView, UpdateGroupView,
-                             DeleteGroupView, StudentClassStatView,
-                             GetSchoolGroups, CreateSchoolView,
-                             UpdateSchoolView, ContactView,
-                             RegistrationView, GetCountries,
-                             StudentDashboard, JoinGroup,
-                             GetCountrySchools, FacultyDashboard,
-                             ICAPDashboard, Home, AddGroup,
-                             UpdateProfileView, FacultyCountries,
-                             FacultyCountrySchools, GroupDetail,
-                             RemoveStudent, LeaveGroup)
+admin.autodiscover()
 
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -48,12 +44,8 @@ urlpatterns = patterns(
     (r'^account_created/',
      TemplateView.as_view(template_name="flatpages/account_created.html")),
     (r'^email_sent/',
-     TemplateView.as_view(template_name="flatpages/email_sent.html"))
-)
+     TemplateView.as_view(template_name="flatpages/email_sent.html")),
 
-
-urlpatterns += patterns(
-    '',
     auth_urls,
     logout_page,
     url(r'^$', Home.as_view(), name="home"),
@@ -61,7 +53,9 @@ urlpatterns += patterns(
 
     # flat and universally accessible pages
     (r'^contact/$', ContactView.as_view()),
-    (r'^thanks_group/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_group'),
+    (r'^thanks_group/(?P<crs_id>\d+)/$', ThanksGroupView.as_view()),
+    url(r'^schools/(?P<country_id>\w[^/]*)/$',
+        SchoolChoiceView.as_view(), name='school-choice'),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
     url(r'^update_profile/(?P<pk>\d+)/$', UpdateProfileView.as_view(),
         name='update-profile'),
@@ -85,8 +79,8 @@ urlpatterns += patterns(
     url(r'^get_groups/$', GetSchoolGroups.as_view()),
 
     # need custom yet almost identical templates for requesting faculty access
-    url(r'^faculty_countries/$', FacultyCountries.as_view()),
-    url(r'^faculty_schools/$', FacultyCountrySchools.as_view()),
+    url(r'^faculty_countries/$', GetFacultyCountries.as_view()),
+    url(r'^faculty_schools/$', GetFacultyCountrySchools.as_view()),
 
     # functionality for teacher create a group
     url(r'^add_group/$',
@@ -106,8 +100,8 @@ urlpatterns += patterns(
 
     # ICAP related pages
     (r'^add_school/$', CreateSchoolView.as_view()),
-    url(r'^view_group_stats/(?P<pk>\d+)/', StudentClassStatView.as_view(),
-        name='view-group-stats'),
+    url(r'^view_group/(?P<pk>\d+)/', StudentClassStatView.as_view(),
+        name='view-group'),
     (r'^edit_school/(?P<pk>\d+)/$', UpdateSchoolView.as_view()),
     # Teacher related pages
     #(r'^view_students/$', 'nepi.main.views.view_students'),

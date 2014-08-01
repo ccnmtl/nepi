@@ -1,97 +1,230 @@
 {% extends "base.html" %}
 {% load i18n admin_static %}
-{% block title %}Sign up for an account{% endblock %}
 
-<script type="type/javascript">
-jQuery(document).load(
-    function()
-    {
-        alert("documetnready");
-    }
-);
+{% block title %}
+    Create your account
+{% endblock %}
 
-jQuery(document).ready(alert("documetnready");
+{% block js %}
+    <script src="/site_media/js/captcha.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            var currentCountryName = "{{form.data.country}}";
+            var currentSchoolId = "{{form.data.school}}";
+            
+            function resetSchoolChoice() {
+                jQuery("select[name='school']").find('option').remove();
+                jQuery("input[name='profile_type']").removeAttr('checked');
+            }
+            
+            function disableFacultyAccess() {
+                jQuery("input[name='profile_type']").attr('disabled', 'disabled');
+                jQuery(".facultyaccess.error").show();
+                jQuery(".facultyaccess.success").hide();
+            }
 
-</script>
+            function enableFacultyAccess() {
+                jQuery("input[name='profile_type']").removeAttr('disabled');
+                jQuery(".facultyaccess.error").hide();
+                jQuery(".facultyaccess.success").show();
+                
+                if (currentSchoolId) {
+                    jQuery("select[name='school']").val(currentSchoolId);
+                    currentSchoolId = undefined;
+                }
+            }
+
+            function populateSchoolChoices(countryName) {
+                jQuery.ajax({
+                    type: 'GET',
+                    url: '/schools/' + countryName + '/',
+                    dataType: 'json',
+                    error: function () {
+                        // This country does not exist in the database
+                        disableFacultyAccess();
+                    },
+                    success: function (json, textStatus, xhr) {
+                        if (json['schools'].length < 2) {
+                            // There are no schools for this country
+                            disableFacultyAccess();
+                        } else {
+                            for (var i=0; i < json.schools.length; i++) {
+                                var school = json.schools[i];
+                                var option = "<option value='"  + school.id + "'>" + school.name + "</option>";
+                                jQuery("select[name='school']").append(option)
+                            }
+                            enableFacultyAccess();                       
+                        }
+                    }
+                });
+            }
+            
+            jQuery("input[name='profile_type']").click(function() {
+                if (jQuery(this).is(':checked')) {
+                    var countryName = jQuery("select[name='country']").val();
+                    if (countryName === '-----') {
+                        jQuery(".facultyaccess.error").show();
+                    } else {
+                        showSchoolChoices();
+                    }
+                } else {
+                    hideSchoolChoices();
+                }
+            });
+    
+            jQuery("select[name='country']").change(function() {
+                var countryName = jQuery("select[name='country']").val();
+                if (currentCountryName !== countryName) {
+                    currentCountryName = countryName;
+                    resetSchoolChoice();
+                    populateSchoolChoices(countryName);
+                }
+            });
+            
+            if (currentCountryName !== '') {
+                populateSchoolChoices(currentCountryName);
+            }
+        });
+    </script>
+{% endblock %}
+
 
 {% block content %}
-		<div id="breadcrumbbar">
-		<span class="here">You are Here:</span>  
-				&gt; 	Create Account
-		</div>
-		
-		<div id="container">
-			<h2>	Create Account	</h2>
-			<form action="." method="post">{% csrf_token %}
-			    {{nepi.main.views.form.non_field_errors}}
-                <fieldset>
-				<legend>Account Information</legend>
+<div class="user-registration">
+    <h1>Create your account</h1>
+    
+    <form action="." method="post">{% csrf_token %}
+        
+        {% if form.errors|length %}
+            <div class="alert alert-block alert-error">
+              <strong>Please correct errors before continuing</strong>
+              {% if form.non_field_errors %}
+                <div>{{ form.non_field_errors}}</div>
+              {% endif %}
+            </div>
+        {% endif %}
+        
+        <div class="fieldWrapper control-group {% if form.first_name.errors %}error{% endif %}">
+            <label for="id_first_name"><b>Your name is:</b></label>
+            <div class="controls">
+                <span>
+                    <input id="id_first_name" maxlength="50" name="first_name" type="text"
+                     value="{{form.data.first_name}}" placeholder="Given Name">
+                </span>&nbsp;&nbsp;
+                <span>
+                    <input id="id_last_name" maxlength="50" name="last_name"
+                     value="{{form.data.last_name}}"
+                     type="text" placeholder="Surname">
+                </span>
+                
+                {% if form.first_name.errors or form.last_name.errors %}
+                    <div class="help-inline">First and last name are required</div>
+                {% endif %}
+            </div>
+        </div>
 
-                    <div class="fieldWrapper">
-                    {{ form.username.errors }}
-					<label for="username">	Username:</label>
-					{{ nepi.main.views.form.username}}
-					<br/><br/>
-					</div>
+        <div class="fieldWrapper control-group {% if form.username.errors %}error{% endif %} wide">
+            <label for="id_username"><b>Your username:</b></label>
+            <div class="controls">
+                {{form.username}}
+                {% if form.username.errors %}
+                    <div class="help-inline">{{form.username.errors}}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="fieldWrapper control-group {% if form.email.errors %}error{% endif %} wide">
+            <label for="id_email"><b>Your email address:</b> <small>(optional for students)</small></label>
+            <div class="controls">
+                {{form.email}}
+                {% if form.email.errors %}
+                    <div class="help-inline">{{form.email.errors}}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="fieldWrapper control-group {% if form.password1.errors %}error{% endif %} wide">
+            <label for="id_password1"><b>Your password:</b></label>
+            <div class="controls">
+                {{form.password1}}
+                {% if form.password1.errors %}
+                    <div class="help-inline">{{form.password1.errors}}</div>
+                {% endif %}
+            </div>
+        </div>
 
-                    <div class="fieldWrapper">
-                    {{ nepi.main.views.form.email.errors }}
-					<label for="email">	Email:</label>
-					{{ nepi.main.views.form.email}}
-					<br/><br/>
-					</div>
-
-                    <div class="fieldWrapper">
-                    {{ nepi.main.views.form.first_name.errors }}
-					<label for="first_name">	First Name:</label>
-					{{ nepi.main.views.form.first_name}}
-					<br/><br/>
+        <div class="fieldWrapper control-group {% if form.password2.errors %}error{% endif %} wide">
+            <label for="id_password2"><b>Confirm your password:</b></label>
+            <div class="controls">
+                {{form.password2}}
+                {% if form.password2.errors %}
+                    <div class="help-inline">{{form.password2.errors}}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="fieldWrapper control-group {% if form.country.errors %}error{% endif %} wide">
+            <label for="id_country"><b>Which country are you in?</b></label>
+            <div class="controls">
+                {{form.country}}
+                {% if form.country.errors %}
+                    <div class="help-inline select">{{form.country.errors}}</div>
+                {% endif %}
+            </div>
+        </div>
+        <br />
+    
+        <div class="fieldWrapper control-group faculty-access">
+            <label class="checkbox">
+                <input id="id_profile_type" name="profile_type" type="checkbox"
+                 {% ifequal form.data.profile_type 'on' %} checked='checked' {% endifequal %}
+                 disabled="disabled">
+                <b>I am requesting faculty-level access</b>
+            </label>
+            <div class="help-inline facultyaccess error">
+                Faculty access is not available in your selected country.<br />
+                If you would like to have your school added, please <a href="/contact/">contact ICAP</a>.
+            </div>
+            <div style="display: none" class="help-inline facultyaccess success well">
+                Faculty requests are sent to an ICAP administrator for approval.<br />
+                You will be notified when your access level has been changed.
+                <br /><br />
+                <div class="fieldWrapper control-group school
+                    {% if form.school.errors %}error{% endif %}">
+                    <label for="id_country"><b>What is your school?</b></label>
+                    <div id="schools-for-country" class="controls">
+                        {{form.school}}
+                        {% if form.school.errors %}
+                            <div class="help-inline select">{{form.school.errors}}</div>
+                        {% endif %}
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="fieldWrapper control-group">
+            <label class="checkbox">
+                {{form.nepi_affiliated}} <b>I am affiliated with ICAP</b>
+            </label>
+        </div>
+        <br />    
 
-                    <div class="fieldWrapper">
-                    {{ nepi.main.views.form.last_name.errors }}
-					<label for="last_name">	Last Name:</label>
-					{{ nepi.main.views.form.last_name}}
-					<br/><br/>
-					</div>
-
-                    <div class="fieldWrapper">
-                    {{ nepi.main.views.form.password1.errors }}
-					<label for="password1">	Password:</label>
-					{{nepi.main.views.form.password1}}
-					<br/><br/>
-                    {{ nepi.main.views.form.password2.errors }}
-					<label for="password2">	Password:</label>
-					{{nepi.main.views.form.password2}}
-					<br/><br/>
-					</div>
-
-                    <div class="fieldWrapper">
-                    {{ nepi.main.views.form.country.errors }}
-					<label for="country">	Country:</label>
-					{{nepi.main.views.form.country}}
-					<br/><br/>
-					</div>
-
-					<div class="fieldWrapper">
-                    {{ nepi.main.views.form.school.errors }}
-					<label for="school">	School:</label>
-					{{ nepi.main.views.form.school }}
-					<br/><br/>
-					</div>
-
-					<br/><br/>
-					<label for="createaccount">	</label>
-					<input id="createaccount" type="submit" value="Create Account" />
-				</fieldset>
-			</form>
-			
-		</div>
-    <div class="p">
-    If you already have a username or password, but have forgotten either,
-        <a href="/register/">reset them here</a>.
-    </div>
-	
+        <div class="fieldWrapper control-group {% if form.captcha.errors %}error{% endif %}">
+            <label for="id_captcha_0">
+                <div><b>Please verify you are a person:</b></div>
+            </label>
+            <div class="controls">
+                {{form.captcha}} {% if form.captcha.errors %} <span class="help-inline">{{form.captcha.errors}}</span>{% endif %}
+            </div>
+        </div>
+        <div class="help-inline captcha">
+            Type the characters you see in the picture.<br />
+            <button class="btn btn-default js-captcha-refresh">Refresh the image</button> if you can't read the picture.<br />
+        </div>
+        
+        <button id="createaccount" class="btn btn-primary" type="submit">Create Account</button>
+    </form>
+</div>
 {% endblock %}
 
 

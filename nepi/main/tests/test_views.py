@@ -1,10 +1,15 @@
+from django.contrib.auth.models import User
+from django.core import mail
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
-from django.contrib.auth.models import User
+from factories import UserFactory, HierarchyFactory, UserProfileFactory, \
+    TeacherProfileFactory, ICAPProfileFactory
+from nepi.main.forms import ContactForm
 from nepi.main.models import UserProfile, Country
-from nepi.main.views import ContactView
-from factories import UserFactory, HierarchyFactory, \
-    UserProfileFactory, TeacherProfileFactory, ICAPProfileFactory
+from nepi.main.tests.factories import SchoolFactory, CountryFactory
+from nepi.main.views import ContactView, ViewPage
+from pagetree.models import UserPageVisit, Section
+import json
 
 
 class TestBasicViews(TestCase):
@@ -43,10 +48,21 @@ class TestBasicViews(TestCase):
         request = self.factory.post('/contact/',
                                     {"subject": "new_student",
                                      "message": "new_student",
-                                     "sender": "new_student",
-                                     "recipients": "email@email.com"})
+                                     "sender": "new_student"})
         response = ContactView.as_view()(request)
         self.assertEqual(response.status_code, 200)
+
+    def test_contact_form_valid(self):
+        form = ContactForm()
+        form.cleaned_data = {
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+            'sender': 'janedoe21@ccnmtl.columbia.edu',
+            'subject': 'Lorem Ipsum',
+            'message': 'Proin tristique volutpat purus sed accumsan.'
+        }
+        ContactView().form_valid(form)
+        self.assertEqual(len(mail.outbox), 1)
 
     def test_smoketest(self):
         response = self.c.get("/smoketest/")
@@ -68,8 +84,6 @@ class TestStudentLoggedInViews(TestCase):
         self.s = self.h.get_root().get_first_leaf()
         self.u = UserFactory(is_superuser=True)
         self.up = UserProfileFactory(user=self.u)
-        self.u.set_password("test")
-        self.u.save()
         self.c = Client()
         self.c.login(username=self.u.username, password="test")
 
@@ -96,8 +110,6 @@ class TestTeacherLoggedInViews(TestCase):
         self.s = self.h.get_root().get_first_leaf()
         self.u = UserFactory(is_superuser=True)
         self.up = TeacherProfileFactory(user=self.u)
-        self.u.set_password("test")
-        self.u.save()
         self.c = Client()
         self.c.login(username=self.u.username, password="test")
 
@@ -120,8 +132,6 @@ class TestICAPLoggedInViews(TestCase):
         self.s = self.h.get_root().get_first_leaf()
         self.u = UserFactory(is_superuser=True)
         self.up = ICAPProfileFactory(user=self.u)
-        self.u.set_password("test")
-        self.u.save()
         self.c = Client()
         self.c.login(username=self.u.username, password="test")
 
@@ -135,3 +145,122 @@ class TestICAPLoggedInViews(TestCase):
                           [('http://testserver/icap-dashboard/%d/'
                             % self.up.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+
+
+class TestPageView(TestCase):
+    def setUp(self):
+        self.h = HierarchyFactory()
+        self.h.get_root().add_child_section_from_dict(
+            {
+                'label': 'Page One',
+                'slug': 'page-one',
+                'pageblocks': [
+                    {'label': 'Introduction',
+                     'css_extra': '',
+                     'block_type': 'Text Block',
+                     'body': 'random text goes here',
+                     },
+                ],
+                'children': [],
+            })
+        self.h.get_root().add_child_section_from_dict(
+            {
+                'label': 'Page Two',
+                'slug': 'page-two',
+                'pageblocks': [
+                    {'label': 'Content',
+                     'css_extra': '',
+                     'block_type': 'Text Block',
+                     'body': 'random text goes here',
+                     },
+                ],
+                'children': [],
+            })
+
+        self.s = self.h.get_root().get_first_leaf()
+        self.u = UserFactory(is_superuser=True)
+        self.up = UserProfileFactory(user=self.u)
+        self.c = Client()
+        self.c.login(username=self.u.username, password="test")
+
+    def test_get_extra_context(self):
+        section_one = Section.objects.get(slug='welcome')
+        section_two = Section.objects.get(slug='page-one')
+        section_three = Section.objects.get(slug='page-two')
+
+        request = RequestFactory().get('/pages/%s/' % self.h.name)
+        request.user = self.u
+
+        view = ViewPage()
+        view.request = request
+        view.root = self.h.get_root()
+
+        ctx = view.get_extra_context()
+        self.assertTrue('menu' in ctx)
+        self.assertEquals(len(ctx['menu']), 3)
+
+        self.assertEquals(ctx['menu'][0]['id'], section_one.id)
+        self.assertFalse(ctx['menu'][0]['disabled'])
+        self.assertEquals(ctx['menu'][0]['label'], 'Welcome')
+        self.assertEquals(ctx['menu'][0]['url'], u'/welcome/')
+        self.assertEquals(ctx['menu'][0]['depth'], 2)
+
+        self.assertEquals(ctx['menu'][1]['id'], section_two.id)
+        self.assertTrue(ctx['menu'][1]['disabled'])
+        self.assertEquals(ctx['menu'][2]['id'], section_three.id)
+        self.assertTrue(ctx['menu'][2]['disabled'])
+
+        UserPageVisit.objects.create(user=self.u,
+                                     section=section_one,
+                                     status='complete')
+        ctx = view.get_extra_context()
+        self.assertEquals(ctx['menu'][0]['id'], section_one.id)
+        self.assertFalse(ctx['menu'][0]['disabled'])
+        self.assertEquals(ctx['menu'][1]['id'], section_two.id)
+        self.assertFalse(ctx['menu'][1]['disabled'])
+        self.assertEquals(ctx['menu'][2]['id'], section_three.id)
+        self.assertTrue(ctx['menu'][2]['disabled'])
+
+
+class TestSchoolView(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+        self.up = UserProfileFactory(user=self.user)
+        self.client = Client()
+        self.client.login(username=self.user.username, password="test")
+        self.country = CountryFactory()
+        self.school = SchoolFactory()
+
+    def test_ajax_only(self):
+        response = self.client.get('/schools/%s/' % self.school.country.name)
+        self.assertEquals(response.status_code, 405)
+
+    def test_get_country_not_found(self):
+        response = self.client.get('/schools/XY/',
+                                   {},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 404)
+
+    def test_get_no_schools(self):
+        response = self.client.get('/schools/%s/' % self.country.name,
+                                   {},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = json.loads(response.content)
+        self.assertEquals(len(the_json['schools']), 1)
+        self.assertEquals(the_json['schools'][0]['id'], '-----')
+        self.assertEquals(the_json['schools'][0]['name'], '-----')
+
+    def test_get_schools(self):
+        response = self.client.get('/schools/%s/' % self.school.country.name,
+                                   {},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = json.loads(response.content)
+        self.assertEquals(len(the_json['schools']), 2)
+
+        self.assertEquals(the_json['schools'][0]['id'], '-----')
+        self.assertEquals(the_json['schools'][0]['name'], '-----')
+        self.assertEquals(the_json['schools'][1]['id'], str(self.school.id))
+        self.assertEquals(the_json['schools'][1]['name'], self.school.name)

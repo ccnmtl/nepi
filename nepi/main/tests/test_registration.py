@@ -1,16 +1,19 @@
-'''Creating test just for registration since it is prone to changing'''
-from django.test import TestCase, RequestFactory
-from nepi.main.models import Country, School
-from nepi.main.models import PendingTeachers
+from django.contrib.auth.models import User
+from django.core import mail
+from django.core.exceptions import ValidationError
+from django.test.client import Client, RequestFactory
+from django.test.testcases import TestCase
+from nepi.main.forms import CreateAccountForm
+from nepi.main.models import Country, School, PendingTeachers
+from nepi.main.tests.factories import UserFactory, GroupFactory
 from nepi.main.views import RegistrationView
-from django.test.client import Client
-from factories import GroupFactory
-# from django.core.exceptions import ValidationError
 
 
-class TestRegistrationAndLogin(TestCase):
+class TestRegistrationView(TestCase):
     def setUp(self):
-        self.c = Client()
+        self.view = RegistrationView()
+        self.existing_user = UserFactory()
+        self.client = Client()
         self.factory = RequestFactory()
         self.country = Country(name='LS')
         self.country.save()
@@ -18,72 +21,116 @@ class TestRegistrationAndLogin(TestCase):
         self.school.save()
         self.group = GroupFactory()
 
-    def test_student_cbv_reg(self):
-        request = self.factory.post(
-            "/register/",
-            {"first_name": "regstudent", "last_name": "regstudent",
-             "username": "regstudent", "email": "test_email@email.com",
-             "password1": "regstudent", "password2": "regstudent",
-             "country": "LS", "profile_type": False,
-             "captcha": True})
-        response = RegistrationView.as_view()(request)
-        self.assertEqual(response.status_code, 200)
-        # should redirect, request factory can't follow linkes like client
+    def test_duplicate_user(self):
+        try:
+            form = CreateAccountForm()
+            form.cleaned_data = {
+                'username': self.existing_user.username
+            }
+            RegistrationView().form_valid(form)
+            self.fail("ValidationException expected")
+        except ValidationError:
+            pass
 
-    def test_student_registration_and_login(self):
+    def test_form_valid_success_student(self):
+        form = CreateAccountForm()
+        form.cleaned_data = {
+            'username': 'janedoe21',
+            'email': 'janedoe21@ccnmtl.columbia.edu',
+            'password1': 'test',
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+            'country': 'LS'
+        }
+        RegistrationView().form_valid(form)
+        user = User.objects.get(username='janedoe21')
+        self.assertEquals(user.email, 'janedoe21@ccnmtl.columbia.edu')
+        self.assertEquals(user.profile.profile_type, 'ST')
+        self.assertEquals(user.first_name, 'Jane')
+        self.assertEquals(user.last_name, 'Doe')
+
+        self.assertEquals(user.profile.country.name, 'LS')
+
+        self.assertFalse(user.profile.icap_affil)
+
+        self.assertTrue(Client().login(username='janedoe21', password="test"))
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject,
+                         'ICAP Nursing E-Learning Registration')
+
+    def test_form_valid_success_faculty(self):
+        form = CreateAccountForm()
+        form.cleaned_data = {
+            'username': 'janedoe21',
+            'email': 'janedoe21@ccnmtl.columbia.edu',
+            'password1': 'test',
+            'first_name': 'Jane',
+            'last_name': 'Doe',
+            'country': 'LS',
+            'profile_type': True,
+            'nepi_affiliated': True
+        }
+        RegistrationView().form_valid(form)
+        user = User.objects.get(username='janedoe21')
+        self.assertEquals(user.email, 'janedoe21@ccnmtl.columbia.edu')
+        self.assertEquals(user.profile.profile_type, 'ST')
+        self.assertEquals(user.first_name, 'Jane')
+        self.assertEquals(user.last_name, 'Doe')
+
+        self.assertEquals(user.profile.country.name, 'LS')
+
+        self.assertTrue(user.profile.icap_affil)
+
+        self.assertTrue(Client().login(username='janedoe21', password="test"))
+
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertEqual(mail.outbox[0].subject,
+                         'ICAP Nursing E-Learning Registration')
+        self.assertEqual(mail.outbox[1].subject,
+                         'Nursing E-Learning: Faculty Access Request')
+
+        self.assertEquals(PendingTeachers.objects.all().count(), 1)
+
+    def test_student_registration_view(self):
         '''when students are registered they should not be added to pending'''
-        response = self.c.post(
+        response = self.client.post(
             '/register/',
             {"first_name": "regstudent", "last_name": "regstudent",
-             "username": "regstudent", "email": "test_email@email.com",
-             "password1": "regstudent", "password2": "regstudent",
-             "country": "LS", "profile_type": False,
-             "captcha": True}, follow=True)
+             "username": "student", "email": "test_email@email.com",
+             "password1": "test", "password2": "test",
+             "country": "LS", "nepi_affiliated": False,
+             "captcha_0": 'dummy_value', "captcha_1": 'PASSED'}, follow=True)
         self.assertEquals(response.status_code, 200)
-        self.pending = PendingTeachers.objects.all()
-        self.assertFalse(self.pending.count())
-        # apparently [] stands for root or '/'
-        self.assertEquals(response.redirect_chain, [])
-        self.assertTemplateUsed('dashboard/student_dashboard.html')
+        self.assertEquals(PendingTeachers.objects.count(), 0)
 
-    def test_teacher_registration_and_login_request_factory(self):
-        '''when teachers register they should
-        be added to the pending teachers table
-        - but dont know how to test for that.'''
-        request = RequestFactory().get('/register/')
-        view = RegistrationView.as_view()
-        response = view(request, data={"first_name": "reg_teacher",
-                                       "last_name": "reg_teacher",
-                                       "username": "reg_teacher",
-                                       "email": "test_email@email.com",
-                                       "password1": "reg_teacher",
-                                       "password2": "reg_teacher",
-                                       "country": "LS",
-                                       "profile_type": True,
-                                       "captcha": True})
-        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/account_created/', 302)])
+        self.assertTemplateUsed(response, 'flatpages/account_created.html')
 
-    def test_teacher_registration_client(self):
-        '''when teachers register they should
-        be added to the pending teachers table
-        - but dont know how to test for that.'''
-        request = self.c.post(
+        student = User.objects.get(username='student')
+        self.assertFalse(student.profile.icap_affil)
+
+        self.assertTrue(Client().login(username='student', password="test"))
+
+    def test_teacher_registration_view(self):
+        response = self.client.post(
             '/register/',
-            {"first_name": "reg_teacher", "last_name": "reg_teacher",
-             "username": "reg_teacher", "email": "test_email@email.com",
-             "password1": "reg_teacher", "password2": "reg_teacher",
-             "country": "LS", "profile_type": True,
-             "captcha": True}, follow=True)
-        self.assertEquals(request.status_code, 200)
+            {"first_name": "first", "last_name": "last",
+             "username": "teacher", "email": "test_email@email.com",
+             "password1": "test", "password2": "test", "profile_type": True,
+             "country": "LS", "school": self.school.id,
+             "nepi_affiliated": True,
+             "captcha_0": 'dummy_value', "captcha_1": 'PASSED'}, follow=True)
+        self.assertEquals(response.status_code, 200)
 
-#     def test_teacher_registration_no_email(self):
-#         '''when teachers register but do not provide email
-#         an error should be thrown.'''
-#         request = self.c.post(
-#             '/register/',
-#             {"first_name": "reg_teacher", "last_name": "reg_teacher",
-#              "username": "reg_teacher", "email": "",
-#              "password1": "reg_teacher", "password2": "reg_teacher",
-#              "country": "LS", "profile_type": True,
-#              "captcha": True}, follow=True)
-#         self.assertRaises(ValidationError, request)
+        self.assertEquals(PendingTeachers.objects.count(), 1)
+
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/account_created/', 302)])
+        self.assertTemplateUsed(response, 'flatpages/account_created.html')
+
+        teacher = User.objects.get(username='teacher')
+        self.assertTrue(teacher.profile.icap_affil)
+
+        self.assertTrue(Client().login(username='teacher', password="test"))

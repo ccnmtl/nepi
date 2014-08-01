@@ -23,13 +23,18 @@
                                             {{cc.name}} Information
                                         </a>
                                         <space>
-                                        <a href="/view_group_stats/{{cc.pk}}/">
+                                        <a href="{% url 'view-group' cc.id %}/">
                                             {{cc.name}} Group Stats
                                         </a>
                                     </td>
                                     <td>
                                         <a href="/edit_group/{{cc.pk}}">
                                             Edit
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'view-group' cc.id %}">
+                                            {{cc.name}} View Group
                                         </a>
                                     </td>
                                     <td>
@@ -94,9 +99,11 @@
                           </tr>
                         </div> 
                   {% endfor %}
+                  <div id="outer_div">
                   <div id="join_group">
                       <button id="join_group_button">Join Group</button>
-                  </div> 
+                  </div>
+                  </div>
             {% endblock %}
  
  
@@ -149,8 +156,7 @@
                                     }
                                 });
                             });
-                    
-                    
+    
                     
                     
                 </script>

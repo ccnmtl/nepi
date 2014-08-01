@@ -35,7 +35,6 @@
 
 {% block content %}
 
-<script src="/site_media/js/dashboard.js"></script>
 <input type="hidden" value={{user.pk}}>
 
     {% block actualtabs %}
@@ -52,13 +51,13 @@
         {% endblock %}
 
         {% block reports %}
-            {% if user_profile.profile_type == "TE" %}
+            {% if object.profile_type == "TE" %}
                 {% include "dashboard/tab_teacher_reports.html" %}
             {% endif %}
-            {% if user_profile.profile_type == "CA" %}
+            {% if object.profile_type == "CA" %}
                 {% include "dashboard/tab_ca_reports.html" %}
             {% endif %}
-            {% if user_profile.profile_type == "IC" %}
+            {% if object.profile_type == "IC" %}
                 {% include "dashboard/tab_icap_reports.html" %}
             {% endif %}
         {% endblock %}
@@ -66,14 +65,27 @@
         {% block profile %}
             {% include "dashboard/tab_profile.html" %}
         {% endblock %}
-    
-        {% comment %}
+
         {% block pending_teachers %}
-            {% if user_profile.profile_type == "IC" %}
+            {% if object.profile_type == "IC" or object.profile_type == "CA" %}
                 {% include "dashboard/tab_pending_teachers.html" %}
             {% endif %}
         {% endblock %}
-        {% endcomment %}
+
+        {% block resources %}
+            {% if object.profile_type == "ST" %}
+                {% include "dashboard/tab_student_resources.html" %}
+            {% endif %}
+            {% if object.profile_type == "TE" %}
+                {% include "dashboard/tab_teacher_resources.html" %}
+            {% endif %}
+            {% if object.profile_type == "CA" %}
+                {% include "dashboard/tab_ca_resources.html" %}
+            {% endif %}
+            {% if object.profile_type == "IC" %}
+                {% include "dashboard/tab_icap_resources.html" %}
+            {% endif %}
+        {% endblock %}
 
         {% comment %}
         {% block formmodal%}

@@ -7,7 +7,7 @@
  */
 
 html {
-  font-family: Arial, Helvetica, sans-serif; /* 1 */
+ font-family: Georgia, Times, "Times New Roman", serif;
   -ms-text-size-adjust: 100%; /* 2 */
   -webkit-text-size-adjust: 100%; /* 2 */
 }
@@ -452,9 +452,12 @@ th {
 body  {
 	background-image: url(../img/bg-blue-stripe.png);
 	background-repeat: repeat;
-	font-family: Arial, 'Helvetica', sans-serif;
+	font-family: Georgia, Times, "Times New Roman", serif;
 }
 
+h1, h2, h3, h4, h5, h6 {
+	font-family: 'Arial', 'helvetica', sans-serif;
+}
 
 #titlebar {
 	padding: 25px 0 10px 0;
@@ -545,10 +548,22 @@ ol.caseanswers, ul.caseanswers {
 /* quizzes that show "correct" answers */
 div.pageblock.show-correct li.correct:after {
     content: url('/site_media/img/correct.png');
+    position: relative;
+    top: 3px;
 }
 
 div.pageblock.show-correct li.incorrect:after {
     content: url('/site_media/img/incorrect.png');
+    position: relative;
+    top: 3px;
+}
+
+#submit-btn {
+	text-align: center;
+}
+
+#submit-btn input {
+	margin: 30px auto;
 }
 
 /* aggregate quiz score */
@@ -563,10 +578,97 @@ div.pageblock.show-correct li.incorrect:after {
     text-align: center;
 }
 
+/* Question styles */
+.cases {
+	margin: 0 auto;
+}
+
+.cases>p {
+	width: 90%;
+	margin: 20px auto 0 auto;
+	font-weight: bold;
+	font-color: #999;
+}
+
+.casequestion {
+	margin: 20px 0 0 0;
+}
+
+.casequestiontext {
+	background-color: #f5f5f5;
+	width: 50%;
+	margin: 0 auto;
+	padding: 20px;
+	border-radius: 10px 10px 0 0;
+	border-left: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+	border-top: solid 1px #ccc;
+	border-bottom: none;
+	-moz-box-sizing: border-box;
+   	-webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.cases .caseanswers {
+	width: 50%;
+	margin: 0 auto;
+	text-align: left;
+	padding: 10px 20px 20px 20px;
+	border-radius: 0 0 10px 10px;
+	border-left: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+	border-bottom: solid 1px #ccc;
+	border-top: none;
+   -moz-box-sizing:    border-box;
+   -webkit-box-sizing: border-box;
+    box-sizing:        border-box;
+}
+
+.caseuserfeedback {
+	width: 90%;
+	margin: 30px auto;
+	padding: 20px;
+	position: relative;
+	top: 3px;
+	background-color: #d9eaf5;
+	border-radius: 10px;
+	border: solid 2px #c7e3f5;
+}
+
+.cases .caseanswers li {
+	margin: 20px 10px;
+	line-height: 22px;
+}
+
+.cases .caseanswers li input {
+	margin: 0 0px 4px 0;
+}
+
+.cases li.incorrect {
+	color: #aaa;
+}
+
+.cases div.user-correct {
+    color: #468847;
+    background-color: #dff0d8;
+    width: 50%;
+    margin: 0 auto;    
+    padding: 5px;
+    border: 1px solid #d6e9c6;
+}
+
+.cases div.user-incorrect {
+    color: #b94a48;
+    background-color: #f2dede;
+    width: 50%;
+    margin: 0 auto;
+    padding: 5px;
+    border: 1px solid #eed3d7;
+}
 
 /* Basic survey styles */
 .survey {
-    min-width: 970px;
+    width: 970px;
 }
 
 .survey .alert.alert-error {
@@ -614,6 +716,9 @@ div.pageblock.show-correct li.incorrect:after {
     float: left;
     width: 116px;
 }
+
+
+
 
 /* slide out menu */
 .slide-out-menu {
@@ -730,3 +835,164 @@ input#generic-reset {
 	clear: both;
 	margin: 10px 0;
 }
+
+/* Registration & Contact Forms*/
+
+div.contact-icap div.help-inline,
+div.user-registration div.help-inline {
+    display: block;
+    padding-bottom: 10px;
+    margin-top: -5px;
+}
+
+div.user-registration div.help-inline.facultyaccess {
+    margin: 5px 0 0 20px;
+    font-size: 92%;
+    width: 397px;
+}
+
+div.user-registration div.help-inline.facultyaccess select {
+    width: 395px;
+}
+
+div.user-registration div.help-inline.select {
+    margin-top: 5px;
+    font-size: 92%;
+}
+
+div.user-registration div.control-group.wide input {
+    width: 443px;
+}
+
+div.user-registration div.control-group.wide select {
+    width: 456px;
+}
+
+div.contact-icap ul.errorlist,
+div.user-registration ul.errorlist {
+    list-style-type: none;
+    margin: 0 0 10px 5px;
+}
+
+div.contact-icap textarea {
+    margin-bottom: 10px;
+}
+
+button.js-captcha-refresh {
+    padding: 0;
+    color: #0088cc;
+    border: 0;
+    background: none;
+    margin: -4px 3px 0 0;
+    line-height: normal;
+    text-decoration: none;
+    box-shadow: none;
+}
+
+button.js-captcha-refresh:hover {
+    outline: none;
+    background-color: white;
+    border: 0;
+    text-decoration: underline;
+    color: #0088cc;
+}
+
+/* contact form */
+
+div.contact-icap div.control-group.wide input {
+    width: 443px;
+}
+
+
+/* resizable textarea styles */
+textarea.resizable {width: 90%; height: 90%;}
+
+.resize-handle {
+               cursor: se-resize;
+               position: absolute;
+               float: right;
+}
+
+
+/* styles for hs.js */
+.hs-show { display: block; }
+.hs-hide { display: none; }
+
+/* styles for tabber.js */
+
+/*--------------------------------------------------
+  REQUIRED to hide the non-active tab content.
+  But do not hide them in the print stylesheet!
+  --------------------------------------------------*/
+.tabberlive .tabbertabhide {
+ display:none;
+}
+
+/*--------------------------------------------------
+  .tabber = before the tabber interface is set up
+  .tabberlive = after the tabber interface is set up
+  --------------------------------------------------*/
+.tabber {
+}
+.tabberlive {
+ /*margin-top:1em;*/
+ margin: 0;
+}
+
+/*--------------------------------------------------
+  ul.tabbernav = the tab navigation list
+  li.tabberactive = the active tab
+  --------------------------------------------------*/
+ul.tabbernav
+{
+ margin:0;
+ padding: 3px 0;
+ border-bottom: 1px solid #778;
+        font-family: arial, helvetica, verdana, sans-serif;
+}
+
+ul.tabbernav li
+{
+ list-style: none;
+ margin: 0;
+ display: inline;
+}
+        
+ul.tabbernav li a
+{
+ padding: 3px 0.5em;
+ margin-left: 3px;
+ border: 1px solid #778;
+ border-bottom: none;
+ background: #DDE;
+ text-decoration: none;
+}
+ 
+ul.tabbernav li a:link { color: #448; }
+ul.tabbernav li a:visited { color: #667; }
+        
+ul.tabbernav li a:hover
+{
+ color: #000;
+ background: #AAE;
+ border-color: #227;
+}
+ul.tabbernav li.tabberactive a
+{
+ background-color: #fff;
+ border-bottom: 1px solid #fff;
+}
+
+ul.tabbernav li.tabberactive a:hover
+{
+ color: #000;
+ background: white;
+ border-bottom: 1px solid white;
+}
+
+.tabberlive .tabbertab {
+ margin: 0;
+ padding:0;
+ border: 0;
+}
+

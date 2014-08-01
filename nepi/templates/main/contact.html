@@ -1,55 +1,94 @@
 {% extends "base.html" %}
-{% comment %}
-{% load i18n %}
 
-{% block stylesheet %}{% endblock %}
+{% block title %}
+    Contact ICAP
+{% endblock %}
 
-{% block bodyclass %}login{% endblock %}
-
-{% block content_title %}{% endblock %}
-
-{% block breadcrumbs %}{% endblock %}
+{% block js %}
+    <script src="/site_media/js/captcha.js"></script>
+{% endblock %}
 
 {% block content %}
-<div id="breadcrumbbar">
-    <span class="here">You are Here:</span>  
-    &gt;    Contact
-</div>
-{% if error_message %}
-<p class="errornote">{{ error_message }}</p>
-{% endif %}
-
-<form action="" method="post">{% csrf_token %}
-    {{ form.non_field_errors }}
-<br/>
-    <div class="fieldWrapper">
-        {{ form.sender.errors }}
-        <label for="id_sender">Your email address:</label>
-        {{ form.sender }}
+<div class="contact-icap">
+    <h1>Contact ICAP</h1>
+    <form action="/contact/" method="post">
+    {% csrf_token %}
+    
+    {% if form.errors|length %}
+        <div class="alert alert-block alert-error">
+            <strong>Please correct errors before continuing</strong>
+            {% if form.non_field_errors %}
+                <div>{{ form.non_field_errors}}</div>
+            {% endif %}
+        </div>
+    {% endif %}
+    
+    <div class="fieldWrapper control-group {% if form.first_name.errors %}error{% endif %}">
+        <label for="id_first_name"><b>Your name is:</b></label>
+        <div class="controls">
+            <span>
+                <input id="id_first_name" maxlength="50" name="first_name" type="text"
+                 value="{{form.data.first_name}}" placeholder="Given Name">
+            </span>&nbsp;&nbsp;
+            <span>
+                <input id="id_last_name" maxlength="50" name="last_name"
+                 value="{{form.data.last_name}}"
+                 type="text" placeholder="Surname">
+            </span>
+            
+            {% if form.first_name.errors or form.last_name.errors %}
+                <div class="help-inline">First and last name are required</div>
+            {% endif %}
+        </div>
     </div>
-<br/>
-    <div class="fieldWrapper">
-        {{ form.subject.errors }}
-        <label for="id_subject">Email subject:</label>
-        {{ form.subject }}
+    
+    <div class="fieldWrapper control-group {% if form.sender.errors %}error{% endif %} wide">
+        <label for="id_sender"><b>Your email address:</b></label>
+        <div class="controls">
+            {{form.sender}}
+            {% if form.sender.errors %}
+                <div class="help-inline">{{form.sender.errors}}</div>
+            {% endif %}
+        </div>
     </div>
-<br/>
-    <div class="fieldWrapper">
-        {{ form.message.errors }}
-        <label for="id_message">Your message:</label>
-        {{ form.message }}
+    
+    <div class="fieldWrapper control-group {% if form.subject.errors %}error{% endif %} wide">
+        <label for="id_subject"><b>Subject:</b></label>
+        <div class="controls">
+            {{form.subject}}
+            {% if form.subject.errors %}
+                <div class="help-inline">{{form.subject.errors}}</div>
+            {% endif %}
+        </div>
     </div>
-
-    <p><input type="submit" value="Send message" /></p>
-</form>
-{% endcomment %}
-
-{% block content %}
-<form action="/contact/" method="post">
-{% csrf_token %}
-{{ form.as_p }}
-<p><input type="submit" value="Submit" class="btn btn-primary" /></p>
-</form>
+    
+    <div class="fieldWrapper control-group {% if form.message.errors %}error{% endif %} wide">
+        <label for="id_message"><b>Message:</b></label>
+        <div class="controls">
+            {{form.message}}
+            {% if form.message.errors %}
+                <div class="help-inline">{{form.message.errors}}</div>
+            {% endif %}
+        </div>
+    </div>    
+    
+    <div class="fieldWrapper control-group {% if form.captcha.errors %}error{% endif %}">
+        <label for="id_captcha_0">
+            <div><b>Please verify you are a person:</b></div>
+        </label>
+        <div class="controls">
+            {{form.captcha}} {% if form.captcha.errors %} <span class="help-inline">{{form.captcha.errors}}</span>{% endif %}
+        </div>
+    </div>
+    <div class="help-inline captcha">
+        Type the characters you see in the picture.<br />
+        <button class="btn btn-default js-captcha-refresh">Refresh the image</button> if you can't read the picture.<br />
+    </div>
+    
+    <br />
+    <input type="submit" value="Send Message" class="btn btn-primary" />
+    </form>
+</div>    
 {% endblock %}
 
 

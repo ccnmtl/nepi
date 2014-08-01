@@ -35,6 +35,8 @@ if 'test' in sys.argv or 'jenkins' in sys.argv:
         }
     }
 
+    CAPTCHA_TEST_MODE = True
+
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 SOUTH_TESTS_MIGRATE = False
 
@@ -210,7 +212,8 @@ PAGEBLOCKS = ['pageblocks.HTMLBlockWYSIWYG',
               'activities.CalendarChart',
               'activities.DosageActivity',
               'activities.ARTCard',
-              'activities.RetentionRateCard']
+              'activities.RetentionRateCard',
+              'activities.AdherenceCard']
 
 AUTH_PROFILE_MODULE = 'nepi.main.UserProfile'
 
@@ -218,3 +221,6 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
 }
+
+ICAP_MAILING_LIST = 'ccnmtl-icap@ccnmtl.columbia.edu'
+NEPI_MAILING_LIST = 'ccnmtl-nepi@ccnmtl.columbia.edu'

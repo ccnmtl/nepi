@@ -1,0 +1,6 @@
+Thank you for registering for the NEPI application.
+
+Your user information is {{user.username}}.
+
+You can log in to {{site.domain}} using the log in form on the front page.
+                          

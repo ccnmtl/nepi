@@ -16,17 +16,25 @@ from quizblock.models import Quiz
 class Country(models.Model):
     '''Users can select counties from drop down menu,
     countries are stored by their official 2 letter codes.'''
-    name = models.CharField(max_length=2, choices=COUNTRY_CHOICES, blank=True)
+    name = models.CharField(max_length=2, choices=COUNTRY_CHOICES, unique=True)
+    display_name = models.TextField()
+
+    class Meta:
+        ordering = ['name']
 
     def __unicode__(self):
-        return self.name
+        return self.display_name
 
 
 class School(models.Model):
     '''Some of the countries have fairly long names,
     assuming the schools may also have long names.'''
-    country = models.ForeignKey(Country, blank=True, default=None)
-    name = models.CharField(blank=True, max_length=50)
+    country = models.ForeignKey(Country)
+    name = models.CharField(max_length=1024)
+
+    class Meta:
+        ordering = ['name']
+        unique_together = ['name', 'country']
 
     def __unicode__(self):
         return self.name
@@ -56,10 +64,9 @@ class UserProfile(models.Model):
     '''UserProfile adds exta information to a user,
     and associates the user with a group, school,
     and counrty.'''
-    user = models.ForeignKey(User, related_name="application_user")
+    user = models.OneToOneField(User, related_name="profile")
     profile_type = models.CharField(max_length=2, choices=PROFILE_CHOICES)
-    country = models.ForeignKey(Country, null=True, default=None, blank=True)
-    # not sure why we are saving this in user profile
+    country = models.ForeignKey(Country)
     icap_affil = models.BooleanField(default=False)
     school = models.ForeignKey(School, null=True, default=None, blank=True)
     group = models.ManyToManyField(

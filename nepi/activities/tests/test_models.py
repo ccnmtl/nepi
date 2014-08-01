@@ -1,11 +1,42 @@
-from factories import ConversationScenarioFactory, \
-    ConvClickFactory
-from nepi.main.tests.factories import UserFactory
 from django.test import TestCase
+
+from nepi.main.tests.factories import UserFactory
 from nepi.activities.models import ConversationResponse
+
+from factories import ConversationScenarioFactory, \
+    ConvClickFactory, GoodConversationFactory, \
+    ConversationPageblockHierarchyFactory
+
+
+class TestConvClick(TestCase):
+    def test_unicode(self):
+        c = ConvClickFactory()
+        self.assertEqual(str(c), "G Click")
+
+
+class TestConversation(TestCase):
+    def test_unicode(self):
+        g = GoodConversationFactory()
+        self.assertEqual(str(g), "G")
 
 
 class TestConversationScenario(TestCase):
+    def test_unicode(self):
+        c = ConversationPageblockHierarchyFactory()
+        self.assertEqual(str(c), "conv_hierarchy")
+
+
+# class TestConversationResponse(TestCase):
+#    def test_unicode(self):
+#        cr = ConversationResponse(conv_scen = ConversationScenarioFactory(),
+#                                         user = UserFactory(),
+#                                         first_click = ConvClickFactory(),
+#                                         second_click = ConvClickFactory(),
+#                                         third_click = ConvClickFactory())
+#        # self.assertEqual(str(cr), conv_hierarchy)
+
+
+class TestLRConversationScenario(TestCase):
     '''We want to make sure we can create a conversation
      response associated with the user upon submission.'''
 

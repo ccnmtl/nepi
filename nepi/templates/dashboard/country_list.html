@@ -1,4 +1,4 @@
-        <div id="pane-content">
+        <div id="join_form">
         <script>
             var country_change = jQuery('#id_country');
 
@@ -20,7 +20,7 @@
             });
         </script>
         
-        <form id="join_group" action="/join_group/" method="post">{% csrf_token %}
+
         <input type="hidden" value={{request.user.pk}}>
         <div id="country_list">
             <select id="id_country" name="country" >

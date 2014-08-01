@@ -5,6 +5,8 @@ from pagetree.models import PageBlock
 from datetime import datetime
 from django import forms
 from django.core.urlresolvers import reverse
+from quizblock.models import Quiz, Submission, Response
+from django.contrib.contenttypes.models import ContentType
 
 
 CONV_CHOICES = (
@@ -146,6 +148,8 @@ class ConversationScenario(models.Model):
             elif (response.first_click is not None
                     and response.second_click is None):
                 return response.first_click.conversation.scenario_type
+            else:
+                return 0
         except ConversationResponse.DoesNotExist:
             return 0
 
@@ -268,6 +272,72 @@ class ARTCard(models.Model):
 class ARTCardForm(forms.ModelForm):
     class Meta:
         model = ARTCard
+
+
+class AdherenceCard(models.Model):
+    pageblocks = generic.GenericRelation(PageBlock)
+    template_file = "activities/adherencecard.html"
+    js_template_file = "activities/adherencecard_js.html"
+    css_template_file = "activities/adherencecard_css.html"
+    display_name = "Adherence Card"
+    intro_text = models.TextField(default='')
+
+    def pageblock(self):
+        return self.pageblocks.all()[0]
+
+    def __unicode__(self):
+        return unicode(self.pageblock())
+
+    def needs_submit(self):
+        '''I believe all of the "needs submit" stuff is being taken
+        care of in the javascript...'''
+        return False
+
+    @classmethod
+    def add_form(self):
+        return AdherenceCardForm()
+
+    def edit_form(self):
+        return AdherenceCardForm(instance=self)
+
+    @classmethod
+    def create(self, request):
+        form = AdherenceCardForm(request.POST)
+        return form.save()
+
+    def edit(self, vals, files):
+        form = AdherenceCardForm(data=vals, files=files, instance=self)
+        if form.is_valid():
+            form.save()
+
+    def unlocked(self, user):
+        return True
+
+    def quizzes(self):
+        # This is for generic relation?
+        ctype = ContentType.objects.get_for_model(Quiz)
+        # Getting matching quiz blocks based on .css
+        blocks = PageBlock.objects.filter(content_type__pk=ctype.pk,
+                                          css_extra__contains=self.quiz_class)
+        # what does this do?
+        ids = blocks.values_list('object_id', flat=True)
+        return Quiz.objects.filter(id__in=ids)
+
+    def user_responses(self, user, quiz):
+        '''No idea if this is the right way to do this'''
+        quiz = self.quizzes(quiz)
+        user = User.objects.get(user=user)
+        try:
+            user_submission = Submission.objects.get(user=user, quiz=quiz)
+            response = Response.objects.get(Submission=user_submission)
+            return response.value
+        except Submission.DoesNotExist:
+            return None
+
+
+class AdherenceCardForm(forms.ModelForm):
+    class Meta:
+        model = AdherenceCard
 
 
 class RetentionRateCard(models.Model):

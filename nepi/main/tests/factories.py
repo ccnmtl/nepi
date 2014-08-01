@@ -16,13 +16,15 @@ class UserFactory(factory.DjangoModelFactory):
 
 class CountryFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Country
-    name = "LS"
+
+    name = factory.Sequence(lambda n: "%d" % (n))
+    display_name = factory.Sequence(lambda n: "country %d" % n)
 
 
 class SchoolFactory(factory.DjangoModelFactory):
     FACTORY_FOR = School
     country = factory.SubFactory(CountryFactory)
-    name = "Test School"
+    name = factory.Sequence(lambda n: "school %d" % n)
 
 
 class GroupFactory(factory.DjangoModelFactory):
