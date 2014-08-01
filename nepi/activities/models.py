@@ -322,19 +322,20 @@ class AdherenceCard(models.Model):
                                           css_extra__contains=self.quiz_class)
         # print blocks[0].css_extra # works the way it should
         ids = blocks.values_list('object_id', flat=True)
-        print ids
+        # print ids
         return Quiz.objects.filter(id__in=ids)
 
     def user_responses(self, user):
         '''No idea if this is the right way to do this'''
         quizzes = self.quizzes()
-        print quizzes.pk
+        # print quizzes.pk
         user = User.objects.get(pk=user.pk)
         try:
-            for quiz in quizzes:
-                user_submission = Submission.objects.get(user=user, quiz=quiz)
-                response = Response.objects.get(Submission=user_submission)
-            return response.value
+            # I'm not bothering to account for multiple questions spec says one
+            user_submission = Submission.objects.get(user=user, quiz=quiz)
+            print user_submission
+            response = Response.objects.get(Submission=user_submission)
+            print response.value
         except Submission.DoesNotExist:
             return None
 
