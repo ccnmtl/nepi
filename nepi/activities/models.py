@@ -315,27 +315,20 @@ class AdherenceCard(models.Model):
         return True
 
     def quizzes(self):
-        # This is for generic relation?
         ctype = ContentType.objects.get_for_model(Quiz)
-        # print ctype.pk
         blocks = PageBlock.objects.filter(content_type__pk=ctype.pk,
                                           css_extra__contains=self.quiz_class)
-        # print blocks[0].css_extra # works the way it should
         ids = blocks.values_list('object_id', flat=True)
-        # print ids
         return Quiz.objects.filter(id__in=ids)
 
     def user_responses(self, user):
         '''No idea if this is the right way to do this'''
-        quizzes = self.quizzes()
-        # print quizzes.pk
+        quiz = self.quizzes()
         user = User.objects.get(pk=user.pk)
         try:
-            # I'm not bothering to account for multiple questions spec says one
-            user_submission = Submission.objects.get(user=user, quiz=quiz)
-            print user_submission
-            response = Response.objects.get(Submission=user_submission)
-            print response.value
+            user_submission = Submission.objects.get(user=user, quiz=quiz[0])
+            response = Response.objects.get(submission=user_submission)
+            return response.value
         except Submission.DoesNotExist:
             return None
 
