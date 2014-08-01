@@ -49,6 +49,11 @@
 	text-align: center;
 }
 
+#correct_open.right-selected, #wrong_open.wrong-selected {
+	color: #000;
+}
+
+
 /* Pt2: Open-Ended Questions */ 
 
 .s2_act_02 #correct_open {
@@ -57,17 +62,74 @@
 	left: 35px;
 }
 
+.s2_act_02 #correct_open:before {
+	content: "";
+	position: absolute;
+	border-style: solid;
+	display: block;
+	width: 0;
+	top: 10px;
+	bottom: auto;
+	left: auto;
+	right: -30px;
+	border-width: 15px 0 15px 30px;
+	border-color: transparent #ccc;
+}
+
+.s2_act_02 #correct_open:after {
+	content: "";
+	position: absolute;
+	border-style: solid;
+	display: block;
+	width: 0;
+	top: 16px;
+	bottom: auto;
+	left: auto;
+	right: -21px;
+	border-width: 9px 0 9px 21px;
+	border-color: transparent #fff;
+}
+
 .s2_act_02 #wrong_open {
 	position: relative;
 	top: 85px;
 	left: -520px;
 }
 
+.s2_act_02 #wrong_open:before {
+	content: "";
+	position: absolute;
+	border-style: solid;
+	display: block;
+	width: 0;
+	top: 10px;
+	bottom: auto;
+	left: auto;
+	right: -30px;
+	border-width: 15px 0 15px 30px;
+	border-color: transparent #ccc;
+}
+
+
+
+.s2_act_02 #wrong_open:after {
+	content: "";
+	position: absolute;
+	border-style: solid;
+	display: block;
+	width: 0;
+	top: 16px;
+	bottom: auto;
+	left: auto;
+	right: -21px;
+	border-width: 9px 0 9px 21px;
+	border-color: transparent #fff;
+}
+
 .s2_act_02 .correct_answer1 {
 	position: relative;
 	top: -245px;
 	left: 680px;
-	position: relative;
 	width: 200px;
 	padding: 40px 30px;
 	margin: 1em auto 80px;
@@ -93,7 +155,6 @@
 	-moz-border-radius: 30px;
 	border-radius: 30px;
 	background-color: #fff;
-
 }
 
 /* creates the smaller circle */
@@ -112,45 +173,173 @@
 
 .s2_act_02 .correct_answer2 {
 	position: relative;
-	top: -180px;
-	left: 845px;
+	top: -280px;
+	left: 875px;
 }
+
+.s2_act_02 .correct_answer2:before {
+	content: "";
+	position: absolute;
+	border-style: solid;
+	display: block;
+	width: 0;
+	top: 10px;
+	top: 10px;
+	bottom: auto;
+	left: -30px;
+	border-width: 15px 30px 15px 0;
+	border-color: transparent #80b6e6;
+}
+
+.s2_act_02 .correct_answer2:after{
+	content: "";
+	position: absolute;
+	border-style: solid;
+	display: block;
+	width: 0;
+	top: 16px;
+	bottom: auto;
+	left: -21px;
+	border-width: 9px 21px 9px 0;
+	border-color: transparent #fff;
+}
+
 .s2_act_02 .correct_answer3 {
-	border: none;
+	position: relative;
+	top: -550px;
+	left: 450px;
 }
+
 .s2_act_02 .correct_answer4 {
 	position: relative;
 	width: 150%;
 	left: 100px;
-	top: -35px;
+	top: -200px;
+}
+
+.s2_act_02 .correct_answer4 p {
+	margin: 0px;
+	padding: 10px;
+}
+
+.s2_act_02 .correct_answer4 p.nurse {
+	background-color: #d9eaf5;
+	text-align: left;
+}
+
+.s2_act_02 .correct_answer4 p.mother {
+	background-color: #c7e3f5;
+	text-align: right;
 }
 
 
 .s2_act_02 .wrong_answer1 {
 	position: relative;
-	top: -150px;
-	left: 265px;
-	border-radius: 90px;
-	padding: 30px;
-	width: 124px;	
+	top: -180px;
+	left: 125px;
+	width: 200px;
+	padding: 40px 35px;
+	margin: 1em auto 80px;
+	text-align: center;
+	-webkit-border-top-left-radius: 220px 120px;
+	-webkit-border-top-right-radius: 220px 120px;
+	-webkit-border-bottom-right-radius: 220px 120px;
+	-webkit-border-bottom-left-radius: 220px 120px;
+	-moz-border-radius: 220px / 120px;
+	border-radius: 220px / 120px;
 }
+
+.s2_act_02 .wrong_answer1:before {
+	content: "";
+	position: absolute;
+	bottom: -10px;
+	left: 20px;
+	width: 30px;
+	height: 30px;
+	border: solid 4px #f5463a;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+	border-radius: 30px;
+	background-color: #fff;
+}
+
+.s2_act_02 .wrong_answer1:after {
+	content: "";
+	position: absolute;
+	bottom: -20px;
+	left: 1px;
+	width: 15px;
+	height: 15px;
+	border: solid 4px #f5463a;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+}
+
 .s2_act_02 .wrong_answer2 {
 	position: relative;
-	top: -130px;
-	left: 270px;
+	top: -230px;
+	left: 300px;
 }
 	
+.s2_act_02 .wrong_answer2:before {
+	content: "";
+	position: absolute;
+	border-style: solid;
+	display: block;
+	width: 0;
+	top: 3px;
+	bottom: auto;
+	left: -30px;
+	border-width: 15px 30px 15px 0;
+	border-color: transparent #f5463a;
+}
+
+.s2_act_02 .wrong_answer2:after{
+	content: "";
+	position: absolute;
+	border-style: solid;
+	display: block;
+	width: 0;
+	top:9px;
+	bottom: auto;
+	left: -21px;
+	border-width: 9px 21px 9px 0;
+	border-color: transparent #fff;
+}
+
 
 .s2_act_02 .wrong_answer3 {
 	position: relative;
-	border: none;
+	top: -450px;
+	left: -105px;
 }
+
 .s2_act_02 .wrong_answer4 {
 	position: relative;
 	width: 150%;
 	left: -450px;
-	top: 50px;
+	top: -150px;
 }
+
+.s2_act_02 .wrong_answer4 p {
+	margin: 0px;
+	padding: 10px;
+}
+
+.s2_act_02 .wrong_answer4 p.nurse {
+	background-color: #f6d4ca;
+	text-align: left;
+}
+
+.s2_act_02 .wrong_answer4 p.mother {
+	background-color: #ef977f;
+	text-align: right;
+}
+
+
+
+
 
 /* Pt3: Non-judgmental words */ 
 
