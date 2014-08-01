@@ -217,9 +217,9 @@
 	top: -200px;
 }
 
-
 .s2_act_02 .correct_answer4 p {
-	margin: 0px
+	margin: 0px;
+	padding: 10px;
 }
 
 .s2_act_02 .correct_answer4 p.nurse {
@@ -231,6 +231,7 @@
 	background-color: #c7e3f5;
 	text-align: right;
 }
+
 
 .s2_act_02 .wrong_answer1 {
 	position: relative;
@@ -320,6 +321,25 @@
 	left: -450px;
 	top: -150px;
 }
+
+.s2_act_02 .wrong_answer4 p {
+	margin: 0px;
+	padding: 10px;
+}
+
+.s2_act_02 .wrong_answer4 p.nurse {
+	background-color: #f6d4ca;
+	text-align: left;
+}
+
+.s2_act_02 .wrong_answer4 p.mother {
+	background-color: #ef977f;
+	text-align: right;
+}
+
+
+
+
 
 /* Pt3: Non-judgmental words */ 
 
