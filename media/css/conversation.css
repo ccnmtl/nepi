@@ -3,19 +3,13 @@
 	width: 50%;
 	float: left;
 	position: absolute;
-	top: -300px;
-
 }
 
 #bad_con {
 	width: 50%;
 	float: left;
 	position: absolute;
-	top: -300px;
-
 }
-
-
 
 .correct_answer1, .correct_answer2, .correct_answer3, .correct_answer4 {
 	border: solid 4px #80b6e6;
@@ -55,10 +49,13 @@
 
 
 /* Pt2: Open-Ended Questions */ 
+.s2_act_02 {
+	min-height: 300px;
+}
 
 .s2_act_02 #correct_open {
 	position: absolute;
-	top: -65px;
+	top: -400px;
 	left: 35px;
 }
 
@@ -92,8 +89,9 @@
 
 .s2_act_02 #wrong_open {
 	position: absolute;
-	top: 85px;
-	left: -520px;
+top: -250px;
+left: 35px;
+
 }
 
 .s2_act_02 #wrong_open:before {
@@ -128,8 +126,8 @@
 
 .s2_act_02 .correct_answer1 {
 	position: absolute;
-	top: -245px;
-	left: 680px;
+top: -425px;
+left: 800px;
 	width: 200px;
 	padding: 40px 30px;
 	margin: 1em auto 80px;
@@ -173,7 +171,7 @@
 
 .s2_act_02 .correct_answer2 {
 	position: absolute;
-	top: -280px;
+	top: -250px;
 	left: 875px;
 }
 
@@ -206,15 +204,14 @@
 
 .s2_act_02 .correct_answer3 {
 	position: absolute;
-	top: -550px;
-	left: 450px;
+top: -400px;
+left: 475px;
+width: 150px;
 }
 
 .s2_act_02 .correct_answer4 {
 	position: absolute;
 	width: 150%;
-	left: 100px;
-	top: -200px;
 }
 
 .s2_act_02 .correct_answer4 p {
@@ -235,9 +232,8 @@
 
 .s2_act_02 .wrong_answer1 {
 	position: absolute;
-	top: -180px;
-	left: 125px;
-	width: 200px;
+	top: -425px;
+	left: 800px;
 	padding: 40px 35px;
 	margin: 1em auto 80px;
 	text-align: center;
@@ -278,8 +274,8 @@
 
 .s2_act_02 .wrong_answer2 {
 	position: absolute;
-	top: -230px;
-	left: 300px;
+	top: -220px;
+	left: 875px;
 }
 	
 .s2_act_02 .wrong_answer2:before {
@@ -311,15 +307,15 @@
 
 .s2_act_02 .wrong_answer3 {
 	position: absolute;
-	top: -450px;
-	left: -105px;
+top: -400px;
+left: 475px;
+width: 150px;
 }
 
 .s2_act_02 .wrong_answer4 {
 	position: absolute;
 	width: 150%;
-	left: -450px;
-	top: -150px;
+
 }
 
 .s2_act_02 .wrong_answer4 p {
