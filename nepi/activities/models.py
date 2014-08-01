@@ -317,19 +317,19 @@ class AdherenceCard(models.Model):
     def quizzes(self):
         # This is for generic relation?
         ctype = ContentType.objects.get_for_model(Quiz)
-        print ctype
-        # Getting matching quiz blocks based on .css
+        # print ctype.pk
         blocks = PageBlock.objects.filter(content_type__pk=ctype.pk,
                                           css_extra__contains=self.quiz_class)
-        print blocks
-        # what does this do?
+        # print blocks[0].css_extra # works the way it should
         ids = blocks.values_list('object_id', flat=True)
+        print ids
         return Quiz.objects.filter(id__in=ids)
 
     def user_responses(self, user):
         '''No idea if this is the right way to do this'''
         quizzes = self.quizzes()
-        user = User.objects.get(user=user)
+        print quizzes.pk
+        user = User.objects.get(pk=user.pk)
         try:
             for quiz in quizzes:
                 user_submission = Submission.objects.get(user=user, quiz=quiz)
