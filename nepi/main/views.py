@@ -464,19 +464,31 @@ class GroupDetail(LoggedInMixin, DetailView):
 
 
 class RemoveStudent(LoggedInMixin, JSONResponseMixin, View):
-    pass
+    '''Think this has to be ajax, doing in Django
+    is just as much trouble...'''
+    template_name = 'dashboard/icap_dashboard.html'
+
+    def post(self, request):
+        scenario = get_object_or_404(Group,
+                                     pk=request.POST['group'])
+        conversation = get_object_or_404(UserProfile,
+                                         pk=request.POST['conversation'])
+#         conclick = ConvClick.objects.create(conversation=conversation)
+#         conclick.save()
+        user_profile = UserProfile.objects.get(user__id=request.user.pk)
+        leave_group = Group.objects.get(pk=pk)
+        leave_group.userprofile_set.remove(user_profile)
+        # user_profile.__group_set.remove(leave_group)
+        return HttpResponseRedirect("/")
 
 
 class LeaveGroup(LoggedInMixin, View):
     template_name = 'dashboard/icap_dashboard.html'
 
     def get(self, request, pk):
-        print request.user.pk
         user_profile = UserProfile.objects.get(user__id=request.user.pk)
-        print user_profile
         leave_group = Group.objects.get(pk=pk)
         leave_group.userprofile_set.remove(user_profile)
-        # user_profile.__group_set.remove(leave_group)
         return HttpResponseRedirect("/")
 
 # class LeaveGroup(LoggedInMixin, JSONResponseMixin, View):
