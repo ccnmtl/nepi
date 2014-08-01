@@ -49,6 +49,11 @@
 	text-align: center;
 }
 
+#correct_open.right-selected, #wrong_open.wrong-selected {
+	color: #000;
+}
+
+
 /* Pt2: Open-Ended Questions */ 
 
 .s2_act_02 #correct_open {
@@ -104,6 +109,8 @@
 	border-width: 15px 0 15px 30px;
 	border-color: transparent #ccc;
 }
+
+
 
 .s2_act_02 #wrong_open:after {
 	content: "";
@@ -198,15 +205,32 @@
 }
 
 .s2_act_02 .correct_answer3 {
-	border: none;
+	position: relative;
+	top: -550px;
+	left: 450px;
 }
+
 .s2_act_02 .correct_answer4 {
 	position: relative;
 	width: 150%;
 	left: 100px;
-	top: -35px;
+	top: -200px;
 }
 
+
+.s2_act_02 .correct_answer4 p {
+	margin: 0px
+}
+
+.s2_act_02 .correct_answer4 p.nurse {
+	background-color: #d9eaf5;
+	text-align: left;
+}
+
+.s2_act_02 .correct_answer4 p.mother {
+	background-color: #c7e3f5;
+	text-align: right;
+}
 
 .s2_act_02 .wrong_answer1 {
 	position: relative;
@@ -286,13 +310,15 @@
 
 .s2_act_02 .wrong_answer3 {
 	position: relative;
-	border: none;
+	top: -450px;
+	left: -105px;
 }
+
 .s2_act_02 .wrong_answer4 {
 	position: relative;
 	width: 150%;
 	left: -450px;
-	top: 50px;
+	top: -150px;
 }
 
 /* Pt3: Non-judgmental words */ 
