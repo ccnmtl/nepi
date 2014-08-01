@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth.models import User
 from django.core import mail
 from django.test import TestCase, RequestFactory
@@ -5,9 +6,9 @@ from django.test.client import Client
 from factories import UserFactory, HierarchyFactory, UserProfileFactory, \
     TeacherProfileFactory, ICAPProfileFactory
 from nepi.main.forms import ContactForm
-from nepi.main.models import UserProfile, Country
+from nepi.main.models import UserProfile, Country, School, Group
 from nepi.main.tests.factories import SchoolFactory, CountryFactory
-from nepi.main.views import ContactView, ViewPage
+from nepi.main.views import ContactView, ViewPage, CreateSchoolView
 from pagetree.models import UserPageVisit, Section
 import json
 
@@ -264,3 +265,35 @@ class TestSchoolView(TestCase):
         self.assertEquals(the_json['schools'][0]['name'], '-----')
         self.assertEquals(the_json['schools'][1]['id'], str(self.school.id))
         self.assertEquals(the_json['schools'][1]['name'], self.school.name)
+
+
+class TestCreateSchoolView(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.country = Country(name='LS')
+        self.country.save()
+        self.school = School(country=self.country, name='School 1')
+        self.school.save()
+        self.group = Group(school=self.school,
+                           name="Group",
+                           start_date=datetime.now(),
+                           end_date=datetime.now())
+        self.student = User(first_name="student", last_name="student",
+                            username="student", email="student@email.com",
+                            password="student")
+        self.student.save()
+        self.teacher = User(first_name="teacher", last_name="teacher",
+                            username="teacher", email="teacher@email.com",
+                            password="teacher")
+        self.teacher.save()
+
+    def test_create_school(self):
+        '''CreateSchoolView'''
+        u = UserFactory()
+        request = self.factory.post(
+            '/add_school/',
+            {"name": "School Needs Name",
+             "creator": u,
+             "country": self.country})
+        request.user = u
+        CreateSchoolView.as_view()(request)
