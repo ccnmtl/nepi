@@ -125,7 +125,7 @@ class StudentDashboard(LoggedInMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(StudentDashboard, self).get_context_data(**kwargs)
-        context['modules'] = Hierarchy.objects.all()
+        context['hierarchy'] = Hierarchy.objects.get(name='main')
         return context
 
 

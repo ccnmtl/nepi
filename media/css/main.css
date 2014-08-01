@@ -996,3 +996,16 @@ ul.tabbernav li.tabberactive a:hover
  border: 0;
 }
 
+div.module-introduction {
+    width: 75%;
+}
+
+div.session-progress {
+    border: 1px solid black;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    padding: 20px;
+    width: 200px;
+}
