@@ -331,8 +331,9 @@ class AdherenceCard(models.Model):
         quizzes = self.quizzes()
         user = User.objects.get(user=user)
         try:
-            user_submission = Submission.objects.get(user=user, quiz=quiz)
-            response = Response.objects.get(Submission=user_submission)
+            for quiz in quizzes:
+                user_submission = Submission.objects.get(user=user, quiz=quiz)
+                response = Response.objects.get(Submission=user_submission)
             return response.value
         except Submission.DoesNotExist:
             return None
