@@ -57,14 +57,15 @@ class CreateAccountForm(forms.Form):
         country = form.get("country")
 
         if is_teacher:
-            if email == "":
+            if email is None or email == "":
                 self._errors["email"] = self.error_class(
                     ["If you are registering as an instructor " +
                      "you must enter a valid email address"])
-            if school == "" or school == "-----":
+            if school is None or school == "" or school == "-----":
                 self._errors["school"] = self.error_class(
                     ["If you are registering as an instructor " +
                      "you must select a school"])
+
         if password1 != password2:
             self._errors["password1"] = self.error_class(
                 ["Passwords must match each other."])
