@@ -2,7 +2,7 @@
 #good_con {
 	width: 50%;
 	float: left;
-	position: relative;
+	position: absolute;
 	top: -300px;
 
 }
@@ -10,7 +10,7 @@
 #bad_con {
 	width: 50%;
 	float: left;
-	position: relative;
+	position: absolute;
 	top: -300px;
 
 }
@@ -57,7 +57,7 @@
 /* Pt2: Open-Ended Questions */ 
 
 .s2_act_02 #correct_open {
-	position: relative;
+	position: absolute;
 	top: -65px;
 	left: 35px;
 }
@@ -91,7 +91,7 @@
 }
 
 .s2_act_02 #wrong_open {
-	position: relative;
+	position: absolute;
 	top: 85px;
 	left: -520px;
 }
@@ -127,7 +127,7 @@
 }
 
 .s2_act_02 .correct_answer1 {
-	position: relative;
+	position: absolute;
 	top: -245px;
 	left: 680px;
 	width: 200px;
@@ -172,7 +172,7 @@
 }
 
 .s2_act_02 .correct_answer2 {
-	position: relative;
+	position: absolute;
 	top: -280px;
 	left: 875px;
 }
@@ -205,13 +205,13 @@
 }
 
 .s2_act_02 .correct_answer3 {
-	position: relative;
+	position: absolute;
 	top: -550px;
 	left: 450px;
 }
 
 .s2_act_02 .correct_answer4 {
-	position: relative;
+	position: absolute;
 	width: 150%;
 	left: 100px;
 	top: -200px;
@@ -234,7 +234,7 @@
 
 
 .s2_act_02 .wrong_answer1 {
-	position: relative;
+	position: absolute;
 	top: -180px;
 	left: 125px;
 	width: 200px;
@@ -277,7 +277,7 @@
 }
 
 .s2_act_02 .wrong_answer2 {
-	position: relative;
+	position: absolute;
 	top: -230px;
 	left: 300px;
 }
@@ -310,13 +310,13 @@
 
 
 .s2_act_02 .wrong_answer3 {
-	position: relative;
+	position: absolute;
 	top: -450px;
 	left: -105px;
 }
 
 .s2_act_02 .wrong_answer4 {
-	position: relative;
+	position: absolute;
 	width: 150%;
 	left: -450px;
 	top: -150px;
@@ -347,7 +347,7 @@
 	border-radius: 10px;
 	padding: 10px;
 	text-align: center;
-	position: relative;
+	position: absolute;
 	top: -400px;
 	width: 200px;
 	left: 80px;
@@ -383,7 +383,7 @@
 
 
 .s2_act_03 #correct_open {
-	position: relative;
+	position: absolute;
 	top: -200px;
 	left: 833px;
 }
@@ -396,9 +396,8 @@
 	width: 0;
 	top: 10px;
 	bottom: auto;
-	left: auto;
-	right: -30px;
-	border-width: 15px 0 15px 30px;
+	left: -30px;
+	border-width: 15px 30px 15px 0;
 	border-color: transparent #ccc;
 }
 
@@ -410,14 +409,13 @@
 	width: 0;
 	top: 16px;
 	bottom: auto;
-	left: auto;
-	right: -21px;
-	border-width: 9px 0 9px 21px;
+	left: -21px;
+	border-width: 9px 21px 9px 0;
 	border-color: transparent #fff;
 }
 
 .s2_act_03 #wrong_open {
-	position: relative;
+	position: absolute;
 	top: 5px;
 	left: 275px;
 }
@@ -430,9 +428,8 @@
 	width: 0;
 	top: 10px;
 	bottom: auto;
-	left: auto;
-	right: -30px;
-	border-width: 15px 0 15px 30px;
+	left: -30px;
+	border-width: 15px 30px 15px 0;
 	border-color: transparent #ccc;
 }
 
@@ -445,15 +442,14 @@
 	width: 0;
 	top: 16px;
 	bottom: auto;
-	left: auto;
-	right: -21px;
-	border-width: 9px 0 9px 21px;
+	left: -21px;
+	border-width: 9px 21px 9px 0;
 	border-color: transparent #fff;
 }
 
 
 .s2_act_03 .correct_answer1 {
-	position: relative;
+	position: absolute;
 	top: -205px;
 	left: -100px;
 	width: 200px;
@@ -509,7 +505,7 @@
 
 
 .s2_act_03 .wrong_answer1 {
-position: relative;
+position: absolute;
 top: -150px;
 left: -450px;
 border-radius: 90px;
@@ -548,7 +544,7 @@ width: 124px;
 }
 	
 .s2_act_03 .wrong_answer3 {
-	position: relative;
+	position: absolute;
 	border: none;
 }
 .s2_act_03 .wrong_answer4 {
@@ -560,20 +556,20 @@ width: 124px;
 
 
 .s2_act_04 #correct_open {
-position: relative;
+position: absolute;
 top: -100px;
 left: 50px;
 
 }
 
 .s2_act_04 #wrong_open {
-position: relative;
+position: absolute;
 top: 65px;
 left: -505px;
 }
 
 .s2_act_04 .correct_answer1 {
-position: relative;
+position: absolute;
 background-color: #fff;
 top: -205px;
 left: 765px;
@@ -593,7 +589,7 @@ width: 124px;
 
 
 .s2_act_04 .wrong_answer1 {
-position: relative;
+position: absolute;
 background-color: #fff;
 top: -250px;
 left: 200px;
@@ -607,7 +603,7 @@ width: 124px;
 }
 	
 .s2_act_04 .wrong_answer3 {
-	position: relative;
+	position: absolute;
 	border: none;
 }
 .s2_act_04 .wrong_answer4 {
@@ -621,7 +617,7 @@ border: solid 4px #80b6e6;
 border-radius: 10px;
 padding: 10px;
 text-align: center;
-position: relative;
+position: absolute;
 top: -400px;
 width: 200px;
 left: 80px;
@@ -630,20 +626,20 @@ left: 80px;
 
 
 .s2_act_05 #correct_open {
-	position: relative;
+	position: absolute;
 	top: -200px;
 	left: 813px;
 }
 
 .s2_act_05 #wrong_open {
-position: relative;
+position: absolute;
 top: -15px;
 left: 275px;
 
 }
 
 .s2_act_05 .correct_answer1 {
-position: relative;
+position: absolute;
 background-color: #fff;
 top: -205px;
 left: 70px;
@@ -663,7 +659,7 @@ width: 124px;
 
 
 .s2_act_05 .wrong_answer1 {
-position: relative;
+position: absolute;
 background-color: #fff;
 top: -120px;
 left: -490px;
@@ -676,7 +672,7 @@ width: 124px;
 }
 	
 .s2_act_05 .wrong_answer3 {
-	position: relative;
+	position: absolute;
 	border: none;
 }
 .s2_act_05 .wrong_answer4 {
@@ -691,7 +687,7 @@ border: solid 4px #80b6e6;
 border-radius: 10px;
 padding: 10px;
 text-align: center;
-position: relative;
+position: absolute;
 top: -400px;
 width: 200px;
 left: 80px;
@@ -700,20 +696,20 @@ left: 80px;
 
 
 .s2_act_06 #correct_open {
-	position: relative;
+	position: absolute;
 	top: -200px;
 	left: 813px;
 }
 
 .s2_act_06 #wrong_open {
-position: relative;
+position: absolute;
 top: 0;
 left: 275px;
 
 }
 
 .s2_act_06 .correct_answer1 {
-position: relative;
+position: absolute;
 background-color: #fff;
 top: -245px;
 left: 91px;
@@ -733,7 +729,7 @@ width: 124px;
 
 
 .s2_act_06 .wrong_answer1 {
-position: relative;
+position: absolute;
 background-color: #fff;
 top: -160px;
 left: -460px;
@@ -746,7 +742,7 @@ width: 124px;
 }
 	
 .s2_act_06 .wrong_answer3 {
-	position: relative;
+	position: absolute;
 	border: none;
 }
 .s2_act_06 .wrong_answer4 {
