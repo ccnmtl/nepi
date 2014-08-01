@@ -1,19 +1,24 @@
 '''Views for NEPI, should probably break up
 into smaller pieces.'''
 from django import forms
+from django.conf import settings
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
+from django.template import loader
+from django.template.context import Context
 from django.utils.decorators import method_decorator
 from django.views.generic import View
+from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, FormView, CreateView, \
     UpdateView
 from django.views.generic.list import ListView
 from nepi.activities.views import JSONResponseMixin
+from nepi.main.choices import COUNTRY_CHOICES
 from nepi.main.forms import CreateAccountForm, ContactForm, \
     UpdateProfileForm, CreateGroupForm
 from nepi.main.models import Group, UserProfile, Country, School, \
@@ -80,27 +85,9 @@ class InstructorPage(LoggedInMixinStaff, InstructorView):
     hierarchy_name = "main"
     hierarchy_base = "/pages/main/"
 
-# should make a class to say thank you for... and give appropriate statement.
 
-
-class ThankYou(LoggedInMixin, View):
-
-    def get(self, request):
-        '''not entirely sure how thise will be called yet...
-        need to determine how we will indicate what the situation is...'''
-        if request.is_ajax():
-            pass
-#             if get
-#             pk=self.request.POST.__getitem__('country'))
-
-    def post(self, request):
-        '''again not entirely sure how this is going to be called'''
-        pass
-
-
-def thanks_group(request, group_id):
-    """Returns thanks for joining group page."""
-    return render(request, 'student/thanks_group.html')
+class ThanksGroupView(LoggedInMixin, TemplateView):
+    template_name = 'student/thanks_group.html'
 
 
 class Home(LoggedInMixin, View):
@@ -282,29 +269,58 @@ class GetSchoolGroups(LoggedInMixin, ListView):
             return {'group_list': group_list}
 
 
+class SchoolChoiceView(JSONResponseMixin, View):
+
+    def get(self, *args, **kwargs):
+        country_id = kwargs.pop('country_id', None)
+        country = get_object_or_404(Country, name=country_id)
+
+        schools = [{'id': '-----', 'name': '-----'}]
+        for school in School.objects.filter(country=country):
+            schools.append({'id': str(school.id), 'name': school.name})
+
+        return self.render_to_json_response({'schools': schools})
+
+
 class RegistrationView(FormView):
     '''changing registration view to form'''
-    template_name = 'registration_form.html'
+    template_name = 'registration/registration_form.html'
     form_class = CreateAccountForm
     success_url = '/account_created/'
 
-    def register_user(self):
-        pass
+    def send_success_email(self, user):
+        template = loader.get_template(
+            'registration/registration_success_email.txt')
 
-    def register_profile(self):
-        pass
+        subject = "ICAP Nursing E-Learning Registration"
 
-    def send_student_email(self):
-        pass
+        ctx = Context({'user': user})
+        message = template.render(ctx)
 
-    def send_teacher_notifiction(self):
-        pass
+        sender = settings.NEPI_MAILING_LIST
+        recipients = [user.email]
+        send_mail(subject, message, sender, recipients)
+
+    def send_teacher_notifiction(self, user):
+        template = loader.get_template(
+            'registration/faculty_request_email.txt')
+
+        country = dict(COUNTRY_CHOICES)[user.profile.country.name]
+
+        subject = "Nursing E-Learning: Faculty Access Request"
+
+        ctx = Context({'user': user, 'country': country})
+        message = template.render(ctx)
+
+        sender = settings.NEPI_MAILING_LIST
+        recipients = [settings.ICAP_MAILING_LIST]
+        send_mail(subject, message, sender, recipients)
 
     def form_valid(self, form):
         form_data = form.cleaned_data
         try:
             User.objects.get(username=form_data['username'])
-            raise forms.ValidationError("this username already exists")
+            raise forms.ValidationError("This username already exists")
         except User.DoesNotExist:
             new_user = User.objects.create_user(
                 username=form_data['username'],
@@ -313,38 +329,26 @@ class RegistrationView(FormView):
             new_user.first_name = form_data['first_name']
             new_user.last_name = form_data['last_name']
             new_user.save()
+
             new_profile = UserProfile(user=new_user)
             new_profile.profile_type = 'ST'
-            try:
-                new_profile.country = Country.objects.get(
-                    name=form_data['country'])
-                new_profile.save()
-            except Country.DoesNotExist:
-                new_country = Country.objects.create(name=form_data['country'])
-                new_country.save()
-                new_profile.save()
-            if form_data['email']:
-                subject = "NEPI Registration"
-                message = "Congratulations! " + \
-                          "You've successfully registered to use NEPI.\n\n" + \
-                          "Your user information is " + \
-                          form_data['username'] + \
-                          ".\n\n" + \
-                          "You may now log in to your account."
-                sender = "nepi@nepi.ccnmtl.columbia.edu"
-                recipients = [form_data['email']]
-                send_mail(subject, message, sender, recipients)
-            recipients = ["nepi@nepi.ccnmtl.columbia.edu"]
-            if form_data['profile_type']:
-                subject = "[Teacher] Account Requested"
-                message = form_data['first_name'] + \
-                    " " + form_data['last_name'] + \
-                    "has requested teacher status in "
-                    # need to add country and schools here
-                pending = PendingTeachers.objects.create(
-                    user_profile=new_profile)
-                pending.save()
-                send_mail(subject, message, sender, recipients)
+
+            if 'nepi_affiliated' in form_data:
+                new_profile.icap_affil = form_data['nepi_affiliated']
+
+            country = Country.objects.get(name=form_data['country'])
+            new_profile.country = country
+
+            new_profile.save()
+
+            # send the user a success email
+            if 'email' in form_data:
+                self.send_success_email(new_user)
+
+            if 'profile_type' in form_data and form_data['profile_type']:
+                PendingTeachers.objects.create(user_profile=new_profile)
+                self.send_teacher_notifiction(new_user)
+
         return super(RegistrationView, self).form_valid(form)
 
 
@@ -494,15 +498,15 @@ class ContactView(FormView):
     success_url = '/email_sent/'
 
     def form_valid(self, form):
-        '''should this be in the form instead?'''
         form_data = form.cleaned_data
-        sender = form_data['sender'],
-        subject = form_data['subject'],
-        message = form_data['message'],
-        recipients = ['nepi@nepi.ccnmtl.columbia.edu']
-        # ["u'cdunlop@columbia.edu'"]
-        send_mail(subject, message, sender, 'nepi@nepi.ccnmtl.columbia.edu')
-        form.send_email(recipients)
+
+        sender = form_data['sender']
+        subject = form_data['subject']
+        message = "First name: %s\nLast name: %s\nMessage: %s" % (
+            form_data['first_name'], form_data['last_name'],
+            form_data['message'])
+        recipients = [settings.NEPI_MAILING_LIST]
+        send_mail(subject, message, sender, recipients)
         return super(ContactView, self).form_valid(form)
 
 
@@ -538,7 +542,7 @@ class StudentClassStatView(LoggedInMixin, DetailView):
 
 class UpdateProfileView(LoggedInMixin, UpdateView):
     model = UserProfile
-    template_name = 'profile_tab.html'
+    template_name = 'dashboard/profile_tab.html'
     form_class = UpdateProfileForm
     success_url = '/'
 

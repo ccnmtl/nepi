@@ -60,8 +60,9 @@ COUNTRY_CHOICES = (
     ('TG', 'Togo'),
     ('TN', 'Tunisia'),
     ('UG', 'Uganda'),
+    ('US', 'United States'),
     ('ZM', 'Zambia'),
-    ('ZW', 'Zimbawe'),
+    ('ZW', 'Zimbabwe'),
 )
 
 

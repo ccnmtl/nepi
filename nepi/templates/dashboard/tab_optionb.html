@@ -9,14 +9,38 @@
         
         {% block tabbody %}
             {% block introtext %}
-                <p>This is a placeholder for one-paragraph description of the
-	            module. You can go through each module at your own
-	            pace. You can stop at any time and your progress will be
-	            saved. When you return, you will come back to this table of
-	            contents page where you can review what you have already
-	            learned, and proceed to complete the course. </p>
+                <div>
+                    <div class="pull-left">
+                        This is a placeholder for one-paragraph description of the
+        	            module. You can go through each module at your own
+        	            pace. You can stop at any time and your progress will be
+        	            saved. When you return, you will come back to this table of
+        	            contents page where you can review what you have already
+        	            learned, and proceed to complete the course.
+                    </div>
+                    <div class="pull-right">
+                        {% with user.profile.last_location as last_location %}
+                            {% if not last_location %}
+                                <a href="{{last_location.get_absolute_url}}" class="btn btn-large btn-primary">
+                                    Begin the Course <i class="icon-arrow-right icon-white"></i></a>
+                            {% else %}
+                                <div class="course-progress">
+                                <h4>Course Progress</h4>
+                                <h5>{{user.profile.percent_complete}}% Complete</h5>
+                                <div class="progress progress-striped">
+                                    <div class="bar" style="width: {{user.profile.percent_complete}}%;"></div>
+                                </div>
+                                <a href="{{last_location.get_absolute_url}}" class="btn btn-large">
+                                    Continue <i class="icon-arrow-right"></i>
+                                </a>
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
             {% endblock %}
             
+            {% comment %}
             {% block table %}
                 <table width="100%" class="table table-striped">
                     {% for um in user_modules %}
@@ -47,6 +71,7 @@
                     {% endfor %}
                 </table>
             {% endblock %}
+            {% endcomment %}
         {% endblock %}
     </div>
 {% endblock %}
