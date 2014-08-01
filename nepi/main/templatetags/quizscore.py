@@ -1,4 +1,5 @@
 from django import template
+from quizblock.models import Answer
 
 register = template.Library()
 
@@ -35,3 +36,23 @@ def aggregate_score(quizzes, user):
         return 0
     else:
         return int(questions_correct / question_count * 100)
+
+
+class MapAnswerNode(template.Node):
+    def __init__(self, response, var_name):
+        self.response = response
+        self.var_name = var_name
+
+    def render(self, context):
+        response = context[self.response]
+        answer = Answer.objects.get(question=response.question,
+                                    value=response.value)
+        context[self.var_name] = answer
+        return ''
+
+
+@register.tag('map_response_to_answer')
+def map_response_to_answer(parser, token):
+    response = token.split_contents()[1:][0]
+    var_name = token.split_contents()[1:][2]
+    return MapAnswerNode(response, var_name)

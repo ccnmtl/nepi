@@ -578,7 +578,7 @@ div.pageblock.show-correct li.incorrect:after {
     text-align: center;
 }
 
-/* Case styles */
+/* Question styles */
 .cases {
 	margin: 0 auto;
 }
@@ -648,6 +648,23 @@ div.pageblock.show-correct li.incorrect:after {
 	color: #aaa;
 }
 
+.cases div.user-correct {
+    color: #468847;
+    background-color: #dff0d8;
+    width: 50%;
+    margin: 0 auto;    
+    padding: 5px;
+    border: 1px solid #d6e9c6;
+}
+
+.cases div.user-incorrect {
+    color: #b94a48;
+    background-color: #f2dede;
+    width: 50%;
+    margin: 0 auto;
+    padding: 5px;
+    border: 1px solid #eed3d7;
+}
 
 /* Basic survey styles */
 .survey {
