@@ -2,8 +2,6 @@
 {% block js %}
 
 <script>
-    //jQuery('#report_form').load('/get_countries/');
-    
     var profilebtn = jQuery('#user-profile-button');
     profilebtn.click(function(){jQuery('#new_profile').load('/dashboard/update_profile/{{user_profile.pk}}/');});
     
