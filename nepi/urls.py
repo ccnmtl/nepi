@@ -9,7 +9,7 @@ from nepi.main.views import CreateGroupView, UpdateGroupView, \
     StudentDashboard, JoinGroup, GetCountrySchools, FacultyDashboard, \
     ICAPDashboard, Home, AddGroup, UpdateProfileView, GetFacultyCountries, \
     GetFacultyCountrySchools, GroupDetail, RemoveStudent, LeaveGroup, \
-    SchoolChoiceView, ThanksGroupView
+    SchoolChoiceView, ThanksGroupView, CountryAdminDashboard
 import nepi.main.views
 import os.path
 import staticmedia
@@ -65,6 +65,8 @@ urlpatterns = patterns(
         StudentDashboard.as_view(), name='student-dashboard'),
     url(r'^faculty-dashboard/(?P<pk>\d+)/$',
         FacultyDashboard.as_view(), name='faculty-dashboard'),
+    url(r'^country-dashboard/(?P<pk>\d+)/$',
+        CountryAdminDashboard.as_view(), name='country-dashboard'),
     url(r'^icap-dashboard/(?P<pk>\d+)/$',
         ICAPDashboard.as_view(), name='icap-dashboard'),
 
