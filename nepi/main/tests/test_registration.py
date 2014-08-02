@@ -92,6 +92,19 @@ class TestRegistrationView(TestCase):
 
         self.assertEquals(PendingTeachers.objects.all().count(), 1)
 
+    def test_student_registration_view_duplicate(self):
+        '''when students are registered they should not be added to pending'''
+        response = self.client.post(
+            '/register/',
+            {"first_name": "regstudent", "last_name": "regstudent",
+             "username": self.existing_user.username,
+             "email": "test_email@email.com",
+             "password1": "test", "password2": "test",
+             "country": "LS", "nepi_affiliated": False,
+             "captcha_0": 'dummy_value', "captcha_1": 'PASSED'}, follow=True)
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue('username' in response.context_data['form']._errors)
+
     def test_student_registration_view(self):
         '''when students are registered they should not be added to pending'''
         response = self.client.post(

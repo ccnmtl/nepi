@@ -1,6 +1,7 @@
 from captcha.fields import CaptchaField
 from choices import COUNTRY_CHOICES
 from django import forms
+from django.contrib.auth.models import User
 from django.forms.fields import ChoiceField
 from nepi.main.models import Country, Group, School, UserProfile
 
@@ -48,11 +49,16 @@ class CreateAccountForm(forms.Form):
     def clean(self):
         form = super(CreateAccountForm, self).clean()
         is_teacher = form.get("profile_type")
+        username = form.get("username")
         email = form.get("email")
         school = form.get("school")
         password1 = form.get("password1")
         password2 = form.get("password2")
         country = form.get("country")
+
+        if User.objects.filter(username=username).count() > 0:
+            self._errors["username"] = self.error_class(
+                    ["This username is taken. Please select a different one"])
 
         if is_teacher:
             if email is None or email == "":
