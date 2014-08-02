@@ -37,7 +37,7 @@ class School(models.Model):
         unique_together = ['name', 'country']
 
     def __unicode__(self):
-        return self.name
+        return '%s - %s' % (self.country.display_name, self.name)
 
 
 class Group(models.Model):
@@ -56,6 +56,14 @@ class Group(models.Model):
     def created_by(self):
         return self.creator
 
+    def format_time(self, dt):
+        return dt.strftime("%m/%d/%y %I:%M %p")
+
+    def formatted_start_date(self):
+        return self.format_time(self.start_date)
+
+    def formatted_end_date(self):
+        return self.format_time(self.end_date)
 
 '''ADD VALIDATION'''
 
@@ -136,14 +144,17 @@ class UserProfile(models.Model):
         if self.is_student():
             return "student"
         elif self.is_teacher():
-            return "teacher"
+            return "faculty"
         elif self.is_country_administrator():
-            return "country administrator"
+            return "country"
         elif self.is_icap():
             return "icap"
 
     def joined_groups(self):
-        return self.group.objects.all()
+        return self.group.exclude(creator=self.user)
+
+    def created_groups(self):
+        return self.group.filter(creator=self.user)
 
 
 class PendingTeachers(models.Model):

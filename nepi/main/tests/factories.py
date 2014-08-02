@@ -26,11 +26,11 @@ class SchoolFactory(factory.DjangoModelFactory):
     name = factory.Sequence(lambda n: "school %d" % n)
 
 
-class GroupFactory(factory.DjangoModelFactory):
+class SchoolGroupFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Group
     school = factory.SubFactory(SchoolFactory)
     creator = factory.SubFactory(UserFactory)
-    name = "A Group"
+    name = factory.Sequence(lambda n: "group %d" % n)
     start_date = datetime.now()
     end_date = datetime.now()
 

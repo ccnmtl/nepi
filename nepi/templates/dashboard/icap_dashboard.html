@@ -1,74 +1,39 @@
 {% extends 'base.html' %}
+
 {% block js %}
-
-<script>
-    var profilebtn = jQuery('#user-profile-button');
-    profilebtn.click(function(){jQuery('#new_profile').load('/dashboard/update_profile/{{user_profile.pk}}/');});
-    
-    var onDelete = function()
-    {
-            jQuery.post(this.href, function(data)
-            {   
-                if (data.result == "ok")
-                {
-                    alert("Group deleted successfully");
-                    location.reload();
-                } else
-                {
-                    // handle error processed by server here
-                    alert("smth goes wrong");
-                }
-            }).fail(function()
-            {
-                // handle unexpected error here
-                alert("error");
-            });
-            return false;
-    };//end of on delete
-
-    jQuery(".delete_link").click(onDelete);
-    
-</script>
+    <script type="text/javascript" src="/site_media/js/dashboard.js"></script>
 {% endblock %}
 
 {% block content %}
+{% with user_profile=object %}
 
 <input type="hidden" value={{user.pk}}>
 
-    {% block tabheaders %}
-        {% include "dashboard/tabheadercontent.html" %}
-    {% endblock%}
+    {% include "dashboard/tabheadercontent.html" %}
 
-    <div class="tab-content">
+    <div class="dashboard tab-content">
         {% include "dashboard/tab_optionb.html" %}
     
-        {% block groups %}
-            {% include "dashboard/tab_groups.html" %}
-        {% endblock %}
+        {% include "dashboard/tab_groups.html" %}
     
-        {% block reports %}
-            {% if object.profile_type == "TE" %}
-                {% include "dashboard/tab_teacher_reports.html" %}
-            {% endif %}
-            {% if object.profile_type == "CA" %}
-                {% include "dashboard/tab_ca_reports.html" %}
-            {% endif %}
-            {% if object.profile_type == "IC" %}
-                {% include "dashboard/tab_icap_reports.html" %}
-            {% endif %}
-        {% endblock %}
+        {% if object.profile_type == "TE" %}
+            {% include "dashboard/tab_teacher_reports.html" %}
+        {% endif %}
+        {% if object.profile_type == "CA" %}
+            {% include "dashboard/tab_ca_reports.html" %}
+        {% endif %}
+        {% if object.profile_type == "IC" %}
+            {% include "dashboard/tab_icap_reports.html" %}
+        {% endif %}
     
-        {% block profile %}
-            {% include "dashboard/tab_profile.html" %}
-        {% endblock %}
+        {% include "dashboard/tab_profile.html" %}
     
-        {% block pending_teachers %}
-            {% if object.profile_type == "IC" or object.profile_type == "CA" %}
-                {% include "dashboard/tab_pending_teachers.html" %}
-            {% endif %}
-        {% endblock %}
-    
-        {% block resources %}
+        {% if object.profile_type == "IC" or object.profile_type == "CA" %}
+            {% include "dashboard/tab_pending_teachers.html" %}
+        {% endif %}
+
+        {% comment %}
+            @todo - make resources visible when we get them
             {% if object.profile_type == "ST" %}
                 {% include "dashboard/tab_student_resources.html" %}
             {% endif %}
@@ -81,19 +46,7 @@
             {% if object.profile_type == "IC" %}
                 {% include "dashboard/tab_icap_resources.html" %}
             {% endif %}
-        {% endblock %}
-    
-        {% comment %}
-        {% block formmodal%}
-            {% include "dashboard/form_modal.html" %}
-        {% endblock %}
-        {% endcomment %}
-    
-        {% comment %}
-        {% block thanksmodal%}
-            {% include "dashboard/thank_you_modal.html" %}
-        {% endblock %}
         {% endcomment %}
     </div>
-    
+{% endwith %}
 {% endblock%}

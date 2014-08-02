@@ -1,11 +1,12 @@
 from django.contrib.auth.models import User
 from django.core import mail
 from django.core.exceptions import ValidationError
-from django.test.client import Client, RequestFactory
+from django.test.client import Client
 from django.test.testcases import TestCase
 from nepi.main.forms import CreateAccountForm
-from nepi.main.models import Country, School, PendingTeachers
-from nepi.main.tests.factories import UserFactory, GroupFactory
+from nepi.main.models import PendingTeachers
+from nepi.main.tests.factories import UserFactory, SchoolFactory, \
+    CountryFactory
 from nepi.main.views import RegistrationView
 
 
@@ -14,12 +15,9 @@ class TestRegistrationView(TestCase):
         self.view = RegistrationView()
         self.existing_user = UserFactory()
         self.client = Client()
-        self.factory = RequestFactory()
-        self.country = Country(name='LS')
-        self.country.save()
-        self.school = School(country=self.country, name='School 1')
-        self.school.save()
-        self.group = GroupFactory()
+
+        self.country = CountryFactory(name='LS')
+        self.school = SchoolFactory(country=self.country)
 
     def test_duplicate_user(self):
         try:
@@ -100,7 +98,7 @@ class TestRegistrationView(TestCase):
              "username": self.existing_user.username,
              "email": "test_email@email.com",
              "password1": "test", "password2": "test",
-             "country": "LS", "nepi_affiliated": False,
+             "country": self.country.name, "nepi_affiliated": False,
              "captcha_0": 'dummy_value', "captcha_1": 'PASSED'}, follow=True)
         self.assertEquals(response.status_code, 200)
         self.assertTrue('username' in response.context_data['form']._errors)
@@ -112,7 +110,7 @@ class TestRegistrationView(TestCase):
             {"first_name": "regstudent", "last_name": "regstudent",
              "username": "student", "email": "test_email@email.com",
              "password1": "test", "password2": "test",
-             "country": "LS", "nepi_affiliated": False,
+             "country": self.country.name, "nepi_affiliated": False,
              "captcha_0": 'dummy_value', "captcha_1": 'PASSED'}, follow=True)
         self.assertEquals(response.status_code, 200)
         self.assertEquals(PendingTeachers.objects.count(), 0)
@@ -132,7 +130,7 @@ class TestRegistrationView(TestCase):
             {"first_name": "first", "last_name": "last",
              "username": "teacher", "email": "test_email@email.com",
              "password1": "test", "password2": "test", "profile_type": True,
-             "country": "LS", "school": self.school.id,
+             "country": self.country.name, "school": self.school.id,
              "nepi_affiliated": True,
              "captcha_0": 'dummy_value', "captcha_1": 'PASSED'}, follow=True)
         self.assertEquals(response.status_code, 200)

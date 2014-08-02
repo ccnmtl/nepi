@@ -16,10 +16,13 @@ class UserAdmin(UserAdmin):
     inlines = (UserProfileInline, )
 
 
-# taken from tobacco
 class UserProfileAdmin(admin.ModelAdmin):
     search_fields = ['user__username']
     list_display = ['user', 'role']
+
+
+class SchoolGroupAdmin(admin.ModelAdmin):
+    list_display = ['name', 'school']
 
 
 admin.site.register(UserProfile, UserProfileAdmin)
@@ -29,7 +32,7 @@ admin.site.register(Hierarchy)
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
-admin.site.register(Group)
+admin.site.register(Group, SchoolGroupAdmin)
 admin.site.register(School)
 admin.site.register(Country)
 admin.site.register(PendingTeachers)

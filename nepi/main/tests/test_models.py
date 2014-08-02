@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
-from factories import GroupFactory
+from factories import SchoolGroupFactory
 from nepi.main.models import AggregateQuizScore
 from nepi.main.tests.factories import StudentProfileFactory, \
     TeacherProfileFactory, ICAPProfileFactory
@@ -10,8 +10,8 @@ from pagetree.tests.factories import HierarchyFactory, ModuleFactory
 
 class TestGroup(TestCase):
     def test_unicode(self):
-        c = GroupFactory()
-        self.assertEqual(str(c), "A Group")
+        grp = SchoolGroupFactory()
+        self.assertEqual(str(grp), grp.name)
 
 
 class TestUserProfile(TestCase):

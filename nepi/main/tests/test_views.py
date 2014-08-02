@@ -7,7 +7,8 @@ from factories import UserFactory, UserProfileFactory, TeacherProfileFactory, \
     ICAPProfileFactory
 from nepi.main.forms import ContactForm
 from nepi.main.models import UserProfile, Country, School, Group
-from nepi.main.tests.factories import SchoolFactory, CountryFactory
+from nepi.main.tests.factories import SchoolFactory, CountryFactory, \
+    SchoolGroupFactory
 from nepi.main.views import ContactView, ViewPage, CreateSchoolView
 from pagetree.models import UserPageVisit, Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
@@ -243,7 +244,7 @@ class TestPageView(TestCase):
         self.assertTrue(ctx['menu'][2]['disabled'])
 
 
-class TestSchoolView(TestCase):
+class TestSchoolChoiceView(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
@@ -258,14 +259,12 @@ class TestSchoolView(TestCase):
         self.assertEquals(response.status_code, 405)
 
     def test_get_country_not_found(self):
-        response = self.client.get('/schools/XY/',
-                                   {},
+        response = self.client.get('/schools/XY/', {},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 404)
 
     def test_get_no_schools(self):
-        response = self.client.get('/schools/%s/' % self.country.name,
-                                   {},
+        response = self.client.get('/schools/%s/' % self.country.name, {},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         the_json = json.loads(response.content)
@@ -285,6 +284,46 @@ class TestSchoolView(TestCase):
         self.assertEquals(the_json['schools'][0]['name'], '-----')
         self.assertEquals(the_json['schools'][1]['id'], str(self.school.id))
         self.assertEquals(the_json['schools'][1]['name'], self.school.name)
+
+
+class TestSchoolGroupChoiceView(TestCase):
+
+    def setUp(self):
+        self.user = UserProfileFactory().user
+        self.client = Client()
+        self.client.login(username=self.user.username, password="test")
+
+    def test_ajax_only(self):
+        grp = SchoolGroupFactory()
+        response = self.client.get('/groups/%s/' % grp.school.id)
+        self.assertEquals(response.status_code, 405)
+
+    def test_get_school_not_found(self):
+        response = self.client.get('/groups/782/', {},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 404)
+
+    def test_get_no_groups(self):
+        school = SchoolFactory()
+        response = self.client.get('/groups/%s/' % school.id,
+                                   {},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = json.loads(response.content)
+        self.assertEquals(len(the_json['groups']), 0)
+
+    def test_get_groups(self):
+        grp = SchoolGroupFactory()
+
+        response = self.client.get('/groups/%s/' % grp.school.id,
+                                   {},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = json.loads(response.content)
+        self.assertEquals(len(the_json['groups']), 1)
+
+        self.assertEquals(the_json['groups'][0]['id'], str(grp.id))
+        self.assertEquals(the_json['groups'][0]['name'], grp.name)
 
 
 class TestCreateSchoolView(TestCase):

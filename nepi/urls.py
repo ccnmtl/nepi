@@ -4,12 +4,12 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 from nepi.main.views import CreateGroupView, UpdateGroupView, \
-    DeleteGroupView, StudentClassStatView, GetSchoolGroups, CreateSchoolView, \
-    UpdateSchoolView, ContactView, RegistrationView, GetCountries, \
-    StudentDashboard, JoinGroup, GetCountrySchools, FacultyDashboard, \
-    ICAPDashboard, Home, AddGroup, UpdateProfileView, \
-    GroupDetail, RemoveStudent, LeaveGroup, \
-    SchoolChoiceView, ThanksGroupView, CountryAdminDashboard
+    DeleteGroupView, StudentClassStatView, CreateSchoolView, \
+    UpdateSchoolView, ContactView, RegistrationView, StudentDashboard, \
+    JoinGroup, FacultyDashboard, ICAPDashboard, HomeView, AddGroupView, \
+    UpdateProfileView, GroupDetail, RemoveStudent, LeaveGroup, \
+    SchoolChoiceView, ThanksGroupView, CountryAdminDashboard, \
+    SchoolGroupChoiceView
 import nepi.main.views
 import os.path
 import staticmedia
@@ -48,17 +48,20 @@ urlpatterns = patterns(
 
     auth_urls,
     logout_page,
-    url(r'^$', Home.as_view(), name="home"),
+    url(r'^$', HomeView.as_view(), name="home"),
     (r'^admin/', include(admin.site.urls)),
 
     # flat and universally accessible pages
     (r'^contact/$', ContactView.as_view()),
     (r'^thanks_group/(?P<crs_id>\d+)/$', ThanksGroupView.as_view()),
-    url(r'^schools/(?P<country_id>\w[^/]*)/$',
-        SchoolChoiceView.as_view(), name='school-choice'),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
     url(r'^update_profile/(?P<pk>\d+)/$', UpdateProfileView.as_view(),
         name='update-profile'),
+
+    # json object delivery
+    url(r'^schools/(?P<country_id>\w[^/]*)/$',
+        SchoolChoiceView.as_view(), name='school-choice'),
+    url(r'^groups/(?P<school_id>\d+)/$', SchoolGroupChoiceView.as_view()),
 
     # dashboard base views
     url(r'^student-dashboard/(?P<pk>\d+)/$',
@@ -72,17 +75,11 @@ urlpatterns = patterns(
 
     # functionality to join a group
     url(r'^join_group/$', JoinGroup.as_view(), name='join-group'),
-    url(r'^leave_group/(?P<pk>\d+)/$', LeaveGroup.as_view(),
-        name='leave-group'),
-    url(r'^get_countries/$', GetCountries.as_view()),
-    url(r'^get_schools/$', GetCountrySchools.as_view()),
-    url(r'^get_schools/(?P<pk>\d+)/$',
-        GetCountrySchools.as_view(), name='get-country-schools'),
-    url(r'^get_groups/$', GetSchoolGroups.as_view()),
+    url(r'^leave_group/$', LeaveGroup.as_view(), name='leave-group'),
 
     # functionality for teacher create a group
     url(r'^add_group/$',
-        AddGroup.as_view(), name='add-group'),
+        AddGroupView.as_view(), name='add-group'),
     url(r'^create_group/$',
         CreateGroupView.as_view(),
         name='create-group'),

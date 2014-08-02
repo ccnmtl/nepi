@@ -58,7 +58,7 @@ class CreateAccountForm(forms.Form):
 
         if User.objects.filter(username=username).count() > 0:
             self._errors["username"] = self.error_class(
-                    ["This username is taken. Please select a different one"])
+                ["This username is taken. Please select a different one"])
 
         if is_teacher:
             if email is None or email == "":

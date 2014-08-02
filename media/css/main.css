@@ -1007,11 +1007,29 @@ ul.tabbernav li.tabberactive a:hover
  border: 0;
 }
 
-div.module-introduction {
+/* Dashboard */
+
+div.dashboard .role {
+    color: darkgray;
+    font-weight: normal;
+}
+
+div.dashboard div.module-introduction {
     width: 75%;
 }
 
-div.session-progress {
+
+div.dashboard blockquote {
+    margin-top: 20px;
+    margin-bottom: 80px;
+}
+
+div.dashboard .your-groups,
+div.dashboard .your-groups-created {
+    margin-bottom: 40px;
+}
+
+div.dashboard div.session-progress {
     border: 1px solid black;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -1020,3 +1038,26 @@ div.session-progress {
     padding: 20px;
     width: 200px;
 }
+
+div.dashboard .first-view {
+}
+
+div.dashboard #user-groups .create-groups,
+div.dashboard #user-groups .find-groups {
+    margin-top: 10px;
+}
+
+div.dashboard .find-group {
+    margin-top: 40px;
+    width: 90%;
+}
+
+div.dashboard .find-group .control-group {
+    margin-top: 25px;
+}
+
+div.dashboard .find-group .control-group.wide select {
+    width: 443px;
+}
+
+

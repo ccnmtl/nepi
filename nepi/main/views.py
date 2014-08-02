@@ -2,48 +2,30 @@
 into smaller pieces.'''
 from django import forms
 from django.conf import settings
-from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import HttpResponseRedirect, HttpResponse
+from django.http.response import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.template.context import Context
-from django.utils.decorators import method_decorator
 from django.views.generic import View
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView, FormView, CreateView, \
     UpdateView
 from django.views.generic.list import ListView
-from nepi.activities.views import JSONResponseMixin
 from nepi.main.choices import COUNTRY_CHOICES
 from nepi.main.forms import CreateAccountForm, ContactForm, \
     UpdateProfileForm, CreateGroupForm
 from nepi.main.models import Group, UserProfile, Country, School, \
     PendingTeachers
+from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
+    LoggedInMixinStaff, JSONResponseMixin
 from pagetree.generic.views import PageView, EditView, InstructorView
 from pagetree.models import Hierarchy, UserPageVisit
 import json
-
-
-class LoggedInMixin(object):
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(LoggedInMixin, self).dispatch(*args, **kwargs)
-
-
-class LoggedInMixinStaff(object):
-    @method_decorator(user_passes_test(lambda u: u.is_staff))
-    def dispatch(self, *args, **kwargs):
-        return super(LoggedInMixinStaff, self).dispatch(*args, **kwargs)
-
-
-class LoggedInMixinSuperuser(object):
-    @method_decorator(user_passes_test(lambda u: u.is_superuser))
-    def dispatch(self, *args, **kwargs):
-        return super(LoggedInMixinSuperuser, self).dispatch(*args, **kwargs)
 
 
 class ViewPage(LoggedInMixin, PageView):
@@ -90,7 +72,7 @@ class ThanksGroupView(LoggedInMixin, TemplateView):
     template_name = 'student/thanks_group.html'
 
 
-class Home(LoggedInMixin, View):
+class HomeView(LoggedInMixin, View):
     '''redoing so that it simply redirects people where they need to be'''
 
     def get(self, request):
@@ -123,9 +105,15 @@ class StudentDashboard(LoggedInMixin, DetailView):
     template_name = 'dashboard/icap_dashboard.html'
     success_url = '/'
 
+    def dispatch(self, *args, **kwargs):
+        if int(kwargs.get('pk')) != self.request.user.profile.id:
+            return HttpResponseForbidden("forbidden")
+        return super(StudentDashboard, self).dispatch(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(StudentDashboard, self).get_context_data(**kwargs)
         context['hierarchy'] = Hierarchy.objects.get(name='main')
+        context['countries'] = COUNTRY_CHOICES
         return context
 
 
@@ -165,7 +153,7 @@ class FacultyDashboard(StudentDashboard):
         context['incomplete'] = self.get_students_done()
         context['done'] = self.get_students_incomplete()
         context['created_groups'] = Group.objects.filter(
-            creator=User.objects.get(pk=self.request.user.pk))
+            creator=self.request.user)
         return context
 
 
@@ -205,49 +193,24 @@ class ICAPDashboard(FacultyDashboard):
         return context
 
 
-class JoinGroup(LoggedInMixin, JSONResponseMixin, View):
+class JoinGroup(LoggedInMixin, View):
     template_name = 'dashboard/icap_dashboard.html'
 
     def post(self, request):
-        user_id = request.user.pk
-        user_profile = UserProfile.objects.get(user__id=user_id)
-        add_group = Group.objects.get(pk=request.POST['group'])
-        user_profile.group.add(add_group)
-        for each in user_profile.group.all():
-            print each.name
+        group = get_object_or_404(Group, pk=request.POST.get('group'))
+        request.user.profile.group.add(group)
+
+        url = '/%s-dashboard/%s/#user-groups' % (request.user.profile.role(),
+                                                 request.user.profile.id)
+        return HttpResponseRedirect(url)
+
+
+class LeaveGroup(LoggedInMixin, JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        group = get_object_or_404(Group, pk=self.request.POST.get('group'))
+        self.request.user.profile.group.remove(group)
         return self.render_to_json_response({'success': True})
-
-
-class GetCountries(LoggedInMixin, ListView):
-    model = Country
-    template_name = 'dashboard/country_list.html'
-    success_url = '/'
-
-
-class GetCountrySchools(LoggedInMixin, ListView):
-    model = School
-    template_name = 'dashboard/school_list.html'
-    success_url = '/'
-
-    def get_context_data(self, **kwargs):
-        if self.request.is_ajax():
-            country_key = self.request.GET.__getitem__('name')
-            country = Country.objects.get(pk=country_key)
-            s = School.objects.filter(country=country)
-            return {'school_list': s}
-
-
-class GetSchoolGroups(LoggedInMixin, ListView):
-    model = Group
-    template_name = 'dashboard/group_list.html'
-    success_url = '/'
-
-    def get_context_data(self, **kwargs):
-        if self.request.is_ajax():
-            school_key = self.request.GET.__getitem__('name')
-            school = School.objects.get(pk=school_key)
-            group_list = Group.objects.filter(school=school)
-            return {'group_list': group_list}
 
 
 class SchoolChoiceView(JSONResponseMixin, View):
@@ -261,6 +224,25 @@ class SchoolChoiceView(JSONResponseMixin, View):
             schools.append({'id': str(school.id), 'name': school.name})
 
         return self.render_to_json_response({'schools': schools})
+
+
+class SchoolGroupChoiceView(LoggedInMixin, JSONResponseMixin, View):
+
+    def get(self, *args, **kwargs):
+        school_id = kwargs.pop('school_id', None)
+        school = get_object_or_404(School, id=school_id)
+        user_groups = self.request.user.profile.group.all()
+
+        groups = []
+        for group in Group.objects.filter(school=school):
+            groups.append({'id': str(group.id),
+                           'name': group.name,
+                           'start_date': group.formatted_start_date(),
+                           'end_date': group.formatted_end_date(),
+                           'creator': group.creator.get_full_name(),
+                           'member': group in user_groups})
+
+        return self.render_to_json_response({'groups': groups})
 
 
 class RegistrationView(FormView):
@@ -349,9 +331,6 @@ class UpdateSchoolView(LoggedInMixin, UpdateView):
     success_url = '/'
 
 
-# LoggedInMixin,
-
-
 class CreateGroupView(LoggedInMixin, CreateView):
     '''generic class based view for
     creating a group'''
@@ -374,7 +353,7 @@ class CreateGroupView(LoggedInMixin, CreateView):
         return HttpResponseRedirect('/')
 
 
-class AddGroup(LoggedInMixin, CreateView):
+class AddGroupView(LoggedInMixin, CreateView):
     '''generic class based view for
     creating a group'''
     model = Group
@@ -459,16 +438,6 @@ class RemoveStudent(LoggedInMixin, JSONResponseMixin, View):
                                     pk=request.POST['student'])
         group.userprofile_set.remove(student)
         return self.render_to_json_response({'success': True})
-
-
-class LeaveGroup(LoggedInMixin, View):
-    template_name = 'dashboard/icap_dashboard.html'
-
-    def get(self, request, pk):
-        user_profile = UserProfile.objects.get(user__id=request.user.pk)
-        leave_group = Group.objects.get(pk=pk)
-        leave_group.userprofile_set.remove(user_profile)
-        return HttpResponseRedirect("/")
 
 
 class ContactView(FormView):
