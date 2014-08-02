@@ -1,10 +1,11 @@
-from datetime import datetime
 from django.contrib.auth.models import User
 from django.test import TestCase
 from factories import GroupFactory
-from nepi.main.models import Group, UserProfile, Country, School, \
-    AggregateQuizScore
-from nepi.main.tests.factories import HierarchyFactory
+from nepi.main.models import AggregateQuizScore
+from nepi.main.tests.factories import StudentProfileFactory, \
+    TeacherProfileFactory, ICAPProfileFactory
+from pagetree.models import Hierarchy, Section, UserPageVisit
+from pagetree.tests.factories import HierarchyFactory, ModuleFactory
 
 
 class TestGroup(TestCase):
@@ -15,48 +16,49 @@ class TestGroup(TestCase):
 
 class TestUserProfile(TestCase):
     def setUp(self):
-        self.student = User(first_name="student", last_name="student",
-                            username="student", email="student@email.com",
-                            password="student")
-        self.student.save()
-        self.teacher = User(first_name="teacher", last_name="teacher",
-                            username="teacher", email="teacher@email.com",
-                            password="teacher")
-        self.teacher.save()
-        self.icap = User(first_name="icapp", last_name="icapp",
-                         username="icapp", email="icapp@email.com",
-                         password="icapp")
-        self.icap.save()
-        self.country1 = Country(name='LS')
-        self.country1.save()
-        self.country2 = Country(name='GM')
-        self.country1.save()
-        self.country3 = Country(name='TG')
-        self.country1.save()
-        self.school = School(country=self.country1, name='School 1')
-        self.school.save()
-        self.group = Group(school=self.school,
-                           name="Group",
-                           start_date=datetime.now(),
-                           end_date=datetime.now())
-        self.group.save()
-        self.student_profile = UserProfile(
-            user=self.student, profile_type='ST', country=self.country1,
-            school=self.school)
-        self.student_profile.save()
-        self.teacher_profile = UserProfile(
-            user=self.teacher, profile_type='TE', country=self.country1,
-            school=self.school)
-        self.teacher_profile.save()
-        self.icap_profile = UserProfile(
-            user=self.icap, profile_type='IC',
-            country=self.country1, school=self.school)
-        self.icap_profile.save()
+        self.student = StudentProfileFactory().user
+        self.teacher = TeacherProfileFactory().user
+        self.icap = ICAPProfileFactory().user
+        ModuleFactory("main", "/")
+        self.hierarchy = Hierarchy.objects.get(name='main')
 
     def test_user_profile_unis(self):
-        self.assertEquals(unicode(self.student), "student")
-        self.assertEquals(unicode(self.teacher), "teacher")
-        self.assertEquals(unicode(self.icap), "icapp")
+        self.assertEquals(unicode(self.student), self.student.username)
+
+    def test_percent_complete(self):
+        self.assertEquals(self.student.profile.percent_complete(), 0)
+
+        # visit section one & child one
+        section_one = Section.objects.get(slug='one')
+        child_one = Section.objects.get(slug='introduction')
+        UserPageVisit.objects.create(user=self.student, section=section_one)
+        UserPageVisit.objects.create(user=self.student, section=child_one)
+        self.assertEquals(self.student.profile.percent_complete(), 40)
+
+    def test_percent_complete_module(self):
+        section_one = Section.objects.get(slug='one')
+        child_one = Section.objects.get(slug='introduction')
+
+        pct = self.student.profile.percent_complete_module(section_one)
+        self.assertEquals(pct, 0)
+
+        UserPageVisit.objects.create(user=self.student, section=section_one)
+        pct = self.student.profile.percent_complete_module(section_one)
+        self.assertEquals(pct, 0)
+
+        UserPageVisit.objects.create(user=self.student, section=child_one)
+        pct = self.student.profile.percent_complete_module(section_one)
+        self.assertEquals(pct, 100)
+
+    def test_sessions_completed(self):
+        section_one = Section.objects.get(slug='one')
+        child_one = Section.objects.get(slug='introduction')
+
+        self.assertEquals(self.student.profile.sessions_completed(), 2)
+
+        UserPageVisit.objects.create(user=self.student, section=section_one)
+        UserPageVisit.objects.create(user=self.student, section=child_one)
+        self.assertEquals(self.student.profile.sessions_completed(), 3)
 
 
 class TestAggregateQuizScore(TestCase):

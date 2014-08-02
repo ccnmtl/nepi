@@ -106,11 +106,12 @@ class UserProfile(models.Model):
                                                   section__in=ids)
             return len(visits) / float(len(sections)) * 100
         else:
-            return 0
+            return 100  # this section has no children.
 
     def sessions_completed(self):
         hierarchy = Hierarchy.get_hierarchy('main')
         complete = 0
+
         for module in hierarchy.get_root().get_children():
             if self.percent_complete_module(module) == 100:
                 complete += 1

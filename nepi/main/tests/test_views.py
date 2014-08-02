@@ -3,13 +3,14 @@ from django.contrib.auth.models import User
 from django.core import mail
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
-from factories import UserFactory, HierarchyFactory, UserProfileFactory, \
-    TeacherProfileFactory, ICAPProfileFactory
+from factories import UserFactory, UserProfileFactory, TeacherProfileFactory, \
+    ICAPProfileFactory
 from nepi.main.forms import ContactForm
 from nepi.main.models import UserProfile, Country, School, Group
 from nepi.main.tests.factories import SchoolFactory, CountryFactory
 from nepi.main.views import ContactView, ViewPage, CreateSchoolView
-from pagetree.models import UserPageVisit, Section
+from pagetree.models import UserPageVisit, Section, Hierarchy
+from pagetree.tests.factories import ModuleFactory
 import json
 
 
@@ -81,7 +82,9 @@ class TestBasicViews(TestCase):
 class TestStudentLoggedInViews(TestCase):
     '''go through some of the views student sees'''
     def setUp(self):
-        self.h = HierarchyFactory()
+        ModuleFactory("main", "/pages/main/")
+        self.h = Hierarchy.objects.get(name='main')
+
         self.s = self.h.get_root().get_first_leaf()
         self.u = UserFactory(is_superuser=True)
         self.up = UserProfileFactory(user=self.u)
@@ -89,11 +92,11 @@ class TestStudentLoggedInViews(TestCase):
         self.c.login(username=self.u.username, password="test")
 
     def test_edit_page_form(self):
-        r = self.c.get("/pages/%s/edit/%s/" % (self.h.name, self.s.slug))
+        r = self.c.get(self.s.get_edit_url())
         self.assertEqual(r.status_code, 200)
 
     def test_page(self):
-        r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
+        r = self.c.get(self.s.get_absolute_url())
         self.assertEqual(r.status_code, 200)
 
     def test_home(self):
@@ -107,7 +110,9 @@ class TestStudentLoggedInViews(TestCase):
 class TestTeacherLoggedInViews(TestCase):
     '''go through some of the views student sees'''
     def setUp(self):
-        self.h = HierarchyFactory()
+        ModuleFactory("main", "/pages/main/")
+        self.h = Hierarchy.objects.get(name='main')
+
         self.s = self.h.get_root().get_first_leaf()
         self.u = UserFactory(is_superuser=True)
         self.up = TeacherProfileFactory(user=self.u)
@@ -115,7 +120,7 @@ class TestTeacherLoggedInViews(TestCase):
         self.c.login(username=self.u.username, password="test")
 
     def test_page(self):
-        r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
+        r = self.c.get(self.s.get_absolute_url())
         self.assertEqual(r.status_code, 200)
 
     def test_home(self):
@@ -129,7 +134,9 @@ class TestTeacherLoggedInViews(TestCase):
 class TestICAPLoggedInViews(TestCase):
     '''go through some of the views student sees'''
     def setUp(self):
-        self.h = HierarchyFactory()
+        ModuleFactory("main", "/pages/main/")
+        self.h = Hierarchy.objects.get(name='main')
+
         self.s = self.h.get_root().get_first_leaf()
         self.u = UserFactory(is_superuser=True)
         self.up = ICAPProfileFactory(user=self.u)
@@ -137,7 +144,7 @@ class TestICAPLoggedInViews(TestCase):
         self.c.login(username=self.u.username, password="test")
 
     def test_page(self):
-        r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
+        r = self.c.get(self.s.get_absolute_url())
         self.assertEqual(r.status_code, 200)
 
     def test_home(self):
@@ -150,7 +157,20 @@ class TestICAPLoggedInViews(TestCase):
 
 class TestPageView(TestCase):
     def setUp(self):
-        self.h = HierarchyFactory()
+        self.h = Hierarchy.objects.create(name='main', base_url='/')
+        self.h.get_root().add_child_section_from_dict(
+            {
+                'label': 'Welcome',
+                'slug': 'welcome',
+                'pageblocks': [
+                    {'label': 'Introduction',
+                     'css_extra': '',
+                     'block_type': 'Text Block',
+                     'body': 'random text goes here',
+                     },
+                ],
+                'children': [],
+            })
         self.h.get_root().add_child_section_from_dict(
             {
                 'label': 'Page One',
@@ -189,7 +209,7 @@ class TestPageView(TestCase):
         section_two = Section.objects.get(slug='page-one')
         section_three = Section.objects.get(slug='page-two')
 
-        request = RequestFactory().get('/pages/%s/' % self.h.name)
+        request = RequestFactory().get('/%s/' % self.h.name)
         request.user = self.u
 
         view = ViewPage()

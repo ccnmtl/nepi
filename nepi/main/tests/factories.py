@@ -4,7 +4,6 @@ from nepi.main.models import (Country,
                               School,
                               Group,
                               UserProfile)
-from pagetree.models import Hierarchy
 import factory
 
 
@@ -54,25 +53,3 @@ class TeacherProfileFactory(UserProfileFactory):
 
 class ICAPProfileFactory(UserProfileFactory):
     profile_type = 'IC'
-
-
-class HierarchyFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Hierarchy
-    name = "main"
-    base_url = "/"
-
-    @factory.post_generation
-    def populate(self, create, extracted, **kwargs):
-        self.get_root().add_child_section_from_dict(
-            {
-                'label': 'Welcome',
-                'slug': 'welcome',
-                'pageblocks': [
-                    {'label': 'Welcome to your new Site',
-                     'css_extra': '',
-                     'block_type': 'Text Block',
-                     'body': 'You should now use the edit link to add content',
-                     },
-                ],
-                'children': [],
-            })
