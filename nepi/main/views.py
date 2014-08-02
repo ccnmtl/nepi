@@ -205,25 +205,6 @@ class ICAPDashboard(FacultyDashboard):
         return context
 
 
-class GetReport(LoggedInMixin, View):
-    template_name = 'dashboard.html'
-
-    def post(self, request):
-        if self.request.is_ajax():
-            user_id = request.user.pk
-            user_profile = UserProfile.objects.get(user=user_id)
-            user_profile.country = Country.objects.get(
-                pk=self.request.POST.__getitem__('country'))
-            user_profile.school = School.objects.get(
-                pk=self.request.POST.__getitem__('school'))
-            user_profile.group = Group.objects.filter(
-                pk=self.request.POST.__getitem__('group'))
-            user_profile.save()
-            return self.render_to_json_response(user_profile)
-        else:
-            return self.request
-
-
 class JoinGroup(LoggedInMixin, JSONResponseMixin, View):
     template_name = 'dashboard/icap_dashboard.html'
 
