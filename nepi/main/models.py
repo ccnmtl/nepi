@@ -9,10 +9,6 @@ from pagetree.models import Section, Hierarchy, UserPageVisit, \
 from quizblock.models import Quiz
 
 
-'''Add change delete are by default for each django model.
-   Need to add permissions for visibility.'''
-
-
 class Country(models.Model):
     '''Users can select counties from drop down menu,
     countries are stored by their official 2 letter codes.'''
@@ -49,6 +45,7 @@ class Group(models.Model):
     creator = models.ForeignKey(User, related_name="created_by",
                                 null=True, default=None, blank=True)
     module = models.ForeignKey(Hierarchy, null=True, default=None, blank=True)
+    archived = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
@@ -57,7 +54,7 @@ class Group(models.Model):
         return self.creator
 
     def format_time(self, dt):
-        return dt.strftime("%m/%d/%y %I:%M %p")
+        return dt.strftime("%m/%d/%Y")
 
     def formatted_start_date(self):
         return self.format_time(self.start_date)
@@ -151,10 +148,7 @@ class UserProfile(models.Model):
             return "icap"
 
     def joined_groups(self):
-        return self.group.exclude(creator=self.user)
-
-    def created_groups(self):
-        return self.group.filter(creator=self.user)
+        return self.group.exclude(creator=self.user).exclude(archived=True)
 
 
 class PendingTeachers(models.Model):

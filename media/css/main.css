@@ -1018,7 +1018,6 @@ div.dashboard div.module-introduction {
     width: 75%;
 }
 
-
 div.dashboard blockquote {
     margin-top: 20px;
     margin-bottom: 80px;
@@ -1026,7 +1025,11 @@ div.dashboard blockquote {
 
 div.dashboard .your-groups,
 div.dashboard .your-groups-created {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+}
+
+div.dashboard .your-groups-created form {
+    display: inline-block;
 }
 
 div.dashboard div.session-progress {
@@ -1039,25 +1042,28 @@ div.dashboard div.session-progress {
     width: 200px;
 }
 
-div.dashboard .first-view {
-}
-
-div.dashboard #user-groups .create-groups,
-div.dashboard #user-groups .find-groups {
+div.dashboard #user-groups .create-group-button,
+div.dashboard #user-groups .find-group-button {
     margin-top: 10px;
 }
 
-div.dashboard .find-group {
-    margin-top: 40px;
-    width: 90%;
-}
-
-div.dashboard .find-group .control-group {
-    margin-top: 25px;
-}
-
-div.dashboard .find-group .control-group.wide select {
+div.dashboard .control-group.wide select {
     width: 443px;
+}
+
+form.edit-group input[name='name'],
+form.create-group input[name='name'] {
+    width: 234px;
+}
+
+form.edit-group div.control-group div.help-inline.error,
+form.create-group div.control-group div.help-inline.error {
+    display: none;
+}
+
+form.edit-group div.control-group.error div.help-inline.error,
+form.create-group div.control-group.error div.help-inline.error {
+    display: block;
 }
 
 

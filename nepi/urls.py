@@ -6,10 +6,10 @@ from django.views.generic import TemplateView
 from nepi.main.views import CreateGroupView, UpdateGroupView, \
     DeleteGroupView, StudentClassStatView, CreateSchoolView, \
     UpdateSchoolView, ContactView, RegistrationView, StudentDashboard, \
-    JoinGroup, FacultyDashboard, ICAPDashboard, HomeView, AddGroupView, \
-    UpdateProfileView, GroupDetail, RemoveStudent, LeaveGroup, \
-    SchoolChoiceView, ThanksGroupView, CountryAdminDashboard, \
-    SchoolGroupChoiceView
+    JoinGroup, FacultyDashboard, ICAPDashboard, \
+    HomeView, UpdateProfileView, GroupDetail, RemoveStudent, \
+    LeaveGroup, SchoolChoiceView, CountryAdminDashboard, \
+    SchoolGroupChoiceView, ArchiveGroupView
 import nepi.main.views
 import os.path
 import staticmedia
@@ -51,9 +51,7 @@ urlpatterns = patterns(
     url(r'^$', HomeView.as_view(), name="home"),
     (r'^admin/', include(admin.site.urls)),
 
-    # flat and universally accessible pages
     (r'^contact/$', ContactView.as_view()),
-    (r'^thanks_group/(?P<crs_id>\d+)/$', ThanksGroupView.as_view()),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
     url(r'^update_profile/(?P<pk>\d+)/$', UpdateProfileView.as_view(),
         name='update-profile'),
@@ -73,25 +71,17 @@ urlpatterns = patterns(
     url(r'^icap-dashboard/(?P<pk>\d+)/$',
         ICAPDashboard.as_view(), name='icap-dashboard'),
 
-    # functionality to join a group
+    # groups
     url(r'^join_group/$', JoinGroup.as_view(), name='join-group'),
     url(r'^leave_group/$', LeaveGroup.as_view(), name='leave-group'),
-
-    # functionality for teacher create a group
-    url(r'^add_group/$',
-        AddGroupView.as_view(), name='add-group'),
-    url(r'^create_group/$',
-        CreateGroupView.as_view(),
+    url(r'^create_group/$', CreateGroupView.as_view(),
         name='create-group'),
-    (r'^edit_group/(?P<pk>\d+)/$',
-     UpdateGroupView.as_view()),
-    url(r'^delete_group/(?P<pk>\d+)/$',
-        DeleteGroupView.as_view(),
-        name='delete-group'),
+    (r'^edit_group/$', UpdateGroupView.as_view()),
+    url(r'^delete_group/$', DeleteGroupView.as_view()),
+    url(r'^archive_group/$', ArchiveGroupView.as_view()),
     url(r'^group_details/(?P<pk>\d+)/$',
         GroupDetail.as_view(), name='group-details'),
     (r'^remove_student/$', RemoveStudent.as_view()),
-    #(r'^group_results/$', 'nepi.main.views.group_results'),
 
     # ICAP related pages
     (r'^add_school/$', CreateSchoolView.as_view()),
@@ -101,9 +91,6 @@ urlpatterns = patterns(
     # Teacher related pages
     #(r'^view_students/$', 'nepi.main.views.view_students'),
     #'nepi.main.views.create_group'),
-
-    (r'^accessible/(?P<section_slug>.*)/$',
-     'is_accessible', {}, 'is-accessible'),
 
     url(r'^captcha/', include('captcha.urls')),
     (r'^activities/', include('nepi.activities.urls')),

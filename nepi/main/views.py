@@ -5,27 +5,25 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.http.response import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.template.context import Context
 from django.views.generic import View
-from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import DeleteView, FormView, CreateView, \
-    UpdateView
+from django.views.generic.edit import FormView, CreateView, UpdateView
 from django.views.generic.list import ListView
 from nepi.main.choices import COUNTRY_CHOICES
 from nepi.main.forms import CreateAccountForm, ContactForm, \
-    UpdateProfileForm, CreateGroupForm
+    UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
     PendingTeachers
 from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
     LoggedInMixinStaff, JSONResponseMixin
 from pagetree.generic.views import PageView, EditView, InstructorView
 from pagetree.models import Hierarchy, UserPageVisit
-import json
+from datetime import datetime
 
 
 class ViewPage(LoggedInMixin, PageView):
@@ -66,10 +64,6 @@ class EditPage(LoggedInMixinSuperuser, EditView):
 class InstructorPage(LoggedInMixinStaff, InstructorView):
     hierarchy_name = "main"
     hierarchy_base = "/pages/main/"
-
-
-class ThanksGroupView(LoggedInMixin, TemplateView):
-    template_name = 'student/thanks_group.html'
 
 
 class HomeView(LoggedInMixin, View):
@@ -114,6 +108,7 @@ class StudentDashboard(LoggedInMixin, DetailView):
         context = super(StudentDashboard, self).get_context_data(**kwargs)
         context['hierarchy'] = Hierarchy.objects.get(name='main')
         context['countries'] = COUNTRY_CHOICES
+        context['joined_groups'] = self.request.user.profile.joined_groups()
         return context
 
 
@@ -153,7 +148,7 @@ class FacultyDashboard(StudentDashboard):
         context['incomplete'] = self.get_students_done()
         context['done'] = self.get_students_incomplete()
         context['created_groups'] = Group.objects.filter(
-            creator=self.request.user)
+            creator=self.request.user).exclude(archived=True)
         return context
 
 
@@ -193,26 +188,6 @@ class ICAPDashboard(FacultyDashboard):
         return context
 
 
-class JoinGroup(LoggedInMixin, View):
-    template_name = 'dashboard/icap_dashboard.html'
-
-    def post(self, request):
-        group = get_object_or_404(Group, pk=request.POST.get('group'))
-        request.user.profile.group.add(group)
-
-        url = '/%s-dashboard/%s/#user-groups' % (request.user.profile.role(),
-                                                 request.user.profile.id)
-        return HttpResponseRedirect(url)
-
-
-class LeaveGroup(LoggedInMixin, JSONResponseMixin, View):
-
-    def post(self, *args, **kwargs):
-        group = get_object_or_404(Group, pk=self.request.POST.get('group'))
-        self.request.user.profile.group.remove(group)
-        return self.render_to_json_response({'success': True})
-
-
 class SchoolChoiceView(JSONResponseMixin, View):
 
     def get(self, *args, **kwargs):
@@ -233,14 +208,18 @@ class SchoolGroupChoiceView(LoggedInMixin, JSONResponseMixin, View):
         school = get_object_or_404(School, id=school_id)
         user_groups = self.request.user.profile.group.all()
 
+        available_groups = Group.objects.filter(school=school)
+        available_groups = available_groups.exclude(creator=self.request.user)
+        available_groups = available_groups.exclude(archived=True)
+
         groups = []
-        for group in Group.objects.filter(school=school):
-            groups.append({'id': str(group.id),
-                           'name': group.name,
-                           'start_date': group.formatted_start_date(),
-                           'end_date': group.formatted_end_date(),
-                           'creator': group.creator.get_full_name(),
-                           'member': group in user_groups})
+        for group in available_groups:
+            if not group in user_groups:
+                groups.append({'id': str(group.id),
+                               'name': group.name,
+                               'start_date': group.formatted_start_date(),
+                               'end_date': group.formatted_end_date(),
+                               'creator': group.creator.get_full_name()})
 
         return self.render_to_json_response({'groups': groups})
 
@@ -331,57 +310,97 @@ class UpdateSchoolView(LoggedInMixin, UpdateView):
     success_url = '/'
 
 
-class CreateGroupView(LoggedInMixin, CreateView):
-    '''generic class based view for
-    creating a group'''
-    model = Group
-    form_class = CreateGroupForm
-    template_name = 'dashboard/create_group.html'
-    success_url = '/'
+class CreateGroupView(LoggedInMixin, View):
 
-    def form_valid(self, request):
-        f = CreateGroupForm(self.request.POST)
-        new_group = f.save(commit=False)
-        creator = User.objects.get(pk=self.request.user.pk)
-        profile = UserProfile.objects.get(user=creator)
-        school = School.objects.get(pk=profile.school.pk)
-        new_group.creator = creator
-        new_group.school = school
-        new_group.save()
-        # why do I need to return an HTTPResponse explicitly?
-        # Should happen automatically no?
-        return HttpResponseRedirect('/')
+    def post(self, *args, **kwargs):
+        # dates come in as MM/DD/YYYY
+        start_date = self.request.POST.get('start_date')
+        end_date = self.request.POST.get('end_date')
+        fmt = "%m/%d/%Y"
 
+        group = Group()
+        group.start_date = datetime.strptime(start_date, fmt).date()
+        group.end_date = datetime.strptime(end_date, fmt).date()
+        group.name = self.request.POST.get('name')
 
-class AddGroupView(LoggedInMixin, CreateView):
-    '''generic class based view for
-    creating a group'''
-    model = Group
-    form_class = CreateGroupForm
-    template_name = 'dashboard/new_group.html'
-    success_url = '/'
+        module_name = self.request.POST.get('module')
+        group.module = Hierarchy.objects.get(name=module_name)
 
-    def form_valid(self, request):
-        f = CreateGroupForm(self.request.POST)
-        new_group = f.save(commit=False)
-        creator = User.objects.get(pk=self.request.user.pk)
-        profile = UserProfile.objects.get(user=creator)
-        school = School.objects.get(pk=profile.school.pk)
-        new_group.creator = creator
-        new_group.school = school
-        new_group.save()
-        # why do I need to return an HTTPResponse explicitly?
-        # Should happen automatically no?
-        return HttpResponseRedirect('/')
+        group.creator = self.request.user
+        group.school = self.request.user.profile.school
+
+        group.save()
+
+        url = '/%s-dashboard/%s/#user-groups' % (
+            self.request.user.profile.role(),
+            self.request.user.profile.id)
+        return HttpResponseRedirect(url)
 
 
-class UpdateGroupView(LoggedInMixin, UpdateView):
-    '''generic class based view for
-    editing a group'''
-    model = Group
-    template_name = 'dashboard/create_group.html'
-    success_url = '/'
-    form_class = CreateGroupForm
+class UpdateGroupView(LoggedInMixin, View):
+    def post(self, *args, **kwargs):
+        pk = self.request.POST.get('pk')
+        group = get_object_or_404(Group, pk=pk)
+
+        if group.creator != self.request.user:
+            return HttpResponseForbidden(
+                'You are not authorized to update this group')
+        start_date = self.request.POST.get('start_date')
+        end_date = self.request.POST.get('end_date')
+        fmt = "%m/%d/%Y"
+
+        group.start_date = datetime.strptime(start_date, fmt).date()
+        group.end_date = datetime.strptime(end_date, fmt).date()
+        group.name = self.request.POST.get('name')
+        group.save()
+
+        url = '/%s-dashboard/%s/#user-groups' % (
+            self.request.user.profile.role(),
+            self.request.user.profile.id)
+        return HttpResponseRedirect(url)
+
+
+class JoinGroup(LoggedInMixin, View):
+    template_name = 'dashboard/icap_dashboard.html'
+
+    def post(self, request):
+        group = get_object_or_404(Group, pk=request.POST.get('group'))
+        request.user.profile.group.add(group)
+
+        url = '/%s-dashboard/%s/#user-groups' % (request.user.profile.role(),
+                                                 request.user.profile.id)
+        return HttpResponseRedirect(url)
+
+
+class DeleteGroupView(LoggedInMixin, JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        group = get_object_or_404(Group, pk=self.request.POST.get('group'))
+        if not group.creator == self.request.user:
+            return HttpResponseForbidden(
+                'You are not authorized to delete this group')
+        group.delete()
+        return self.render_to_json_response({'success': True})
+
+
+class ArchiveGroupView(LoggedInMixin, JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        group = get_object_or_404(Group, pk=self.request.POST.get('group'))
+        if not group.creator == self.request.user:
+            return HttpResponseForbidden(
+                'You are not authorized to archive this group')
+        group.archived = True
+        group.save()
+        return self.render_to_json_response({'success': True})
+
+
+class LeaveGroup(LoggedInMixin, JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        group = get_object_or_404(Group, pk=self.request.POST.get('group'))
+        self.request.user.profile.group.remove(group)
+        return self.render_to_json_response({'success': True})
 
 
 class GroupDetail(LoggedInMixin, DetailView):
@@ -458,21 +477,6 @@ class ContactView(FormView):
         recipients = [settings.NEPI_MAILING_LIST]
         send_mail(subject, message, sender, recipients)
         return super(ContactView, self).form_valid(form)
-
-
-class DeleteGroupView(LoggedInMixin, DeleteView):
-    model = Group
-    success_url = reverse_lazy('home')
-
-    def dispatch(self, *args, **kwargs):
-        resp = super(DeleteGroupView, self).dispatch(*args, **kwargs)
-        if self.request.is_ajax():
-            response_data = {"result": "ok"}
-            return HttpResponse(json.dumps(response_data),
-                                content_type="application/json")
-        else:
-            # POST request (not ajax) will do a redirect to success_url
-            return resp
 
 
 class StudentClassStatView(LoggedInMixin, DetailView):

@@ -1,5 +1,5 @@
 <div class="tab-pane" id="user-profile">
-    <div>
+{% comment %}
         Your Profile
 
 
@@ -36,4 +36,5 @@
         </table>
         </div>
     <a href={% url 'update-profile' object.pk %}>Update Profile</a>
+{% endcomment %}    
 </div>

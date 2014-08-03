@@ -1,9 +1,9 @@
 <div class="tab-pane active" id="user-modules">
-
+    {% if user.profile.percent_complete == 0 %}
     <div class="alert alert-info">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
         <strong>Welcome!</strong> Placeholder text for the first time user experience.
     </div>
+    {% endif %}
     
     <h3>Option B+</h3>
     
@@ -19,7 +19,7 @@
         <div class="pull-right session-progress">
             <h4>Session Progress</h4>
             {% with user.profile.last_location as last_location %}
-            {% if not last_location %}
+            {% if user.profile.percent_complete == 0 %}
                 <a href="{{last_location.get_absolute_url}}" class="btn btn-large btn-primary">
                     Begin the Course <i class="icon-arrow-right icon-white"></i></a>
             {% else %}

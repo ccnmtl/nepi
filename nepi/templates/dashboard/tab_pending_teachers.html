@@ -1,12 +1,7 @@
 <div class="tab-pane" id="pending-teachers">
-    <div id="pane-content">
-    {% block tabtitle %}
-        Pending Teachers
-    {% endblock %}
-    
-    
-	{% block tabbody %}
-        <table width="100%" class="table table-striped table-condensed">
+    Pending Teachers
+
+    <table width="100%" class="table table-striped table-condensed">
         <tr><td>Teacher Name </td><td> School </td><td> Country </td></tr>
         {% for pt in pending_teachers %}
             <tr>
@@ -15,9 +10,6 @@
             {% empty %}
              <tr><td><b><p>No instructors have self registered yet.</p></b></td></tr>
             {% endfor %}
-        </table>
-       
-    {% endblock %}
-    </div>
+    </table>
 </div>
 

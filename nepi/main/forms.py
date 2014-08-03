@@ -189,9 +189,3 @@ class UpdateProfileForm(forms.ModelForm):
                 self.cleaned_data.get('password1')
         self.instance.user.save()
         return super(UpdateProfileForm, self).save(*args, **kwargs)
-
-
-class CreateGroupForm(forms.ModelForm):
-    class Meta:
-        model = Group
-        exclude = ("school", "creator")

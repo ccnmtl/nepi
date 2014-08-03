@@ -22,7 +22,7 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 
 class SchoolGroupAdmin(admin.ModelAdmin):
-    list_display = ['name', 'school']
+    list_display = ['name', 'school', 'creator', 'archived']
 
 
 admin.site.register(UserProfile, UserProfileAdmin)
