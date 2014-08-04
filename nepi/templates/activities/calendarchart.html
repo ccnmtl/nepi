@@ -1,10 +1,4 @@
 {% load markup %}
-
-{% comment %}
-{% with block.conversationscenario as conversationscenario %}
-{% endwith %}
-{% endcomment %}
-
 {% if block.label %}<div id="month_title"><h3>{{block.label}}</h3></div>{% endif %}
 </br></br>
 
@@ -16,12 +10,16 @@
 {% endif %}
 
 <div id="correct_day" value="{{ block.birth_date }}" data-day="{{ block.birth_date }}" style="visibility: hidden">  </div>
-
-
-
+    {% while day <= block.num_days %}
+    <div id="month">
+        <div data-day="1" class="day">
+         {{ day|add:"1" }}
+        </div>
+    </div>
+{% endfor %}
 </br></br>
 
-
+{% comment %}
 <div id="month">
 
 <div data-day="1" class="day">
@@ -114,6 +112,9 @@
 <div data-day="30" class="day">
 30
 </div>
+{% endcomment %}
+
+
 </div>
 
 

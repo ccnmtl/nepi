@@ -2,7 +2,9 @@ from nepi.activities.models import (ConversationScenario,
                                     Conversation,
                                     ConversationResponse,
                                     ImageInteractive,
-                                    CalendarChart)
+                                    CalendarChart,
+                                    Month,
+                                    Day)
 from django.contrib import admin
 
 
@@ -11,3 +13,5 @@ admin.site.register(Conversation)
 admin.site.register(ConversationResponse)
 admin.site.register(ImageInteractive)
 admin.site.register(CalendarChart)
+admin.site.register(Month)
+admin.site.register(Day)

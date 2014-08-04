@@ -454,15 +454,22 @@ class RetentionResponse(models.Model):
         return("Response to " + str(self.retentionrate))
 
 
+class Month(models.Model):
+    display_name = models.CharField(max_length=255, default="")
+
+    def __unicode__(self):
+        return"%s" % self.display_name
+
+
 class CalendarChart(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
     template_file = "activities/calendarchart.html"
     js_template_file = "activities/calendarchart_js.html"
     css_template_file = "activities/calendarchart_css.html"
     display_name = "Calendar Chart"
+    month = models.ForeignKey(Month)
     description = models.TextField(default='')
-    birth_date = models.IntegerField(default=0)
-    appointment = models.IntegerField(default=0)
+    correct_date = models.IntegerField(default=1)
 
     def pageblock(self):
         return self.pageblocks.all()[0]
@@ -499,6 +506,15 @@ class CalendarChart(models.Model):
 class CalendarChartForm(forms.ModelForm):
     class Meta:
         model = CalendarChart
+
+
+class Day(models.Model):
+    calendar = models.ForeignKey(Month)
+    number = models.IntegerField(default=1)
+    explanation = models.CharField(max_length=255, default="")
+
+    def __unicode__(self):
+        return"%s %s" % (self.number, self.explanation)
 
 
 class CalendarResponse(models.Model):
