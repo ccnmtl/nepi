@@ -314,11 +314,11 @@ class AdherenceCard(models.Model):
         return True
 
     def quizzes(self):
-        # This is for generic relation?
         ctype = ContentType.objects.get_for_model(Quiz)
-        # Getting matching quiz blocks based on .css
+        print ctype
         blocks = PageBlock.objects.filter(content_type__pk=ctype.pk,
                                           css_extra__contains=self.quiz_class)
+        print blocks
         # what does this do?
         ids = blocks.values_list('object_id', flat=True)
         return Quiz.objects.filter(id__in=ids)
