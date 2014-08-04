@@ -226,6 +226,9 @@ class RegistrationView(FormView):
     success_url = '/account_created/'
 
     def send_success_email(self, user):
+        if not user.email:
+            return
+
         template = loader.get_template(
             'registration/registration_success_email.txt')
 
