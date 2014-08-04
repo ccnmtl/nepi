@@ -17,7 +17,7 @@
      
      // Join Group Functionality
      function clearSchoolGroupChoices(elt) {
-         jQuery(elt).find("div.schoolgroup table").find('tr.group-row').remove();
+         jQuery(elt).find("div.schoolgroup table").find('tr.content-row').remove();
      }
 
      function clearSchoolChoices(elt) {
@@ -75,7 +75,7 @@
                     // @todo - a client-side template would do nicely here
                     for (var i=0; i < json.groups.length; i++) {
                         var group = json.groups[i];
-                        var row = "<tr class='group-row'>" + 
+                        var row = "<tr class='content-row'>" + 
                             "<td>" + group.name + "</td>" + 
                             "<td>" + group.start_date + "</td>" +
                             "<td>" + group.end_date + "</td>" +
@@ -136,7 +136,7 @@
                 data: jQuery(frm).serialize(),
                 type: "POST",
                 success: function (data) {
-                    if (jQuery(table).find('tr.group-row').length == 1) {
+                    if (jQuery(table).find('tr.content-row').length == 1) {
                         jQuery(".your-groups").fadeOut(function() {
                             jQuery(row).remove();
                         });
@@ -165,7 +165,7 @@
                 data: jQuery(frm).serialize(),
                 type: "POST",
                 success: function (data) {
-                    if (jQuery(table).find('tr.group-row').length == 1) {
+                    if (jQuery(table).find('tr.content-row').length == 1) {
                         jQuery(".your-groups-created").fadeOut(function() {
                             jQuery(row).remove();
                         });
@@ -194,7 +194,7 @@
                 data: jQuery(frm).serialize(),
                 type: "POST",
                 success: function (data) {
-                    if (jQuery(table).find('tr.group-row').length == 1) {
+                    if (jQuery(table).find('tr.content-row').length == 1) {
                         jQuery(".your-groups-created").fadeOut(function() {
                             jQuery(row).remove();
                         });
@@ -262,42 +262,38 @@
        
         return submit;
     });
-
-
-    /**
-    jQuery('#add_group_button').click(function() {
-        jQuery('#add_group_div').load('/add_group/');
-    });
     
-    jQuery('#edit_group_button').click(function() {
-        jQuery('#edit_group_div').load('/edit_group/');
-    });
+    function updateFacultyAccess(msg, url, elt) {
+        if (confirm(msg)) {
+            var row = jQuery(elt).parents('tr')[0];
+            var table = jQuery(row).parents('table')[0];
     
-    var profilebtn = jQuery('#user-profile-button');
-    profilebtn.click(function(){jQuery('#new_profile').load('/dashboard/update_profile/{{user_profile.pk}}/');});
-    
-    var onDelete = function()
-    {
-            jQuery.post(this.href, function(data)
-            {   
-                if (data.result == "ok")
-                {
-                    alert("Group deleted successfully");
-                    location.reload();
-                } else
-                {
-                    // handle error processed by server here
-                    alert("smth goes wrong");
+            jQuery.ajax({
+                url: url,
+                data: {'user_id': jQuery(elt).data('user-id')},
+                type: "POST",
+                success: function (data) {
+                    jQuery(row).fadeOut(function() {
+                        jQuery(row).remove();
+                    });
+                },
+                error: function(data)  {
+                    alert("An error occurred. Please try again");
                 }
-            }).fail(function()
-            {
-                // handle unexpected error here
-                alert("error");
             });
-            return false;
-    };//end of on delete
+        }        
+    }
+    
+    jQuery("button.deny-faculty-access").on("click", function() {
+        var msg = "Are you sure you want to deny faculty access?";
+        var url = '/faculty/deny/';
+        return updateFacultyAccess(msg, url, this);
+    });
 
-    jQuery(".delete_link").click(onDelete);
-    **/
+    jQuery("button.confirm-faculty-access").on("click", function() {
+        var msg = "Are you sure you want to grant faculty access?";
+        var url = '/faculty/confirm/';
+        return updateFacultyAccess(msg, url, this);
+    });
  });
     

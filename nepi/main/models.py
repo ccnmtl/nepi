@@ -38,12 +38,11 @@ class School(models.Model):
 
 class Group(models.Model):
     '''Allow association of group with module.'''
-    school = models.ForeignKey(School, null=True, default=None, blank=True)
+    school = models.ForeignKey(School)
     start_date = models.DateField()
     end_date = models.DateField()
     name = models.CharField(max_length=50)
-    creator = models.ForeignKey(User, related_name="created_by",
-                                null=True, default=None, blank=True)
+    creator = models.ForeignKey(User, related_name="created_by")
     module = models.ForeignKey(Hierarchy, null=True, default=None, blank=True)
     archived = models.BooleanField(default=False)
 
@@ -154,7 +153,7 @@ class UserProfile(models.Model):
 class PendingTeachers(models.Model):
     user_profile = models.ForeignKey(UserProfile,
                                      related_name="pending_teachers")
-    school = models.ForeignKey(School, null=True, default=None)
+    school = models.ForeignKey(School)
 
 
 class AggregateQuizScore(models.Model):

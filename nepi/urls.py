@@ -6,10 +6,10 @@ from django.views.generic import TemplateView
 from nepi.main.views import CreateGroupView, UpdateGroupView, \
     DeleteGroupView, StudentClassStatView, CreateSchoolView, \
     UpdateSchoolView, ContactView, RegistrationView, StudentDashboard, \
-    JoinGroup, FacultyDashboard, ICAPDashboard, \
-    HomeView, UpdateProfileView, GroupDetail, RemoveStudent, \
-    LeaveGroup, SchoolChoiceView, CountryAdminDashboard, \
-    SchoolGroupChoiceView, ArchiveGroupView
+    JoinGroup, FacultyDashboard, ICAPDashboard, HomeView, UpdateProfileView, \
+    GroupDetail, RemoveStudent, LeaveGroup, SchoolChoiceView, \
+    CountryAdminDashboard, SchoolGroupChoiceView, ArchiveGroupView, \
+    ConfirmFacultyView, DenyFacultyView
 import nepi.main.views
 import os.path
 import staticmedia
@@ -84,6 +84,8 @@ urlpatterns = patterns(
     (r'^remove_student/$', RemoveStudent.as_view()),
 
     # ICAP related pages
+    (r'^faculty/confirm/$', ConfirmFacultyView.as_view()),
+    (r'^faculty/deny/$', DenyFacultyView.as_view()),
     (r'^add_school/$', CreateSchoolView.as_view()),
     url(r'^view_group/(?P<pk>\d+)/', StudentClassStatView.as_view(),
         name='view-group'),

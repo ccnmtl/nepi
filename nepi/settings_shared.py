@@ -159,11 +159,11 @@ STATSD_PORT = 8125
 STATSD_PATCHES = ['django_statsd.patches.db', ]
 
 THUMBNAIL_SUBDIR = "thumbs"
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_SUBJECT_PREFIX = "[nepi] "
 EMAIL_HOST = 'localhost'
 SERVER_EMAIL = "nepi@ccnmtl.columbia.edu"
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
+
 
 # put any static media here to override app served static media
 STATICMEDIA_MOUNTS = (

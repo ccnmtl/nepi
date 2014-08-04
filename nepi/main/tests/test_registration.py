@@ -66,6 +66,7 @@ class TestRegistrationView(TestCase):
             'first_name': 'Jane',
             'last_name': 'Doe',
             'country': 'LS',
+            'school': self.school.id,
             'profile_type': True,
             'nepi_affiliated': True
         }

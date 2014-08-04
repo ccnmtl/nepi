@@ -1,10 +1,8 @@
 <div class="tab-pane" id="user-groups">
-    {% if object.profile_type == "IC" or object.profile_type == "CA" or object.profile_type == "TE" %}
-        <h2>{{user.profile.school.name}}</h2>
+    {% if object.profile_type == "TE" %}
+        <h3>{{user.profile.school.name}}</h3>
         <h3 class="role">
-            {% if object.profile_type == "TE" %}
-                FACULTY ROLE
-            {% endif %}
+            FACULTY ROLE
         </h3>
         
         <blockquote>
@@ -14,7 +12,7 @@
                     <table width="100%" class="table table-striped table-condensed"> 
                         <tr><th>Name</th><th>Begin Date</th><th>End Date</th><th>Members</th><th>Actions</th>
                         {% for group in created_groups.all %}
-                            <tr id="faculty-group-{{group.id}}" class="group-row">
+                            <tr id="faculty-group-{{group.id}}" class="content-row">
                                 <td><a href="{% url 'view-group' group.id %}">{{group.name}}</a></td>
                                 <td>{{group.formatted_start_date}}</td>
                                 <td>{{group.formatted_end_date}}</td>
@@ -59,7 +57,7 @@
                     <tr><th>Name</th><th>Instructor</th><th>Begin Date</th><th>End Date</th><th>Action</th></tr>
                 
                     {% for group in joined_groups.all %}
-                        <tr id="student-group-{{group.id}}" class="group-row">
+                        <tr id="student-group-{{group.id}}" class="content-row">
                             <td><a href="/view_group_stats/{{group.pk}}/">{{group.name}}</a></td>
                             <td>{{group.creator.get_full_name}}</td>
                             <td>{{group.formatted_start_date}}</td>

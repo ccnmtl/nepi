@@ -6,9 +6,10 @@ from django.test.client import Client
 from factories import UserFactory, UserProfileFactory, TeacherProfileFactory, \
     ICAPProfileFactory
 from nepi.main.forms import ContactForm
-from nepi.main.models import UserProfile, Country, School, Group
+from nepi.main.models import UserProfile, Country, School, Group, \
+    PendingTeachers
 from nepi.main.tests.factories import SchoolFactory, CountryFactory, \
-    SchoolGroupFactory
+    SchoolGroupFactory, StudentProfileFactory
 from nepi.main.views import ContactView, ViewPage, CreateSchoolView
 from pagetree.models import UserPageVisit, Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
@@ -356,3 +357,64 @@ class TestCreateSchoolView(TestCase):
              "country": self.country})
         request.user = u
         CreateSchoolView.as_view()(request)
+
+
+class TestConfirmAndDenyFacultyViews(TestCase):
+    def setUp(self):
+        self.school = SchoolFactory()
+        self.icap = ICAPProfileFactory().user
+        self.teacher = TeacherProfileFactory().user
+        self.pending = StudentProfileFactory().user
+
+        PendingTeachers.objects.create(user_profile=self.pending.profile,
+                                       school=self.school)
+
+        self.client = Client()
+
+    def test_ajax_only(self):
+        self.client.login(username=self.icap.username, password="test")
+
+        response = self.client.post('/faculty/confirm/', {})
+        self.assertEquals(response.status_code, 405)
+
+        response = self.client.post('/faculty/deny/', {})
+        self.assertEquals(response.status_code, 405)
+
+    def test_unauthorized(self):
+        self.client.login(username=self.teacher.username, password="test")
+        response = self.client.post('/faculty/confirm/',
+                                    {'user_id': self.pending.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 403)
+
+        response = self.client.post('/faculty/deny/',
+                                    {'user_id': self.pending.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 403)
+
+    def test_confirm_faculty(self):
+        self.client.login(username=self.icap.username, password="test")
+        response = self.client.post('/faculty/confirm/',
+                                    {'user_id': self.pending.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.pending = User.objects.get(username=self.pending.username)
+        self.assertTrue(self.pending.profile.is_teacher())
+        self.assertEquals(self.pending.profile.school, self.school)
+        self.assertEquals(self.pending.profile.country, self.school.country)
+
+        self.assertEquals(PendingTeachers.objects.count(), 0)
+        self.assertEquals(len(mail.outbox), 1)
+
+    def test_deny_faculty(self):
+        self.client.login(username=self.icap.username, password="test")
+
+        response = self.client.post('/faculty/deny/',
+                                    {'user_id': self.pending.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.pending = User.objects.get(username=self.pending.username)
+        self.assertTrue(self.pending.profile.is_student())
+
+        self.assertEquals(PendingTeachers.objects.count(), 0)
+        self.assertEquals(len(mail.outbox), 1)

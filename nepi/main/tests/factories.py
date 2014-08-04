@@ -1,10 +1,9 @@
 from datetime import datetime
 from django.contrib.auth.models import User
-from nepi.main.models import (Country,
-                              School,
-                              Group,
-                              UserProfile)
+from nepi.main.models import Country, School, Group, UserProfile
 import factory
+import random
+import string
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -13,10 +12,19 @@ class UserFactory(factory.DjangoModelFactory):
     password = factory.PostGenerationMethodCall('set_password', 'test')
 
 
+def country_choice(n):
+    cc = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                 for _ in range(2))
+    while Country.objects.filter(name=cc):
+        cc = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                     for _ in range(2))
+    return cc
+
+
 class CountryFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Country
 
-    name = factory.Sequence(lambda n: "%d" % (n))
+    name = factory.Sequence(lambda n: country_choice(n))
     display_name = factory.Sequence(lambda n: "country %d" % n)
 
 

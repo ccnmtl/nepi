@@ -1,15 +1,23 @@
 <div class="tab-pane" id="pending-teachers">
-    Pending Teachers
+    <h3>Pending Teachers</h3>
 
     <table width="100%" class="table table-striped table-condensed">
-        <tr><td>Teacher Name </td><td> School </td><td> Country </td></tr>
+        <tr><th>Teacher Name</th><th>School</th><th>Country</th><th>Actions</th></tr>
         {% for pt in pending_teachers %}
-            <tr>
-                  <td>{{pt.first_name}}{{pt.first_name}}</td><td>{{pt.school}}</td><td>{{pt.country}}</td>
+            <tr class="content-row">
+              <td>{{pt.user_profile.user.get_full_name}}</td>
+              <td>{{pt.school.name}}</td>
+              <td>{{pt.school.country.display_name}}</td>
+              <td>
+                <button data-user-id="{{pt.user_profile.user.id}}"
+                    class='btn btn-default btn-small confirm-faculty-access'>Confirm</button> 
+                <button data-user-id="{{pt.user_profile.user.id}}"
+                    class='btn btn-default btn-small deny-faculty-access'>Deny</button>
+              </td>
             </tr>
-            {% empty %}
-             <tr><td><b><p>No instructors have self registered yet.</p></b></td></tr>
-            {% endfor %}
+        {% empty %}
+            <tr><td><b><p>No instructors have self registered yet.</p></b></td></tr>
+        {% endfor %}
     </table>
 </div>
 

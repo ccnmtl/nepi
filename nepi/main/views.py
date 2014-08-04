@@ -173,18 +173,7 @@ class ICAPDashboard(FacultyDashboard):
 
     def get_context_data(self, **kwargs):
         context = super(ICAPDashboard, self).get_context_data(**kwargs)
-        context['pending_teachers'] = PendingTeachers.objects.filter(
-            user_profile__profile_type='TE')
-        context['countries'] = Country.objects.all()
-#             profile_type="ST").count()
-#         context['in_progress'] = self.get_students_in_progress()
-#         context['incomplete'] = self.get_students_done()
-#         context['done'] = self.get_students_incomplete()
-        # context['created_groups'] = Group.objects.filter(
-        #     creator=User.objects.get(pk=self.request.user.pk))
-        # context['joined_groups'] = UserProfile.objects.get(
-        #     user=self.request.user.pk).group.all()
-        # context['modules'] = Hierarchy.objects.all()
+        context['pending_teachers'] = PendingTeachers.objects.all()
         return context
 
 
@@ -288,7 +277,9 @@ class RegistrationView(FormView):
                 self.send_success_email(new_user)
 
             if 'profile_type' in form_data and form_data['profile_type']:
-                PendingTeachers.objects.create(user_profile=new_profile)
+                school = get_object_or_404(School, id=form_data['school'])
+                PendingTeachers.objects.create(user_profile=new_profile,
+                                               school=school)
                 self.send_teacher_notifiction(new_user)
 
         return super(RegistrationView, self).form_valid(form)
@@ -400,6 +391,69 @@ class LeaveGroup(LoggedInMixin, JSONResponseMixin, View):
     def post(self, *args, **kwargs):
         group = get_object_or_404(Group, pk=self.request.POST.get('group'))
         self.request.user.profile.group.remove(group)
+        return self.render_to_json_response({'success': True})
+
+
+class ConfirmFacultyView(LoggedInMixin, JSONResponseMixin, View):
+
+    def send_confirmation_email(self, user):
+        template = loader.get_template(
+            'dashboard/faculty_success_email.txt')
+
+        subject = "ICAP Nursing E-Learning Faculty Access"
+
+        ctx = Context({'user': user})
+        message = template.render(ctx)
+
+        sender = settings.NEPI_MAILING_LIST
+        send_mail(subject, message, sender, [user.email])
+
+    def post(self, *args, **kwargs):
+        if not (self.request.user.profile.is_icap() or
+                self.request.user.profile.is_country_administrator()):
+            return HttpResponseForbidden(
+                'You are not authorized to deny faculty access.')
+
+        user = get_object_or_404(User, pk=self.request.POST.get('user_id'))
+
+        pending = PendingTeachers.objects.get(user_profile=user.profile)
+
+        user.profile.school = pending.school
+        user.profile.country = pending.school.country
+        user.profile.profile_type = 'TE'
+        user.profile.save()
+        self.send_confirmation_email(user)
+
+        pending.delete()
+        return self.render_to_json_response({'success': True})
+
+
+class DenyFacultyView(LoggedInMixin, JSONResponseMixin, View):
+
+    def send_denied_email(self, user, school):
+        template = loader.get_template(
+            'dashboard/faculty_denied_email.txt')
+
+        subject = "ICAP Nursing E-Learning Faculty Access"
+
+        ctx = Context({'user': user, 'school': school})
+        message = template.render(ctx)
+
+        sender = settings.NEPI_MAILING_LIST
+        send_mail(subject, message, sender, [user.email])
+
+    def post(self, *args, **kwargs):
+        if not (self.request.user.profile.is_icap() or
+                self.request.user.profile.is_country_administrator()):
+            return HttpResponseForbidden(
+                'You are not authorized to deny faculty access.')
+
+        user = get_object_or_404(User, pk=self.request.POST.get('user_id'))
+        pending = PendingTeachers.objects.get(user_profile=user.profile)
+
+        self.send_denied_email(user, pending.school)
+
+        pending.delete()
         return self.render_to_json_response({'success': True})
 
 
