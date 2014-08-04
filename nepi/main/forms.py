@@ -33,17 +33,17 @@ class CreateAccountForm(forms.Form):
         max_length=25, required=True)
     email = forms.EmailField(required=False)
     country = forms.ChoiceField(required=True, choices=COUNTRY_CHOICES)
-    school = ChoiceFieldNoValidation(required=False,
-                                     label="Please select your school")
+
+    # School is not validated as it is variably required
+    # Yes for teachers, No for students
+    school = ChoiceFieldNoValidation(required=False)
+
     nepi_affiliated = forms.BooleanField(required=False)
     password1 = forms.CharField(
-        max_length=25, widget=forms.PasswordInput, required=True,
-        label="Password")
+        max_length=25, widget=forms.PasswordInput, required=True)
     password2 = forms.CharField(
-        max_length=25, widget=forms.PasswordInput, required=True,
-        label="Confirm Password")
-    profile_type = forms.BooleanField(
-        required=False, label="Are you a Teacher?")
+        max_length=25, widget=forms.PasswordInput, required=True)
+    profile_type = forms.BooleanField(required=False)
     captcha = CaptchaField()
 
     def clean(self):
@@ -81,24 +81,6 @@ class CreateAccountForm(forms.Form):
                 "This field is required"])
 
         return form
-
-'''Do I really need three forms or is their
-a better way to do this dynamically?'''
-
-
-class CountryGroupForm(forms.Form):
-    country = forms.ChoiceField(required=True,
-                                label="What country do you reside in?",
-                                choices=COUNTRY_CHOICES)
-    school = forms.ModelChoiceField(queryset=Country.objects.all())
-
-
-class SchoolGroupForm(forms.Form):
-    country = forms.ChoiceField(required=True,
-                                label="What country do you reside in?",
-                                choices=COUNTRY_CHOICES)
-    school = forms.ModelChoiceField(queryset=Country.objects.all())
-    group = forms.ModelChoiceField(queryset=Group.objects.all())
 
 
 class ContactForm(forms.Form):
@@ -142,7 +124,6 @@ class UpdateProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UpdateProfileForm, self).__init__(*args, **kwargs)
         passed_profile = kwargs.get('instance')
-        #print passed_profile
         self.fields['first_name'].initial = passed_profile.user.first_name
         self.fields['last_name'].initial = passed_profile.user.last_name
         self.fields['email'].initial = passed_profile.user.email

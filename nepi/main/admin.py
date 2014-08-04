@@ -25,6 +25,10 @@ class SchoolGroupAdmin(admin.ModelAdmin):
     list_display = ['name', 'school', 'creator', 'archived']
 
 
+class PendingTeacherAdmin(admin.ModelAdmin):
+    list_display = ['user_profile', 'school']
+
+
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Hierarchy)
 
@@ -35,4 +39,4 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Group, SchoolGroupAdmin)
 admin.site.register(School)
 admin.site.register(Country)
-admin.site.register(PendingTeachers)
+admin.site.register(PendingTeachers, PendingTeacherAdmin)
