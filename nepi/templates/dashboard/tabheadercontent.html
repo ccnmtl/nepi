@@ -5,16 +5,14 @@
         </a>
     </li>
 
-    {% if user_profile.profile_type == "ST" or user_profile.profile_type == "TE" %}
     <li>
         <a href="#user-groups" data-toggle="tab">
             Groups
         </a>
     </li>
-    {% endif %}
 
     {% comment %}
-    {% if user_profile.profile_type == "IC" or user_profile.profile_type == "TE" %}
+    {% if not user_profile.is_student %}
     <li>
         <a href="#user-reports" data-toggle="tab">
             Reports
@@ -29,7 +27,7 @@
         </a>
     </li>
     
-    {% if object.profile_type == "IC" or object.profile_type == "CA" %}
+    {% if user_profile.is_country_administrator or user_profile.is_icap %}
     <li>
         <a href="#pending-teachers" data-toggle="tab">
             Pending Teachers

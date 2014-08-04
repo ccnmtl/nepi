@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from factories import SchoolGroupFactory
-from nepi.main.models import AggregateQuizScore
+from nepi.main.models import AggregateQuizScore, PendingTeachers
 from nepi.main.tests.factories import StudentProfileFactory, \
-    TeacherProfileFactory, ICAPProfileFactory
+    TeacherProfileFactory, ICAPProfileFactory, \
+    CountryAdministratorProfileFactory, SchoolFactory
 from pagetree.models import Hierarchy, Section, UserPageVisit
 from pagetree.tests.factories import HierarchyFactory, ModuleFactory
 
@@ -19,11 +20,38 @@ class TestUserProfile(TestCase):
         self.student = StudentProfileFactory().user
         self.teacher = TeacherProfileFactory().user
         self.icap = ICAPProfileFactory().user
+        self.country_admin = CountryAdministratorProfileFactory().user
         ModuleFactory("main", "/")
         self.hierarchy = Hierarchy.objects.get(name='main')
 
     def test_user_profile_unis(self):
         self.assertEquals(unicode(self.student), self.student.username)
+
+    def test_user_profile_roles(self):
+        self.assertTrue(self.student.profile.is_student())
+        self.assertFalse(self.teacher.profile.is_student())
+        self.assertFalse(self.country_admin.profile.is_student())
+        self.assertFalse(self.icap.profile.is_student())
+
+        self.assertFalse(self.student.profile.is_teacher())
+        self.assertTrue(self.teacher.profile.is_teacher())
+        self.assertFalse(self.country_admin.profile.is_teacher())
+        self.assertFalse(self.icap.profile.is_teacher())
+
+        self.assertFalse(self.student.profile.is_country_administrator())
+        self.assertFalse(self.teacher.profile.is_country_administrator())
+        self.assertTrue(self.country_admin.profile.is_country_administrator())
+        self.assertFalse(self.icap.profile.is_country_administrator())
+
+        self.assertFalse(self.student.profile.is_icap())
+        self.assertFalse(self.teacher.profile.is_icap())
+        self.assertFalse(self.country_admin.profile.is_icap())
+        self.assertTrue(self.icap.profile.is_icap())
+
+        self.assertEquals(self.student.profile.role(), 'student')
+        self.assertEquals(self.teacher.profile.role(), 'faculty')
+        self.assertEquals(self.country_admin.profile.role(), 'country')
+        self.assertEquals(self.icap.profile.role(), 'icap')
 
     def test_percent_complete(self):
         self.assertEquals(self.student.profile.percent_complete(), 0)
@@ -59,6 +87,29 @@ class TestUserProfile(TestCase):
         UserPageVisit.objects.create(user=self.student, section=section_one)
         UserPageVisit.objects.create(user=self.student, section=child_one)
         self.assertEquals(self.student.profile.sessions_completed(), 3)
+
+    def test_joined_groups(self):
+        group = SchoolGroupFactory()
+
+        self.assertEquals(self.student.profile.joined_groups().count(), 0)
+
+        self.student.profile.group.add(group)
+        self.assertEquals(self.student.profile.joined_groups().count(), 1)
+
+        group.archived = True
+        group.save()
+        self.assertEquals(self.student.profile.joined_groups().count(), 0)
+
+
+class TestPendingTeachers(TestCase):
+    def test_unicode(self):
+        school = SchoolFactory()
+        student = StudentProfileFactory()
+        teacher = PendingTeachers.objects.create(user_profile=student,
+                                                 school=school)
+
+        label = "%s - %s" % (student, school)
+        self.assertEquals(label, teacher.__unicode__())
 
 
 class TestAggregateQuizScore(TestCase):

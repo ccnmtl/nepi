@@ -9,7 +9,8 @@ from nepi.main.forms import ContactForm
 from nepi.main.models import UserProfile, Country, School, Group, \
     PendingTeachers
 from nepi.main.tests.factories import SchoolFactory, CountryFactory, \
-    SchoolGroupFactory, StudentProfileFactory
+    SchoolGroupFactory, StudentProfileFactory, \
+    CountryAdministratorProfileFactory
 from nepi.main.views import ContactView, ViewPage, CreateSchoolView
 from pagetree.models import UserPageVisit, Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
@@ -85,76 +86,188 @@ class TestStudentLoggedInViews(TestCase):
     '''go through some of the views student sees'''
     def setUp(self):
         ModuleFactory("main", "/pages/main/")
-        self.h = Hierarchy.objects.get(name='main')
+        hierarchy = Hierarchy.objects.get(name='main')
+        self.section = hierarchy.get_root().get_first_leaf()
 
-        self.s = self.h.get_root().get_first_leaf()
-        self.u = UserFactory(is_superuser=True)
-        self.up = UserProfileFactory(user=self.u)
-        self.c = Client()
-        self.c.login(username=self.u.username, password="test")
+        self.student = StudentProfileFactory().user
+        self.client = Client()
+        self.client.login(username=self.student.username, password="test")
 
     def test_edit_page_form(self):
-        r = self.c.get(self.s.get_edit_url())
-        self.assertEqual(r.status_code, 200)
+        response = self.client.get(self.section.get_edit_url())
+        self.assertEqual(response.status_code, 302)
 
     def test_page(self):
-        r = self.c.get(self.s.get_absolute_url())
-        self.assertEqual(r.status_code, 200)
+        response = self.client.get(self.section.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
 
     def test_home(self):
-        response = self.c.get("/", follow=True)
+        response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
                           [('http://testserver/student-dashboard/%d/'
-                            % self.up.pk, 302)])
+                            % self.student.profile.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+
+    def test_profile_access(self):
+        alt_student_profile = StudentProfileFactory()
+
+        profile_url = '/student-dashboard/%s/' % (self.student.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 200)
+
+        profile_url = '/student-dashboard/%s/' % (alt_student_profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
+
+        profile_url = '/faculty-dashboard/%s/' % (self.student.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
+
+        profile_url = '/country-dashboard/%s/' % (self.student.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
+
+        profile_url = '/icap-dashboard/%s/' % (self.student.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
 
 
 class TestTeacherLoggedInViews(TestCase):
-    '''go through some of the views student sees'''
+
     def setUp(self):
         ModuleFactory("main", "/pages/main/")
-        self.h = Hierarchy.objects.get(name='main')
+        hierarchy = Hierarchy.objects.get(name='main')
+        self.section = hierarchy.get_root().get_first_leaf()
 
-        self.s = self.h.get_root().get_first_leaf()
-        self.u = UserFactory(is_superuser=True)
-        self.up = TeacherProfileFactory(user=self.u)
-        self.c = Client()
-        self.c.login(username=self.u.username, password="test")
+        self.teacher = TeacherProfileFactory().user
+        self.client = Client()
+        self.client.login(username=self.teacher.username, password="test")
 
     def test_page(self):
-        r = self.c.get(self.s.get_absolute_url())
-        self.assertEqual(r.status_code, 200)
+        response = self.client.get(self.section.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
 
     def test_home(self):
-        response = self.c.get("/", follow=True)
+        response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
                           [('http://testserver/faculty-dashboard/%d/'
-                            % self.up.pk, 302)])
+                            % self.teacher.profile.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+
+    def test_profile_access(self):
+        alt_teacher_profile = TeacherProfileFactory()
+
+        profile_url = '/student-dashboard/%s/' % (self.teacher.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
+
+        profile_url = '/faculty-dashboard/%s/' % (self.teacher.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 200)
+
+        profile_url = '/faculty-dashboard/%s/' % (alt_teacher_profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
+
+        profile_url = '/country-dashboard/%s/' % (self.teacher.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
+
+        profile_url = '/icap-dashboard/%s/' % (self.teacher.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
+
+
+class TestCountryAdminLoggedInViews(TestCase):
+
+    def setUp(self):
+        ModuleFactory("main", "/pages/main/")
+        hierarchy = Hierarchy.objects.get(name='main')
+        self.section = hierarchy.get_root().get_first_leaf()
+
+        self.country = CountryAdministratorProfileFactory().user
+        self.client = Client()
+        self.client.login(username=self.country.username, password="test")
+
+    def test_page(self):
+        response = self.client.get(self.section.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+    def test_home(self):
+        response = self.client.get("/", follow=True)
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/country-dashboard/%d/'
+                            % self.country.profile.pk, 302)])
+        self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+
+    def test_profile_access(self):
+        alt_country_profile = CountryAdministratorProfileFactory()
+
+        profile_url = '/student-dashboard/%s/' % (self.country.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
+
+        profile_url = '/faculty-dashboard/%s/' % (self.country.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
+
+        profile_url = '/country-dashboard/%s/' % (self.country.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 200)
+
+        profile_url = '/country-dashboard/%s/' % (alt_country_profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
+
+        profile_url = '/icap-dashboard/%s/' % (self.country.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
 
 
 class TestICAPLoggedInViews(TestCase):
-    '''go through some of the views student sees'''
+
     def setUp(self):
         ModuleFactory("main", "/pages/main/")
-        self.h = Hierarchy.objects.get(name='main')
+        hierarchy = Hierarchy.objects.get(name='main')
+        self.section = hierarchy.get_root().get_first_leaf()
 
-        self.s = self.h.get_root().get_first_leaf()
-        self.u = UserFactory(is_superuser=True)
-        self.up = ICAPProfileFactory(user=self.u)
-        self.c = Client()
-        self.c.login(username=self.u.username, password="test")
+        self.icap = ICAPProfileFactory().user
+        self.client = Client()
+        self.client.login(username=self.icap.username, password="test")
 
     def test_page(self):
-        r = self.c.get(self.s.get_absolute_url())
-        self.assertEqual(r.status_code, 200)
+        response = self.client.get(self.section.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
 
     def test_home(self):
-        response = self.c.get("/", follow=True)
+        response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
                           [('http://testserver/icap-dashboard/%d/'
-                            % self.up.pk, 302)])
+                            % self.icap.profile.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+
+    def test_profile_access(self):
+        alt_icap_profile = ICAPProfileFactory()
+
+        profile_url = '/student-dashboard/%s/' % (self.icap.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
+
+        profile_url = '/faculty-dashboard/%s/' % (self.icap.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
+
+        profile_url = '/country-dashboard/%s/' % (self.icap.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
+
+        profile_url = '/icap-dashboard/%s/' % (self.icap.profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 200)
+
+        profile_url = '/icap-dashboard/%s/' % (alt_icap_profile.id)
+        response = self.client.get(profile_url)
+        self.assertEquals(response.status_code, 403)
 
 
 class TestPageView(TestCase):
@@ -418,3 +531,40 @@ class TestConfirmAndDenyFacultyViews(TestCase):
 
         self.assertEquals(PendingTeachers.objects.count(), 0)
         self.assertEquals(len(mail.outbox), 1)
+
+
+class TestCreateGroupView(TestCase):
+    def setUp(self):
+        self.teacher = TeacherProfileFactory().user
+        self.school = SchoolFactory()
+        self.client = Client()
+
+        ModuleFactory("main", "/pages/main/")
+        self.hierarchy = Hierarchy.objects.get(name='main')
+
+    def test_student_forbidden(self):
+        student = StudentProfileFactory().user
+        self.client.login(username=student.username, password="test")
+        response = self.client.get('/create_group/')
+        self.assertEquals(response.status_code, 403)
+
+    def test_create_group(self):
+        self.client.login(username=self.teacher.username, password="test")
+
+        data = {
+            'start_date': '09/20/2018',
+            'end_date': '09/29/2018',
+            'name': 'The Group',
+            'module': 'main'
+        }
+
+        response = self.client.post("/create_group/", data, follow=True)
+        self.assertEquals(response.redirect_chain, [(
+            'http://testserver/faculty-dashboard/%d/#user-groups'
+            % self.teacher.profile.pk, 302)])
+        self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+
+        group = Group.objects.get(name='The Group')
+        self.assertEquals(group.formatted_start_date(), '09/20/2018')
+        self.assertEquals(group.formatted_end_date(), '09/29/2018')
+        self.assertEquals(group.module, self.hierarchy)

@@ -1,5 +1,6 @@
 '''Views for NEPI, should probably break up
 into smaller pieces.'''
+from datetime import datetime
 from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -15,15 +16,14 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView, UpdateView
 from django.views.generic.list import ListView
 from nepi.main.choices import COUNTRY_CHOICES
-from nepi.main.forms import CreateAccountForm, ContactForm, \
-    UpdateProfileForm
+from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
     PendingTeachers
 from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
-    LoggedInMixinStaff, JSONResponseMixin
+    LoggedInMixinStaff, JSONResponseMixin, StudentLoggedInMixin, \
+    FacultyLoggedInMixin, CountryAdministratorLoggedInMixin, ICAPLoggedInMixin
 from pagetree.generic.views import PageView, EditView, InstructorView
 from pagetree.models import Hierarchy, UserPageVisit
-from datetime import datetime
 
 
 class ViewPage(LoggedInMixin, PageView):
@@ -74,15 +74,16 @@ class HomeView(LoggedInMixin, View):
             user_profile = UserProfile.objects.get(user=request.user.pk)
         except UserProfile.DoesNotExist:
             return HttpResponseRedirect(reverse('register'))
-        if user_profile.profile_type == 'ST':
+        if user_profile.is_student():
             return HttpResponseRedirect(reverse('student-dashboard',
                                         kwargs={'pk': user_profile.pk}))
-            # return HttpResponseRedirect(reverse('student-dashboard',
-            #    {'pk' : profile.pk})) # {% url 'news-year-archive' yearvar %}"
-        elif user_profile.profile_type == 'TE':
+        elif user_profile.is_teacher():
             return HttpResponseRedirect(reverse('faculty-dashboard',
                                         kwargs={'pk': user_profile.pk}))
-        elif user_profile.profile_type == 'IC':
+        elif user_profile.is_country_administrator():
+            return HttpResponseRedirect(reverse('country-dashboard',
+                                        kwargs={'pk': user_profile.pk}))
+        elif user_profile.is_icap():
             return HttpResponseRedirect(reverse('icap-dashboard',
                                         kwargs={'pk': user_profile.pk}))
         else:
@@ -91,7 +92,7 @@ class HomeView(LoggedInMixin, View):
             return HttpResponseRedirect(reverse('register'))
 
 
-class StudentDashboard(LoggedInMixin, DetailView):
+class UserProfileView(DetailView):
     '''For the first tab of the dashboard we are showing
     groups that the user belongs to, and if they do not belong to any
     we are giving the the option to affiliate with one'''
@@ -102,19 +103,44 @@ class StudentDashboard(LoggedInMixin, DetailView):
     def dispatch(self, *args, **kwargs):
         if int(kwargs.get('pk')) != self.request.user.profile.id:
             return HttpResponseForbidden("forbidden")
-        return super(StudentDashboard, self).dispatch(*args, **kwargs)
+        return super(UserProfileView, self).dispatch(*args, **kwargs)
 
-    def get_context_data(self, **kwargs):
-        context = super(StudentDashboard, self).get_context_data(**kwargs)
+    def get_student_context(self):
+        context = {}
         context['hierarchy'] = Hierarchy.objects.get(name='main')
         context['countries'] = COUNTRY_CHOICES
         context['joined_groups'] = self.request.user.profile.joined_groups()
         return context
 
+    def get_faculty_context(self):
+        context = self.get_student_context()
+        context['created_groups'] = Group.objects.filter(
+            creator=self.request.user).exclude(archived=True)
+        return context
 
-class FacultyDashboard(StudentDashboard):
-    template_name = 'dashboard/icap_dashboard.html'
-    success_url = '/'
+    def get_country_context(self):
+        return self.get_faculty_context()
+
+    def get_icap_context(self):
+        context = self.get_country_context()
+        context['pending_teachers'] = PendingTeachers.objects.all()
+        return context
+
+
+class StudentDashboard(StudentLoggedInMixin, UserProfileView):
+
+    def get_context_data(self, **kwargs):
+        context = super(UserProfileView, self).get_context_data(**kwargs)
+        context.update(self.get_student_context())
+        return context
+
+
+class FacultyDashboard(FacultyLoggedInMixin, UserProfileView):
+
+    def get_context_data(self, **kwargs):
+        context = super(UserProfileView, self).get_context_data(**kwargs)
+        context.update(self.get_faculty_context())
+        return context
 
     def get_students_in_progress(self):
         find_students = UserProfile.objects.filter(profile_type="ST")
@@ -140,40 +166,21 @@ class FacultyDashboard(StudentDashboard):
                 done = done + 1
         return done
 
+
+class CountryAdminDashboard(CountryAdministratorLoggedInMixin,
+                            UserProfileView):
+
     def get_context_data(self, **kwargs):
-        context = super(FacultyDashboard, self).get_context_data(**kwargs)
-        context['students'] = UserProfile.objects.filter(
-            profile_type="ST").count()
-        context['in_progress'] = self.get_students_in_progress()
-        context['incomplete'] = self.get_students_done()
-        context['done'] = self.get_students_incomplete()
-        context['created_groups'] = Group.objects.filter(
-            creator=self.request.user).exclude(archived=True)
+        context = super(UserProfileView, self).get_context_data(**kwargs)
+        context.update(self.get_country_context())
         return context
 
 
-class CountryAdminDashboard(FacultyDashboard):
-    template_name = 'dashboard/icap_dashboard.html'
-    success_url = '/'
+class ICAPDashboard(ICAPLoggedInMixin, UserProfileView):
 
     def get_context_data(self, **kwargs):
-        context = super(CountryAdminDashboard, self).get_context_data(**kwargs)
-        # is this necessary? or can I just reference object/userprofile?
-        profile = UserProfile.objects.get(user=self.request.user.pk)
-        context['country'] = Country.objects.get(pk=profile.country.pk)
-        # is this possible? guess we'll find out...
-        context['country_schools'] = \
-            School.objects.get(country=context['country'])
-        return context
-
-
-class ICAPDashboard(FacultyDashboard):
-    template_name = 'dashboard/icap_dashboard.html'
-    success_url = '/'
-
-    def get_context_data(self, **kwargs):
-        context = super(ICAPDashboard, self).get_context_data(**kwargs)
-        context['pending_teachers'] = PendingTeachers.objects.all()
+        context = super(UserProfileView, self).get_context_data(**kwargs)
+        context.update(self.get_icap_context())
         return context
 
 
@@ -214,12 +221,14 @@ class SchoolGroupChoiceView(LoggedInMixin, JSONResponseMixin, View):
 
 
 class RegistrationView(FormView):
-    '''changing registration view to form'''
     template_name = 'registration/registration_form.html'
     form_class = CreateAccountForm
     success_url = '/account_created/'
 
     def send_success_email(self, user):
+        if not user.email:
+            return
+
         template = loader.get_template(
             'registration/registration_success_email.txt')
 
@@ -303,7 +312,16 @@ class UpdateSchoolView(LoggedInMixin, UpdateView):
 
 class CreateGroupView(LoggedInMixin, View):
 
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.profile.is_student():
+            return HttpResponseForbidden("forbidden")
+        return super(CreateGroupView, self).dispatch(*args, **kwargs)
+
     def post(self, *args, **kwargs):
+        # validation is taking place client-side
+        # @todo -- add server-side validation & then client-side error msg
+        # just in case javascript is turned off
+
         # dates come in as MM/DD/YYYY
         start_date = self.request.POST.get('start_date')
         end_date = self.request.POST.get('end_date')
@@ -319,7 +337,6 @@ class CreateGroupView(LoggedInMixin, View):
 
         group.creator = self.request.user
         group.school = self.request.user.profile.school
-
         group.save()
 
         url = '/%s-dashboard/%s/#user-groups' % (

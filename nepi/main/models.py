@@ -147,13 +147,17 @@ class UserProfile(models.Model):
             return "icap"
 
     def joined_groups(self):
-        return self.group.exclude(creator=self.user).exclude(archived=True)
+        '''Groups this user has joined'''
+        return self.group.exclude(archived=True)
 
 
 class PendingTeachers(models.Model):
     user_profile = models.ForeignKey(UserProfile,
                                      related_name="pending_teachers")
     school = models.ForeignKey(School)
+
+    def __unicode__(self):
+        return "%s - %s" % (self.user_profile, self.school)
 
 
 class AggregateQuizScore(models.Model):

@@ -61,3 +61,7 @@ class TeacherProfileFactory(UserProfileFactory):
 
 class ICAPProfileFactory(UserProfileFactory):
     profile_type = 'IC'
+
+
+class CountryAdministratorProfileFactory(UserProfileFactory):
+    profile_type = 'CA'
