@@ -1,40 +1,38 @@
 <div class="tab-pane" id="user-profile">
-{% comment %}
-        Your Profile
+    Your Profile
 
+    <form>
+        <fieldset>
+            <div class="control-group">
+                Your name is: {{ user.first_name }} {{ user.last_name }}
+            </div>
 
-        <b>{{object}}</b><br />
-        <table width="100%" class="table table-striped table-condensed">
-            <tr>
-                <td><b>Your name is:</b>
-            </tr>
-            <tr>
-                <td>
-                {{ user.first_name }}
-                </td>
-                <td>
-                {{ request.user.last_name }}
-                </td>
-            </tr>
-            <tr>
-                <td><b>Your username is:</b></td>
-            </tr>
-            <tr><td>{{request.user.username}}</td></tr>
-            <tr><td><b>You are in:</b></td></tr>
-            <tr><td>{{object.country}}</td></tr>
-            <tr>
-            <td>
-                {{object.icap_affil}}
-            </td>
-            <td><b>I am ICAP Affiliated</b></td>
-            </tr>
-            <tr><td><b>Your email:</b></td></tr>
-            <tr><td>{{request.user.email}}</td></tr>
+            <div class="control-group">
+                Your username: {{ user.username }}
+            </div>
 
-            <tr><td><b>Faculty Access:</b></td></tr>
-            <tr><td>{{object.profile_type}}</td></tr>
-        </table>
-        </div>
-    <a href={% url 'update-profile' object.pk %}>Update Profile</a>
-{% endcomment %}    
-</div>
+            <div class="control-group">
+                {% if object.icap_affil %}
+                You are ICAP Affiliated
+                {% else %}
+                You are not ICAP Affiliated
+                {% endif %}
+            </div>
+
+            <div class="control-group">
+                You are in: {{ object.country }}
+            </div>
+
+            <div class="control-group">
+                Your email: {{user.email}}
+            </div>
+
+            <div class="control-group">
+                <label>
+                    Faculty access: {{object.profile_type}}
+                </label>
+            </div>
+            <a href="{% url 'update-profile' object.pk %}">Update Profile</a>
+        </fieldset>
+    </form>
+</div><!-- end #user-profile -->
