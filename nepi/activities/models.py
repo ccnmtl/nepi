@@ -279,6 +279,7 @@ class AdherenceCard(models.Model):
     template_file = "activities/adherencecard.html"
     js_template_file = "activities/adherencecard_js.html"
     css_template_file = "activities/adherencecard_css.html"
+    quiz_class = models.TextField(default='')
     display_name = "Adherence Card"
     intro_text = models.TextField(default='')
 
@@ -319,17 +320,16 @@ class AdherenceCard(models.Model):
         blocks = PageBlock.objects.filter(content_type__pk=ctype.pk,
                                           css_extra__contains=self.quiz_class)
         print blocks
-        # what does this do?
         ids = blocks.values_list('object_id', flat=True)
         return Quiz.objects.filter(id__in=ids)
 
-    def user_responses(self, user, quiz):
+    def user_responses(self, user):
         '''No idea if this is the right way to do this'''
-        quiz = self.quizzes(quiz)
-        user = User.objects.get(user=user)
+        quiz = self.quizzes()
+        user = User.objects.get(pk=user.pk)
         try:
-            user_submission = Submission.objects.get(user=user, quiz=quiz)
-            response = Response.objects.get(Submission=user_submission)
+            user_submission = Submission.objects.get(user=user, quiz=quiz[0])
+            response = Response.objects.get(submission=user_submission)
             return response.value
         except Submission.DoesNotExist:
             return None

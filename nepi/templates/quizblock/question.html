@@ -1,5 +1,5 @@
 {% load markup %}
-{% load getresponse %}
+{% load getresponse quizscore %}
 
 {% getquestionresponse question as response %}
 
@@ -11,32 +11,47 @@
             {% if response and question.explanation and 'show-feedback' in block.pageblock.css_extra %}
                 <div class="caseuserfeedback">{{question.explanation|safe}}</div>
             {% endif %}
-            <div class="casequestiontext">{{question.text|safe}}</div>
             
-                {% if question.answerable %}
+            {% if response and 'show-user-correct' in block.pageblock.css_extra %}
+                {% map_response_to_answer response as the_answer %}
+            
+                {% if the_answer.correct %}
+                    <div class="user-correct">You chose {{the_answer.label}}. That is correct.</div>
+                {% else %}
+                    <div class="user-incorrect">You chose {{the_answer.label}}. That is incorrect.</div>
+                    <div class="user-correct">The correct answer is 
+                        {% for answer in question.answer_set.all %}
+                            {% if answer.correct %}
+                                {{answer.label}}
+                            {% endif %}
+                        {% endfor %}.
+                    </div>
+                {% endif %}
+            {% endif %}            
+
+            <div class="casequestiontext">{{question.text|safe}}</div>
+                        
+            {% if question.answerable %}
             	{% if question.is_single_choice %}
-              	  {% include 'quizblock/single_choice.html' %}
+              	    {% include 'quizblock/single_choice.html' %}
             	{% endif %}
 
             	{% if question.is_single_choice_dropdown %}
-              	  {% include 'quizblock/single_choice_dropdown.html' %}
+              	 {% include 'quizblock/single_choice_dropdown.html' %}
             	{% endif %}
 
             	{% if question.is_multiple_choice %}
-            	  {% include 'quizblock/multiple_choice.html' %}
+            	   {% include 'quizblock/multiple_choice.html' %}
             	{% endif %}
             {% else %}
                 {% if question.is_short_text %}
-                  {% include 'quizblock/short_text.html' %}
+                    {% include 'quizblock/short_text.html' %}
                 {% endif %}
 
                 {% if question.is_long_text %}
-                  {% include 'quizblock/long_text.html' %}
+                    {% include 'quizblock/long_text.html' %}
                 {% endif %}
-            {% endif %}
-            
-              
-            
+            {% endif %}            
         </div>
     </div>
 </div>

@@ -1,11 +1,9 @@
 from datetime import datetime
 from django.contrib.auth.models import User
-from nepi.main.models import (Country,
-                              School,
-                              Group,
-                              UserProfile)
-from pagetree.models import Hierarchy
+from nepi.main.models import Country, School, Group, UserProfile
 import factory
+import random
+import string
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -14,10 +12,19 @@ class UserFactory(factory.DjangoModelFactory):
     password = factory.PostGenerationMethodCall('set_password', 'test')
 
 
+def country_choice(n):
+    cc = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                 for _ in range(2))
+    while Country.objects.filter(name=cc):
+        cc = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                     for _ in range(2))
+    return cc
+
+
 class CountryFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Country
 
-    name = factory.Sequence(lambda n: "%d" % (n))
+    name = factory.Sequence(lambda n: country_choice(n))
     display_name = factory.Sequence(lambda n: "country %d" % n)
 
 
@@ -27,11 +34,11 @@ class SchoolFactory(factory.DjangoModelFactory):
     name = factory.Sequence(lambda n: "school %d" % n)
 
 
-class GroupFactory(factory.DjangoModelFactory):
+class SchoolGroupFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Group
     school = factory.SubFactory(SchoolFactory)
     creator = factory.SubFactory(UserFactory)
-    name = "A Group"
+    name = factory.Sequence(lambda n: "group %d" % n)
     start_date = datetime.now()
     end_date = datetime.now()
 
@@ -54,25 +61,3 @@ class TeacherProfileFactory(UserProfileFactory):
 
 class ICAPProfileFactory(UserProfileFactory):
     profile_type = 'IC'
-
-
-class HierarchyFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Hierarchy
-    name = "main"
-    base_url = "/"
-
-    @factory.post_generation
-    def populate(self, create, extracted, **kwargs):
-        self.get_root().add_child_section_from_dict(
-            {
-                'label': 'Welcome',
-                'slug': 'welcome',
-                'pageblocks': [
-                    {'label': 'Welcome to your new Site',
-                     'css_extra': '',
-                     'block_type': 'Text Block',
-                     'body': 'You should now use the edit link to add content',
-                     },
-                ],
-                'children': [],
-            })

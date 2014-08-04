@@ -1,15 +1,18 @@
+from datetime import datetime
 from django.contrib.auth.models import User
 from django.core import mail
-from django.core.exceptions import ValidationError
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
-from factories import UserFactory, HierarchyFactory, UserProfileFactory, \
-    TeacherProfileFactory, ICAPProfileFactory
-from nepi.main.forms import CreateAccountForm, ContactForm
-from nepi.main.models import UserProfile, Country, PendingTeachers
-from nepi.main.tests.factories import SchoolFactory, CountryFactory
-from nepi.main.views import ContactView, ViewPage, RegistrationView
-from pagetree.models import UserPageVisit, Section
+from factories import UserFactory, UserProfileFactory, TeacherProfileFactory, \
+    ICAPProfileFactory
+from nepi.main.forms import ContactForm
+from nepi.main.models import UserProfile, Country, School, Group, \
+    PendingTeachers
+from nepi.main.tests.factories import SchoolFactory, CountryFactory, \
+    SchoolGroupFactory, StudentProfileFactory
+from nepi.main.views import ContactView, ViewPage, CreateSchoolView
+from pagetree.models import UserPageVisit, Section, Hierarchy
+from pagetree.tests.factories import ModuleFactory
 import json
 
 
@@ -81,7 +84,9 @@ class TestBasicViews(TestCase):
 class TestStudentLoggedInViews(TestCase):
     '''go through some of the views student sees'''
     def setUp(self):
-        self.h = HierarchyFactory()
+        ModuleFactory("main", "/pages/main/")
+        self.h = Hierarchy.objects.get(name='main')
+
         self.s = self.h.get_root().get_first_leaf()
         self.u = UserFactory(is_superuser=True)
         self.up = UserProfileFactory(user=self.u)
@@ -89,11 +94,11 @@ class TestStudentLoggedInViews(TestCase):
         self.c.login(username=self.u.username, password="test")
 
     def test_edit_page_form(self):
-        r = self.c.get("/pages/%s/edit/%s/" % (self.h.name, self.s.slug))
+        r = self.c.get(self.s.get_edit_url())
         self.assertEqual(r.status_code, 200)
 
     def test_page(self):
-        r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
+        r = self.c.get(self.s.get_absolute_url())
         self.assertEqual(r.status_code, 200)
 
     def test_home(self):
@@ -107,7 +112,9 @@ class TestStudentLoggedInViews(TestCase):
 class TestTeacherLoggedInViews(TestCase):
     '''go through some of the views student sees'''
     def setUp(self):
-        self.h = HierarchyFactory()
+        ModuleFactory("main", "/pages/main/")
+        self.h = Hierarchy.objects.get(name='main')
+
         self.s = self.h.get_root().get_first_leaf()
         self.u = UserFactory(is_superuser=True)
         self.up = TeacherProfileFactory(user=self.u)
@@ -115,7 +122,7 @@ class TestTeacherLoggedInViews(TestCase):
         self.c.login(username=self.u.username, password="test")
 
     def test_page(self):
-        r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
+        r = self.c.get(self.s.get_absolute_url())
         self.assertEqual(r.status_code, 200)
 
     def test_home(self):
@@ -129,7 +136,9 @@ class TestTeacherLoggedInViews(TestCase):
 class TestICAPLoggedInViews(TestCase):
     '''go through some of the views student sees'''
     def setUp(self):
-        self.h = HierarchyFactory()
+        ModuleFactory("main", "/pages/main/")
+        self.h = Hierarchy.objects.get(name='main')
+
         self.s = self.h.get_root().get_first_leaf()
         self.u = UserFactory(is_superuser=True)
         self.up = ICAPProfileFactory(user=self.u)
@@ -137,7 +146,7 @@ class TestICAPLoggedInViews(TestCase):
         self.c.login(username=self.u.username, password="test")
 
     def test_page(self):
-        r = self.c.get("/pages/%s/%s/" % (self.h.name, self.s.slug))
+        r = self.c.get(self.s.get_absolute_url())
         self.assertEqual(r.status_code, 200)
 
     def test_home(self):
@@ -148,83 +157,22 @@ class TestICAPLoggedInViews(TestCase):
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
 
 
-class TestRegistrationView(TestCase):
-    def setUp(self):
-        self.view = RegistrationView()
-        self.existing_user = UserFactory()
-
-    def test_duplicate_user(self):
-        try:
-            form = CreateAccountForm()
-            form.cleaned_data = {
-                'username': self.existing_user.username
-            }
-            RegistrationView().form_valid(form)
-            self.fail("ValidationException expected")
-        except ValidationError:
-            pass
-
-    def test_form_valid_success_student(self):
-        form = CreateAccountForm()
-        form.cleaned_data = {
-            'username': 'janedoe21',
-            'email': 'janedoe21@ccnmtl.columbia.edu',
-            'password1': 'test',
-            'first_name': 'Jane',
-            'last_name': 'Doe',
-            'country': 'BF'
-        }
-        RegistrationView().form_valid(form)
-        user = User.objects.get(username='janedoe21')
-        self.assertEquals(user.email, 'janedoe21@ccnmtl.columbia.edu')
-        self.assertEquals(user.profile.profile_type, 'ST')
-        self.assertEquals(user.first_name, 'Jane')
-        self.assertEquals(user.last_name, 'Doe')
-
-        country = Country.objects.get(name='BF')
-        self.assertEquals(user.profile.country, country)
-
-        self.assertTrue(Client().login(username='janedoe21', password="test"))
-
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject,
-                         'ICAP Nursing E-Learning Registration')
-
-    def test_form_valid_success_faculty(self):
-        form = CreateAccountForm()
-        form.cleaned_data = {
-            'username': 'janedoe21',
-            'email': 'janedoe21@ccnmtl.columbia.edu',
-            'password1': 'test',
-            'first_name': 'Jane',
-            'last_name': 'Doe',
-            'country': 'BF',
-            'profile_type': True
-        }
-        RegistrationView().form_valid(form)
-        user = User.objects.get(username='janedoe21')
-        self.assertEquals(user.email, 'janedoe21@ccnmtl.columbia.edu')
-        self.assertEquals(user.profile.profile_type, 'ST')
-        self.assertEquals(user.first_name, 'Jane')
-        self.assertEquals(user.last_name, 'Doe')
-
-        country = Country.objects.get(name='BF')
-        self.assertEquals(user.profile.country, country)
-
-        self.assertTrue(Client().login(username='janedoe21', password="test"))
-
-        self.assertEqual(len(mail.outbox), 2)
-        self.assertEqual(mail.outbox[0].subject,
-                         'ICAP Nursing E-Learning Registration')
-        self.assertEqual(mail.outbox[1].subject,
-                         'Nursing E-Learning: Faculty Access Request')
-
-        self.assertEquals(PendingTeachers.objects.all().count(), 1)
-
-
 class TestPageView(TestCase):
     def setUp(self):
-        self.h = HierarchyFactory()
+        self.h = Hierarchy.objects.create(name='main', base_url='/')
+        self.h.get_root().add_child_section_from_dict(
+            {
+                'label': 'Welcome',
+                'slug': 'welcome',
+                'pageblocks': [
+                    {'label': 'Introduction',
+                     'css_extra': '',
+                     'block_type': 'Text Block',
+                     'body': 'random text goes here',
+                     },
+                ],
+                'children': [],
+            })
         self.h.get_root().add_child_section_from_dict(
             {
                 'label': 'Page One',
@@ -263,7 +211,7 @@ class TestPageView(TestCase):
         section_two = Section.objects.get(slug='page-one')
         section_three = Section.objects.get(slug='page-two')
 
-        request = RequestFactory().get('/pages/%s/' % self.h.name)
+        request = RequestFactory().get('/%s/' % self.h.name)
         request.user = self.u
 
         view = ViewPage()
@@ -297,7 +245,7 @@ class TestPageView(TestCase):
         self.assertTrue(ctx['menu'][2]['disabled'])
 
 
-class TestSchoolView(TestCase):
+class TestSchoolChoiceView(TestCase):
 
     def setUp(self):
         self.user = UserFactory()
@@ -312,14 +260,12 @@ class TestSchoolView(TestCase):
         self.assertEquals(response.status_code, 405)
 
     def test_get_country_not_found(self):
-        response = self.client.get('/schools/XY/',
-                                   {},
+        response = self.client.get('/schools/XY/', {},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 404)
 
     def test_get_no_schools(self):
-        response = self.client.get('/schools/%s/' % self.country.name,
-                                   {},
+        response = self.client.get('/schools/%s/' % self.country.name, {},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         the_json = json.loads(response.content)
@@ -339,3 +285,136 @@ class TestSchoolView(TestCase):
         self.assertEquals(the_json['schools'][0]['name'], '-----')
         self.assertEquals(the_json['schools'][1]['id'], str(self.school.id))
         self.assertEquals(the_json['schools'][1]['name'], self.school.name)
+
+
+class TestSchoolGroupChoiceView(TestCase):
+
+    def setUp(self):
+        self.user = UserProfileFactory().user
+        self.client = Client()
+        self.client.login(username=self.user.username, password="test")
+
+    def test_ajax_only(self):
+        grp = SchoolGroupFactory()
+        response = self.client.get('/groups/%s/' % grp.school.id)
+        self.assertEquals(response.status_code, 405)
+
+    def test_get_school_not_found(self):
+        response = self.client.get('/groups/782/', {},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 404)
+
+    def test_get_no_groups(self):
+        school = SchoolFactory()
+        response = self.client.get('/groups/%s/' % school.id,
+                                   {},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = json.loads(response.content)
+        self.assertEquals(len(the_json['groups']), 0)
+
+    def test_get_groups(self):
+        grp = SchoolGroupFactory()
+
+        response = self.client.get('/groups/%s/' % grp.school.id,
+                                   {},
+                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = json.loads(response.content)
+        self.assertEquals(len(the_json['groups']), 1)
+
+        self.assertEquals(the_json['groups'][0]['id'], str(grp.id))
+        self.assertEquals(the_json['groups'][0]['name'], grp.name)
+
+
+class TestCreateSchoolView(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.country = Country(name='LS')
+        self.country.save()
+        self.school = School(country=self.country, name='School 1')
+        self.school.save()
+        self.group = Group(school=self.school,
+                           name="Group",
+                           start_date=datetime.now(),
+                           end_date=datetime.now())
+        self.student = User(first_name="student", last_name="student",
+                            username="student", email="student@email.com",
+                            password="student")
+        self.student.save()
+        self.teacher = User(first_name="teacher", last_name="teacher",
+                            username="teacher", email="teacher@email.com",
+                            password="teacher")
+        self.teacher.save()
+
+    def test_create_school(self):
+        '''CreateSchoolView'''
+        u = UserFactory()
+        request = self.factory.post(
+            '/add_school/',
+            {"name": "School Needs Name",
+             "creator": u,
+             "country": self.country})
+        request.user = u
+        CreateSchoolView.as_view()(request)
+
+
+class TestConfirmAndDenyFacultyViews(TestCase):
+    def setUp(self):
+        self.school = SchoolFactory()
+        self.icap = ICAPProfileFactory().user
+        self.teacher = TeacherProfileFactory().user
+        self.pending = StudentProfileFactory().user
+
+        PendingTeachers.objects.create(user_profile=self.pending.profile,
+                                       school=self.school)
+
+        self.client = Client()
+
+    def test_ajax_only(self):
+        self.client.login(username=self.icap.username, password="test")
+
+        response = self.client.post('/faculty/confirm/', {})
+        self.assertEquals(response.status_code, 405)
+
+        response = self.client.post('/faculty/deny/', {})
+        self.assertEquals(response.status_code, 405)
+
+    def test_unauthorized(self):
+        self.client.login(username=self.teacher.username, password="test")
+        response = self.client.post('/faculty/confirm/',
+                                    {'user_id': self.pending.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 403)
+
+        response = self.client.post('/faculty/deny/',
+                                    {'user_id': self.pending.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 403)
+
+    def test_confirm_faculty(self):
+        self.client.login(username=self.icap.username, password="test")
+        response = self.client.post('/faculty/confirm/',
+                                    {'user_id': self.pending.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.pending = User.objects.get(username=self.pending.username)
+        self.assertTrue(self.pending.profile.is_teacher())
+        self.assertEquals(self.pending.profile.school, self.school)
+        self.assertEquals(self.pending.profile.country, self.school.country)
+
+        self.assertEquals(PendingTeachers.objects.count(), 0)
+        self.assertEquals(len(mail.outbox), 1)
+
+    def test_deny_faculty(self):
+        self.client.login(username=self.icap.username, password="test")
+
+        response = self.client.post('/faculty/deny/',
+                                    {'user_id': self.pending.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.pending = User.objects.get(username=self.pending.username)
+        self.assertTrue(self.pending.profile.is_student())
+
+        self.assertEquals(PendingTeachers.objects.count(), 0)
+        self.assertEquals(len(mail.outbox), 1)

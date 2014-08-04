@@ -467,6 +467,17 @@ h1, h2, h3, h4, h5, h6 {
 	clear: both;
 }
 
+	/* Slide Out Navigation*/
+	
+.slide-out-menu.open {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: .875em;
+}
+
+.slide-out-menu a {
+	margin: 2px 0;
+}
+
 	/*Navigation*/
 
 .navbar-inner /*overwriting bootstrap*/ {
@@ -578,7 +589,7 @@ div.pageblock.show-correct li.incorrect:after {
     text-align: center;
 }
 
-/* Case styles */
+/* Question styles */
 .cases {
 	margin: 0 auto;
 }
@@ -648,6 +659,23 @@ div.pageblock.show-correct li.incorrect:after {
 	color: #aaa;
 }
 
+.cases div.user-correct {
+    color: #468847;
+    background-color: #dff0d8;
+    width: 50%;
+    margin: 0 auto;    
+    padding: 5px;
+    border: 1px solid #d6e9c6;
+}
+
+.cases div.user-incorrect {
+    color: #b94a48;
+    background-color: #f2dede;
+    width: 50%;
+    margin: 0 auto;
+    padding: 5px;
+    border: 1px solid #eed3d7;
+}
 
 /* Basic survey styles */
 .survey {
@@ -978,4 +1006,64 @@ ul.tabbernav li.tabberactive a:hover
  padding:0;
  border: 0;
 }
+
+/* Dashboard */
+
+div.dashboard .role {
+    color: darkgray;
+    font-weight: normal;
+}
+
+div.dashboard div.module-introduction {
+    width: 75%;
+}
+
+div.dashboard blockquote {
+    margin-top: 20px;
+    margin-bottom: 80px;
+}
+
+div.dashboard .your-groups,
+div.dashboard .your-groups-created {
+    margin-bottom: 20px;
+}
+
+div.dashboard .your-groups-created form {
+    display: inline-block;
+}
+
+div.dashboard div.session-progress {
+    border: 1px solid black;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font-size: 1.2em;
+    padding: 20px;
+    width: 200px;
+}
+
+div.dashboard #user-groups .create-group-button,
+div.dashboard #user-groups .find-group-button {
+    margin-top: 10px;
+}
+
+div.dashboard .control-group.wide select {
+    width: 443px;
+}
+
+form.edit-group input[name='name'],
+form.create-group input[name='name'] {
+    width: 234px;
+}
+
+form.edit-group div.control-group div.help-inline.error,
+form.create-group div.control-group div.help-inline.error {
+    display: none;
+}
+
+form.edit-group div.control-group.error div.help-inline.error,
+form.create-group div.control-group.error div.help-inline.error {
+    display: block;
+}
+
 

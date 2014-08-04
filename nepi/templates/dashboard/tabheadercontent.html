@@ -1,16 +1,19 @@
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs dashboard-nav">
     <li class="active">
         <a href="#user-modules" data-toggle="tab">
             Option B+
         </a>
     </li>
 
+    {% if user_profile.profile_type == "ST" or user_profile.profile_type == "TE" %}
     <li>
         <a href="#user-groups" data-toggle="tab">
             Groups
         </a>
     </li>
+    {% endif %}
 
+    {% comment %}
     {% if user_profile.profile_type == "IC" or user_profile.profile_type == "TE" %}
     <li>
         <a href="#user-reports" data-toggle="tab">
@@ -18,6 +21,7 @@
         </a>
     </li>
     {% endif %}
+    {% endcomment %}
 
     <li>
         <a href="#user-profile" data-toggle="tab">
@@ -33,10 +37,12 @@
     </li>
     {% endif %}
 
+    {% comment %}
     <li>
         <a href="#user-resources" data-toggle="tab">
             Resources
         </a>
     </li>
+    {% endcomment %}
 
 </ul>

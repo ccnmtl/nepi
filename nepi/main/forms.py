@@ -1,6 +1,7 @@
 from captcha.fields import CaptchaField
 from choices import COUNTRY_CHOICES
 from django import forms
+from django.contrib.auth.models import User
 from django.forms.fields import ChoiceField
 from nepi.main.models import Country, Group, School, UserProfile
 
@@ -25,15 +26,13 @@ class CreateAccountForm(forms.Form):
     to allow guest users to create guest accounts.'''
 
     first_name = forms.CharField(
-        max_length=50, required=True, label="First Name")
+        max_length=50, required=True)
     last_name = forms.CharField(
-        max_length=50, required=True, label="Last Name")
+        max_length=50, required=True)
     username = forms.CharField(
-        max_length=25, required=True, label="Username")
-    email = forms.EmailField(required=False, label="Email(not required):")
-    country = forms.ChoiceField(required=True,
-                                label="What country do you reside in?",
-                                choices=COUNTRY_CHOICES)
+        max_length=25, required=True)
+    email = forms.EmailField(required=False)
+    country = forms.ChoiceField(required=True, choices=COUNTRY_CHOICES)
     school = ChoiceFieldNoValidation(required=False,
                                      label="Please select your school")
     nepi_affiliated = forms.BooleanField(required=False)
@@ -50,21 +49,27 @@ class CreateAccountForm(forms.Form):
     def clean(self):
         form = super(CreateAccountForm, self).clean()
         is_teacher = form.get("profile_type")
+        username = form.get("username")
         email = form.get("email")
         school = form.get("school")
         password1 = form.get("password1")
         password2 = form.get("password2")
         country = form.get("country")
 
+        if User.objects.filter(username=username).count() > 0:
+            self._errors["username"] = self.error_class(
+                ["This username is taken. Please select a different one"])
+
         if is_teacher:
-            if email == "":
+            if email is None or email == "":
                 self._errors["email"] = self.error_class(
                     ["If you are registering as an instructor " +
                      "you must enter a valid email address"])
-            if school == "" or school == "-----":
+            if school is None or school == "" or school == "-----":
                 self._errors["school"] = self.error_class(
                     ["If you are registering as an instructor " +
                      "you must select a school"])
+
         if password1 != password2:
             self._errors["password1"] = self.error_class(
                 ["Passwords must match each other."])
@@ -184,9 +189,3 @@ class UpdateProfileForm(forms.ModelForm):
                 self.cleaned_data.get('password1')
         self.instance.user.save()
         return super(UpdateProfileForm, self).save(*args, **kwargs)
-
-
-class CreateGroupForm(forms.ModelForm):
-    class Meta:
-        model = Group
-        exclude = ("school", "creator")

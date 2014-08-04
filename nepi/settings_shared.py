@@ -35,6 +35,8 @@ if 'test' in sys.argv or 'jenkins' in sys.argv:
         }
     }
 
+    CAPTCHA_TEST_MODE = True
+
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 SOUTH_TESTS_MIGRATE = False
 
@@ -157,11 +159,11 @@ STATSD_PORT = 8125
 STATSD_PATCHES = ['django_statsd.patches.db', ]
 
 THUMBNAIL_SUBDIR = "thumbs"
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_SUBJECT_PREFIX = "[nepi] "
 EMAIL_HOST = 'localhost'
 SERVER_EMAIL = "nepi@ccnmtl.columbia.edu"
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
+
 
 # put any static media here to override app served static media
 STATICMEDIA_MOUNTS = (
@@ -191,7 +193,8 @@ WIND_AFFIL_HANDLERS = ['djangowind.auth.AffilGroupMapper',
                        'djangowind.auth.SuperuserMapper']
 WIND_STAFF_MAPPER_GROUPS = ['tlc.cunix.local:columbia.edu']
 WIND_SUPERUSER_MAPPER_GROUPS = ['anp8', 'jb2410', 'zm4', 'egr2107', 'cld2156',
-                                'sld2131', 'amm8', 'mar227', 'jed2161']
+                                'sld2131', 'amm8', 'mar227', 'jed2161',
+                                'njn2118']
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_COOKIE_HTTPONLY = True

@@ -3,8 +3,9 @@ from django.test.client import RequestFactory
 from django.test.testcases import TestCase
 from nepi.main.templatetags.accessible import SubmittedNode
 from nepi.main.templatetags.quizscore import is_user_correct, aggregate_score
-from nepi.main.tests.factories import HierarchyFactory, UserFactory
-from pagetree.models import Section
+from nepi.main.tests.factories import UserFactory
+from pagetree.models import Section, Hierarchy
+from pagetree.tests.factories import ModuleFactory
 from quizblock.models import Quiz, Question, Submission, Response, Answer
 from quizblock.tests.test_templatetags import MockNodeList
 
@@ -214,12 +215,14 @@ class TestAccessible(TestCase):
     def setUp(self):
         self.user = UserFactory(is_superuser=True)
 
-        self.h = HierarchyFactory()
-        self.section_one = Section.objects.get(slug='welcome')
+        ModuleFactory("one", "/pages/one/")
+        self.hierarchy = Hierarchy.objects.get(name='one')
 
-        self.h.get_root().add_child_section_from_dict({
-            'label': 'Page Two',
-            'slug': 'page-two',
+        self.section_one = Section.objects.get(slug='one')
+
+        self.hierarchy.get_root().add_child_section_from_dict({
+            'label': 'Page Four',
+            'slug': 'page-four',
             'pageblocks': [{
                 'label': 'Content',
                 'css_extra': '',
@@ -236,9 +239,9 @@ class TestAccessible(TestCase):
                 }]
             }]
         })
-        self.section_two = Section.objects.get(slug='page-two')
+        self.section_four = Section.objects.get(slug='page-four')
 
-        self.request = RequestFactory().get('/pages/%s/' % self.h.name)
+        self.request = RequestFactory().get('/pages/%s/' % self.hierarchy.name)
         self.request.user = self.user
 
     def test_issubmitted_no_pageblocks(self):
@@ -257,7 +260,7 @@ class TestAccessible(TestCase):
         nlFalse = MockNodeList()
 
         node = SubmittedNode('section', nlTrue, nlFalse)
-        context = dict(request=self.request, section=self.section_two)
+        context = dict(request=self.request, section=self.section_four)
         out = node.render(context)
         self.assertEqual(out, None)
         self.assertFalse(nlTrue.rendered)
@@ -273,7 +276,7 @@ class TestAccessible(TestCase):
         nlFalse = MockNodeList()
 
         node = SubmittedNode('section', nlTrue, nlFalse)
-        context = dict(request=self.request, section=self.section_two)
+        context = dict(request=self.request, section=self.section_four)
         out = node.render(context)
         self.assertEqual(out, None)
         self.assertTrue(nlTrue.rendered)

@@ -4,12 +4,12 @@ from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
 from nepi.main.views import CreateGroupView, UpdateGroupView, \
-    DeleteGroupView, StudentClassStatView, GetSchoolGroups, \
-    CreateSchoolView, UpdateSchoolView, ContactView, RegistrationView, \
-    GetCountries, StudentDashboard, JoinGroup, GetCountrySchools, \
-    FacultyDashboard, ICAPDashboard, Home, AddGroup, UpdateProfileView, \
-    GetFacultyCountries, GetFacultyCountrySchools, GroupDetail, \
-    RemoveStudent, LeaveGroup, SchoolChoiceView
+    DeleteGroupView, StudentClassStatView, CreateSchoolView, \
+    UpdateSchoolView, ContactView, RegistrationView, StudentDashboard, \
+    JoinGroup, FacultyDashboard, ICAPDashboard, HomeView, UpdateProfileView, \
+    GroupDetail, RemoveStudent, LeaveGroup, SchoolChoiceView, \
+    CountryAdminDashboard, SchoolGroupChoiceView, ArchiveGroupView, \
+    ConfirmFacultyView, DenyFacultyView
 import nepi.main.views
 import os.path
 import staticmedia
@@ -48,57 +48,44 @@ urlpatterns = patterns(
 
     auth_urls,
     logout_page,
-    url(r'^$', Home.as_view(), name="home"),
+    url(r'^$', HomeView.as_view(), name="home"),
     (r'^admin/', include(admin.site.urls)),
 
-    # flat and universally accessible pages
     (r'^contact/$', ContactView.as_view()),
-    (r'^thanks_group/(?P<crs_id>\d+)/$', 'nepi.main.views.thanks_group'),
-    url(r'^schools/(?P<country_id>\w[^/]*)/$',
-        SchoolChoiceView.as_view(), name='school-choice'),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
     url(r'^update_profile/(?P<pk>\d+)/$', UpdateProfileView.as_view(),
         name='update-profile'),
+
+    # json object delivery
+    url(r'^schools/(?P<country_id>\w[^/]*)/$',
+        SchoolChoiceView.as_view(), name='school-choice'),
+    url(r'^groups/(?P<school_id>\d+)/$', SchoolGroupChoiceView.as_view()),
 
     # dashboard base views
     url(r'^student-dashboard/(?P<pk>\d+)/$',
         StudentDashboard.as_view(), name='student-dashboard'),
     url(r'^faculty-dashboard/(?P<pk>\d+)/$',
         FacultyDashboard.as_view(), name='faculty-dashboard'),
+    url(r'^country-dashboard/(?P<pk>\d+)/$',
+        CountryAdminDashboard.as_view(), name='country-dashboard'),
     url(r'^icap-dashboard/(?P<pk>\d+)/$',
         ICAPDashboard.as_view(), name='icap-dashboard'),
 
-    # functionality to join a group
+    # groups
     url(r'^join_group/$', JoinGroup.as_view(), name='join-group'),
-    url(r'^leave_group/(?P<pk>\d+)/$', LeaveGroup.as_view(),
-        name='leave-group'),
-    url(r'^get_countries/$', GetCountries.as_view()),
-    url(r'^get_schools/$', GetCountrySchools.as_view()),
-    url(r'^get_schools/(?P<pk>\d+)/$',
-        GetCountrySchools.as_view(), name='get-country-schools'),
-    url(r'^get_groups/$', GetSchoolGroups.as_view()),
-
-    # need custom yet almost identical templates for requesting faculty access
-    url(r'^faculty_countries/$', GetFacultyCountries.as_view()),
-    url(r'^faculty_schools/$', GetFacultyCountrySchools.as_view()),
-
-    # functionality for teacher create a group
-    url(r'^add_group/$',
-        AddGroup.as_view(), name='add-group'),
-    url(r'^create_group/$',
-        CreateGroupView.as_view(),
+    url(r'^leave_group/$', LeaveGroup.as_view(), name='leave-group'),
+    url(r'^create_group/$', CreateGroupView.as_view(),
         name='create-group'),
-    (r'^edit_group/(?P<pk>\d+)/$',
-     UpdateGroupView.as_view()),
-    url(r'^delete_group/(?P<pk>\d+)/$',
-        DeleteGroupView.as_view(),
-        name='delete-group'),
+    (r'^edit_group/$', UpdateGroupView.as_view()),
+    url(r'^delete_group/$', DeleteGroupView.as_view()),
+    url(r'^archive_group/$', ArchiveGroupView.as_view()),
     url(r'^group_details/(?P<pk>\d+)/$',
         GroupDetail.as_view(), name='group-details'),
     (r'^remove_student/$', RemoveStudent.as_view()),
-    #(r'^group_results/$', 'nepi.main.views.group_results'),
 
     # ICAP related pages
+    (r'^faculty/confirm/$', ConfirmFacultyView.as_view()),
+    (r'^faculty/deny/$', DenyFacultyView.as_view()),
     (r'^add_school/$', CreateSchoolView.as_view()),
     url(r'^view_group/(?P<pk>\d+)/', StudentClassStatView.as_view(),
         name='view-group'),
@@ -106,9 +93,6 @@ urlpatterns = patterns(
     # Teacher related pages
     #(r'^view_students/$', 'nepi.main.views.view_students'),
     #'nepi.main.views.create_group'),
-
-    (r'^accessible/(?P<section_slug>.*)/$',
-     'is_accessible', {}, 'is-accessible'),
 
     url(r'^captcha/', include('captcha.urls')),
     (r'^activities/', include('nepi.activities.urls')),

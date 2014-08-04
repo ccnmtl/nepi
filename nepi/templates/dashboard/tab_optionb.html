@@ -1,52 +1,39 @@
-
-{% block tabcontent %}
-    <div class="tab-content">
-        <div class="tab-pane active" id="user-modules">
-        
-        {% block tabtitle %}
-            <b>Option B+</b>
-        {% endblock %}
-        
-        {% block tabbody %}
-            {% block introtext %}
-                <p>This is a placeholder for one-paragraph description of the
-	            module. You can go through each module at your own
-	            pace. You can stop at any time and your progress will be
-	            saved. When you return, you will come back to this table of
-	            contents page where you can review what you have already
-	            learned, and proceed to complete the course. </p>
-            {% endblock %}
-            
-            {% block table %}
-                <table width="100%" class="table table-striped">
-                    {% for um in user_modules %}
-                        <tr>
-                            <td>
-                                <a href="{{um.get_absolute_url}}">
-                                    {{um.name}}
-                                </a>
-                            </td>
-                            <td>
-                                User Progress
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <p>Tell User they should associate themselves with a group.</p>
-                    {% endfor %}
-
-                    {% for m in modules %}
-                        <tr>
-                            <td>
-                                <a href="{{m.get_absolute_url}}">
-                                    {{m.name}}
-                                </a>
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <p>No Modules Yet.</p>
-                    {% endfor %}
-                </table>
-            {% endblock %}
-        {% endblock %}
+<div class="tab-pane active" id="user-modules">
+    {% if user.profile.percent_complete == 0 %}
+    <div class="alert alert-info">
+        <strong>Welcome!</strong> Placeholder text for the first time user experience.
     </div>
-{% endblock %}
+    {% endif %}
+    
+    <h3>Option B+</h3>
+    
+    <div>
+        <div class="pull-left module-introduction">
+            This is a placeholder for one-paragraph description of the
+            module. You can go through each module at your own
+            pace. You can stop at any time and your progress will be
+            saved. When you return, you will come back to this table of
+            contents page where you can review what you have already
+            learned, and proceed to complete the course.
+        </div>
+        <div class="pull-right session-progress">
+            <h4>Session Progress</h4>
+            {% with user.profile.last_location as last_location %}
+            {% if user.profile.percent_complete == 0 %}
+                <a href="{{last_location.get_absolute_url}}" class="btn btn-large btn-primary">
+                    Begin the Course <i class="icon-arrow-right icon-white"></i></a>
+            {% else %}
+                <div class="progress progress-striped">
+                    <div class="bar" style="width: {{user.profile.percent_complete}}%;"></div>
+                </div>
+                
+                <div>{{user.profile.sessions_completed}} of {{hierarchy.get_root.get_children|length}} sessions completed</div>
+                <br />
+                <a href="{{last_location.get_absolute_url}}" class="btn btn-large">
+                    Continue <i class="icon-arrow-right"></i>
+                </a>
+            {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</div>

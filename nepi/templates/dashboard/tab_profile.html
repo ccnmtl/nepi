@@ -1,11 +1,6 @@
-{% block tabcontent %}
-    <div class="tab-pane" id="user-profile">
-        <div id="pane-content">
-        {% block tabtitle %}
-            Your Profile
-        {% endblock %}
-    
-        {% block tabbody %}
+<div class="tab-pane" id="user-profile">
+{% comment %}
+        Your Profile
 
 
         <b>{{object}}</b><br />
@@ -39,6 +34,7 @@
             <tr><td><b>Faculty Access:</b></td></tr>
             <tr><td>{{object.profile_type}}</td></tr>
         </table>
-        </div><a href={% url 'update-profile' object.pk %}>Update Profile</a></div>
-        {% endblock %}
-    {% endblock %}
+        </div>
+    <a href={% url 'update-profile' object.pk %}>Update Profile</a>
+{% endcomment %}    
+</div>

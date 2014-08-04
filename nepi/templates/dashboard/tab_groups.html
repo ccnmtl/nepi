@@ -1,166 +1,221 @@
-{% block tabcontent %}
-    <div class="tab-pane" id="user-groups">
-        <div id="pane-content">
-        {% block tabtitle %}
-            Your Groups
-        {% endblock %}
-    
-        {% block tabbody %}
-
-            {% if object.profile_type == "IC" or object.profile_type == "CA" or object.profile_type == "TE"%}
-                {% block groupscreated %}
-                    <div id="groups_created">
-                        <b><p>Groups You've Created: </p></b>
-                            <table width="100%" class="table table-striped table-condensed"> 
-                                {% for cc in created_groups %}
-                                <tr>
-                                    <td>
-                                        <a href="{{cc.module.get_absolute_url}}">
-                                            {{cc.name}}
-                                        </a>
-                                        <space>
-                                        <a href="/group_details/{{cc.pk}}/">
-                                            {{cc.name}} Information
-                                        </a>
-                                        <space>
-                                        <a href="{% url 'view-group' cc.id %}/">
-                                            {{cc.name}} Group Stats
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a href="/edit_group/{{cc.pk}}">
+<div class="tab-pane" id="user-groups">
+    {% if object.profile_type == "TE" %}
+        <h3>{{user.profile.school.name}}</h3>
+        <h3 class="role">
+            FACULTY ROLE
+        </h3>
+        
+        <blockquote>
+            {% if created_groups.count > 0 %}
+                <div class="your-groups-created">
+                    <h4>Groups you've created</h4>
+                    <table width="100%" class="table table-striped table-condensed"> 
+                        <tr><th>Name</th><th>Begin Date</th><th>End Date</th><th>Members</th><th>Actions</th>
+                        {% for group in created_groups.all %}
+                            <tr id="faculty-group-{{group.id}}" class="content-row">
+                                <td><a href="{% url 'view-group' group.id %}">{{group.name}}</a></td>
+                                <td>{{group.formatted_start_date}}</td>
+                                <td>{{group.formatted_end_date}}</td>
+                                <td>{{group.userprofile_set.count}}</td>
+                                <td>
+                                    <button class="btn btn-default btn-small edit-group-button"
+                                        data-pk="{{group.pk}}" data-start-date="{{group.formatted_start_date}}"
+                                        data-end-date="{{group.formatted_end_date}}" data-name="{{group.name}}">
                                             Edit
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a href="{% url 'view-group' cc.id %}">
-                                            {{cc.name}} View Group
-                                        </a>
-                                    </td>
-                                    <td>
-                                         <a href="/archive_group/{{cc.pk}}">
-                                             Archive
-                                         </a>
-                                     </td>
-                                     {% if cc.userprofile_set.count == 0 %}
-                                         <td>
-                                             <div>
-                                                 <a href="{% url 'delete-group' cc.id %}" class="delete_link">
-                                                     Delete Group
-                                                 </a>
-                                             </div>
-                                         </td>
-                                     {% endif %}
-                                 </tr>
-                                 {% empty %}
-                                 <tr>
-                                     <td>
-                                         <p>You have not created any groups yet.</p>
-                                     </td>
-                                 </tr>
-                                 {% endfor %}
-                             </table>
-                             
-                             
-                             <div id="add_group_div">
-                                 <button id="add_group_button">Add Group - Ajax</button>
-                             </div>
-                             <a href="{% url 'create-group' %}">Create Group - non Ajax</a>
-
-                             
-                         </div>    
-                {% endblock %}
+                                    </button>
+                                    <form action='/archive_group/' method='post'>
+                                        <input type='hidden' name='group' value='{{group.id}}' />
+                                        <button class="btn btn-default btn-small archive-group">Archive</button>
+                                    </form>
+                                    {% if group.userprofile_set.count == 0 %}
+                                        <form action='/delete_group/' method='post'>
+                                            <input type='hidden' name='group' value='{{group.id}}' />
+                                            <button class="btn btn-default btn-small delete-group">Delete</button>
+                                        </form>
+                                    {% endif %}
+                                </td>
+                             </tr>
+                         {% endfor %}
+                     </table>
+                </div>
             {% endif %}
             
-            {% block usergroups %}
-            
-                <div id="groups_joined">
-                    <b><p>Groups You've Joined: </p></b>
-                    {% for uc in object.group.all %}
-                        <tr>
-                            <td>{{uc.name}}</td>
-                            <td><a href="{{uc.get_absolute_url}}">{{uc.name}}</a></td>
-                            <td><a href="/view_group_stats/uc.pk/">see progress</a></td><button id="progress_button">See Progress</button>
-                            <td><a href="/leave_group/{{uc.pk}}/">leave group</a></td><button id="leave_group_btn">Leave Group</button>
-                        </tr>
-                    {% empty %}
-                        <div name="instruction-div">
-                            <tr>
-                                <td>
-                                    There should be an instruction div of some sorts here to tell first timers what to do.
-                                </td>
-                            </tr>
-                          </div>
-                        <div>
-                          <tr>
-                              <td>
-                                  <p>You have not joined any groups yet.</p>
-                              </td>
-                          </tr>
-                        </div> 
-                  {% endfor %}
-                  <div id="outer_div">
-                  <div id="join_group">
-                      <button id="join_group_button">Join Group</button>
-                  </div>
-                  </div>
-            {% endblock %}
- 
- 
-              </div>
-
-             
+            <div>
+                <h5>Create {% if created_groups.count > 0 %} More {% endif %}Groups</h5>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
+                <div><a href="#create-a-group" role="button" class="btn btn-primary create-group-button" data-toggle="modal">Create Group</a></div>
+            </div>
+        </blockquote>
+    {% endif %}
+    
+    <h3 class="role">STUDENT ROLE</h3>
+    <blockquote>
+        {% if joined_groups.count > 0 %}
+            <div class="your-groups">
+                <h4>Groups you've joined</h4>
+                <table width="100%" class="table table-striped table-condensed">
+                    <tr><th>Name</th><th>Instructor</th><th>Begin Date</th><th>End Date</th><th>Action</th></tr>
+                
+                    {% for group in joined_groups.all %}
+                        <tr id="student-group-{{group.id}}" class="content-row">
+                            <td><a href="/view_group_stats/{{group.pk}}/">{{group.name}}</a></td>
+                            <td>{{group.creator.get_full_name}}</td>
+                            <td>{{group.formatted_start_date}}</td>
+                            <td>{{group.formatted_end_date}}</td>
+                            <td>
+                                <form action='/leave_group/' method='post'>
+                                    <input type='hidden' name='group' value='{{group.id}}' />
+                                    <button class="btn btn-default btn-small leave-group">Leave</button>
+                                </form>
+                            </td>
+                    {% endfor %}
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
+        
+        <div>
+            <h5>Join {% if joined_groups.count > 0 %} More {% endif %}Groups</h5>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
+            <div><a href="#find-a-group" role="button" class="btn btn-primary find-group-button" data-toggle="modal">Find a Group</a></div>
+        </div>
+    </blockquote>
+        
+    <div id="find-a-group" class="modal hide">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+            <h4>Find Group</h4>
+        </div>
+        <div class="modal-body find-group">
+            <div class="fieldWrapper control-group country wide">
+                <label for="id_country"><b>Where is your institution located?</b></label>
+                <div class="controls">
+                    <select id="id_country" name="country">
+                    {% for choice in countries %}
+                        <option value="{{choice.0}}">{{choice.1}}</option>
+                    {% endfor %}
+                    </select>
+                    <div class="help-inline error no-schools" style="display: none">
+                        Your selected country has no institutions.<br />
+                        If you would like to have your school added, please <a href="/contact/">contact ICAP</a>.
+                    </div>
+                </div>
+            </div>
+            <div class="fieldWrapper control-group school wide" style="display: none">
+                <label for="id_country"><b>Select your institution:</b></label>
+                <div id="schools-for-country" class="controls">
+                    <select id="id_school" name="school"></select>
+                    <div class="help-inline error no-schoolgroups" style="display: none">
+                        Your selected institution has no available groups.<br />
+                        Please ask your instructor to create a group.
+                    </div>
+                </div>
+            </div>
+            <div class="fieldWrapper control-group schoolgroup" style="display: none">
+                <table width="100%" class="table table-striped table-condensed"> 
+                    <tr><th>Name</th><th>Begin Date</th><th>End Date</th><th>Instructor</th><th>Action</th></tr>
+                </table>
+            </div>
+            <div class="clearfix"></div>   
         </div>
     </div>
     
-            {% block extrajs %}
-                <script>
-                    var join_btn = jQuery('#join_group_button');
-                    join_btn.click(
-                    function()
-                    {
-                        jQuery('#join_group').load('/get_countries/');
-                    });
-                    
-                    var add_btn = jQuery('#add_group_button');
-                    add_btn.click(function(){jQuery('#add_group_div').load('/add_group/');});
-                    
-                    var edit_btn = jQuery('#edit_group_button');
-                    edit_btn.click(function(){jQuery('#edit_group_div').load('/edit_group/');});
-
-                    
-                    jQuery("#leave_group_btn").on("click", 
-                            function()
-                            {    
-                                jQuery.ajax(
-                                {
-                                    url: "/leave_group/",
-                                    type: "POST",
-                                    data: {'scenario' : good_s, 'conversation' : good_c },
-                                    success: function (data) 
-                                    {
-                                        jQuery("#correct_open").addClass( "right-selected" )
-                                        jQuery(".correct_answer1, .correct_answer2, .correct_answer3, .correct_answer4").addClass( "right-selected" ).show();
-
-                                        jQuery(".wrong_answer1, .wrong_answer2, .wrong_answer3, .wrong_answer4").hide();
-                                        jQuery("#wrong_open").removeClass( "wrong-selected" );
-
-                                        goodvar = true;
-                                      
-                                        maybeActivateNextButton();
-                                    },
-                                  
-                                    error: function(data) 
-                                    {
-                                        alert("There was an error submitting your form.");
-                                    }
-                                });
-                            });
+    <div id="create-a-group" class="modal hide">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+            <h4>Create Group</h4>
+        </div>
+        <div class="modal-body">
+            <form class="action-container create-group" action='/create_group/' method="post">{% csrf_token %}
+                <div class="fieldWrapper control-group start_date wide">
+                    <label><b>Begin Date:</b></label>
+                    <div class="controls">
+                        <div class="input-append date" data-date="" data-date-format="mm/dd/yyyy">
+                            <input name="start_date" size="16" type="text" value="" readonly="readonly">
+                            <span class="add-on"><i class="icon-th"></i></span>
+                        </div>                        
+                        <div class="help-inline error start_date">
+                            Please specify a valid date. Begin date must be before the end date.
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldWrapper control-group end_date wide">
+                    <label><b>End Date:</b></label>
+                    <div class="controls">
+                        <div class="input-append date" data-date="" data-date-format="mm/dd/yyyy">
+                            <input name="end_date" size="16" type="text" value="" readonly="readonly">
+                            <span class="add-on"><i class="icon-th"></i></span>
+                        </div>                        
+                        <div class="help-inline error end_date">
+                            Please specify a valid date. End date must be after the begin date.
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldWrapper control-group name wide">
+                    <label><b>Name:</b></label>
+                    <div class="controls">
+                        <input name="name" type="text" />
+                        <div class="help-inline error name">
+                            This field is required.
+                        </div>
+                    </div>
+                </div>
+                <input type='hidden' name='module' value='main' />
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                <button class="btn btn-primary">Create Group</button>
+            </form>
+        </div>
+    </div>
     
-                    
-                    
-                </script>
-    {% endblock %}
-        {% endblock %}
-{% endblock %}
+    <div id="edit-a-group" class="modal hide">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+            <h4>Edit Group</h4>
+        </div>
+        <div class="modal-body">
+            <form class="action-container edit-group" action='/edit_group/' method="post">{% csrf_token %}
+                <input type="hidden" name="pk" value="" />
+                <div class="fieldWrapper control-group start_date wide">
+                    <label><b>Begin Date:</b></label>
+                    <div class="controls">
+                        <div class="input-append date start-date" data-date="" data-date-format="mm/dd/yyyy">
+                            <input name="start_date" size="16" type="text" value="" readonly="readonly">
+                            <span class="add-on"><i class="icon-th"></i></span>
+                        </div>                        
+                        <div class="help-inline error start_date">
+                            Please specify a valid date. Begin date must be before the end date.
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldWrapper control-group end_date wide">
+                    <label><b>End Date:</b></label>
+                    <div class="controls">
+                        <div class="input-append date end-date" data-date="" data-date-format="mm/dd/yyyy">
+                            <input name="end_date" size="16" type="text" value="" readonly="readonly">
+                            <span class="add-on"><i class="icon-th"></i></span>
+                        </div>                        
+                        <div class="help-inline error end_date">
+                            Please specify a valid date. End date must be after the begin date.
+                        </div>
+                    </div>
+                </div>
+                <div class="fieldWrapper control-group name wide">
+                    <label><b>Name:</b></label>
+                    <div class="controls">
+                        <input name="name" type="text" />
+                        <div class="help-inline error name">
+                            This field is required.
+                        </div>
+                    </div>
+                </div>
+                <input type='hidden' name='module' value='main' />
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                <button class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 

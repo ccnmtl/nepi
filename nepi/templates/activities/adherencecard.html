@@ -1,8 +1,44 @@
+{% load markup %}
+{% load adherence_state %}
+
+{% if block.label %}<h3>{{block.label}}</h3>{% endif %}
+{% if block.description %}{{block.description|safe}}{% endif %}
+
 {% block content %}
-<div class="adherencecard" data-part="1">1</div><div class="answer" data-part="1" style="visibility:hidden">1</div>
-<div class="adherencecard" data-part="2">2</div><div class="answer" data-part="2" style="visibility:hidden">1</div>
-<div class="adherencecard" data-part="3">3</div><div class="answer" data-part="3" style="visibility:hidden">1</div>
-<div class="adherencecard" data-part="4">4</div><div class="answer" data-part="4" style="visibility:hidden">1</div>
-<div class="adherencecard" data-part="5">5</div><div class="answer" data-part="5" style="visibility:hidden">1</div>
-<div class="adherencecard" data-part="6">6</div><div class="answer" data-part="6" style="visibility:hidden">1</div>
+<div class="adherencecard" data-part="1">1</div>
+    <div class="answer" data-part="1">
+        {% get_response_for adherence_one as adherence_one %}
+        {{adherence_one}}
+    </div>
+
+<div class="adherencecard" data-part="2">2</div>
+    <div class="answer" data-part="2">
+        {% get_response_for adherence_two as adherence_two %}
+        {{adherence_two}}
+    </div>
+
+<div class="adherencecard" data-part="3">3</div>
+    <div class="answer" data-part="3">
+        {% get_response_for adherence_three as adherence_three %}
+        {{adherence_three}}
+    </div>
+
+<div class="adherencecard" data-part="4">4</div>
+    <div class="answer" data-part="4">
+        {% get_response_for adherence_four as adherence_four %}
+        {{adherence_four}}
+    </div>
+
+<div class="adherencecard" data-part="5">5</div>
+    <div class="answer" data-part="5">
+        {% get_response_for adherence_five as adherence_five %}
+        {{adherence_five}}
+    </div>
+
+<div class="adherencecard" data-part="6">6</div>
+    <div class="answer" data-part="6">
+        {% get_response_for adherence_six as adherence_six %}
+        {{adherence_six}}
+    </div>
+
 {% endblock %}

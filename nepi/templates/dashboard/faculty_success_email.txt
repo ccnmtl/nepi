@@ -1,0 +1,1 @@
+You have been granted faculty access for {{user.profile.school.name}}.                          

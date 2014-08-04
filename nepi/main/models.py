@@ -4,13 +4,9 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from pagetree.models import Section, Hierarchy, UserLocation, UserPageVisit, \
+from pagetree.models import Section, Hierarchy, UserPageVisit, \
     PageBlock
 from quizblock.models import Quiz
-
-
-'''Add change delete are by default for each django model.
-   Need to add permissions for visibility.'''
 
 
 class Country(models.Model):
@@ -37,18 +33,18 @@ class School(models.Model):
         unique_together = ['name', 'country']
 
     def __unicode__(self):
-        return self.name
+        return '%s - %s' % (self.country.display_name, self.name)
 
 
 class Group(models.Model):
     '''Allow association of group with module.'''
-    school = models.ForeignKey(School, null=True, default=None, blank=True)
+    school = models.ForeignKey(School)
     start_date = models.DateField()
     end_date = models.DateField()
     name = models.CharField(max_length=50)
-    creator = models.ForeignKey(User, related_name="created_by",
-                                null=True, default=None, blank=True)
+    creator = models.ForeignKey(User, related_name="created_by")
     module = models.ForeignKey(Hierarchy, null=True, default=None, blank=True)
+    archived = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
@@ -56,6 +52,14 @@ class Group(models.Model):
     def created_by(self):
         return self.creator
 
+    def format_time(self, dt):
+        return dt.strftime("%m/%d/%Y")
+
+    def formatted_start_date(self):
+        return self.format_time(self.start_date)
+
+    def formatted_end_date(self):
+        return self.format_time(self.end_date)
 
 '''ADD VALIDATION'''
 
@@ -78,33 +82,44 @@ class UserProfile(models.Model):
     class Meta:
         ordering = ["user"]
 
-    def get_has_visited(self, section):
-        return section.get_uservisit(self.user) is not None
+    def last_location(self):
+        hierarchy = Hierarchy.get_hierarchy('main')
+        visits = UserPageVisit.objects.filter(user=self.user)
 
-    def set_has_visited(self, sections):
-        for sect in sections:
-            sect.user_pagevisit(self.user, "complete")
-            sect.user_visit(self.user)
-
-    def last_location(self, hierarchy_name=None):
-        if hierarchy_name is None:
-            hierarchy_name = self.role()
-        hierarchy = Hierarchy.get_hierarchy(hierarchy_name)
-        try:
-            UserLocation.objects.get(user=self.user,
-                                     hierarchy=hierarchy)
-            return hierarchy.get_user_section(self.user)
-        except UserLocation.DoesNotExist:
+        if visits.count() < 1:
             return hierarchy.get_first_leaf(hierarchy.get_root())
+        else:
+            visits = visits.order_by('-last_visit')
+            return visits[0].section
 
     def percent_complete(self):
-        hierarchy = Hierarchy.get_hierarchy(self.role())
-        visits = UserPageVisit.objects.filter(section__hierarchy=hierarchy)
+        hierarchy = Hierarchy.get_hierarchy('main')
+        visits = UserPageVisit.objects.filter(user=self.user,
+                                              section__hierarchy=hierarchy)
         sections = Section.objects.filter(hierarchy=hierarchy)
         if len(sections) > 0:
-            return int(len(visits) / float(len(sections)) * 100)
+            return len(visits) / float(len(sections)) * 100
         else:
             return 0
+
+    def percent_complete_module(self, module):
+        sections = module.get_descendants()
+        if len(sections) > 0:
+            ids = [s.id for s in sections]
+            visits = UserPageVisit.objects.filter(user=self.user,
+                                                  section__in=ids)
+            return len(visits) / float(len(sections)) * 100
+        else:
+            return 100  # this section has no children.
+
+    def sessions_completed(self):
+        hierarchy = Hierarchy.get_hierarchy('main')
+        complete = 0
+
+        for module in hierarchy.get_root().get_children():
+            if self.percent_complete_module(module) == 100:
+                complete += 1
+        return complete
 
     def display_name(self):
         return self.user.username
@@ -125,20 +140,20 @@ class UserProfile(models.Model):
         if self.is_student():
             return "student"
         elif self.is_teacher():
-            return "teacher"
+            return "faculty"
         elif self.is_country_administrator():
-            return "country administrator"
+            return "country"
         elif self.is_icap():
             return "icap"
 
     def joined_groups(self):
-        return self.group.objects.all()
+        return self.group.exclude(creator=self.user).exclude(archived=True)
 
 
 class PendingTeachers(models.Model):
     user_profile = models.ForeignKey(UserProfile,
                                      related_name="pending_teachers")
-    school = models.ForeignKey(School, null=True, default=None)
+    school = models.ForeignKey(School)
 
 
 class AggregateQuizScore(models.Model):
