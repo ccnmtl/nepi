@@ -137,6 +137,9 @@ class UserProfile(models.Model):
         '''Groups this user has joined'''
         return self.group.exclude(archived=True)
 
+    def is_pending_teacher(self):
+        return PendingTeachers.objects.filter(user_profile=self).count() > 0
+
 
 class PendingTeachers(models.Model):
     user_profile = models.ForeignKey(UserProfile,

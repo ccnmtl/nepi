@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from nepi.main.views import CreateGroupView, UpdateGroupView, \
     DeleteGroupView, StudentClassStatView, CreateSchoolView, \
     UpdateSchoolView, ContactView, RegistrationView, StudentDashboard, \
-    JoinGroup, FacultyDashboard, ICAPDashboard, HomeView, UpdateProfileView, \
+    JoinGroup, FacultyDashboard, ICAPDashboard, HomeView, \
     GroupDetail, RemoveStudent, LeaveGroup, SchoolChoiceView, \
     CountryAdminDashboard, SchoolGroupChoiceView, ArchiveGroupView, \
     ConfirmFacultyView, DenyFacultyView
@@ -49,8 +49,6 @@ urlpatterns = patterns(
 
     (r'^contact/$', ContactView.as_view()),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
-    url(r'^update_profile/(?P<pk>\d+)/$', UpdateProfileView.as_view(),
-        name='update-profile'),
 
     # json object delivery
     url(r'^schools/(?P<country_id>\w[^/]*)/$',

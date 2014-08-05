@@ -1,8 +1,7 @@
 <div class="tab-pane user-profile-form" id="user-profile">
     <h3>Your Profile</h3>
-
-    <form action="./#user-profile" method='post'>
-    {% csrf_token %}
+    
+    <form action="./#user-profile" method='post'>{% csrf_token %}
     
         {% if profile_form.errors|length %}
             <div class="alert alert-block alert-error">
@@ -18,12 +17,12 @@
             <div class="controls">
                 <span>
                     <input id="id_first_name" maxlength="50" name="first_name" type="text"
-                     value="{% if profile_form.initial.first_name %}{{profile_form.initial.first_name}}{% else %}{{profile_form.data.first_name}}{% endif %}"
+                     value="{% if profile_form.data.first_name %}{{profile_form.data.first_name}}{% else %}{{profile_form.initial.first_name}}{% endif %}"
                      placeholder="Given Name">
                 </span>&nbsp;&nbsp;
                 <span>
                     <input id="id_last_name" maxlength="50" name="last_name"
-                     value="{% if profile_form.initial.last_name %}{{profile_form.initial.last_name}}{% else %}{{profile_form.data.last_name}}{% endif %}"
+                     value="{% if profile_form.data.last_name %}{{profile_form.data.last_name}}{% else %}{{profile_form.initial.last_name}}{% endif %}"
                      type="text" placeholder="Surname">
                 </span>
                 
@@ -90,38 +89,49 @@
         <br />
         
         {% if user_profile.is_student %}
-            <div class="fieldWrapper control-group faculty-access">
-                <label class="checkbox">
-                    <input id="id_profile_type" name="profile_type" type="checkbox"
-                     {% ifequal profile_form.data.profile_type 'on' %} checked='checked' {% endifequal %}
-                     disabled="disabled">
-                    <b>I am requesting faculty-level access</b>
-                </label>
-                <div class="help-inline error">
-                    Faculty access is not available in your selected country.<br />
-                    If you would like to have your school added, please <a href="/contact/">contact ICAP</a>.
-                </div>
-                <div style="display: none" class="help-inline success well">
+            {% if user_profile.is_pending_teacher %}
+                <div class="fieldWrapper control-group">
+                    <label><b>You have requested faculty access</b></label>
+                    <div class="help-inline">
                     Faculty requests are sent to an ICAP administrator for approval.<br />
                     You will be notified when your access level has been changed.
-                    <br /><br />
-                    <div class="fieldWrapper control-group school
-                        {% if profile_form.school.errors %}error{% endif %}">
-                        <label for="id_country"><b>What is your school?</b></label>
-                        <div id="schools-for-country" class="controls">
-                            {{profile_form.school}}
-                            {% if profile_form.school.errors %}
-                                <div class="help-inline select">{{profile_form.school.errors}}</div>
-                            {% endif %}
+                    </div>
+                </div>
+            {% else %}            
+                <div class="fieldWrapper control-group faculty-access">
+                    <label class="checkbox">
+                        <input id="id_profile_type" name="profile_type" type="checkbox"
+                         {% ifequal profile_form.data.profile_type 'on' %} checked='checked' {% endifequal %}
+                         disabled="disabled">
+                        <b>I am requesting faculty-level access</b>
+                    </label>
+                    <div class="help-inline error">
+                        Faculty access is not available in your selected country.<br />
+                        If you would like to have your school added, please <a href="/contact/">contact ICAP</a>.
+                    </div>
+                    <div style="display: none" class="help-inline success well">
+                        Faculty requests are sent to an ICAP administrator for approval.<br />
+                        You will be notified when your access level has been changed.
+                        <br /><br />
+                        <div class="fieldWrapper control-group school
+                            {% if profile_form.school.errors %}error{% endif %}">
+                            <label for="id_country"><b>What is your school?</b></label>
+                            <div id="schools-for-country" class="controls">
+                                {{profile_form.school}}
+                                {% if profile_form.school.errors %}
+                                    <div class="help-inline select">{{profile_form.school.errors}}</div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>        
+            {% endif %}        
         {% else %}{% if user_profile.school %}
             <div class="fieldWrapper control-group wide">
-                <label for="id_school"><b>Your school:</b></label>
+                <label><b>Your school:</b></label>
                 <div class="controls">
-                    {{user_profile.school.name}}
+                    {{user_profile.school.name}}<br />
+                    {{user_profile.school.country.display_name}} 
                 </div>
             </div><br />
         {% endif %}{% endif %}

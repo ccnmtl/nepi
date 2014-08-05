@@ -3,7 +3,6 @@ from choices import COUNTRY_CHOICES
 from django import forms
 from django.contrib.auth.models import User
 from django.forms.fields import ChoiceField
-from nepi.main.models import Country
 
 
 class LoginForm(forms.Form):
@@ -115,40 +114,31 @@ class UpdateProfileForm(forms.Form):
 
     def clean(self):
         form = super(UpdateProfileForm, self).clean()
-#
-#         faculty_access = form.get("faculty_access")
-#         email = form.get("email")
-#         password1 = form.get("password1")
-#         password2 = form.get("password2")
-#         try:
-#             new_country = Country.objects.get(name=form.get("country"))
-#         except Country.DoesNotExist:
-#             new_country = Country.objects.create(name=form.get("country"))
-#             new_country.save()
-#         # country = Country.objects.get(name=form.get("country"))
-#         if faculty_access and (email == ""):
-#             self._errors["email"] = self.error_class(
-#                 ["If you are registering as an instructor " +
-#                  "you must enter a valid email address"])
-#         if password1 != password2:
-#             self._errors["password1"] = self.error_class(
-#                 ["Passwords must match each other."])
-#             self._errors["password2"] = self.error_class(
-#                 ["Passwords must match each other."])
-#
-        return form
+        is_teacher = form.get("profile_type")
+        email = form.get("email")
+        school = form.get("school")
+        password1 = form.get("password1")
+        password2 = form.get("password2")
+        country = form.get("country")
 
-    def save(self, *args, **kwargs):
-        '''to save attributes from another model must explicitly
-        save the extra fields of the form'''
-        self.instance.user.first_name = self.cleaned_data.get('first_name')
-        self.instance.user.last_name = self.cleaned_data.get('last_name')
-        self.instance.user.email = self.cleaned_data.get('email')
-        self.instance.user.country = Country.object.get(
-            name=self.cleaned_data.get('country'))
-        if (self.cleaned_data.get('password1')
-                and self.cleaned_data.get('password2')):
-            self.instance.user.last_name = \
-                self.cleaned_data.get('password1')
-        self.instance.user.save()
-        return super(UpdateProfileForm, self).save(*args, **kwargs)
+        if is_teacher:
+            if email is None or email == "":
+                self._errors["email"] = self.error_class(
+                    ["If you are registering as an instructor " +
+                     "you must enter a valid email address"])
+            if school is None or school == "" or school == "-----":
+                self._errors["school"] = self.error_class(
+                    ["If you are registering as an instructor " +
+                     "you must select a school"])
+
+        if password1 != password2:
+            self._errors["password1"] = self.error_class(
+                ["Passwords must match each other."])
+            self._errors["password2"] = self.error_class(
+                ["Passwords must match each other."])
+
+        if country is None or country == '-----':
+            self._errors['country'] = self.error_class([
+                "This field is required"])
+
+        return form
