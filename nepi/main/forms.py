@@ -51,13 +51,13 @@ class UserProfileForm(forms.Form):
     profile_type = forms.BooleanField(required=False)
 
     def clean(self):
-        form = super(UserProfileForm, self).clean()
-        is_teacher = form.get("profile_type")
-        email = form.get("email")
-        school = form.get("school", None)
-        password1 = form.get("password1")
-        password2 = form.get("password2")
-        country = form.get("country")
+        cleaned_data = super(UserProfileForm, self).clean()
+        is_teacher = cleaned_data.get("profile_type")
+        email = cleaned_data.get("email")
+        school = cleaned_data.get("school", None)
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+        country = cleaned_data.get("country")
 
         if is_teacher:
             if email is None or email == "":
@@ -80,7 +80,7 @@ class UserProfileForm(forms.Form):
             self._errors['country'] = self.error_class([
                 "This field is required"])
 
-        return form
+        return cleaned_data
 
     def send_success_email(self, user):
         template = loader.get_template(
@@ -119,14 +119,14 @@ class CreateAccountForm(UserProfileForm):
     captcha = CaptchaField()
 
     def clean(self):
-        form = super(CreateAccountForm, self).clean()
+        cleaned_data = super(CreateAccountForm, self).clean()
 
-        username = form.get("username")
+        username = cleaned_data.get("username")
         if User.objects.filter(username=username).count() > 0:
             self._errors["username"] = self.error_class(
                 ["This username is taken. Please select a different one"])
 
-        return form
+        return cleaned_data
 
     def save(self, commit=True):
         form_data = self.cleaned_data

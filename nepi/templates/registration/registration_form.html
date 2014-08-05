@@ -111,8 +111,8 @@
                 Faculty requests are sent to an ICAP administrator for approval.<br />
                 You will be notified when your access level has been changed.
                 <br /><br />
-                    <div class="fieldWrapper control-group school {% if profile_form.school.errors %}error{% endif %}"
-                        {% if profile_form.data.school %}data-school-id='{{profile_form.data.school}}'{% endif %}>
+                    <div class="fieldWrapper control-group school {% if form.school.errors %}error{% endif %}"
+                        {% if form.data.school %}data-school-id='{{form.data.school}}'{% endif %}>
                     <label><b>What is your school?</b></label>
                     <div class="controls">
                         {{form.school}}

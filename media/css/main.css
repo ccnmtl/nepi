@@ -902,6 +902,7 @@ div.contact-icap ul.errorlist,
 div.user-profile-form ul.errorlist {
     list-style-type: none;
     margin: 0 0 10px 5px;
+    color: #b94a48;
 }
 
 div.contact-icap textarea {
