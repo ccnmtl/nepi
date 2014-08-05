@@ -4,8 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from pagetree.models import Section, Hierarchy, UserPageVisit, \
-    PageBlock
+from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from quizblock.models import Quiz
 
 
@@ -82,8 +81,7 @@ class UserProfile(models.Model):
     class Meta:
         ordering = ["user"]
 
-    def last_location(self):
-        hierarchy = Hierarchy.get_hierarchy('main')
+    def last_location(self, hierarchy):
         visits = UserPageVisit.objects.filter(user=self.user)
 
         if visits.count() < 1:
@@ -92,18 +90,8 @@ class UserProfile(models.Model):
             visits = visits.order_by('-last_visit')
             return visits[0].section
 
-    def percent_complete(self):
-        hierarchy = Hierarchy.get_hierarchy('main')
-        visits = UserPageVisit.objects.filter(user=self.user,
-                                              section__hierarchy=hierarchy)
-        sections = Section.objects.filter(hierarchy=hierarchy)
-        if len(sections) > 0:
-            return len(visits) / float(len(sections)) * 100
-        else:
-            return 0
-
-    def percent_complete_module(self, module):
-        sections = module.get_descendants()
+    def percent_complete(self, parent_section):
+        sections = parent_section.get_descendants()
         if len(sections) > 0:
             ids = [s.id for s in sections]
             visits = UserPageVisit.objects.filter(user=self.user,
@@ -112,12 +100,11 @@ class UserProfile(models.Model):
         else:
             return 100  # this section has no children.
 
-    def sessions_completed(self):
-        hierarchy = Hierarchy.get_hierarchy('main')
+    def sessions_completed(self, hierarchy):
         complete = 0
 
-        for module in hierarchy.get_root().get_children():
-            if self.percent_complete_module(module) == 100:
+        for session in hierarchy.get_root().get_children():
+            if self.percent_complete(session) == 100:
                 complete += 1
         return complete
 
@@ -149,6 +136,9 @@ class UserProfile(models.Model):
     def joined_groups(self):
         '''Groups this user has joined'''
         return self.group.exclude(archived=True)
+
+    def is_pending_teacher(self):
+        return PendingTeachers.objects.filter(user_profile=self).count() > 0
 
 
 class PendingTeachers(models.Model):

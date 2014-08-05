@@ -2,7 +2,8 @@ from django.contrib.auth.models import User
 from django.test.client import RequestFactory
 from django.test.testcases import TestCase
 from nepi.main.templatetags.accessible import SubmittedNode
-from nepi.main.templatetags.quizscore import is_user_correct, aggregate_score
+from nepi.main.templatetags.progressreport import is_user_correct, \
+    aggregate_score
 from nepi.main.tests.factories import UserFactory
 from pagetree.models import Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory

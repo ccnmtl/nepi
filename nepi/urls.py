@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from nepi.main.views import CreateGroupView, UpdateGroupView, \
     DeleteGroupView, StudentClassStatView, CreateSchoolView, \
     UpdateSchoolView, ContactView, RegistrationView, StudentDashboard, \
-    JoinGroup, FacultyDashboard, ICAPDashboard, HomeView, UpdateProfileView, \
+    JoinGroup, FacultyDashboard, ICAPDashboard, HomeView, \
     GroupDetail, RemoveStudent, LeaveGroup, SchoolChoiceView, \
     CountryAdminDashboard, SchoolGroupChoiceView, ArchiveGroupView, \
     ConfirmFacultyView, DenyFacultyView
@@ -37,14 +37,10 @@ urlpatterns = patterns(
      TemplateView.as_view(template_name="flatpages/about.html")),
     (r'^help/',
      TemplateView.as_view(template_name="flatpages/help.html")),
-    (r'^thank_you_reg/',
-     TemplateView.as_view(template_name="flatpages/registration_thanks.html")),
-    (r'^thank_you_school/',
-     TemplateView.as_view(template_name="flatpages/school_added.html")),
     (r'^account_created/',
      TemplateView.as_view(template_name="flatpages/account_created.html")),
     (r'^email_sent/',
-     TemplateView.as_view(template_name="flatpages/email_sent.html")),
+     TemplateView.as_view(template_name="flatpages/contact_email_sent.html")),
 
     auth_urls,
     logout_page,
@@ -53,8 +49,6 @@ urlpatterns = patterns(
 
     (r'^contact/$', ContactView.as_view()),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
-    url(r'^update_profile/(?P<pk>\d+)/$', UpdateProfileView.as_view(),
-        name='update-profile'),
 
     # json object delivery
     url(r'^schools/(?P<country_id>\w[^/]*)/$',

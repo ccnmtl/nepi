@@ -53,40 +53,53 @@ class TestUserProfile(TestCase):
         self.assertEquals(self.country_admin.profile.role(), 'country')
         self.assertEquals(self.icap.profile.role(), 'icap')
 
+    def test_last_location(self):
+        first_leaf = Section.objects.get(label='Three')
+        self.assertEquals(self.student.profile.last_location(self.hierarchy),
+                          first_leaf)
+
+        section = Section.objects.get(slug='two')
+        UserPageVisit.objects.create(user=self.student, section=section)
+        self.assertEquals(self.student.profile.last_location(self.hierarchy),
+                          section)
+
     def test_percent_complete(self):
-        self.assertEquals(self.student.profile.percent_complete(), 0)
+        root = self.hierarchy.get_root()
+        self.assertEquals(self.student.profile.percent_complete(root), 0)
 
         # visit section one & child one
         section_one = Section.objects.get(slug='one')
         child_one = Section.objects.get(slug='introduction')
         UserPageVisit.objects.create(user=self.student, section=section_one)
         UserPageVisit.objects.create(user=self.student, section=child_one)
-        self.assertEquals(self.student.profile.percent_complete(), 40)
+        self.assertEquals(self.student.profile.percent_complete(root), 50)
 
-    def test_percent_complete_module(self):
+    def test_percent_complete_session(self):
         section_one = Section.objects.get(slug='one')
         child_one = Section.objects.get(slug='introduction')
 
-        pct = self.student.profile.percent_complete_module(section_one)
+        pct = self.student.profile.percent_complete(section_one)
         self.assertEquals(pct, 0)
 
         UserPageVisit.objects.create(user=self.student, section=section_one)
-        pct = self.student.profile.percent_complete_module(section_one)
+        pct = self.student.profile.percent_complete(section_one)
         self.assertEquals(pct, 0)
 
         UserPageVisit.objects.create(user=self.student, section=child_one)
-        pct = self.student.profile.percent_complete_module(section_one)
+        pct = self.student.profile.percent_complete(section_one)
         self.assertEquals(pct, 100)
 
     def test_sessions_completed(self):
         section_one = Section.objects.get(slug='one')
         child_one = Section.objects.get(slug='introduction')
 
-        self.assertEquals(self.student.profile.sessions_completed(), 2)
+        self.assertEquals(self.student.profile.sessions_completed(
+            self.hierarchy), 2)
 
         UserPageVisit.objects.create(user=self.student, section=section_one)
         UserPageVisit.objects.create(user=self.student, section=child_one)
-        self.assertEquals(self.student.profile.sessions_completed(), 3)
+        self.assertEquals(
+            self.student.profile.sessions_completed(self.hierarchy), 3)
 
     def test_joined_groups(self):
         group = SchoolGroupFactory()
