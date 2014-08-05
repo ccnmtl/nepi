@@ -10,16 +10,16 @@
 {% endif %}
 
 <div id="correct_day" value="{{ block.correct_date }}" data-day="{{ block.correct_date }}" style="visibility: hidden">  </div>
-{% comment %}
-    {% for day in block.month %}
+    <h3>{{block.month.display_name}}</h3>
+    {% for day in block.month.day_set.all %}
     <div id="month">
-        <div data-day="1" class="day">
-         {{ day|add:"1" }}
+        <div data-day="{{ day.number }}" data-explanation="{{ day.explanation }}" class="day">
+        {{ day.number }}
         </div>
     </div>
 {% endfor %}
 </br></br>
-{% endcomment %}
+
 </div>
 
 

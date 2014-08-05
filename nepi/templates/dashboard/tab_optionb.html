@@ -37,9 +37,11 @@
                 <dl class="dl-horizontal">
                     <dt>Pre-test score</dt><dd>{{user_profile|pretest_score:optionb}}%</dd>
                     <dt>Post-test score</dt><dd>{{user_profile|posttest_score:optionb}}%</dd>
+                    {% comment %}
                     {% for session in optionb.get_root.get_children %}
                         <dt>Session {{forloop.counter}}</dt><dd>{{user_profile|session_score:session}}</dd>
                     {% endfor %}
+                    {% endcomment %}
                 </dl>
             {% endif %}
         </div>
