@@ -48,7 +48,6 @@ class UserProfileFactory(factory.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
     profile_type = 'ST'
     country = factory.SubFactory(CountryFactory)
-    school = factory.SubFactory(SchoolFactory)
 
 
 class StudentProfileFactory(UserProfileFactory):
@@ -57,6 +56,7 @@ class StudentProfileFactory(UserProfileFactory):
 
 class TeacherProfileFactory(UserProfileFactory):
     profile_type = 'TE'
+    school = factory.SubFactory(SchoolFactory)
 
 
 class ICAPProfileFactory(UserProfileFactory):

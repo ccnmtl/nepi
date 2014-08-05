@@ -103,18 +103,18 @@
                  disabled="disabled">
                 <b>I am requesting faculty-level access</b>
             </label>
-            <div class="help-inline error">
+            <div class="help-inline no-schools-available">
                 Faculty access is not available in your selected country.<br />
                 If you would like to have your school added, please <a href="/contact/">contact ICAP</a>.
             </div>
-            <div style="display: none" class="help-inline success well">
+            <div class="help-inline well schools-available">
                 Faculty requests are sent to an ICAP administrator for approval.<br />
                 You will be notified when your access level has been changed.
                 <br /><br />
-                <div class="fieldWrapper control-group school
-                    {% if form.school.errors %}error{% endif %}">
-                    <label for="id_country"><b>What is your school?</b></label>
-                    <div id="schools-for-country" class="controls">
+                    <div class="fieldWrapper control-group school {% if profile_form.school.errors %}error{% endif %}"
+                        {% if profile_form.data.school %}data-school-id='{{profile_form.data.school}}'{% endif %}>
+                    <label><b>What is your school?</b></label>
+                    <div class="controls">
                         {{form.school}}
                         {% if form.school.errors %}
                             <div class="help-inline select">{{form.school.errors}}</div>

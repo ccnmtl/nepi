@@ -1,9 +1,6 @@
 from django.contrib.auth.models import User
-from django.core import mail
-from django.core.exceptions import ValidationError
 from django.test.client import Client
 from django.test.testcases import TestCase
-from nepi.main.forms import CreateAccountForm
 from nepi.main.models import PendingTeachers
 from nepi.main.tests.factories import UserFactory, SchoolFactory, \
     CountryFactory
@@ -18,78 +15,6 @@ class TestRegistrationView(TestCase):
 
         self.country = CountryFactory(name='LS')
         self.school = SchoolFactory(country=self.country)
-
-    def test_duplicate_user(self):
-        try:
-            form = CreateAccountForm()
-            form.cleaned_data = {
-                'username': self.existing_user.username
-            }
-            RegistrationView().form_valid(form)
-            self.fail("ValidationException expected")
-        except ValidationError:
-            pass
-
-    def test_form_valid_success_student(self):
-        form = CreateAccountForm()
-        form.cleaned_data = {
-            'username': 'janedoe21',
-            'email': 'janedoe21@ccnmtl.columbia.edu',
-            'password1': 'test',
-            'first_name': 'Jane',
-            'last_name': 'Doe',
-            'country': 'LS'
-        }
-        RegistrationView().form_valid(form)
-        user = User.objects.get(username='janedoe21')
-        self.assertEquals(user.email, 'janedoe21@ccnmtl.columbia.edu')
-        self.assertEquals(user.profile.profile_type, 'ST')
-        self.assertEquals(user.first_name, 'Jane')
-        self.assertEquals(user.last_name, 'Doe')
-
-        self.assertEquals(user.profile.country.name, 'LS')
-
-        self.assertFalse(user.profile.icap_affil)
-
-        self.assertTrue(Client().login(username='janedoe21', password="test"))
-
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject,
-                         'ICAP Nursing E-Learning Registration')
-
-    def test_form_valid_success_faculty(self):
-        form = CreateAccountForm()
-        form.cleaned_data = {
-            'username': 'janedoe21',
-            'email': 'janedoe21@ccnmtl.columbia.edu',
-            'password1': 'test',
-            'first_name': 'Jane',
-            'last_name': 'Doe',
-            'country': 'LS',
-            'school': self.school.id,
-            'profile_type': True,
-            'nepi_affiliated': True
-        }
-        RegistrationView().form_valid(form)
-        user = User.objects.get(username='janedoe21')
-        self.assertEquals(user.email, 'janedoe21@ccnmtl.columbia.edu')
-        self.assertEquals(user.profile.profile_type, 'ST')
-        self.assertEquals(user.first_name, 'Jane')
-        self.assertEquals(user.last_name, 'Doe')
-
-        self.assertEquals(user.profile.country.name, 'LS')
-
-        self.assertTrue(user.profile.icap_affil)
-
-        self.assertTrue(Client().login(username='janedoe21', password="test"))
-
-        self.assertEqual(len(mail.outbox), 2)
-        self.assertEqual(mail.outbox[0].subject,
-                         'ICAP Nursing E-Learning Registration')
-        self.assertEqual(mail.outbox[1].subject,
-                         'Nursing E-Learning: Faculty Access Request')
-
-        self.assertEquals(PendingTeachers.objects.all().count(), 1)
 
     def test_student_registration_view_duplicate(self):
         '''when students are registered they should not be added to pending'''

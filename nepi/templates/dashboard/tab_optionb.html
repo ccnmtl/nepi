@@ -32,15 +32,6 @@
                 <a href="{{user_profile|last_location_url:optionb}}"" class="btn btn-large pull-right">
                     Continue <i class="icon-arrow-right"></i>
                 </a>
-                
-                <div class="clearfix"></div>
-                <dl class="dl-horizontal">
-                    <dt>Pre-test score</dt><dd>{{user_profile|pretest_score:optionb}}%</dd>
-                    <dt>Post-test score</dt><dd>{{user_profile|posttest_score:optionb}}%</dd>
-                    {% for session in optionb.get_root.get_children %}
-                        <dt>Session {{forloop.counter}}</dt><dd>{{user_profile|session_score:session}}</dd>
-                    {% endfor %}
-                </dl>
             {% endif %}
         </div>
     </div>

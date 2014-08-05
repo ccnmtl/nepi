@@ -6,8 +6,7 @@ from django.test.client import Client
 from factories import UserFactory, UserProfileFactory, TeacherProfileFactory, \
     ICAPProfileFactory
 from nepi.main.forms import ContactForm
-from nepi.main.models import UserProfile, Country, School, Group, \
-    PendingTeachers
+from nepi.main.models import Country, School, Group, PendingTeachers
 from nepi.main.tests.factories import SchoolFactory, CountryFactory, \
     SchoolGroupFactory, StudentProfileFactory, \
     CountryAdministratorProfileFactory
@@ -20,41 +19,30 @@ import json
 class TestBasicViews(TestCase):
 
     def setUp(self):
-        self.c = Client()
+        self.client = Client()
         self.factory = RequestFactory()
-        # ICAP User
-        self.icap_user = User.objects.create_user(
-            'icap_user', 'icap@icap.com', 'icap_user')
-        self.icap_user.save()
-        self.country = Country(name='AO')
-        self.country.save()
-        self.user_profile = UserProfile(
-            user=self.icap_user, profile_type='IC', country=self.country)
-        self.user_profile.save()
 
     def test_home(self):
-        response = self.c.get("/", follow=True)
+        response = self.client.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(response.redirect_chain[0],
-                          ('http://testserver/accounts/login/?next=/',
-                           302))
+                          ('http://testserver/accounts/login/?next=/', 302))
 
     def test_about(self):
-        response = self.c.get("/about/")
+        response = self.client.get("/about/")
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed('flatpages/about.html')
 
     def test_help(self):
-        response = self.c.get("/help/")
+        response = self.client.get("/help/")
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed('flatpages/help.html')
 
     def test_contact(self):
-        request = self.factory.post('/contact/',
+        response = self.client.post('/contact/',
                                     {"subject": "new_student",
                                      "message": "new_student",
                                      "sender": "new_student"})
-        response = ContactView.as_view()(request)
         self.assertEqual(response.status_code, 200)
 
     def test_contact_form_valid(self):
@@ -70,16 +58,8 @@ class TestBasicViews(TestCase):
         self.assertEqual(len(mail.outbox), 1)
 
     def test_smoketest(self):
-        response = self.c.get("/smoketest/")
+        response = self.client.get("/smoketest/")
         self.assertEquals(response.status_code, 200)
-
-    def test_register_form(self):
-        r = self.c.get("/register/")
-        self.assertEqual(r.status_code, 200)
-
-    def test_register_form_invalid_submission(self):
-        r = self.c.post("/register/", dict())
-        self.assertEqual(r.status_code, 200)
 
 
 class TestStudentLoggedInViews(TestCase):
@@ -107,6 +87,15 @@ class TestStudentLoggedInViews(TestCase):
                           [('http://testserver/student-dashboard/%d/'
                             % self.student.profile.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+
+    def test_home_noprofile(self):
+        user = UserFactory()
+        self.client.login(username=user.username, password="test")
+
+        response = self.client.get("/", follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEquals(response.redirect_chain[0],
+                          ('http://testserver/register/', 302))
 
     def test_profile_access(self):
         alt_student_profile = StudentProfileFactory()

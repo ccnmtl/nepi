@@ -22,6 +22,7 @@
     
         {% include "dashboard/tab_groups.html" %}
     
+        {% comment %}
         {% if object.profile_type == "TE" %}
             {% include "dashboard/tab_teacher_reports.html" %}
         {% endif %}
@@ -31,6 +32,7 @@
         {% if object.profile_type == "IC" %}
             {% include "dashboard/tab_icap_reports.html" %}
         {% endif %}
+        {% endcomment %}
     
         {% include "dashboard/tab_profile.html" %}
     

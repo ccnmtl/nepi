@@ -1,7 +1,6 @@
 '''Views for NEPI, should probably break up
 into smaller pieces.'''
 from datetime import datetime
-from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
@@ -92,6 +91,16 @@ class HomeView(LoggedInMixin, View):
             return HttpResponseRedirect(reverse('register'))
 
 
+class RegistrationView(FormView):
+    template_name = 'registration/registration_form.html'
+    form_class = CreateAccountForm
+    success_url = '/account_created/'
+
+    def form_valid(self, form):
+        form.save()
+        return super(RegistrationView, self).form_valid(form)
+
+
 class UserProfileView(DetailView):
     '''For the first tab of the dashboard we are showing
     groups that the user belongs to, and if they do not belong to any
@@ -105,61 +114,6 @@ class UserProfileView(DetailView):
             return HttpResponseForbidden("forbidden")
         return super(UserProfileView, self).dispatch(*args, **kwargs)
 
-    def send_teacher_notifiction(self, user):
-        template = loader.get_template(
-            'dashboard/faculty_request_email.txt')
-
-        country = dict(COUNTRY_CHOICES)[user.profile.country.name]
-
-        subject = "Nursing E-Learning: Faculty Access Request"
-
-        ctx = Context({'user': user, 'country': country})
-        message = template.render(ctx)
-
-        sender = settings.NEPI_MAILING_LIST
-        recipients = [settings.ICAP_MAILING_LIST]
-        send_mail(subject, message, sender, recipients)
-
-    def get_user_profile_form(self):
-        context = {
-            'first_name': self.request.user.first_name,
-            'last_name': self.request.user.last_name,
-            'email': self.request.user.email,
-            'country': self.request.user.profile.country.name,
-            'nepi_affiliated': self.request.user.profile.icap_affil
-        }
-        if self.request.user.profile.school:
-            context['school'] = self.request.user.profile.school.id
-
-        return UpdateProfileForm(initial=context)
-
-    def save_profile(self, profile_form):
-        user = self.request.user
-        profile = self.request.user.profile
-
-        user.first_name = profile_form.cleaned_data.get('first_name')
-        user.last_name = profile_form.cleaned_data.get('last_name')
-        user.email = profile_form.cleaned_data.get('email')
-        user.save()
-
-        if (profile_form.cleaned_data.get('password1')
-                and profile_form.cleaned_data.get('password2')):
-            user.set_password(profile_form.cleaned_data.get('password1'))
-
-        profile.icap_affil = profile_form.cleaned_data.get('nepi_affiliated')
-        profile.country = Country.objects.get(
-            name=profile_form.cleaned_data.get('country'))
-
-        profile.save()
-
-        profile_type = profile_form.cleaned_data.get('profile_type', False)
-        if not profile.is_pending_teacher() and profile_type:
-            school_id = profile_form.cleaned_data.get('school', None)
-            school = School.objects.get(id=school_id)
-
-            PendingTeachers.objects.create(user_profile=profile, school=school)
-            self.send_teacher_notifiction(user)
-
     def get_common_context(self):
         context = {}
 
@@ -167,7 +121,7 @@ class UserProfileView(DetailView):
         hierarchy = Hierarchy.objects.get(name='main')
         context['optionb'] = hierarchy
 
-        context['profile_form'] = self.get_user_profile_form()
+        context['profile_form'] = UpdateProfileForm(instance=self.request.user)
 
         context['countries'] = COUNTRY_CHOICES
         context['joined_groups'] = self.request.user.profile.joined_groups()
@@ -196,7 +150,7 @@ class UserProfileView(DetailView):
         profile_form = UpdateProfileForm(self.request.POST)
 
         if profile_form.is_valid():
-            self.save_profile(profile_form)
+            profile_form.save()
             url = '/%s-dashboard/%s/#user-profile' % (
                 self.request.user.profile.role(), self.request.user.profile.id)
             return HttpResponseRedirect(url)
@@ -273,77 +227,6 @@ class SchoolGroupChoiceView(LoggedInMixin, JSONResponseMixin, View):
                                'creator': group.creator.get_full_name()})
 
         return self.render_to_json_response({'groups': groups})
-
-
-class RegistrationView(FormView):
-    template_name = 'registration/registration_form.html'
-    form_class = CreateAccountForm
-    success_url = '/account_created/'
-
-    def send_success_email(self, user):
-        template = loader.get_template(
-            'registration/registration_success_email.txt')
-
-        subject = "ICAP Nursing E-Learning Registration"
-
-        ctx = Context({'user': user})
-        message = template.render(ctx)
-
-        sender = settings.NEPI_MAILING_LIST
-        recipients = [user.email]
-        send_mail(subject, message, sender, recipients)
-
-    def send_teacher_notifiction(self, user):
-        template = loader.get_template(
-            'dashboard/faculty_request_email.txt')
-
-        country = dict(COUNTRY_CHOICES)[user.profile.country.name]
-
-        subject = "Nursing E-Learning: Faculty Access Request"
-
-        ctx = Context({'user': user, 'country': country})
-        message = template.render(ctx)
-
-        sender = settings.NEPI_MAILING_LIST
-        recipients = [settings.ICAP_MAILING_LIST]
-        send_mail(subject, message, sender, recipients)
-
-    def form_valid(self, form):
-        form_data = form.cleaned_data
-        try:
-            User.objects.get(username=form_data['username'])
-            raise forms.ValidationError("This username already exists")
-        except User.DoesNotExist:
-            new_user = User.objects.create_user(
-                username=form_data['username'],
-                email=form_data['email'],
-                password=form_data['password1'])
-            new_user.first_name = form_data['first_name']
-            new_user.last_name = form_data['last_name']
-            new_user.save()
-
-            new_profile = UserProfile(user=new_user)
-            new_profile.profile_type = 'ST'
-
-            if 'nepi_affiliated' in form_data:
-                new_profile.icap_affil = form_data['nepi_affiliated']
-
-            country = Country.objects.get(name=form_data['country'])
-            new_profile.country = country
-
-            new_profile.save()
-
-            # send the user a success email
-            if new_user.email:
-                self.send_success_email(new_user)
-
-            if 'profile_type' in form_data and form_data['profile_type']:
-                school = get_object_or_404(School, id=form_data['school'])
-                PendingTeachers.objects.create(user_profile=new_profile,
-                                               school=school)
-                self.send_teacher_notifiction(new_user)
-
-        return super(RegistrationView, self).form_valid(form)
 
 
 class CreateSchoolView(LoggedInMixin, CreateView):

@@ -1,1 +1,1 @@
-{{user.get_full_name}} has requested faculty access.
+{{user.get_full_name}} ({{user.username}}) has requested faculty access for {{school.name}} in {{school.country.display_name}}.

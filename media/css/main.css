@@ -866,6 +866,25 @@ div.user-profile-form div.faculty-access div.help-inline select {
     width: 395px;
 }
 
+div.user-profile-form div.faculty-access.disabled,
+div.user-profile-form div.faculty-access.disabled div.help-inline {
+    color: #999;
+}
+
+div.user-profile-form div.faculty-access div.no-schools-available {
+    display: none;
+}
+div.user-profile-form div.faculty-access div.schools-available {
+    display: block;
+}
+
+div.user-profile-form div.faculty-access.disabled div.no-schools-available {
+    display: block;
+}
+div.user-profile-form div.faculty-access.disabled div.schools-available {
+    display: none;
+}
+
 div.user-profile-form div.help-inline.select {
     margin-top: 5px;
     font-size: 92%;
@@ -883,11 +902,6 @@ div.contact-icap ul.errorlist,
 div.user-profile-form ul.errorlist {
     list-style-type: none;
     margin: 0 0 10px 5px;
-}
-
-div.user-profile-form div.faculty-access.disabled,
-div.user-profile-form div.faculty-access.disabled div.help-inline {
-    color: #999;
 }
 
 div.contact-icap textarea {

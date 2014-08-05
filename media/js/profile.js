@@ -7,23 +7,12 @@ jQuery(document).ready(function () {
     
     function disableFacultyAccess() {
         jQuery("div.user-profile-form input[name='profile_type']").attr('disabled', 'disabled');
-        jQuery("div.user-profile-form .faculty-access .error").show();
-        jQuery("div.user-profile-form .faculty-access .success").hide();
         jQuery("div.user-profile-form .faculty-access").addClass('disabled')
     }
 
     function enableFacultyAccess() {
         jQuery("div.user-profile-form input[name='profile_type']").removeAttr('disabled');
-        jQuery("div.user-profile-form .faculty-access .error").hide();
-        jQuery("div.user-profile-form .faculty-access .success").show();
         jQuery("div.user-profile-form .faculty-access").removeClass('disabled')
-
-/**        
-        if (currentSchoolId) {
-            jQuery("div.user-profile-form select[name='school']").val(currentSchoolId);
-            currentSchoolId = undefined;
-        }
-**/        
     }
 
     function profileSchoolChoices(countryName) {
@@ -45,7 +34,12 @@ jQuery(document).ready(function () {
                         var option = "<option value='"  + school.id + "'>" + school.name + "</option>";
                         jQuery("div.user-profile-form select[name='school']").append(option)
                     }
-                    enableFacultyAccess();              
+        
+                    if (currentSchoolId) {
+                        jQuery("div.user-profile-form select[name='school']").val(currentSchoolId);
+                        currentSchoolId = undefined;
+                    }
+                    enableFacultyAccess();          
                 }
             }
         });
@@ -60,6 +54,7 @@ jQuery(document).ready(function () {
         }
     });
     
+    var currentSchoolId = jQuery("div.user-profile-form div.control-group.school").data('school-id');
     var currentCountryName = jQuery("div.user-profile-form select[name='country']").val();
     if (currentCountryName !== '-----') {
         profileSchoolChoices(currentCountryName);
