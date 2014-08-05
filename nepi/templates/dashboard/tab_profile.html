@@ -1,38 +1,138 @@
-<div class="tab-pane" id="user-profile">
-    Your Profile
+<div class="tab-pane user-profile-form" id="user-profile">
+    <h3>Your Profile</h3>
 
-    <form>
-        <fieldset>
-            <div class="control-group">
-                Your name is: {{ user.first_name }} {{ user.last_name }}
+    <form action="./#user-profile" method='post'>
+    {% csrf_token %}
+    
+        {% if profile_form.errors|length %}
+            <div class="alert alert-block alert-error">
+              <strong>Please correct errors before continuing</strong>
+              {% if profile_form.non_field_errors %}
+                <div>{{ profile_form.non_field_errors}}</div>
+              {% endif %}
             </div>
+        {% endif %}
 
-            <div class="control-group">
-                Your username: {{ user.username }}
-            </div>
-
-            <div class="control-group">
-                {% if object.icap_affil %}
-                You are ICAP Affiliated
-                {% else %}
-                You are not ICAP Affiliated
+        <div class="fieldWrapper control-group {% if profile_form.first_name.errors %}error{% endif %}">
+            <label for="id_first_name"><b>Your name is:</b></label>
+            <div class="controls">
+                <span>
+                    <input id="id_first_name" maxlength="50" name="first_name" type="text"
+                     value="{% if profile_form.initial.first_name %}{{profile_form.initial.first_name}}{% else %}{{profile_form.data.first_name}}{% endif %}"
+                     placeholder="Given Name">
+                </span>&nbsp;&nbsp;
+                <span>
+                    <input id="id_last_name" maxlength="50" name="last_name"
+                     value="{% if profile_form.initial.last_name %}{{profile_form.initial.last_name}}{% else %}{{profile_form.data.last_name}}{% endif %}"
+                     type="text" placeholder="Surname">
+                </span>
+                
+                {% if profile_form.first_name.errors or profile_form.last_name.errors %}
+                    <div class="help-inline">First and last name are required</div>
                 {% endif %}
             </div>
-
-            <div class="control-group">
-                You are in: {{ object.country }}
+        </div>
+        
+        <div class="fieldWrapper control-group wide">
+            <label for="id_username"><b>Your username:</b></label>
+            <div class="controls">
+                {{user.username}}
             </div>
+        </div><br />
 
-            <div class="control-group">
-                Your email: {{user.email}}
+        <div class="fieldWrapper control-group {% if profile_form.email.errors %}error{% endif %} wide">
+            <label for="id_email"><b>Your email address:</b> <small>(optional for students)</small></label>
+            <div class="controls">
+                {{profile_form.email}}
+                {% if profile_form.email.errors %}
+                    <div class="help-inline">{{profile_form.email.errors}}</div>
+                {% endif %}
             </div>
+        </div>        
+        
+        <div class="fieldWrapper control-group {% if profile_form.password1.errors %}error{% endif %} wide">
+            <label for="id_password1"><b>Your password:</b></label>
+            <div class="controls">
+                {{profile_form.password1}}
+                {% if profile_form.password1.errors %}
+                    <div class="help-inline">{{profile_form.password1.errors}}</div>
+                {% else %}
+                    <div class="help-inline">
+                        Leave blank to keep the same password
+                    </div>
+                {% endif %}
+            </div>
+        </div>
 
-            <div class="control-group">
-                <label>
-                    Faculty access: {{object.profile_type}}
+        <div class="fieldWrapper control-group {% if profile_form.password2.errors %}error{% endif %} wide">
+            <label for="id_password2"><b>Confirm your password:</b></label>
+            <div class="controls">
+                {{profile_form.password2}}
+                {% if profile_form.password2.errors %}
+                    <div class="help-inline">{{profile_form.password2.errors}}</div>
+                {% else %}
+                    <div class="help-inline">
+                        Leave blank to keep the same password
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="fieldWrapper control-group {% if profile_form.country.errors %}error{% endif %} wide">
+            <label for="id_country"><b>Which country are you in?</b></label>
+            <div class="controls">
+                {{profile_form.country}}
+                {% if profile_form.country.errors %}
+                    <div class="help-inline select">{{profile_form.country.errors}}</div>
+                {% endif %}
+            </div>
+        </div>
+        <br />
+        
+        {% if user_profile.is_student %}
+            <div class="fieldWrapper control-group faculty-access">
+                <label class="checkbox">
+                    <input id="id_profile_type" name="profile_type" type="checkbox"
+                     {% ifequal profile_form.data.profile_type 'on' %} checked='checked' {% endifequal %}
+                     disabled="disabled">
+                    <b>I am requesting faculty-level access</b>
                 </label>
-            </div>
-            <a href="{% url 'update-profile' object.pk %}">Update Profile</a>
-        </fieldset>
+                <div class="help-inline error">
+                    Faculty access is not available in your selected country.<br />
+                    If you would like to have your school added, please <a href="/contact/">contact ICAP</a>.
+                </div>
+                <div style="display: none" class="help-inline success well">
+                    Faculty requests are sent to an ICAP administrator for approval.<br />
+                    You will be notified when your access level has been changed.
+                    <br /><br />
+                    <div class="fieldWrapper control-group school
+                        {% if profile_form.school.errors %}error{% endif %}">
+                        <label for="id_country"><b>What is your school?</b></label>
+                        <div id="schools-for-country" class="controls">
+                            {{profile_form.school}}
+                            {% if profile_form.school.errors %}
+                                <div class="help-inline select">{{profile_form.school.errors}}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>        
+        {% else %}{% if user_profile.school %}
+            <div class="fieldWrapper control-group wide">
+                <label for="id_school"><b>Your school:</b></label>
+                <div class="controls">
+                    {{user_profile.school.name}}
+                </div>
+            </div><br />
+        {% endif %}{% endif %}
+        
+        <div class="fieldWrapper control-group">
+            <label class="checkbox">
+                {{profile_form.nepi_affiliated}} <b>I am affiliated with ICAP</b>
+            </label>
+        </div>
+        <br />         
+
+        <button class="btn btn-primary" type="submit">Update Profile</button>
     </form>
 </div><!-- end #user-profile -->

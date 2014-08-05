@@ -1,3 +1,5 @@
+{% load progressreport %}
+
 <div class="tab-pane" id="user-groups">
     {% if object.profile_type == "TE" %}
         <h3>{{user.profile.school.name}}</h3>
@@ -54,22 +56,27 @@
             <div class="your-groups">
                 <h4>Groups you've joined</h4>
                 <table width="100%" class="table table-striped table-condensed">
-                    <tr><th>Name</th><th>Instructor</th><th>Begin Date</th><th>End Date</th><th>Action</th></tr>
+                    <tr><th>Name</th><th>Instructor</th><th>Begin Date</th><th>End Date</th><th>Progress</th><th>Action</th></tr>
                 
                     {% for group in joined_groups.all %}
                         <tr id="student-group-{{group.id}}" class="content-row">
-                            <td><a href="/view_group_stats/{{group.pk}}/">{{group.name}}</a></td>
+                            <td><a href="#">{{group.name}}</a></td>
                             <td>{{group.creator.get_full_name}}</td>
                             <td>{{group.formatted_start_date}}</td>
                             <td>{{group.formatted_end_date}}</td>
+                            <td>
+                                <div class="progress progress-striped">
+                                    <div class="bar" style="width: {{user_profile|percent_complete_group:group}}%"></div>
+                                </div>
+                            </td>
                             <td>
                                 <form action='/leave_group/' method='post'>
                                     <input type='hidden' name='group' value='{{group.id}}' />
                                     <button class="btn btn-default btn-small leave-group">Leave</button>
                                 </form>
                             </td>
+                        </tr>
                     {% endfor %}
-                    </tr>
                 </table>
             </div>
         {% endif %}

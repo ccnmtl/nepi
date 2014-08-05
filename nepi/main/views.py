@@ -105,12 +105,34 @@ class UserProfileView(DetailView):
             return HttpResponseForbidden("forbidden")
         return super(UserProfileView, self).dispatch(*args, **kwargs)
 
-    def get_student_context(self):
+    def get_user_profile_form(self):
+        context = {
+            'first_name': self.request.user.first_name,
+            'last_name': self.request.user.last_name,
+            'email': self.request.user.email,
+            'country': self.request.user.profile.country.name,
+            'nepi_affiliated': self.request.user.profile.icap_affil
+        }
+        if self.request.user.profile.school:
+            context['school'] = self.request.user.profile.school.id
+
+        return UpdateProfileForm(initial=context)
+
+    def get_common_context(self):
         context = {}
-        context['hierarchy'] = Hierarchy.objects.get(name='main')
+
+        # todo - this will require some addition when new modules are added
+        hierarchy = Hierarchy.objects.get(name='main')
+        context['optionb'] = hierarchy
+
+        context['profile_form'] = self.get_user_profile_form()
+
         context['countries'] = COUNTRY_CHOICES
         context['joined_groups'] = self.request.user.profile.joined_groups()
         return context
+
+    def get_student_context(self):
+        return self.get_common_context()
 
     def get_faculty_context(self):
         context = self.get_student_context()
@@ -125,6 +147,20 @@ class UserProfileView(DetailView):
         context = self.get_country_context()
         context['pending_teachers'] = PendingTeachers.objects.all()
         return context
+
+    def post(self, *args, **kwargs):
+        self.object = self.get_object()
+
+        profile_form = UpdateProfileForm(self.request.POST)
+
+        if profile_form.is_valid():
+            url = '/%s-dashboard/%s/#user-groups' % (
+                self.request.user.profile.role(), self.request.user.profile.id)
+            return HttpResponseRedirect(url)
+
+        context = self.get_context_data(object=self.object)
+        context['user_profile_form'] = profile_form
+        return self.render_to_response(context)
 
 
 class StudentDashboard(StudentLoggedInMixin, UserProfileView):
@@ -141,30 +177,6 @@ class FacultyDashboard(FacultyLoggedInMixin, UserProfileView):
         context = super(UserProfileView, self).get_context_data(**kwargs)
         context.update(self.get_faculty_context())
         return context
-
-    def get_students_in_progress(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        in_progress = 0
-        for each in find_students:
-            if each.percent_complete() != 0 and each.percent_complete() != 100:
-                in_progress = in_progress + 1
-        return in_progress
-
-    def get_students_incomplete(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        incomplete = 0
-        for each in find_students:
-            if each.percent_complete() != 0 and each.percent_complete() != 100:
-                incomplete = incomplete + 1
-            return incomplete
-
-    def get_students_done(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        done = 0
-        for each in find_students:
-            if each.percent_complete() == 100:
-                done = done + 1
-        return done
 
 
 class CountryAdminDashboard(CountryAdministratorLoggedInMixin,
@@ -226,9 +238,6 @@ class RegistrationView(FormView):
     success_url = '/account_created/'
 
     def send_success_email(self, user):
-        if not user.email:
-            return
-
         template = loader.get_template(
             'registration/registration_success_email.txt')
 
@@ -243,7 +252,7 @@ class RegistrationView(FormView):
 
     def send_teacher_notifiction(self, user):
         template = loader.get_template(
-            'registration/faculty_request_email.txt')
+            'dashboard/faculty_request_email.txt')
 
         country = dict(COUNTRY_CHOICES)[user.profile.country.name]
 
@@ -282,7 +291,7 @@ class RegistrationView(FormView):
             new_profile.save()
 
             # send the user a success email
-            if 'email' in form_data:
+            if new_user.email:
                 self.send_success_email(new_user)
 
             if 'profile_type' in form_data and form_data['profile_type']:
@@ -295,16 +304,14 @@ class RegistrationView(FormView):
 
 
 class CreateSchoolView(LoggedInMixin, CreateView):
-    '''generic class based view for
-    adding a school'''
+    '''generic class based view for adding a school'''
     model = School
     template_name = 'icap/add_school.html'
     success_url = '/'
 
 
 class UpdateSchoolView(LoggedInMixin, UpdateView):
-    '''generic class based view for
-    editing a school'''
+    '''generic class based view for editing a school'''
     model = School
     template_name = 'icap/add_school.html'
     success_url = '/'

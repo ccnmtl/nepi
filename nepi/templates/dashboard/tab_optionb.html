@@ -1,5 +1,7 @@
+{% load progressreport %}
+
 <div class="tab-pane active" id="user-modules">
-    {% if user.profile.percent_complete == 0 %}
+    {% if user_profile|percent_complete:optionb == 0 %}
     <div class="alert alert-info">
         <strong>Welcome!</strong> Placeholder text for the first time user experience.
     </div>
@@ -7,8 +9,8 @@
     
     <h3>Option B+</h3>
     
-    <div>
-        <div class="pull-left module-introduction">
+    <div class="row-fluid">
+        <div class="span7">
             This is a placeholder for one-paragraph description of the
             module. You can go through each module at your own
             pace. You can stop at any time and your progress will be
@@ -16,24 +18,30 @@
             contents page where you can review what you have already
             learned, and proceed to complete the course.
         </div>
-        <div class="pull-right session-progress">
+        <div class="span5 session-progress">
             <h4>Session Progress</h4>
-            {% with user.profile.last_location as last_location %}
-            {% if user.profile.percent_complete == 0 %}
-                <a href="{{last_location.get_absolute_url}}" class="btn btn-large btn-primary">
+            {% if user_profile|percent_complete:optionb == 0 %}
+                <a href="{{user_profile|last_location_url:optionb}}" class="btn btn-large btn-primary pull-right">
                     Begin the Course <i class="icon-arrow-right icon-white"></i></a>
             {% else %}
                 <div class="progress progress-striped">
-                    <div class="bar" style="width: {{user.profile.percent_complete}}%;"></div>
+                    <div class="bar" style="width: {{user_profile|percent_complete:optionb}}%;"></div>
                 </div>
-                
-                <div>{{user.profile.sessions_completed}} of {{hierarchy.get_root.get_children|length}} sessions completed</div>
+                <div>{{user_profile|sessions_completed:optionb}} of {{optionb.get_root.get_children|length}} sessions completed</div>
                 <br />
-                <a href="{{last_location.get_absolute_url}}" class="btn btn-large">
+                <a href="{{user_profile|last_location_url:optionb}}"" class="btn btn-large pull-right">
                     Continue <i class="icon-arrow-right"></i>
                 </a>
+                
+                <div class="clearfix"></div>
+                <dl class="dl-horizontal">
+                    <dt>Pre-test score</dt><dd>{{user_profile|pretest_score:optionb}}%</dd>
+                    <dt>Post-test score</dt><dd>{{user_profile|posttest_score:optionb}}%</dd>
+                    {% for session in optionb.get_root.get_children %}
+                        <dt>Session {{forloop.counter}}</dt><dd>{{user_profile|session_score:session}}</dd>
+                    {% endfor %}
+                </dl>
             {% endif %}
-            {% endwith %}
         </div>
     </div>
 </div>

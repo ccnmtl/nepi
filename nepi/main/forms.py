@@ -3,7 +3,7 @@ from choices import COUNTRY_CHOICES
 from django import forms
 from django.contrib.auth.models import User
 from django.forms.fields import ChoiceField
-from nepi.main.models import Country, Group, School, UserProfile
+from nepi.main.models import Country
 
 
 class LoginForm(forms.Form):
@@ -97,54 +97,45 @@ class ContactForm(forms.Form):
     captcha = CaptchaField()
 
 
-class ICAPForm(forms.Form):
-    countries = forms.ModelChoiceField(queryset=Country.objects.all())
-    schools = forms.ModelChoiceField(queryset=School.objects.all())
-    countrys = forms.ModelChoiceField(queryset=Group.objects.all())
-
-
-class UpdateProfileForm(forms.ModelForm):
+class UpdateProfileForm(forms.Form):
     first_name = forms.CharField(max_length=100, required=True)
     last_name = forms.CharField(max_length=100, required=True)
-    faculty_access = forms.BooleanField(required=False)
-    country = forms.ChoiceField(required=True, choices=COUNTRY_CHOICES)
     email = forms.EmailField(required=False)
+    profile_type = forms.BooleanField(required=False)
+    country = forms.ChoiceField(required=True, choices=COUNTRY_CHOICES)
+
+    # School is not validated as it is variably required
+    # Yes for teachers, No for students. Same for email
+    school = ChoiceFieldNoValidation(required=False)
+
     password1 = forms.CharField(max_length=100, required=False)
     password2 = forms.CharField(max_length=100, required=False)
 
-    def __init__(self, *args, **kwargs):
-        super(UpdateProfileForm, self).__init__(*args, **kwargs)
-        passed_profile = kwargs.get('instance')
-        self.fields['first_name'].initial = passed_profile.user.first_name
-        self.fields['last_name'].initial = passed_profile.user.last_name
-        self.fields['email'].initial = passed_profile.user.email
-        self.fields['country'].initial = passed_profile.country
-
-    class Meta:
-        model = UserProfile
-        exclude = ['profile_type', 'group', 'school', 'user']
+    nepi_affiliated = forms.BooleanField(required=False)
 
     def clean(self):
         form = super(UpdateProfileForm, self).clean()
-        faculty_access = form.get("faculty_access")
-        email = form.get("email")
-        password1 = form.get("password1")
-        password2 = form.get("password2")
-        try:
-            new_country = Country.objects.get(name=form.get("country"))
-        except Country.DoesNotExist:
-            new_country = Country.objects.create(name=form.get("country"))
-            new_country.save()
-        # country = Country.objects.get(name=form.get("country"))
-        if faculty_access and (email == ""):
-            self._errors["email"] = self.error_class(
-                ["If you are registering as an instructor " +
-                 "you must enter a valid email address"])
-        if password1 != password2:
-            self._errors["password1"] = self.error_class(
-                ["Passwords must match each other."])
-            self._errors["password2"] = self.error_class(
-                ["Passwords must match each other."])
+#
+#         faculty_access = form.get("faculty_access")
+#         email = form.get("email")
+#         password1 = form.get("password1")
+#         password2 = form.get("password2")
+#         try:
+#             new_country = Country.objects.get(name=form.get("country"))
+#         except Country.DoesNotExist:
+#             new_country = Country.objects.create(name=form.get("country"))
+#             new_country.save()
+#         # country = Country.objects.get(name=form.get("country"))
+#         if faculty_access and (email == ""):
+#             self._errors["email"] = self.error_class(
+#                 ["If you are registering as an instructor " +
+#                  "you must enter a valid email address"])
+#         if password1 != password2:
+#             self._errors["password1"] = self.error_class(
+#                 ["Passwords must match each other."])
+#             self._errors["password2"] = self.error_class(
+#                 ["Passwords must match each other."])
+#
         return form
 
     def save(self, *args, **kwargs):

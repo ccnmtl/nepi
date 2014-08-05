@@ -7,90 +7,12 @@
 
 {% block js %}
     <script src="/site_media/js/captcha.js"></script>
-    <script type="text/javascript">
-        jQuery(document).ready(function () {
-            var currentCountryName = "{{form.data.country}}";
-            var currentSchoolId = "{{form.data.school}}";
-            
-            function resetSchoolChoice() {
-                jQuery("select[name='school']").find('option').remove();
-                jQuery("input[name='profile_type']").removeAttr('checked');
-            }
-            
-            function disableFacultyAccess() {
-                jQuery("input[name='profile_type']").attr('disabled', 'disabled');
-                jQuery(".facultyaccess.error").show();
-                jQuery(".facultyaccess.success").hide();
-            }
-
-            function enableFacultyAccess() {
-                jQuery("input[name='profile_type']").removeAttr('disabled');
-                jQuery(".facultyaccess.error").hide();
-                jQuery(".facultyaccess.success").show();
-                
-                if (currentSchoolId) {
-                    jQuery("select[name='school']").val(currentSchoolId);
-                    currentSchoolId = undefined;
-                }
-            }
-
-            function populateSchoolChoices(countryName) {
-                jQuery.ajax({
-                    type: 'GET',
-                    url: '/schools/' + countryName + '/',
-                    dataType: 'json',
-                    error: function () {
-                        // This country does not exist in the database
-                        disableFacultyAccess();
-                    },
-                    success: function (json, textStatus, xhr) {
-                        if (json['schools'].length < 2) {
-                            // There are no schools for this country
-                            disableFacultyAccess();
-                        } else {
-                            for (var i=0; i < json.schools.length; i++) {
-                                var school = json.schools[i];
-                                var option = "<option value='"  + school.id + "'>" + school.name + "</option>";
-                                jQuery("select[name='school']").append(option)
-                            }
-                            enableFacultyAccess();                       
-                        }
-                    }
-                });
-            }
-            
-            jQuery("input[name='profile_type']").click(function() {
-                if (jQuery(this).is(':checked')) {
-                    var countryName = jQuery("select[name='country']").val();
-                    if (countryName === '-----') {
-                        jQuery(".facultyaccess.error").show();
-                    } else {
-                        showSchoolChoices();
-                    }
-                } else {
-                    hideSchoolChoices();
-                }
-            });
-    
-            jQuery("select[name='country']").change(function() {
-                var countryName = jQuery("select[name='country']").val();
-                if (currentCountryName !== countryName) {
-                    currentCountryName = countryName;
-                    resetSchoolChoice();
-                    populateSchoolChoices(countryName);
-                }
-            });
-            
-            if (currentCountryName !== '') {
-                populateSchoolChoices(currentCountryName);
-            }
-        });
-    </script>
+    <script src="/site_media/js/profile.js"></script>
 {% endblock %}
 
 
 {% block content %}
-<div class="user-registration">
+<div class="user-registration user-profile-form">
     <h1>Create your account</h1>
     
     <form action="." method="post">{% csrf_token %}
@@ -174,18 +96,18 @@
         </div>
         <br />
     
-        <div class="fieldWrapper control-group faculty-access">
+        <div class="fieldWrapper control-group faculty-access disabled">
             <label class="checkbox">
                 <input id="id_profile_type" name="profile_type" type="checkbox"
                  {% ifequal form.data.profile_type 'on' %} checked='checked' {% endifequal %}
                  disabled="disabled">
                 <b>I am requesting faculty-level access</b>
             </label>
-            <div class="help-inline facultyaccess error">
+            <div class="help-inline error">
                 Faculty access is not available in your selected country.<br />
                 If you would like to have your school added, please <a href="/contact/">contact ICAP</a>.
             </div>
-            <div style="display: none" class="help-inline facultyaccess success well">
+            <div style="display: none" class="help-inline success well">
                 Faculty requests are sent to an ICAP administrator for approval.<br />
                 You will be notified when your access level has been changed.
                 <br /><br />

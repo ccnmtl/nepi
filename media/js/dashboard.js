@@ -8,12 +8,13 @@
          window.location.hash = e.target.hash;
          scrollTo(0,0);
      })
-     
-     jQuery(".date").datepicker();
 
      function showError(elt) {
         jQuery(elt).parent().find("div.help-inline").fadeIn();
      }
+
+     // initialize date pickers for create group
+     jQuery(".date").datepicker();
      
      // Join Group Functionality
      function clearSchoolGroupChoices(elt) {
@@ -98,7 +99,7 @@
         });
     }
 
-    jQuery("select[name='country']").change(function() {
+    jQuery("#user-groups select[name='country']").change(function() {
         var elt = jQuery(this).parents('div.modal')[0];
         
         clearSchoolGroupChoices(elt);
