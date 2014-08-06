@@ -1,0 +1,41 @@
+.artcard.section {
+	display: block;
+	/*background-color: #fff;*/
+	cursor: pointer;
+}
+
+#followupblock {
+	position: relative;
+	left: 137px;
+	top: -297px;
+	width: 54px;
+	height: 150px;
+	border: solid 3px #000;
+}
+
+#adherenceblock {
+	position: relative;
+	left: 756px;
+	top: -378px;
+	width: 43px;
+	height: 19px;
+	border: solid 3px #5385DF;
+}
+
+#whyblock {
+	position: relative;
+	left: 756px;
+	top: -381px;
+	width: 43px;
+	height: 18px;
+	border: solid 3px #000;
+}
+
+#regimenblock {
+	position: relative;
+	left: 805px;
+	top: -427px;
+	width: 60px;
+	height: 83px;
+	border: solid 3px #000;
+}
