@@ -1,3 +1,13 @@
+.pageblock.s3_act_01 {
+	margin: 0 0 200px 0;
+}
+
+#artcardsections {
+	float: left;
+	display: block;
+	position: absolute;
+}
+
 .artcard.section {
 	display: block;
 	/*background-color: #fff;*/
@@ -5,36 +15,36 @@
 }
 
 #followupblock {
-	position: relative;
-	left: 137px;
+	position: absolute;
+	left: 135px;
 	top: -297px;
-	width: 54px;
+	width: 57px;
 	height: 150px;
 	border: solid 3px #000;
 }
 
 #adherenceblock {
-	position: relative;
+	position: absolute;
 	left: 756px;
-	top: -378px;
+	top: -222px;
 	width: 43px;
 	height: 19px;
 	border: solid 3px #5385DF;
 }
 
 #whyblock {
-	position: relative;
+	position: absolute;
 	left: 756px;
-	top: -381px;
+	top: -200px;
 	width: 43px;
 	height: 18px;
 	border: solid 3px #000;
 }
 
 #regimenblock {
-	position: relative;
+	position: absolute;
 	left: 805px;
-	top: -427px;
+	top: -222px;
 	width: 60px;
 	height: 83px;
 	border: solid 3px #000;
