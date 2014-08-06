@@ -6,6 +6,7 @@
 	float: left;
 	display: block;
 	position: absolute;
+	width: 1100px;
 }
 
 .artcard.section {
@@ -18,34 +19,69 @@
 	position: absolute;
 	left: 135px;
 	top: -297px;
-	width: 57px;
+	width: 53px;
 	height: 150px;
-	border: solid 3px #000;
+	border: solid 5px #83D0D7;
 }
 
 #adherenceblock {
 	position: absolute;
-	left: 756px;
-	top: -222px;
-	width: 43px;
-	height: 19px;
-	border: solid 3px #5385DF;
+	left: 755px;
+	top: -223px;
+	width: 39px;
+	height: 17px;
+	border: solid 5px #F3B564;
 }
 
 #whyblock {
 	position: absolute;
-	left: 756px;
-	top: -200px;
-	width: 43px;
-	height: 18px;
-	border: solid 3px #000;
+	left: 755px;
+	top: -201px;
+	width: 40px;
+	height: 15px;
+	border: solid 5px #D95F50;
 }
 
 #regimenblock {
 	position: absolute;
-	left: 805px;
-	top: -222px;
-	width: 60px;
+	left: 804px;
+	top: -223px;
+	width: 56px;
 	height: 83px;
-	border: solid 3px #000;
+	border: solid 5px #64C0F3;
+}
+
+.explanation {
+	text-align: center;
+}
+
+.ex_title
+{
+	background-color: #f5f5f5;
+	width: 50%;
+	margin: 0 auto;
+	padding: 20px;
+	border-radius: 10px 10px 0 0;
+	border-left: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+	border-top: solid 1px #ccc;
+	border-bottom: none;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.ex_content {
+	width: 50%;
+	margin: 0 auto;
+	text-align: left;
+	padding: 10px 20px 20px 20px;
+	border-radius: 0 0 10px 10px;
+	border-left: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+	border-bottom: solid 1px #ccc;
+	border-top: none;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
 }
