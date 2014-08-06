@@ -1,5 +1,23 @@
+<script src="/site_media/js/jquery-ui-1.10.3.min.js"></script>
 <script type="text/javascript">
-jQuery(document).ready(function(){
+jQuery(document).ready(function() {
+    jQuery(".dosage-clipboard img").click(function() {
+        var position = jQuery(this).position();
+        jQuery('.dosage-clipboard-popover').css({
+            'left': (position.left - 400) + 'px',
+            'top': (position.top) + 'px'});
+        
+        jQuery('.dosage-clipboard-popover').toggle('slide', {direction: 'right'}, 500);
+    });
+    
+    jQuery(".dosage-clipboard-content button.close").click(function() {
+        jQuery('.dosage-clipboard-popover').toggle('slide', {direction: 'right'}, 500);
+    });
+
+    
+//     jQuery(".dosage-clipboard img ").click(function() {
+//         jQuery('.dosage-clipboard-content').toggleClass('open');
+//     });    
 
        jQuery('form').submit(function(e) {
 
@@ -54,21 +72,6 @@ jQuery(document).ready(function(){
                  return false;
         }
        });
-          
-	jQuery("#clipboard-button").on("click",
-		function()
-		{ 
-			jQuery("#clipboard").show();
-		});
-
-	jQuery("#clipboard").on("click",
-		function()
-		{ 
-			jQuery("#clipboard").hide();		
-		});
-		
-
-
 
 		if (jQuery('#sub_nvp').attr('data-value') != jQuery("#user_nvp").attr('data-value'))
 		{

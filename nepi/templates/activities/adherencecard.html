@@ -1,44 +1,35 @@
 {% load markup %}
 {% load adherence_state %}
 
-{% if block.label %}<h3>{{block.label}}</h3>{% endif %}
-{% if block.description %}{{block.description|safe}}{% endif %}
+{% get_response_for adherence_one as adherence_one %}
+{% get_response_for adherence_two as adherence_two %}
+{% get_response_for adherence_three as adherence_three %}
+{% get_response_for adherence_four as adherence_four %}
+{% get_response_for adherence_five as adherence_five %}
+{% get_response_for adherence_six as adherence_six %}
 
-{% block content %}
-<div class="adherencecard" data-part="1">1</div>
-    <div class="answer" data-part="1">
-        {% get_response_for adherence_one as adherence_one %}
+<div class="document-adherence">
+    <div class="adherence-one {% ifequal block.quiz_class 'adherence_one' %}current{% endifequal %}">
         {{adherence_one}}
     </div>
-
-<div class="adherencecard" data-part="2">2</div>
-    <div class="answer" data-part="2">
-        {% get_response_for adherence_two as adherence_two %}
+    
+    <div class="adherence-two {% ifequal block.quiz_class 'adherence_two' %}current{% endifequal %}">
         {{adherence_two}}
     </div>
-
-<div class="adherencecard" data-part="3">3</div>
-    <div class="answer" data-part="3">
-        {% get_response_for adherence_three as adherence_three %}
+    
+    <div class="adherence-three {% ifequal block.quiz_class 'adherence_three' %}current{% endifequal %}">
         {{adherence_three}}
     </div>
-
-<div class="adherencecard" data-part="4">4</div>
-    <div class="answer" data-part="4">
-        {% get_response_for adherence_four as adherence_four %}
+    
+    <div class="adherence-four {% ifequal block.quiz_class 'adherence_four' %}current{% endifequal %}">
         {{adherence_four}}
     </div>
-
-<div class="adherencecard" data-part="5">5</div>
-    <div class="answer" data-part="5">
-        {% get_response_for adherence_five as adherence_five %}
+    
+    <div class="adherence-five {% ifequal block.quiz_class 'adherence_five' %}current{% endifequal %}">
         {{adherence_five}}
     </div>
-
-<div class="adherencecard" data-part="6">6</div>
-    <div class="answer" data-part="6">
-        {% get_response_for adherence_six as adherence_six %}
+    
+    <div class="adherence-six {% ifequal block.quiz_class 'adherence_six' %}current{% endifequal %}">
         {{adherence_six}}
     </div>
-
-{% endblock %}
+</div>

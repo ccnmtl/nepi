@@ -702,7 +702,27 @@ div.pageblock.show-correct li.incorrect:after {
     width: 90%;
 }
 
+.survey ol.caseanswers {
+    width: 100%;
+    border: 0;
+}
+
+.survey .casequestiontext {    
+    background-color: white;
+    border: 0;
+    padding: 0;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    float: left;
+    margin-bottom: 10px;
+}
+
 /* Likert scale quiz layout */
+
+.likert .casecontent {
+    margin-bottom: 20px;
+}
 
 .likert .quizdescription div.row {
     margin-top: 10px;
@@ -724,19 +744,21 @@ div.pageblock.show-correct li.incorrect:after {
 }
 
 .likert .casequestiontext {
-    float: left;
     width: 270px;
     margin-right: 56px;
     font-weight: normal !important;
-    margin-left: 15px;
+    margin-left: 15px;  
+}
+
+.likert .casequestion {
+    margin: 0;
 }
 
 .likert ol.caseanswers li {
     float: left;
     width: 116px;
+    margin: 0;
 }
-
-
 
 
 /* slide out menu */
@@ -748,6 +770,10 @@ div.pageblock.show-correct li.incorrect:after {
     left: -420px;
     height: 95%;
     z-index: 1000;
+}
+
+.slide-out-menu.right {
+    right: 0;
 }
 
 .slide-out-menu .toggle-primary-toc {
@@ -777,6 +803,10 @@ div.pageblock.show-correct li.incorrect:after {
 
 .slide-out-menu.open {
     left: 0px;
+}
+
+.slide-out-menu.right.open {
+    right: 300px;
 }
 
 .slide-out-menu div.primary-toc {
@@ -1094,4 +1124,79 @@ form.create-group div.control-group.error div.help-inline.error {
     display: block;
 }
 
+/** dosage activity **/
+.dosage-clipboard {
+    float: right;
+    cursor: pointer;
+}
 
+.dosage-clipboard-popover {
+    position: absolute;
+    width: 400px;
+    z-index: 1010;
+/*     top: 0; */
+/*     left: 0; */
+    padding: 1px;
+    text-align: left;
+    white-space: normal;
+    background-color: #D9EDF6;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+}
+
+.dosage-clipboard-content {
+    padding: 20px;
+}
+
+.dosage-clipboard-content button.close {
+    float: right;
+    margin-top: -14px;
+    margin-right: -10px;
+}
+
+.dosage-clipboard-content table {
+    border: 0;
+    border-spacing: 5px;
+    border-collapse: separate;
+    margin-left: -5px;
+}
+
+.dosage-clipboard-content table tr {
+    border: 0;
+}
+
+.dosage-clipboard-content table tr td {
+    background-color: #3986AB;
+    color: white;
+    border: 0;
+    padding: 5px;
+    font-size: .9em;
+}
+
+/** Document Adherence Activity **/
+.document-adherence .current {
+    border: 1px solid red;
+}
+
+.document-adherence .adherence-one {
+    background-color: yellow;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+}
+
+.document-adherence .adherence-two {
+    background-color: green;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+}

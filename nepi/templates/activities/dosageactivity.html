@@ -1,50 +1,78 @@
-{% load markup %}
 {% load dosage_state %}
-{% with block.dosageactivity as dosageactivity %}
-{% endwith %}
 {% getdosageresponse block as dosager %}
 
-<div id="clipboard-button"> Clip Board Here </div>
+<div class="dosage-activity">
+    <div class="dosage-clipboard-popover fade left in" style="display: none">
+        <div class="dosage-clipboard-content">
+            <button type="button" class="close">&times;</button>
+            <h4>NVP Dosage Chart</h4>
+            
+            <h5>Daily dosing for NVP for infants from birth-6 weeks</h5>
+            
+            <table>
+            <tr><td>Birth weight 2000-2499 g </td><td> 1ml (10mg) once a day </td></tr>
+            <tr><td>Birth weight ≥ 2500 g </td><td> 1.5 ml (15mg) once a day </td></tr>
+            <tr><td>Infants < 2000 g 0.2 ml </td><td> (2mg)/kg once a day </td></tr>
+            </table>
+    
+            <br />
+            <h5> Daily dosing for NVP for infants > 6 weeks of age</h5>
+            <div>
+            Depending on country guidelines, there may
+            be rare cases in which children over 6 weeks
+            are given NVP as prophylaxis. In this case the
+            dosages are:
+            </div>
+            
+            <table>
+            <tr><td>6 weeks to 6 months </td><td> 20mg (2ml) once a day</td></tr>
+            <tr><td>Over 6 months to 9 months </td><td> 30mg (3ml) once a day</td></tr>
+            <tr><td>Over 9 months until breastfeeding ends </td><td> 40mg (4ml) once a day</td></tr>
+            </table>
+        </div>
+    </div>
 
-{% if block.label %}<h3>{{block.label}}</h3>{% endif %}
-{{block.description|markdown}}
-
-</br></br>{% if block.question %}<h3>{{block.question}}</h3>{% endif %}
-
+{% comment %}
 {% if dosager %}
-<input type="hidden" id="sub_nvp" data-value="{{block.ml_nvp}}">
-<input type="hidden" id="sub_times_day" data-value="{{block.times_day}}">
-<input type="hidden" id="sub_weeks" data-value="{{block.weeks}}">
+    <input type="hidden" id="sub_nvp" data-value="{{block.ml_nvp}}">
+    <input type="hidden" id="sub_times_day" data-value="{{block.times_day}}">
+    <input type="hidden" id="sub_weeks" data-value="{{block.weeks}}">
 {% endif %}
 
 <div id="wrong" style="display:none;" class='alert alert-error'><b>Incorrect</b></div>
 <div id="right" style="display:none;" class='alert alert-success'><b>Correct</b></div>
+{% endcomment %}
 
-<div id="dosage">
-<table>
-   <tr><td> MLVP:</td><td>
-   		{% if dosager %}
-   			<div id="user_nvp" name="usernvp" data-value="{{dosager.ml_nvp}}" value="{{dosager.ml_nvp}}">{{dosager.ml_nvp}}
-   			<div id="show_response">
-   			</div>
-   			</div>
-   		{% else %}
-   			<input type="text" id="nvp_input" name="pageblock-{{block.pageblock.id}}-mlnvp" value="">
-   		{% endif %}
-   	</td></tr>
-   
-   <tr><td>Number of Times per Day:</td><td>
-   		{% if dosager %}
-   			<div id="user_times_day" data-value="{{dosager.times_day}}" value="{{dosager.times_day}}">{{dosager.times_day}}
-   			<div id="show_response">
-   			</div>
-   			</div>
-   		{% else %}
-   			<input type="text" id="times_day_input" name="pageblock-{{block.pageblock.id}}-times_day" value="">
-   		{% endif %}
-   		</td></tr>
 
-   <tr><td>Number of Weeks:</td><td>
+<div class="row-fluid">
+    <div class="span4 offset4 form-horizontal">
+          <div class="dosage-question">{{block.question|safe}}</div>
+          <div class="control-group">
+            <label class="control-label">How many ml of NVP?</label>
+            <div class="controls">
+                {% if dosager %}
+                    <div data-value="{{dosager.ml_nvp}}" value="{{dosager.ml_nvp}}">{{dosager.ml_nvp}}</div>
+                {% else %}
+                    <input type="text" name="pageblock-{{block.pageblock.id}}-mlnvp" value="" />
+                {% endif %}
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">>How many times each day?</label>
+            <div class="controls">
+                {% if dosager %}
+                    <div id="user_times_day" data-value="{{dosager.times_day}}" value="{{dosager.times_day}}">{{dosager.times_day}}</div>
+                {% else %}
+                    <input type="text" id="times_day_input" name="pageblock-{{block.pageblock.id}}-times_day" value="">
+                {% endif %}
+            </div>
+          </div>          
+    </div>
+</div>
+{% comment %}        
+
+
+   <tr><td>For how many weeks?</td><td>
 	   {% if dosager %}
 	   		<div id="user_weeks" data-value="{{dosager.weeks}}" value="{{dosager.weeks}}">{{dosager.weeks}}
 	   		<div id="show_response">
@@ -62,39 +90,7 @@
 	   {% endif %}
 	   
 </table>
+{% endcomment %}
 
-
-<div id="clipboard" style="display: none">
-<b>NVP Dosage Chart</b>
-
-<b>Daily dosing for NVP for infants from
-birth to 6 weeks</b>
-
-<table border="1" style="width:350px">
-<tr><td>Birth weight 2000-2499 g </td><td> 1ml (10mg) once a day </td></tr>
-<tr><td>Birth weight ≥ 2500 g </td><td> 1.5 ml (15mg) once a day </td></tr>
-<tr><td>Infants < 2000 g 0.2 ml </td><td> (2mg)/kg once a day </td></tr>
-</table>
-<div>
-Depending on country guidelines, there may
-be rare cases in which children over 6 weeks
-are given NVP as prophylaxis. In this case the
-dosages are:
 </div>
-
-<b> Daily dosing for NVP for infants > 6
-weeks of age: </b>
-<table border="1" style="width:350px">
-<tr><td>6 weeks to 6 months </td><td> 20mg (2ml) once a day</td></tr>
-<tr><td>Over 6 months to 9 months </td><td> 30mg (3ml) once a day</td></tr>
-<tr><td>Over 9 months until breastfeeding ends </td><td> 40mg (4ml) once a day</td></tr>
-</table>
-</div>
-</div>
-
-
-
-</br></br></br></br></br></br>
-
-
 

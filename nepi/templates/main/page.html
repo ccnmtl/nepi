@@ -11,18 +11,14 @@
     
     <script type="text/javascript">
         jQuery(document).ready(function () {
+
             jQuery("body").delegate('a.disabled', 'click', function() {
                 return false;  // call preventDefault and stopPropagation by default
             });
-            jQuery("body").delegate('.toggle-primary-toc', 'click', function() {
-                jQuery('.slide-out-menu').toggleClass('open');
-            });
-            jQuery("body").delegate('.slide-out-menu a', 'click', function() {
-                jQuery('.slide-out-menu').toggleClass('open');
-                window.location = jQuery(this).attr(href);
-            });
+            
             jQuery("body").delegate("div.pageblock.numeric-only input[type='text']",
                     'keypress', validate_numeric_input);
+            
             jQuery("form").submit(function(evt) {
                 if (!is_form_complete(this)) {
                     evt.stopImmediatePropagation();
@@ -33,10 +29,23 @@
                 }
             });
             
+            // Sliding menu
+            jQuery("body").delegate('.toggle-primary-toc', 'click', function() {
+                jQuery('.primarynav').toggleClass('open');
+            });
+            jQuery("body").delegate('.primarynav a', 'click', function() {
+                if (jQuery(this).hasClass('disabled')) {
+                    return false;
+                } else {
+                    jQuery('.primarynav').toggleClass('open');
+                    window.location = jQuery(this).attr(href);
+                }
+            });
+            
             // scroll to the current section in the toc
             var elt = jQuery("a[data-id='{{section.id}}']")[0];
             var top = jQuery(elt).position().top - 50;
-            jQuery(".slide-out-menu div.primary-toc").scrollTop(top);
+            jQuery(".primarynav div.primary-toc").scrollTop(top);
         });
     </script>
 {% endblock %}
@@ -117,13 +126,13 @@
                 {% if allow_redo %}
                     <form action="." method="post">
                     <input type="hidden" name="action" value="reset" />
-                    <input type="submit" value="clear your answers and try again" class="btn" />
+                    <input type="submit" value="clear your answers and try again" class="btn btn-default" />
                     </form>
                 {% else %}{% if user.is_superuser %}
                     <form action="." method="post">
                         <div>
                             <input type="hidden" name="action" value="reset" />
-                            <input type="submit" id="generic-reset" value="Clear Responses (superuser only)" />
+                            <input type="submit" id="generic-reset" value="Clear Responses (superuser only)" class="btn btn-default" />
                             <div style="clear: both"></div>
                         </div>
                     </form>

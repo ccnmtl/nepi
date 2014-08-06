@@ -5,8 +5,6 @@ from pagetree.models import PageBlock
 from datetime import datetime
 from django import forms
 from django.core.urlresolvers import reverse
-from quizblock.models import Quiz, Submission, Response
-from django.contrib.contenttypes.models import ContentType
 
 
 CONV_CHOICES = (
@@ -277,11 +275,8 @@ class ARTCardForm(forms.ModelForm):
 class AdherenceCard(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
     template_file = "activities/adherencecard.html"
-    js_template_file = "activities/adherencecard_js.html"
-    css_template_file = "activities/adherencecard_css.html"
-    quiz_class = models.TextField(default='')
+    quiz_class = models.TextField()
     display_name = "Adherence Card"
-    intro_text = models.TextField(default='')
 
     def pageblock(self):
         return self.pageblocks.all()[0]
@@ -290,8 +285,6 @@ class AdherenceCard(models.Model):
         return unicode(self.pageblock())
 
     def needs_submit(self):
-        '''I believe all of the "needs submit" stuff is being taken
-        care of in the javascript...'''
         return False
 
     @classmethod
@@ -313,26 +306,6 @@ class AdherenceCard(models.Model):
 
     def unlocked(self, user):
         return True
-
-    def quizzes(self):
-        ctype = ContentType.objects.get_for_model(Quiz)
-        print ctype
-        blocks = PageBlock.objects.filter(content_type__pk=ctype.pk,
-                                          css_extra__contains=self.quiz_class)
-        print blocks
-        ids = blocks.values_list('object_id', flat=True)
-        return Quiz.objects.filter(id__in=ids)
-
-    def user_responses(self, user):
-        '''No idea if this is the right way to do this'''
-        quiz = self.quizzes()
-        user = User.objects.get(pk=user.pk)
-        try:
-            user_submission = Submission.objects.get(user=user, quiz=quiz[0])
-            response = Response.objects.get(submission=user_submission)
-            return response.value
-        except Submission.DoesNotExist:
-            return None
 
 
 class AdherenceCardForm(forms.ModelForm):
@@ -534,8 +507,8 @@ class DosageActivity(models.Model):
     js_template_file = "activities/dosageactivity_js.html"
     css_template_file = "activities/dosageactivity_css.html"
     display_name = "Dosage Activity"
-    explanation = models.TextField(default='')
-    question = models.CharField(max_length=64)
+    explanation = models.TextField()
+    question = models.TextField()
     ml_nvp = models.IntegerField(default=0)
     times_day = models.IntegerField(default=0)
     weeks = models.IntegerField(default=0)
