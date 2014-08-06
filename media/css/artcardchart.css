@@ -85,18 +85,34 @@
 
 .ex_titlefollow {
 	background-color: #83D0D7;
+	color: #fff;
+	font-weight: bold;
+	font-family: Arial, helvetica, sans-serif;
+	font-size: 1.25em;
 }
 
 .ex_titlead {
 	background-color: #F3B564;
+	color: #fff;
+	font-weight: bold;
+	font-family: Arial, helvetica, sans-serif;
+	font-size: 1.25em;
 }
 
 .ex_titlewhy {
 	background-color: #D95F50;
+	color: #fff;
+	font-weight: bold;
+	font-family: Arial, helvetica, sans-serif;
+	font-size: 1.25em;
 }
 
 .ex_titleregimen {
 	background-color: #64C0F3;
+	color: #fff;
+	font-weight: bold;
+	font-family: Arial, helvetica, sans-serif;
+	font-size: 1.25em;
 }
 
 #followupblock:hover, #adherenceblock:hover, #whyblock:hover, #regimenblock:hover {
