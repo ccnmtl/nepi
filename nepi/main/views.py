@@ -74,8 +74,12 @@ class HomeView(LoggedInMixin, View):
         except UserProfile.DoesNotExist:
             return HttpResponseRedirect(reverse('register'))
 
-        return HttpResponseRedirect(reverse('dashboard',
-                                    kwargs={'pk': user_profile.pk}))
+        if user_profile.is_student():
+            url = '/dashboard/%s/#user-modules' % (user_profile.id)
+        else:
+            url = '/dashboard/%s/#user-groups' % (user_profile.id)
+
+        return HttpResponseRedirect(url)
 
 
 class RegistrationView(FormView):

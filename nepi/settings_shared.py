@@ -35,8 +35,6 @@ if 'test' in sys.argv or 'jenkins' in sys.argv:
         }
     }
 
-    CAPTCHA_TEST_MODE = True
-
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 SOUTH_TESTS_MIGRATE = False
 
@@ -225,3 +223,5 @@ LOGGING = {
 
 ICAP_MAILING_LIST = 'ccnmtl-icap@ccnmtl.columbia.edu'
 NEPI_MAILING_LIST = 'ccnmtl-nepi@ccnmtl.columbia.edu'
+
+CAPTCHA_FONT_SIZE = 34

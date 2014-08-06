@@ -909,6 +909,10 @@ div.contact-icap textarea {
     margin-bottom: 10px;
 }
 
+img.captcha {
+    border: 1px solid black;
+}
+
 button.js-captcha-refresh {
     padding: 0;
     color: #0088cc;

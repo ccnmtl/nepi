@@ -84,7 +84,7 @@ class TestStudentLoggedInViews(TestCase):
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/dashboard/%d/'
+                          [('http://testserver/dashboard/%d/#user-modules'
                             % self.student.profile.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
 
@@ -127,7 +127,7 @@ class TestTeacherLoggedInViews(TestCase):
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/dashboard/%d/'
+                          [('http://testserver/dashboard/%d/#user-groups'
                             % self.teacher.profile.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
 
@@ -161,7 +161,7 @@ class TestCountryAdminLoggedInViews(TestCase):
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/dashboard/%d/'
+                          [('http://testserver/dashboard/%d/#user-groups'
                             % self.country.profile.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
 
@@ -195,7 +195,7 @@ class TestICAPLoggedInViews(TestCase):
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/dashboard/%d/'
+                          [('http://testserver/dashboard/%d/#user-groups'
                             % self.icap.profile.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
 

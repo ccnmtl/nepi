@@ -113,7 +113,7 @@
                 <br /><br />
                     <div class="fieldWrapper control-group school {% if form.school.errors %}error{% endif %}"
                         {% if form.data.school %}data-school-id='{{form.data.school}}'{% endif %}>
-                    <label><b>What is your school?</b></label>
+                    <label><b>What is your school? <small>(faculty only)</small></b></label>
                     <div class="controls">
                         {{form.school}}
                         {% if form.school.errors %}
