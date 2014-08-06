@@ -83,7 +83,8 @@ def session_score(user_profile, session):
 
 @register.filter
 def percent_complete(user_profile, hierarchy):
-    return user_profile.percent_complete(hierarchy.get_root())
+    pct = user_profile.percent_complete(hierarchy.get_root())
+    return "{0:.2f}".format(round(pct, 2))
 
 
 @register.filter

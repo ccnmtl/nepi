@@ -1,4 +1,5 @@
  jQuery(document).ready(function () {
+     
      // handle hash tag navigation
      var hash = window.location.hash;
      hash && jQuery('.dashboard-nav a[href="' + hash + '"]').tab('show');
@@ -8,13 +9,13 @@
          window.location.hash = e.target.hash;
          scrollTo(0,0);
      })
-
+     
+     // initialize date pickers for create group
+     jQuery(".date").datepicker();
+     
      function showError(elt) {
         jQuery(elt).parent().find("div.help-inline").fadeIn();
      }
-
-     // initialize date pickers for create group
-     jQuery(".date").datepicker();
      
      // Join Group Functionality
      function clearSchoolGroupChoices(elt) {
@@ -25,7 +26,7 @@
          jQuery(elt).find("select[name='school']").find('option').remove();
      }
 
-     function populateSchoolChoices(elt, eltCountrySelect, eltSchoolSelect) {
+     function populateSchoolChoices(elt, eltCountrySelect, eltSchoolSelect, callback) {
         clearSchoolChoices(elt);
         
         var countryName = jQuery(eltCountrySelect).val();
@@ -49,7 +50,10 @@
                         jQuery(eltSchoolSelect).append(option)
                     }
                     jQuery("div.help-inline").hide();
-                    jQuery(eltSchoolSelect).parents(".control-group").fadeIn();                      
+                    jQuery(eltSchoolSelect).parents(".control-group").fadeIn();
+                    if (callback) {
+                        callback();
+                    }
                 }
             }
         });
@@ -111,7 +115,7 @@
         populateSchoolChoices(elt, this, eltSchoolChoice);
     });
 
-    jQuery("select[name='school']").change(function() {
+    jQuery("#find-a-group").find("select[name='school']").change(function() {
         var elt = jQuery(this).parents('div.modal')[0];
         var eltGroupChoice = jQuery(elt).find("div.schoolgroup table")[0];
         populateSchoolGroupChoices(elt, this, eltGroupChoice);
@@ -212,7 +216,7 @@
         }
         return false;
     });
-    
+
     jQuery('#create-a-group').on('show', function () {
         jQuery(this).find("div.control-group").removeClass("error");
         jQuery(this).find(".date").datepicker('setValue', '');
@@ -238,12 +242,24 @@
         var name = this.name.value.trim();
         var startdate = new Date(this.start_date.value.trim());
         var enddate = new Date(this.end_date.value.trim());
+        
         var submit = true;
 
-        if (name == '') {
+        if (this.country.value === '-----') {
+            jQuery(this).find("div.control-group.country").addClass("error");
+            submit = false;
+        }
+        
+        if (this.school.value === '-----') {
+            jQuery(this).find("div.control-group.school").addClass("error");
+            submit = false;
+        }
+
+        if (name === '') {
             jQuery(this).find("div.control-group.name").addClass("error");
             submit = false;
         }
+        
         
         if (startdate == 'Invalid Date') {
             jQuery(this).find("div.control-group.start_date").addClass("error");
@@ -296,5 +312,24 @@
         var url = '/faculty/confirm/';
         return updateFacultyAccess(msg, url, this);
     });
+    
+    // Create group initialization
+    // select the user's country for picking groups
+    if (profile_attributes.role == 'faculty' || profile_attributes.role == 'country') {
+        var eltCountrySelect =  jQuery("#create-a-group").find("select[name='country']");
+        var eltSchoolSelect =  jQuery("#create-a-group").find("select[name='school']");
+        
+        jQuery(eltCountrySelect).val(profile_attributes.country);
+        jQuery(eltCountrySelect).attr('disabled', 'disabled');
+        
+        populateSchoolChoices(jQuery("#create-a-group"),
+            eltCountrySelect, eltSchoolSelect,
+            function() {
+                if (profile_attributes.role == 'faculty') {
+                    jQuery(eltSchoolSelect).val(profile_attributes.school);
+                    jQuery(eltSchoolSelect).attr('disabled', 'disabled');
+                }
+            });
+    }
  });
     

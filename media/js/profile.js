@@ -56,7 +56,7 @@ jQuery(document).ready(function () {
     
     var currentSchoolId = jQuery("div.user-profile-form div.control-group.school").data('school-id');
     var currentCountryName = jQuery("div.user-profile-form select[name='country']").val();
-    if (currentCountryName !== '-----') {
+    if (currentCountryName !== undefined && currentCountryName !== '-----') {
         profileSchoolChoices(currentCountryName);
     }
 });

@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.db.models.query_utils import Q
 from django.http import HttpResponseRedirect
 from django.http.response import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
@@ -19,8 +20,7 @@ from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
     PendingTeachers
 from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
-    LoggedInMixinStaff, JSONResponseMixin, StudentLoggedInMixin, \
-    FacultyLoggedInMixin, CountryAdministratorLoggedInMixin, ICAPLoggedInMixin
+    LoggedInMixinStaff, JSONResponseMixin
 from pagetree.generic.views import PageView, EditView, InstructorView
 from pagetree.models import Hierarchy, UserPageVisit
 
@@ -73,22 +73,9 @@ class HomeView(LoggedInMixin, View):
             user_profile = UserProfile.objects.get(user=request.user.pk)
         except UserProfile.DoesNotExist:
             return HttpResponseRedirect(reverse('register'))
-        if user_profile.is_student():
-            return HttpResponseRedirect(reverse('student-dashboard',
-                                        kwargs={'pk': user_profile.pk}))
-        elif user_profile.is_teacher():
-            return HttpResponseRedirect(reverse('faculty-dashboard',
-                                        kwargs={'pk': user_profile.pk}))
-        elif user_profile.is_country_administrator():
-            return HttpResponseRedirect(reverse('country-dashboard',
-                                        kwargs={'pk': user_profile.pk}))
-        elif user_profile.is_icap():
-            return HttpResponseRedirect(reverse('icap-dashboard',
-                                        kwargs={'pk': user_profile.pk}))
-        else:
-            '''I assume it could be possible another
-            app has a profile_type variable?'''
-            return HttpResponseRedirect(reverse('register'))
+
+        return HttpResponseRedirect(reverse('dashboard',
+                                    kwargs={'pk': user_profile.pk}))
 
 
 class RegistrationView(FormView):
@@ -101,7 +88,7 @@ class RegistrationView(FormView):
         return super(RegistrationView, self).form_valid(form)
 
 
-class UserProfileView(DetailView):
+class UserProfileView(LoggedInMixin, DetailView):
     '''For the first tab of the dashboard we are showing
     groups that the user belongs to, and if they do not belong to any
     we are giving the the option to affiliate with one'''
@@ -114,34 +101,61 @@ class UserProfileView(DetailView):
             return HttpResponseForbidden("forbidden")
         return super(UserProfileView, self).dispatch(*args, **kwargs)
 
-    def get_common_context(self):
+    def get_faculty_context(self):
         context = {}
+
+        groups = Group.objects.filter(
+            creator=self.request.user).exclude(archived=True)
+        groups = groups.order_by('name')
+
+        context['managed_groups'] = groups
+        return context
+
+    def get_country_context(self):
+        context = {}
+        groups = Group.objects.filter(
+            Q(creator=self.request.user) |
+            Q(school__country=self.request.user.profile.country))
+        groups = groups.exclude(archived=True)
+        groups = groups.order_by('school__name', 'name')
+        context['managed_groups'] = groups
+
+        teachers = PendingTeachers.objects.filter(
+            Q(school__country=self.request.user.profile.country))
+        teachers = teachers.order_by('school__name')
+        context['pending_teachers'] = teachers
+
+        return context
+
+    def get_icap_context(self):
+        context = {}
+        context['managed_groups'] = Group.objects.all().order_by(
+            'school__country__display_name', 'school__name', 'name')
+
+        teachers = PendingTeachers.objects.all()
+        teachers = teachers.order_by('school__country__display_name',
+                                     'school__name')
+        context['pending_teachers'] = teachers
+        return context
+
+    def get_context_data(self, **kwargs):
+        context = super(UserProfileView, self).get_context_data(**kwargs)
 
         # todo - this will require some addition when new modules are added
         hierarchy = Hierarchy.objects.get(name='main')
         context['optionb'] = hierarchy
 
         context['profile_form'] = UpdateProfileForm(instance=self.request.user)
-
         context['countries'] = COUNTRY_CHOICES
         context['joined_groups'] = self.request.user.profile.joined_groups()
-        return context
 
-    def get_student_context(self):
-        return self.get_common_context()
+        if self.request.user.profile.is_teacher():
+            context.update(self.get_faculty_context())
+        elif self.request.user.profile.is_country_administrator():
+            context.update(self.get_country_context())
+        elif self.request.user.profile.is_icap():
+            context.update(self.get_icap_context())
 
-    def get_faculty_context(self):
-        context = self.get_student_context()
-        context['created_groups'] = Group.objects.filter(
-            creator=self.request.user).exclude(archived=True)
-        return context
-
-    def get_country_context(self):
-        return self.get_faculty_context()
-
-    def get_icap_context(self):
-        context = self.get_country_context()
-        context['pending_teachers'] = PendingTeachers.objects.all()
         return context
 
     def post(self, *args, **kwargs):
@@ -151,46 +165,12 @@ class UserProfileView(DetailView):
 
         if profile_form.is_valid():
             profile_form.save()
-            url = '/%s-dashboard/%s/#user-profile' % (
-                self.request.user.profile.role(), self.request.user.profile.id)
+            url = '/dashboard/%s/#user-profile' % (self.object.id)
             return HttpResponseRedirect(url)
 
         context = self.get_context_data(object=self.object)
         context['profile_form'] = profile_form
         return self.render_to_response(context)
-
-
-class StudentDashboard(StudentLoggedInMixin, UserProfileView):
-
-    def get_context_data(self, **kwargs):
-        context = super(UserProfileView, self).get_context_data(**kwargs)
-        context.update(self.get_student_context())
-        return context
-
-
-class FacultyDashboard(FacultyLoggedInMixin, UserProfileView):
-
-    def get_context_data(self, **kwargs):
-        context = super(UserProfileView, self).get_context_data(**kwargs)
-        context.update(self.get_faculty_context())
-        return context
-
-
-class CountryAdminDashboard(CountryAdministratorLoggedInMixin,
-                            UserProfileView):
-
-    def get_context_data(self, **kwargs):
-        context = super(UserProfileView, self).get_context_data(**kwargs)
-        context.update(self.get_country_context())
-        return context
-
-
-class ICAPDashboard(ICAPLoggedInMixin, UserProfileView):
-
-    def get_context_data(self, **kwargs):
-        context = super(UserProfileView, self).get_context_data(**kwargs)
-        context.update(self.get_icap_context())
-        return context
 
 
 class SchoolChoiceView(JSONResponseMixin, View):
@@ -269,12 +249,15 @@ class CreateGroupView(LoggedInMixin, View):
         group.module = Hierarchy.objects.get(name=module_name)
 
         group.creator = self.request.user
-        group.school = self.request.user.profile.school
+        if self.request.user.profile.is_teacher():
+            group.school = self.request.user.profile.school
+        else:
+            school = School.objects.get(id=self.request.POST.get('school'))
+            group.school = school
+
         group.save()
 
-        url = '/%s-dashboard/%s/#user-groups' % (
-            self.request.user.profile.role(),
-            self.request.user.profile.id)
+        url = '/dashboard/%s/#user-groups' % (self.request.user.profile.id)
         return HttpResponseRedirect(url)
 
 
@@ -283,7 +266,9 @@ class UpdateGroupView(LoggedInMixin, View):
         pk = self.request.POST.get('pk')
         group = get_object_or_404(Group, pk=pk)
 
-        if group.creator != self.request.user:
+        if (self.request.user.profile.is_student() or
+            (self.request.user.profile.is_teacher() and
+             not group.creator == self.request.user)):
             return HttpResponseForbidden(
                 'You are not authorized to update this group')
         start_date = self.request.POST.get('start_date')
@@ -295,9 +280,7 @@ class UpdateGroupView(LoggedInMixin, View):
         group.name = self.request.POST.get('name')
         group.save()
 
-        url = '/%s-dashboard/%s/#user-groups' % (
-            self.request.user.profile.role(),
-            self.request.user.profile.id)
+        url = '/dashboard/%s/#user-groups' % (self.request.user.profile.id)
         return HttpResponseRedirect(url)
 
 
@@ -308,8 +291,7 @@ class JoinGroup(LoggedInMixin, View):
         group = get_object_or_404(Group, pk=request.POST.get('group'))
         request.user.profile.group.add(group)
 
-        url = '/%s-dashboard/%s/#user-groups' % (request.user.profile.role(),
-                                                 request.user.profile.id)
+        url = '/dashboard/%s/#user-groups' % (request.user.profile.id)
         return HttpResponseRedirect(url)
 
 
@@ -317,7 +299,9 @@ class DeleteGroupView(LoggedInMixin, JSONResponseMixin, View):
 
     def post(self, *args, **kwargs):
         group = get_object_or_404(Group, pk=self.request.POST.get('group'))
-        if not group.creator == self.request.user:
+        if (self.request.user.profile.is_student() or
+            (self.request.user.profile.is_teacher() and
+             not group.creator == self.request.user)):
             return HttpResponseForbidden(
                 'You are not authorized to delete this group')
         group.delete()
@@ -328,7 +312,9 @@ class ArchiveGroupView(LoggedInMixin, JSONResponseMixin, View):
 
     def post(self, *args, **kwargs):
         group = get_object_or_404(Group, pk=self.request.POST.get('group'))
-        if not group.creator == self.request.user:
+        if (self.request.user.profile.is_student() or
+            (self.request.user.profile.is_teacher() and
+             not group.creator == self.request.user)):
             return HttpResponseForbidden(
                 'You are not authorized to archive this group')
         group.archived = True
@@ -414,39 +400,25 @@ class GroupDetail(LoggedInMixin, DetailView):
     template_name = 'dashboard/group_details.html'
     success_url = '/'
 
-    def get_students_in_progress(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        in_progress = 0
-        for each in find_students:
-            if each.percent_complete() != 0 and each.percent_complete() != 100:
-                in_progress = in_progress + 1
-        return in_progress
-
-    def get_students_incomplete(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        incomplete = 0
-        for each in find_students:
-            if each.percent_complete() != 0 and each.percent_complete() != 100:
-                incomplete = incomplete + 1
-            return incomplete
-
-    def get_students_done(self):
-        find_students = UserProfile.objects.filter(profile_type="ST")
-        done = 0
-        for each in find_students:
-            if each.percent_complete() == 100:
-                done = done + 1
-        return done
-
     def get_context_data(self, **kwargs):
         context = super(GroupDetail, self).get_context_data(**kwargs)
-        context['user_profile'] = UserProfile.objects.get(
-            user=self.request.user.pk)
         context['students'] = self.object.userprofile_set.all()
         context['student_count'] = self.object.userprofile_set.all().count()
-        context['in_progress'] = self.get_students_in_progress()
-        context['incomplete'] = self.get_students_done()
-        context['done'] = self.get_students_incomplete()
+
+        context['not_started'] = 0
+        context['in_progress'] = 0
+        context['complete'] = 0
+
+        module_root = self.object.module.get_root()
+        for profile in self.object.userprofile_set.all():
+            pct = profile.percent_complete(module_root)
+            if pct == 0:
+                context['not_started'] += 1
+            elif pct == 100:
+                context['complete'] += 1
+            else:
+                context['in_progress'] += 1
+
         return context
 
 

@@ -8,12 +8,20 @@
     <script type="text/javascript" src="/site_media/js/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="/site_media/js/dashboard.js"></script>
     <script type="text/javascript" src="/site_media/js/profile.js"></script>
+    
+    <script type="text/javascript">
+        var profile_attributes = {
+            'role': "{{object.role}}",
+            {% if user.profile.school %}
+                'school': "{{object.school.id}}",
+            {% endif %}
+            'country': "{{object.country.name}}"
+        }
+    </script>
 {% endblock %}
 
 {% block content %}
 {% with user_profile=object %}
-
-<input type="hidden" value={{user.pk}}>
 
     {% include "dashboard/tabheadercontent.html" %}
 

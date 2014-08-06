@@ -193,7 +193,10 @@ class UpdateProfileForm(UserProfileForm):
         user.save()
 
         profile.icap_affil = form_data.get('nepi_affiliated')
-        profile.country = Country.objects.get(name=form_data.get('country'))
+
+        if user.profile.is_student() and not user.profile.is_pending_teacher():
+            profile.country = Country.objects.get(
+                name=form_data.get('country'))
         profile.save()
 
         profile_type = form_data.get('profile_type', False)

@@ -1,6 +1,5 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http.response import HttpResponseNotAllowed, HttpResponse, \
-    HttpResponseForbidden
+from django.http.response import HttpResponseNotAllowed, HttpResponse
 from django.utils.decorators import method_decorator
 import json
 
@@ -41,42 +40,6 @@ class LoggedInMixin(object):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(LoggedInMixin, self).dispatch(*args, **kwargs)
-
-
-class StudentLoggedInMixin(object):
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        if not self.request.user.profile.is_student():
-            return HttpResponseForbidden("forbidden")
-
-        return super(StudentLoggedInMixin, self).dispatch(*args, **kwargs)
-
-
-class FacultyLoggedInMixin(object):
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        if not self.request.user.profile.is_teacher():
-            return HttpResponseForbidden("forbidden")
-        return super(FacultyLoggedInMixin, self).dispatch(*args, **kwargs)
-
-
-class CountryAdministratorLoggedInMixin(object):
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        if not self.request.user.profile.is_country_administrator():
-            return HttpResponseForbidden("forbidden")
-
-        return super(CountryAdministratorLoggedInMixin,
-                     self).dispatch(*args, **kwargs)
-
-
-class ICAPLoggedInMixin(object):
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        if not self.request.user.profile.is_icap():
-            return HttpResponseForbidden("forbidden")
-
-        return super(ICAPLoggedInMixin, self).dispatch(*args, **kwargs)
 
 
 class LoggedInMixinStaff(object):

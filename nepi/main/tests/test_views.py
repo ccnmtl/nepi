@@ -84,7 +84,7 @@ class TestStudentLoggedInViews(TestCase):
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/student-dashboard/%d/'
+                          [('http://testserver/dashboard/%d/'
                             % self.student.profile.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
 
@@ -100,23 +100,11 @@ class TestStudentLoggedInViews(TestCase):
     def test_profile_access(self):
         alt_student_profile = StudentProfileFactory()
 
-        profile_url = '/student-dashboard/%s/' % (self.student.profile.id)
+        profile_url = '/dashboard/%s/' % (self.student.profile.id)
         response = self.client.get(profile_url)
         self.assertEquals(response.status_code, 200)
 
-        profile_url = '/student-dashboard/%s/' % (alt_student_profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
-
-        profile_url = '/faculty-dashboard/%s/' % (self.student.profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
-
-        profile_url = '/country-dashboard/%s/' % (self.student.profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
-
-        profile_url = '/icap-dashboard/%s/' % (self.student.profile.id)
+        profile_url = '/dashboard/%s/' % (alt_student_profile.id)
         response = self.client.get(profile_url)
         self.assertEquals(response.status_code, 403)
 
@@ -139,30 +127,18 @@ class TestTeacherLoggedInViews(TestCase):
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/faculty-dashboard/%d/'
+                          [('http://testserver/dashboard/%d/'
                             % self.teacher.profile.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
 
     def test_profile_access(self):
         alt_teacher_profile = TeacherProfileFactory()
 
-        profile_url = '/student-dashboard/%s/' % (self.teacher.profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
-
-        profile_url = '/faculty-dashboard/%s/' % (self.teacher.profile.id)
+        profile_url = '/dashboard/%s/' % (self.teacher.profile.id)
         response = self.client.get(profile_url)
         self.assertEquals(response.status_code, 200)
 
-        profile_url = '/faculty-dashboard/%s/' % (alt_teacher_profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
-
-        profile_url = '/country-dashboard/%s/' % (self.teacher.profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
-
-        profile_url = '/icap-dashboard/%s/' % (self.teacher.profile.id)
+        profile_url = '/dashboard/%s/' % (alt_teacher_profile.id)
         response = self.client.get(profile_url)
         self.assertEquals(response.status_code, 403)
 
@@ -185,30 +161,18 @@ class TestCountryAdminLoggedInViews(TestCase):
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/country-dashboard/%d/'
+                          [('http://testserver/dashboard/%d/'
                             % self.country.profile.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
 
     def test_profile_access(self):
         alt_country_profile = CountryAdministratorProfileFactory()
 
-        profile_url = '/student-dashboard/%s/' % (self.country.profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
-
-        profile_url = '/faculty-dashboard/%s/' % (self.country.profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
-
-        profile_url = '/country-dashboard/%s/' % (self.country.profile.id)
+        profile_url = '/dashboard/%s/' % (self.country.profile.id)
         response = self.client.get(profile_url)
         self.assertEquals(response.status_code, 200)
 
-        profile_url = '/country-dashboard/%s/' % (alt_country_profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
-
-        profile_url = '/icap-dashboard/%s/' % (self.country.profile.id)
+        profile_url = '/dashboard/%s/' % (alt_country_profile.id)
         response = self.client.get(profile_url)
         self.assertEquals(response.status_code, 403)
 
@@ -231,30 +195,18 @@ class TestICAPLoggedInViews(TestCase):
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/icap-dashboard/%d/'
+                          [('http://testserver/dashboard/%d/'
                             % self.icap.profile.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
 
     def test_profile_access(self):
         alt_icap_profile = ICAPProfileFactory()
 
-        profile_url = '/student-dashboard/%s/' % (self.icap.profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
-
-        profile_url = '/faculty-dashboard/%s/' % (self.icap.profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
-
-        profile_url = '/country-dashboard/%s/' % (self.icap.profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
-
-        profile_url = '/icap-dashboard/%s/' % (self.icap.profile.id)
+        profile_url = '/dashboard/%s/' % (self.icap.profile.id)
         response = self.client.get(profile_url)
         self.assertEquals(response.status_code, 200)
 
-        profile_url = '/icap-dashboard/%s/' % (alt_icap_profile.id)
+        profile_url = '/dashboard/%s/' % (alt_icap_profile.id)
         response = self.client.get(profile_url)
         self.assertEquals(response.status_code, 403)
 
@@ -549,7 +501,7 @@ class TestCreateGroupView(TestCase):
 
         response = self.client.post("/create_group/", data, follow=True)
         self.assertEquals(response.redirect_chain, [(
-            'http://testserver/faculty-dashboard/%d/#user-groups'
+            'http://testserver/dashboard/%d/#user-groups'
             % self.teacher.profile.pk, 302)])
         self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
 
