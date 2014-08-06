@@ -24,6 +24,8 @@ DATABASES = {
 }
 
 if 'test' in sys.argv or 'jenkins' in sys.argv:
+    CAPTCHA_TEST_MODE = True
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
