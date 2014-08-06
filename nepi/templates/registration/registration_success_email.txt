@@ -1,6 +1,5 @@
-Thank you for registering for the NEPI application.
+Thank you for registering for ICAP Nursing E-learning.
 
 Your user information is {{user.username}}.
 
-You can log in to {{site.domain}} using the log in form on the front page.
-                          
+Visit http://nepi.ccnmtl.columbia.edu to login.

@@ -1,16 +1,15 @@
 {% load progressreport %}
 
 <div class="tab-pane active" id="user-modules">
-    {% if user_profile|percent_complete:optionb == 0 %}
+    {% if user_profile|percent_complete:optionb == '0.00' %}
     <div class="alert alert-info">
         <strong>Welcome!</strong> Placeholder text for the first time user experience.
     </div>
     {% endif %}
     
-    <h3>Option B+</h3>
-    
     <div class="row-fluid">
-        <div class="span7">
+        <div class="span9">
+            <h3>Option B+</h3>
             This is a placeholder for one-paragraph description of the
             module. You can go through each module at your own
             pace. You can stop at any time and your progress will be
@@ -18,10 +17,10 @@
             contents page where you can review what you have already
             learned, and proceed to complete the course.
         </div>
-        <div class="span5 session-progress">
+        <div class="span3 session-progress">
             <h4>Session Progress</h4>
-            {% if user_profile|percent_complete:optionb == 0 %}
-                <a href="{{user_profile|last_location_url:optionb}}" class="btn btn-large btn-primary pull-right">
+            {% if user_profile|percent_complete:optionb == '0.00' %}
+                <a href="{{user_profile|last_location_url:optionb}}" class="btn btn-large btn-primary">
                     Begin the Course <i class="icon-arrow-right icon-white"></i></a>
             {% else %}
                 <div class="progress progress-striped">
