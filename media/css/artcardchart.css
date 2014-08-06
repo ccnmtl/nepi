@@ -20,7 +20,7 @@
 	left: 135px;
 	top: -297px;
 	width: 53px;
-	height: 150px;
+	height: 45px;
 	border: solid 5px #83D0D7;
 }
 
@@ -47,7 +47,7 @@
 	left: 804px;
 	top: -223px;
 	width: 56px;
-	height: 83px;
+	height: 77px;
 	border: solid 5px #64C0F3;
 }
 
@@ -97,4 +97,8 @@
 
 .ex_titleregimen {
 	background-color: #64C0F3;
+}
+
+#followupblock:hover, #adherenceblock:hover, #whyblock:hover, #regimenblock:hover {
+	border: solid 5px #ccc;
 }
