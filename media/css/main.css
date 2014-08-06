@@ -1183,20 +1183,36 @@ form.create-group div.control-group.error div.help-inline.error {
 }
 
 /** Document Adherence Activity **/
-.document-adherence .current {
+.document-adherence .adherence-response {
+    width: 25px;
+    height: 25px;
+    text-align: center;
+}
+
+.document-adherence .adherence-response.current {
     border: 1px solid red;
 }
 
 .document-adherence .adherence-one {
     background-color: yellow;
-    width: 25px;
-    height: 25px;
-    text-align: center;
 }
 
 .document-adherence .adherence-two {
     background-color: green;
-    width: 25px;
-    height: 25px;
-    text-align: center;
+}
+
+.document-adherence .adherence-three {
+    background-color: blue;
+}
+
+.document-adherence .adherence-four {
+    background-color: aqua;
+}
+
+.document-adherence .adherence-five {
+    background-color: coral;
+}
+
+.document-adherence .adherence-six {
+    background-color: DarkGoldenRod;
 }
