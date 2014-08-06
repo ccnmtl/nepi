@@ -1,12 +1,26 @@
 {% block content %}
-<div class="artcard" data-part="followup">followup</div>
-<div class="artcard" data-part="adherence">adherence</div>
-<div class="artcard" data-part="why">why</div>
-<div class="artcard" data-part="regimen">regimen</div>
-<div id="explanation_box" class="artcard">explanation</div>
+<div id="artcardsections">
+<div class="artcard section" id="followupblock" data-part="followup"></div>
+<div class="artcard section" id="adherenceblock" data-part="adherence"></div>
+<div class="artcard section" id="whyblock" data-part="why"></div>
+<div class="artcard section" id="regimenblock" data-part="regimen"></div>
+<div id="explanation_box" class="artcard"></div>
+</div>
 
-<div style="display:none" id="followup" class="explanation">"Explanation for followup here."</div>
-<div style="display:none" id="adherence" class="explanation">"Explanation for adherence here."</div>
-<div style="display:none" id="why" class="explanation">"Explanation for why here."</div>
-<div style="display:none" id="regimen" class="explanation">"Explanation for regimen here."</div>
+<div style="display:none" id="followup" class="explanation">
+		<div class="ex_titlefollow">Follow-Up Date</div>
+		<div class="ex_content">Explanation for followup here.</div>
+</div>
+<div style="display:none" id="adherence" class="explanation">
+		<div class="ex_titlead">Adherence</div>
+		<div class="ex_content">Explanation for followup here.</div>
+</div>
+<div style="display:none" id="why" class="explanation">
+		<div class="ex_titlewhy">Why</div>
+		<div class="ex_content">Explanation for followup here.</div>
+</div>
+<div style="display:none" id="regimen" class="explanation">
+		<div class="ex_titleregimen">Regimen</div>
+		<div class="ex_content">Explanation for followup here.</div>
+</div>
 {% endblock %}
