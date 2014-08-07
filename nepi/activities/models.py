@@ -509,7 +509,7 @@ class DosageActivity(models.Model):
     display_name = "Dosage Activity"
     explanation = models.TextField()
     question = models.TextField()
-    ml_nvp = models.IntegerField(default=0)
+    ml_nvp = models.DecimalField(default=0.0, max_digits=4, decimal_places=2)
     times_day = models.IntegerField(default=0)
     weeks = models.IntegerField(default=0)
 
