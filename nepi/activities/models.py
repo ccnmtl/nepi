@@ -473,6 +473,33 @@ class CalendarChart(models.Model):
             form.save()
 
     def unlocked(self, user):
+        '''Make sure the user has selected the correct
+        date before they can proceed.'''
+        response = CalendarResponse.objects.filter(
+            calendar_activity=self, user=user)
+        if (len(response) == 1
+                and response[0].first_click is not None
+                and response[0].correct_click is not None):
+            return True
+        else:
+            return False
+
+    def submit(self, user, data):
+        for k in data.keys():
+            if k == "day":
+                day = int(data[k])
+            try:
+                cr = CalendarResponse.objects.get(calendar_activity=self,
+                                                  user=user)
+                if cr.first_click is None:
+                    cr.first_click = day
+                if cr.day == self.correct_date:
+                    cr.correct_click = cr.day
+                cr.save()
+            except CalendarResponse.DoesNotExist:
+                return None
+
+    def redirect_to_self_on_submit(self):
         return True
 
 
@@ -491,14 +518,12 @@ class Day(models.Model):
 
 
 class CalendarResponse(models.Model):
-    conv_scen = models.ForeignKey(CalendarChart, null=True, blank=True)
+    calendar_activity = models.ForeignKey(CalendarChart, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
-    first_click = models.ForeignKey(ConvClick,
-                                    related_name="calendar_first_click",
-                                    null=True, blank=True)
-    last_click = models.ForeignKey(ConvClick,
-                                   related_name="calendar_last_click",
-                                   null=True, blank=True)
+    first_click = models.ForeignKey(Day, null=True, blank=True,
+                                    related_name="first_click")
+    correct_click = models.ForeignKey(Day, null=True, blank=True,
+                                      related_name="correct_click")
 
 
 class DosageActivity(models.Model):
