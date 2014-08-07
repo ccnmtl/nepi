@@ -14,7 +14,7 @@
     <div id="month">
     {% for day in block.month.day_set.all %}
     </br>
-        <div data-day="{{ day.pk }}" data-explanation="{{ day.explanation }}" class="day">
+        <div data-day="{{ day.pk }}" data-date="{{ day.number }}" data-explanation="{{ day.explanation }}" class="day">
         {{ day.number }}
         </div>
     </br>
