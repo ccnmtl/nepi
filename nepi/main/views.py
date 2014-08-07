@@ -2,6 +2,7 @@
 into smaller pieces.'''
 from datetime import datetime
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -170,6 +171,9 @@ class UserProfileView(LoggedInMixin, DetailView):
         if profile_form.is_valid():
             profile_form.save()
             url = '/dashboard/%s/#user-profile' % (self.object.id)
+            messages.add_message(self.request, messages.INFO,
+                                 'Your changes have been saved.')
+
             return HttpResponseRedirect(url)
 
         context = self.get_context_data(object=self.object)
