@@ -32,65 +32,65 @@
         </div>
     </div>
 
-{% comment %}
-{% if dosager %}
-    <input type="hidden" id="sub_nvp" data-value="{{block.ml_nvp}}">
-    <input type="hidden" id="sub_times_day" data-value="{{block.times_day}}">
-    <input type="hidden" id="sub_weeks" data-value="{{block.weeks}}">
-{% endif %}
-
-<div id="wrong" style="display:none;" class='alert alert-error'><b>Incorrect</b></div>
-<div id="right" style="display:none;" class='alert alert-success'><b>Correct</b></div>
-{% endcomment %}
-
-
-<div class="row-fluid">
-    <div class="span4 offset4 form-horizontal">
-          <div class="dosage-question">{{block.question|safe}}</div>
-          <div class="control-group">
-            <label class="control-label">How many ml of NVP?</label>
-            <div class="controls">
-                {% if dosager %}
-                    <div data-value="{{dosager.ml_nvp}}" value="{{dosager.ml_nvp}}">{{dosager.ml_nvp}}</div>
-                {% else %}
-                    <input type="text" name="pageblock-{{block.pageblock.id}}-mlnvp" value="" />
-                {% endif %}
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label">>How many times each day?</label>
-            <div class="controls">
-                {% if dosager %}
-                    <div id="user_times_day" data-value="{{dosager.times_day}}" value="{{dosager.times_day}}">{{dosager.times_day}}</div>
-                {% else %}
-                    <input type="text" id="times_day_input" name="pageblock-{{block.pageblock.id}}-times_day" value="">
-                {% endif %}
-            </div>
-          </div>          
+    <div class="dosage-question">
+        {{block.question|safe}}
     </div>
+    <div class="control-group">
+        <label class="control-label">How many ml of NVP?</label>
+        <div class="controls">
+            {% if dosager %}
+                <div>
+                    <input type="text" name="pageblock-{{block.pageblock.id}}-mlnvp" value="{{dosager.ml_nvp}}" readonly="readonly" /> <b>ml</b>
+                    
+                    {% ifequal dosager.ml_nvp block.ml_nvp %} 
+                        <span class='alert alert-success'><b>Correct</b></span>
+                    {% else %}
+                        <span class='alert alert-error'><b>Incorrect</b></span>
+                    {% endifequal %}
+                </div>
+            {% else %}
+                <input type="text" name="pageblock-{{block.pageblock.id}}-mlnvp" value="" /> <b>ml</b>
+            {% endif %}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">How many times each day?</label>
+        <div class="controls">
+            {% if dosager %}
+                <div>
+                    <input type="text" id="times_day_input" name="pageblock-{{block.pageblock.id}}-times_day" value="{{dosager.times_day}}" readonly="readonly"> <b>x per day</b>
+                   
+                    {% ifequal dosager.times_day block.times_day %} 
+                        <span class='alert alert-success'><b>Correct</b></span>
+                    {% else %}
+                        <span class='alert alert-error'><b>Incorrect</b></span>
+                    {% endifequal %}
+                </div>
+            {% else %}
+                <input type="text" id="times_day_input" name="pageblock-{{block.pageblock.id}}-times_day" value=""> <b>x per day</b> 
+            {% endif %}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">For how many weeks?</label>
+        <div class="controls">
+            {% if dosager %}
+                <div>
+                    <input type="text" id="week_input" name="pageblock-{{block.pageblock.id}}-weeks" value="{{dosager.weeks}}" readonly="readonly"> <b>weeks</b>
+                    {% ifequal dosager.weeks block.weeks %} 
+                        <span class='alert alert-success'><b>Correct</b></span>
+                    {% else %}
+                        <span class='alert alert-error'><b>Incorrect</b></span>
+                    {% endifequal %}
+                </div>            
+            {% else %}
+                <input type="text" id="week_input" name="pageblock-{{block.pageblock.id}}-weeks" value=""> <b>weeks</b>
+            {% endif %}            
+        </div>
+    </div>
+
+    {% if dosager %}
+         <div class="explanation">{{block.explanation}}</div>
+    {% endif %}
+
 </div>
-{% comment %}        
-
-
-   <tr><td>For how many weeks?</td><td>
-	   {% if dosager %}
-	   		<div id="user_weeks" data-value="{{dosager.weeks}}" value="{{dosager.weeks}}">{{dosager.weeks}}
-	   		<div id="show_response">
-	   		</div>
-	   		</div>
-	   {% else %}
-		   <input type="text" id="week_input" name="pageblock-{{block.pageblock.id}}-weeks" value="">
-	   {% endif %}
-	   </td></tr>
-	   {% if dosager %}
-	       <div id="explanation">{{block.explanation}}
-	       <div id="show_response">
-	       </div>
-	       </div>
-	   {% endif %}
-	   
-</table>
-{% endcomment %}
-
-</div>
-

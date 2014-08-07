@@ -11,7 +11,8 @@
     
     <script type="text/javascript">
         jQuery(document).ready(function () {
-
+            var initialSection = jQuery("a[data-id='{{section.id}}']")[0];
+            
             jQuery("body").delegate('a.disabled', 'click', function() {
                 return false;  // call preventDefault and stopPropagation by default
             });
@@ -31,9 +32,18 @@
             
             // Sliding menu
             jQuery("body").delegate('.toggle-primary-toc', 'click', function() {
-                jQuery('.primarynav').toggleClass('open');
+                jQuery('.slide-out-menu').toggleClass('open transition');
+                if (initialSection) {
+                    // scroll to the current section in the toc.
+                    // this scroll needs to be completed after the show
+                    // to ensure the position is correct
+                    var top = jQuery(initialSection).position().top +
+                        jQuery(".slide-out-menu div.primary-toc").scrollTop();
+                    jQuery(".slide-out-menu .primary-toc").scrollTop(top);
+                    initialSection = undefined;
+                }
             });
-            jQuery("body").delegate('.primarynav a', 'click', function() {
+            jQuery("body").delegate('.slide-out-menu a', 'click', function() {
                 if (jQuery(this).hasClass('disabled')) {
                     return false;
                 } else {
@@ -41,11 +51,6 @@
                     window.location = jQuery(this).attr(href);
                 }
             });
-            
-            // scroll to the current section in the toc
-            var elt = jQuery("a[data-id='{{section.id}}']")[0];
-            var top = jQuery(elt).position().top - 50;
-            jQuery(".primarynav div.primary-toc").scrollTop(top);
         });
     </script>
 {% endblock %}

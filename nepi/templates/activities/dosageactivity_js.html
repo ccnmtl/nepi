@@ -13,95 +13,20 @@ jQuery(document).ready(function() {
     jQuery(".dosage-clipboard-content button.close").click(function() {
         jQuery('.dosage-clipboard-popover').toggle('slide', {direction: 'right'}, 500);
     });
-
     
-//     jQuery(".dosage-clipboard img ").click(function() {
-//         jQuery('.dosage-clipboard-content').toggleClass('open');
-//     });    
+    jQuery("input[type='text']")
 
-       jQuery('form').submit(function(e) {
-
-        var check1 = false; 
-        var check2 = false;
-		var check3 = false;
-
-        var inputs = jQuery(e.currentTarget).find("input[type='text']");
+    jQuery('form').submit(function(evt) {
+        var inputs = jQuery(evt.currentTarget).find("input[type='text']");
         
-        for (var i=0; i < inputs.length; i++)
-        {
+        for (var i=0; i < inputs.length; i++) {
             var value = jQuery(inputs[i]).val();
-           
-            if (value === null || value === "") {
-                 alert("All values must be filled out");
-                 check1 = false;
-                 break;
-             }
 			
-            if (value !== null || value !== "") {
-                 check1 = true;
-             }
-			
-             if (value.length > 2)  {
-                 alert("Values should consist of one or two digits");
-                 check2 = false;
-                 break;
-             }
-			
-             if (value.length <= 2)  {
-                 check2 = true;
-             }
-            
-             if (! /^[0-9]{1,2}$/.test(value))
-             {
-                 alert("Values should consist of one or two digits");
-                 check3 = false;
-                 break;
-             }
-            
-            if(/^[0-9]{1,2}$/.test(value))
-            {
-                 check3 = true;
+            if (value.length > 2)  {
+                alert("Values should consist of one or two digits.");
+                return false;
             }
-
-        }// end of for
-       
-        if (check1 && check2 && check3) {
-                 // e.preventDefault();
-                 return true;
-             } else {
-                 return false;
         }
-       });
-
-		if (jQuery('#sub_nvp').attr('data-value') != jQuery("#user_nvp").attr('data-value'))
-		{
-				jQuery('#user_nvp #show_response').html(jQuery('#wrong').html());//.addClass('alert alert-error');
-				//jQuery('#user_nvp #show_response').css('alert', 'alert-error');
-		}
-		
-		if (jQuery("#sub_times_day").attr('data-value') != jQuery("#user_times_day").attr('data-value'))
-		{
-				jQuery('#user_times_day #show_response').html(jQuery('#wrong').html());
-		}
-		
-		if (jQuery("#sub_weeks").attr('data-value') != jQuery("#user_weeks").attr('data-value'))
-		{
-				jQuery('#user_weeks #show_response').html(jQuery('#wrong').html());
-		}
-
-
-
-		if (jQuery("#sub_nvp").attr('data-value') == jQuery("#user_nvp").attr('data-value'))
-		{
-				jQuery('#user_nvp #show_response').html(jQuery('#right').html());
-		}
-		if (jQuery("#sub_times_day").attr('data-value') == jQuery("#user_times_day").attr('data-value'))
-		{
-				jQuery('#user_times_day #show_response').html(jQuery('#right').html());
-		}
-		if (jQuery("#sub_weeks").attr('data-value') == jQuery("#user_weeks").attr('data-value'))
-		{
-				jQuery('#user_weeks #show_response').html(jQuery('#right').html());
-		}
+    });
 });
 </script>

@@ -38,7 +38,9 @@ function validate_numeric_input(evt) {
     key = String.fromCharCode( key );
     var regex = /[0-9]|\./;
     if( !regex.test(key) ) {
-      theEvent.returnValue = false;
-      if(theEvent.preventDefault) theEvent.preventDefault();
+       theEvent.returnValue = false;
+       if (theEvent.preventDefault) {
+           theEvent.preventDefault();
+       }
     }
 }

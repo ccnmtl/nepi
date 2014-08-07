@@ -764,9 +764,9 @@ div.pageblock.show-correct li.incorrect:after {
 /* slide out menu */
 .slide-out-menu {
     position: fixed;
-    -webkit-transition: all 0.3s ease;
-    -moz-transition: all 0.3s ease;
-    transition: all 0.3s ease;
+    -webkit-transition: left 0.3s ease;
+    -moz-transition: left 0.3s ease;
+    transition: left 0.3s ease;
     left: -420px;
     height: 95%;
     z-index: 1000;
@@ -805,8 +805,8 @@ div.pageblock.show-correct li.incorrect:after {
     left: 0px;
 }
 
-.slide-out-menu.right.open {
-    right: 300px;
+.slide-out-menu.transition .primary-toc a {
+    color: #47a3da;
 }
 
 .slide-out-menu div.primary-toc {
@@ -1181,6 +1181,52 @@ form.create-group div.control-group.error div.help-inline.error {
     padding: 5px;
     font-size: .9em;
 }
+
+.dosage-activity .dosage-question {
+    width: 50%;
+    margin: 0 auto;
+    padding-bottom: 20px;
+}
+
+.dosage-activity .control-group {
+    clear: both;
+    width: 50%;
+    margin: 0 auto;    
+}
+
+.dosage-activity .control-group label {
+    float: left;
+    width: 200px;
+    margin: 7px 0 32px 0;
+}
+
+.dosage-activity .control-group .controls {
+    float: left;
+}
+
+.dosage-activity .control-group input[type='text'] {
+    width: 50px;
+    margin-right: 5px;
+}
+
+.dosage-activity .explanation {
+    clear: both;
+    color: #BF985E;
+    background-color: #FCF8E4;
+    border: 2px solid #FBEED6;
+    width: 50%;
+    margin: 30px auto;    
+    box-sizing: border-box;
+    padding: 20px;
+    position: relative;
+    top: 3px;
+    border-radius: 10px;    
+}
+
+.dosage-activity .alert {
+    margin-left: 10px;
+}
+
 
 /** Document Adherence Activity **/
 .document-adherence .adherence-response {
