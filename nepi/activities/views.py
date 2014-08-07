@@ -6,7 +6,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from nepi.activities.models import Conversation, ConversationScenario, \
     ConvClick, ConversationResponse, ConversationForm, RetentionRateCard, \
-    RetentionClick, RetentionResponse
+    RetentionClick, RetentionResponse, CalendarResponse, CalendarChart, Day
 from nepi.mixins import JSONResponseMixin
 import json
 
@@ -167,3 +167,20 @@ class SaveRetentionResponse(View, JSONResponseMixin):
             '''If submitted string is not in the acceptable strings list
             something is very funny.'''
             return render_to_json_response({'success': False})
+
+
+class SaveCalendarResponse(View, JSONResponseMixin):
+    def post(self, request):
+        calendar = get_object_or_404(CalendarChart,
+                                     pk=request.POST['calendar'])
+        day = get_object_or_404(Day,
+                                pk=request.POST['day'])
+        cr, created = CalendarResponse.objects.get_or_create(
+            calendar_activity=calendar, user=request.user)
+        if cr.first_click is None:
+            cr.first_click = day
+            cr.save()
+        if day.number == calendar.correct_date:
+            cr.correct_click = day
+            cr.save()
+        return render_to_json_response({'success': True})
