@@ -476,7 +476,7 @@ class CalendarChart(models.Model):
         '''Make sure the user has selected the correct
         date before they can proceed.'''
         response = CalendarResponse.objects.filter(
-            conv_scen=self, user=user)
+            calendar_activity=self, user=user)
         if (len(response) == 1
                 and response[0].first_click is not None
                 and response[0].correct_click is not None):

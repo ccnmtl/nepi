@@ -1,23 +1,37 @@
 <script>
 
 jQuery(document).ready(function() {
+
+
+
+
+
     var calendar = jQuery("#calendar_id").data().calendar;
-    alert(calendar);
-    
+    var check_val = jQuery("#check_val").data().check;
+
     jQuery(".day").on("click",
     
     function() {
+    
             var calendar = jQuery("#calendar_id").data().calendar;
             var day = jQuery(this).data().day;
             alert(jQuery(this).data().explanation);
-            //alert(jQuery(this).data().day);
             
             jQuery.ajax(
             {  
                 url: "/activities/calendar_click/",
                 type: "POST",
                 data: {'calendar' : calendar, 'day' : day },
-                success: function (data){}
+                success: function (data){
+                    if (day === check_val) 
+                    {
+                        jQuery("li.next a").removeClass("disabled");
+                    }
+                    else
+                    {
+                        jQuery("li.next a").addClass("disabled");
+                    }
+                }
             });//end of ajax
             
     });//end of function
