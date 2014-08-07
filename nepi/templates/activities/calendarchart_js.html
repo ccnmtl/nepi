@@ -1,24 +1,29 @@
 <script>
 
 jQuery(document).ready(function() {
-jQuery(".day").on("click",
+    var calendar = jQuery("#calendar_id").data().calendar;
+    alert(calendar);
+    
+    jQuery(".day").on("click",
     
     function() {
-
-            var clicked_num = jQuery(this).data().day;
-            var correct_day = jQuery("#correct_day").data().day;
+            var calendar = jQuery("#calendar_id").data().calendar;
+            var day = jQuery(this).data().day;
+            alert(jQuery(this).data().explanation);
+            //alert(jQuery(this).data().day);
+            
+            jQuery.ajax(
+            {  
+                url: "/activities/calendar_click/",
+                type: "POST",
+                data: {'calendar' : calendar, 'day' : day },
+                success: function (data){}
+            });//end of ajax
+            
+    });//end of function
+            
+            
   
-            if (clicked_num == correct_day){
-                alert("you have selected the correct date");
-            }
-            if (clicked_num > correct_day){
-                alert("waited too long");
-            }
-            if (clicked_num < correct_day){
-                alert("baby has not been born yet");
-            }
-});
-
 });
 
 </script>

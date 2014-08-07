@@ -9,11 +9,11 @@
 </br></br>
 {% endif %}
 
-<div id="correct_day" value="{{ block.correct_date }}" data-day="{{ block.correct_date }}" style="visibility: hidden">  </div>
+<div id="calendar_id" value="{{ block.pk }}" data-calendar="{{ block.pk }}" style="visibility: hidden">  </div>
     <h3>{{block.month.display_name}}</h3>
     {% for day in block.month.day_set.all %}
     <div id="month">
-        <div data-day="{{ day.number }}" data-explanation="{{ day.explanation }}" class="day">
+        <div data-day="{{ day.pk }}" data-explanation="{{ day.explanation }}" class="day">
         {{ day.number }}
         </div>
     </div>
