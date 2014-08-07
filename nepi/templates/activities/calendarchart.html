@@ -1,26 +1,24 @@
 {% load markup %}
 {% if block.label %}<div id="month_title"><h3>{{block.label}}</h3></div>{% endif %}
-</br></br>
 
 {% if block.description %}
 <div id="description">
 {{block.description|markdown}}
 </div>
-</br></br>
+
 {% endif %}
 <div id="check_val" value="{{ block.correct_date }}" data-check="{{ block.correct_date }}" style="visibility: hidden">  </div>
 <div id="calendar_id" value="{{ block.pk }}" data-calendar="{{ block.pk }}" style="visibility: hidden">  </div>
     <h3>{{block.month.display_name}}</h3>
     <div id="month">
     {% for day in block.month.day_set.all %}
-    </br>
+
         <div data-day="{{ day.pk }}" data-explanation="{{ day.explanation }}" class="day">
         {{ day.number }}
         </div>
-    </br>
+
 {% endfor %}
 </div>
-</br></br>
 
 </div>
 
