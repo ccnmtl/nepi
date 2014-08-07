@@ -172,7 +172,7 @@ class UserProfileView(LoggedInMixin, DetailView):
             profile_form.save()
             url = '/dashboard/%s/#user-profile' % (self.object.id)
             messages.add_message(self.request, messages.INFO,
-                             'Your changes have been saved')
+                                 'Your changes have been saved.')
 
             return HttpResponseRedirect(url)
 
