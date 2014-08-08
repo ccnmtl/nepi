@@ -467,6 +467,37 @@ h1, h2, h3, h4, h5, h6 {
 	clear: both;
 }
 
+/* Body Text Styles */
+
+.pageblock p, .pageblock ol, .pageblock ul{
+	width: 65%;
+	margin: 0 auto;
+	line-height: 28px;
+}
+
+.pageblock p {
+	margin: 20px auto;
+}
+
+
+.pageblock ul {
+	padding-left: 65px;
+}
+
+.pageblock ol {
+	 margin: 20px auto;
+ 	padding-left: 65px;
+}
+
+.pageblock li {
+	margin: 10px 0;
+	line-height: 22px;
+}
+
+.pageblock > ul > ul {
+	margin-left: -20px;
+}
+
 	/* Slide Out Navigation*/
 	
 .slide-out-menu.open {
