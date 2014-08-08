@@ -13,17 +13,17 @@ jQuery(document).ready(function() {
     
     function() {
     
-            var calendar = jQuery("#calendar_id").data().calendar;
             var day = jQuery(this).data().day;
+            var date = jQuery(this).data().date;
             alert(jQuery(this).data().explanation);
-            
+
             jQuery.ajax(
             {  
                 url: "/activities/calendar_click/",
                 type: "POST",
                 data: {'calendar' : calendar, 'day' : day },
                 success: function (data){
-                    if (day === check_val) 
+                    if (date === check_val) 
                     {
                         jQuery("li.next a").removeClass("disabled");
                     }

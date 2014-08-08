@@ -12,8 +12,13 @@
     <h3>{{block.month.display_name}}</h3>
     <div id="month">
     {% for day in block.month.day_set.all %}
+<<<<<<< HEAD
 
         <div data-day="{{ day.pk }}" data-explanation="{{ day.explanation }}" class="day">
+=======
+    </br>
+        <div data-day="{{ day.pk }}" data-date="{{ day.number }}" data-explanation="{{ day.explanation }}" class="day">
+>>>>>>> 3590af724486fd1702d4d428e194cb23cce5f0d6
         {{ day.number }}
         </div>
 
