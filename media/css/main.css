@@ -1230,35 +1230,81 @@ form.create-group div.control-group.error div.help-inline.error {
 
 /** Document Adherence Activity **/
 .document-adherence .adherence-response {
-    width: 25px;
-    height: 25px;
-    text-align: center;
+	text-align: center;
 }
 
+.adherence-response.one {
+	position: relative;
+	top: -196px;
+	left: 759px;
+}
+
+.adherence-response.two {
+	position: relative;
+top: -225px;
+left: 781px;
+}
+
+.adherence-response.three {
+	position: relative;
+top: -223px;
+left: 758px;
+}
+
+.adherence-response.four {
+	position: relative;
+top: -225px;
+left: 781px;
+}
+
+.adherence-response.five {
+	position: relative;
+top: -225px;
+left: 781px;
+}
+
+.adherence-response.six {
+	position: relative;
+top: -225px;
+left: 781px;
+}
+
+
 .document-adherence .adherence-response.current {
-    border: 1px solid red;
 }
 
 .document-adherence .adherence-one {
+	width: 22px;
+	height: 29px;
     background-color: yellow;
 }
 
 .document-adherence .adherence-two {
+	width: 22px;
+	height: 29px;
     background-color: green;
 }
 
 .document-adherence .adherence-three {
+width: 22px;
+height: 30px;
     background-color: blue;
 }
 
 .document-adherence .adherence-four {
+	width: 22px;
+	height: 30px;
     background-color: aqua;
 }
 
 .document-adherence .adherence-five {
+	width: 22px;
+	height: 29px;
     background-color: coral;
 }
 
 .document-adherence .adherence-six {
+	width: 22px;
+	height: 29px;
     background-color: DarkGoldenRod;
 }
