@@ -552,6 +552,17 @@ h4.pagetitle {
 }
 
 /* All quiz styling */
+
+.quizdescription {
+	padding: 20px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	background-color: #eee;
+	text-align: center;
+	margin-bottom: 20px auto;
+}
+
 ol.caseanswers, ul.caseanswers {
     list-style-type: none;
 }
@@ -596,9 +607,6 @@ div.pageblock.show-correct li.incorrect:after {
 
 .cases>p {
 	width: 90%;
-	margin: 20px auto 0 auto;
-	font-weight: bold;
-	font-color: #999;
 }
 
 .casequestion {
@@ -1229,6 +1237,17 @@ form.create-group div.control-group.error div.help-inline.error {
 
 
 /** Document Adherence Activity **/
+.pageblock.document .cases p {
+	width: 90%;
+	padding: 20px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	background-color: #eee;
+	text-align: center;
+	margin: 20px auto;
+}
+	
 .document-adherence .adherence-response {
 	text-align: center;
 }
@@ -1241,32 +1260,32 @@ form.create-group div.control-group.error div.help-inline.error {
 
 .adherence-response.two {
 	position: relative;
-top: -225px;
-left: 781px;
+	top: -225px;
+	left: 781px;
 }
 
 .adherence-response.three {
 	position: relative;
-top: -223px;
-left: 758px;
+	top: -223px;
+	left: 758px;
 }
 
 .adherence-response.four {
 	position: relative;
-top: -225px;
-left: 781px;
+	top: -253px;
+	left: 780px;
 }
 
 .adherence-response.five {
 	position: relative;
-top: -225px;
-left: 781px;
+	top: -251px;
+	left: 758px;
 }
 
 .adherence-response.six {
 	position: relative;
-top: -225px;
-left: 781px;
+	top: -280px;
+	left: 780px;
 }
 
 
@@ -1286,13 +1305,13 @@ left: 781px;
 }
 
 .document-adherence .adherence-three {
-width: 22px;
-height: 30px;
+	width: 22px;
+	height: 30px;
     background-color: blue;
 }
 
 .document-adherence .adherence-four {
-	width: 22px;
+	width: 23px;
 	height: 30px;
     background-color: aqua;
 }
@@ -1304,7 +1323,7 @@ height: 30px;
 }
 
 .document-adherence .adherence-six {
-	width: 22px;
+	width: 23px;
 	height: 29px;
     background-color: DarkGoldenRod;
 }
