@@ -469,6 +469,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Body Text Styles */
 
+.pageblock {
+	clear: both;
+}
+
 .pageblock p, .pageblock ol, .pageblock ul{
 	width: 65%;
 	margin: 0 auto;
@@ -580,6 +584,13 @@ h4.pagetitle {
 	background-color: #fff;
 	max-width: 1110px;
 	padding: 30px;
+}
+
+.pageblock.imgline {
+	display: inline;
+	float: left;
+	clear: none;
+	margin: 0 20px 20px 0;
 }
 
 /* All quiz styling */
