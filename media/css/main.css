@@ -595,15 +595,6 @@ h4.pagetitle {
 
 /* All quiz styling */
 
-.quizdescription {
-	padding: 20px;
-	border-radius: 10px;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	background-color: #eee;
-	text-align: center;
-	margin-bottom: 20px auto;
-}
 
 ol.caseanswers, ul.caseanswers {
     list-style-type: none;
