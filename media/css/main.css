@@ -928,6 +928,18 @@ input#generic-reset {
 
 /* Registration & Contact Forms*/
 
+div.user-profile-form {
+    width: 453px;
+}
+
+div.user-profile-form label small {
+    float: right;
+}
+
+div.user-profile-form label[for=id_captcha_0] small {
+    float: none;
+}
+
 div.contact-icap div.help-inline,
 div.user-profile-form div.help-inline {
     display: block;
