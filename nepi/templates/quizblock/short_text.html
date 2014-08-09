@@ -1,9 +1,13 @@
 {% load markup %}
 
+<div class="caseanswers">
+<center>
 {% if response %}
     <input type="text" name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
         disabled='disabled' value="{{response.value}}" />
 {% else %}
     <input type="text" name="pageblock-{{block.pageblock.id}}-question{{question.id}}" />
 {% endif %}
+</center>
+</div>
   
