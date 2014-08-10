@@ -47,6 +47,7 @@
                     // There are no schools for this country
                     showError(eltCountrySelect);
                 } else {
+                    jQuery(elt).find("div.control-group").removeClass('error');
                     for (var i=0; i < json.schools.length; i++) {
                         var school = json.schools[i];
                         var option = "<option value='"  + school.id + "'>" + school.name + "</option>";
@@ -79,7 +80,12 @@
                 if (json['groups'].length < 1) {
                     // There are no groups for this country
                     showError(eltSchoolSelect);
+                    jQuery(eltGroupTable).parents(".control-group").removeClass('error');
+                    jQuery(eltGroupTable).parents(".control-group").fadeOut();
                 } else {
+                    jQuery(elt).find("div.control-group").removeClass('error');
+                    jQuery(eltGroupTable).find("tr.content-row").remove();
+                    
                     // @todo - a client-side template would do nicely here
                     for (var i=0; i < json.groups.length; i++) {
                         var group = json.groups[i];
@@ -240,6 +246,8 @@
     });
     
     jQuery('button.edit-group-button').click(function () {
+        jQuery(this).find("div.control-group").removeClass("error");
+
         var pk = jQuery(this).data('pk');
         var name = jQuery(this).data('name');
         var startdate = jQuery(this).data('start-date');
