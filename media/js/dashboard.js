@@ -10,11 +10,14 @@
          scrollTo(0,0);
      })
      
-     // initialize date pickers for create group
-     jQuery(".date").datepicker();
+     // initialize date pickers for create & edit group
+     jQuery(".datepicker").datepicker({dateFormat: "mm/dd/yy"});
+     jQuery(".calendar").click(function() {
+         jQuery(this).prev().datepicker("show"); 
+     });
      
      function showError(elt) {
-        jQuery(elt).parent().find("div.help-inline").fadeIn();
+        jQuery(elt).parents('.control-group').addClass('error');
      }
      
      // Join Group Functionality
@@ -49,7 +52,7 @@
                         var option = "<option value='"  + school.id + "'>" + school.name + "</option>";
                         jQuery(eltSchoolSelect).append(option)
                     }
-                    jQuery("div.help-inline").hide();
+                    jQuery(eltSchoolSelect).parents(".control-group").removeClass('error');
                     jQuery(eltSchoolSelect).parents(".control-group").fadeIn();
                     if (callback) {
                         callback();
@@ -96,7 +99,7 @@
                         row += "</tr>";
                         jQuery(eltGroupTable).append(row);
                     }
-                    jQuery("div.help-inline").hide();
+                    jQuery(eltGroupTable).parents(".control-group").removeClass('error');
                     jQuery(eltGroupTable).parents(".control-group").fadeIn();
                 }
             }
@@ -124,7 +127,7 @@
     jQuery('#find-a-group').on('show', function () {
         clearSchoolGroupChoices(this);
         clearSchoolChoices(this);
-        jQuery(this).find("div.help-inline").hide();
+        jQuery(this).find("div.control-group").removeClass('error');
         jQuery(this).find("select[name='country']").val('-----');
         jQuery(this).find("div.control-group.school").hide();
         jQuery(this).find("div.control-group.schoolgroup").hide();
@@ -219,6 +222,20 @@
 
     jQuery('#create-a-group').on('show', function () {
         jQuery(this).find("div.control-group").removeClass("error");
+        
+        var countryElt = jQuery(this).find("select[name='country']")[0];
+        var schoolElt = jQuery(this).find("select[name='school']")[0];
+        if (jQuery(countryElt).attr('disabled') === undefined) {
+            // country is enabled -- icap member. clear country + school
+            jQuery(countryElt).val('-----');
+            jQuery(schoolElt).find('option').remove();
+            jQuery(this).find("div.control-group.school").hide();
+        } else if (jQuery(schoolElt).attr('disabled') === undefined) {
+            // country is disabled & school is enabled -- country admin
+            // clear the school choice
+            jQuery(schoolElt).val('-----');
+        }
+        jQuery(this).find("input[name='name']").val('');
         jQuery(this).find(".date").datepicker('setValue', '');
     });
     
@@ -231,8 +248,8 @@
         var modal = jQuery("#edit-a-group");
         jQuery(modal).find("input[name='pk']").val(pk);
         jQuery(modal).find("input[name='name']").val(name);
-        jQuery(modal).find("div.start-date").datepicker('setValue', startdate);
-        jQuery(modal).find("div.end-date").datepicker('setValue', enddate);
+        jQuery(modal).find("input[name='start_date']").datepicker('setDate', startdate);
+        jQuery(modal).find("input[name='end_date']").datepicker('setDate', enddate);
         jQuery(modal).modal();
     });
 
@@ -245,12 +262,12 @@
         
         var submit = true;
 
-        if (this.country.value === '-----') {
+        if ('country' in this && this.country.value === '-----') {
             jQuery(this).find("div.control-group.country").addClass("error");
             submit = false;
         }
         
-        if (this.school.value === '-----') {
+        if ('school' in this && this.school.value === '-----') {
             jQuery(this).find("div.control-group.school").addClass("error");
             submit = false;
         }
