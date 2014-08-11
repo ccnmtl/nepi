@@ -1,3 +1,5 @@
+
+
 .dosage-clipboard {
 	background-color: #d9eaf5;
 	padding: 25px;
@@ -98,20 +100,23 @@
 }
 
 .dosage-activity .explanation {
-    clear: both;
-    color: #BF985E;
-    background-color: #FCF8E4;
-    border: 2px solid #FBEED6;
-    width: 50%;
-    margin: 30px auto;    
-    box-sizing: border-box;
-    padding: 20px;
-    position: relative;
-    top: 3px;
-    border-radius: 10px;    
+	clear: both;
+	width: 65%;
+	margin: 30px auto;
+	padding: 20px;
+	position: relative;
+	top: 3px;
+	background-color: #fff6cf;
+	border-radius: 10px;
+	border: solid 1px #eecf4b;
 }
 
 .dosage-activity .alert {
     margin-left: 10px;
 }
+
+.module-art-infant #submit-btn {
+	clear: both;
+}
+
 
