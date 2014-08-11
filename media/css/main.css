@@ -314,6 +314,10 @@ html input[disabled] {
   cursor: default;
 }
 
+input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
+	color: #aaa;
+}
+
 ul.pager li.next a.disabled {
     color: #999;
     cursor: not-allowed;
@@ -661,10 +665,10 @@ div.pageblock.show-correct li.incorrect:after {
     box-sizing: border-box;
 }
 
-.cases .caseanswers {
+.cases div.caseanswers {
 	width: 50%;
 	margin: 0 auto;
-	text-align: left;
+	text-align: center;
 	padding: 10px 20px 20px 20px;
 	border-radius: 0 0 10px 10px;
 	border-left: solid 1px #ccc;
@@ -674,6 +678,21 @@ div.pageblock.show-correct li.incorrect:after {
    -moz-box-sizing:    border-box;
    -webkit-box-sizing: border-box;
     box-sizing:        border-box;
+}
+
+.cases ol.caseanswers {
+	width: 50%;
+	margin: 0 auto;
+	padding: 10px 20px 20px 20px;
+	border-radius: 0 0 10px 10px;
+	border-left: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+	border-bottom: solid 1px #ccc;
+	border-top: none;
+   -moz-box-sizing:    border-box;
+   -webkit-box-sizing: border-box;
+    box-sizing:        border-box;
+	text-align: left;
 }
 
 .caseuserfeedback {
@@ -1300,13 +1319,13 @@ form.create-group div.control-group.error div.help-inline.error {
 /** Document Adherence Activity **/
 .pageblock.document .cases p {
 	width: 90%;
+	margin: 30px auto;
 	padding: 20px;
+	position: relative;
+	top: 3px;
+	background-color: #d9eaf5;
 	border-radius: 10px;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	background-color: #eee;
-	text-align: center;
-	margin: 20px auto;
+	border: solid 2px #c7e3f5;
 }
 	
 .document-adherence .adherence-response {
@@ -1350,43 +1369,49 @@ form.create-group div.control-group.error div.help-inline.error {
 }
 
 
+.document-adherence {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #fff;
+}
+
 .document-adherence .adherence-response.current {
 }
 
 .document-adherence .adherence-one {
 	width: 22px;
 	height: 29px;
-    background-color: yellow;
+    background-color: #83D0D7;
 }
 
 .document-adherence .adherence-two {
 	width: 22px;
 	height: 29px;
-    background-color: green;
+    background-color: #F3B564;
 }
 
 .document-adherence .adherence-three {
 	width: 22px;
 	height: 30px;
-    background-color: blue;
+    background-color: #D95F50;
 }
 
 .document-adherence .adherence-four {
 	width: 23px;
 	height: 30px;
-    background-color: aqua;
+    background-color: #64C0F3;
 }
 
 .document-adherence .adherence-five {
 	width: 22px;
 	height: 29px;
-    background-color: coral;
+    background-color: #b4dead;
 }
 
 .document-adherence .adherence-six {
 	width: 23px;
 	height: 29px;
-    background-color: DarkGoldenRod;
+    background-color: #d4adde;
 }
 
 /** JQuery UI DatePicker Styles **/
