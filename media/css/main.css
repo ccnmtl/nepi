@@ -680,7 +680,7 @@ div.pageblock.show-correct li.incorrect:after {
     box-sizing:        border-box;
 }
 
-.cases ol.caseanswers {
+.cases ol.caseanswers, .cases ul.caseanswers {
 	width: 50%;
 	margin: 0 auto;
 	padding: 10px 20px 20px 20px;
@@ -743,6 +743,17 @@ div.pageblock.show-correct li.incorrect:after {
     position: relative;
     top: 3px;
     border-radius: 10px;    
+}
+
+.quizdescription {
+	width: 65%;
+	margin: 30px auto;
+	padding: 20px;
+	position: relative;
+	top: 3px;
+	background-color: #d9eaf5;
+	border-radius: 10px;
+	border: solid 2px #c7e3f5;
 }
 
 /* Basic survey styles */
@@ -1210,109 +1221,6 @@ div.find-group div.control-group.error div.help-inline.error,
 form.edit-group div.control-group.error div.help-inline.error,
 form.create-group div.control-group.error div.help-inline.error {
     display: block;
-}
-
-/** dosage activity **/
-.dosage-clipboard {
-    float: right;
-    cursor: pointer;
-}
-
-.dosage-clipboard-popover {
-    position: absolute;
-    width: 400px;
-    z-index: 1010;
-/*     top: 0; */
-/*     left: 0; */
-    padding: 1px;
-    text-align: left;
-    white-space: normal;
-    background-color: #D9EDF6;
-    border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    border-radius: 6px;
-    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding;
-    background-clip: padding-box;
-}
-
-.dosage-clipboard-content {
-    padding: 20px;
-}
-
-.dosage-clipboard-content button.close {
-    float: right;
-    margin-top: -14px;
-    margin-right: -10px;
-}
-
-.dosage-clipboard-content table {
-    border: 0;
-    border-spacing: 5px;
-    border-collapse: separate;
-    margin-left: -5px;
-}
-
-.dosage-clipboard-content table tr {
-    border: 0;
-}
-
-.dosage-clipboard-content table tr td {
-    background-color: #3986AB;
-    color: white;
-    border: 0;
-    padding: 5px;
-    font-size: .9em;
-}
-
-.dosage-activity .dosage-question {
-    width: 50%;
-    margin: 0 auto;
-    padding-bottom: 20px;
-}
-
-.dosage-activity .control-group {
-    clear: both;
-    width: 50%;
-    margin: 0 auto;    
-}
-
-.dosage-activity .control-group label {
-    float: left;
-    width: 200px;
-    margin: 7px 0 32px 0;
-}
-
-.dosage-activity .control-group .controls {
-    float: left;
-}
-
-.dosage-activity .control-group input[type='text'] {
-    width: 50px;
-    margin-right: 5px;
-}
-
-.dosage-activity .explanation {
-    clear: both;
-    color: #BF985E;
-    background-color: #FCF8E4;
-    border: 2px solid #FBEED6;
-    width: 50%;
-    margin: 30px auto;    
-    box-sizing: border-box;
-    padding: 20px;
-    position: relative;
-    top: 3px;
-    border-radius: 10px;    
-}
-
-.dosage-activity .alert {
-    margin-left: 10px;
 }
 
 
