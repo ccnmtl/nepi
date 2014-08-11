@@ -696,14 +696,14 @@ div.pageblock.show-correct li.incorrect:after {
 }
 
 .caseuserfeedback {
-	width: 90%;
+	width: 65%;
 	margin: 30px auto;
 	padding: 20px;
 	position: relative;
 	top: 3px;
-	background-color: #d9eaf5;
+	background-color: #fff6cf;
 	border-radius: 10px;
-	border: solid 2px #c7e3f5;
+	border: solid 1px #eecf4b;
 }
 
 .cases .caseanswers li {
@@ -1317,8 +1317,8 @@ form.create-group div.control-group.error div.help-inline.error {
 
 
 /** Document Adherence Activity **/
-.pageblock.document .cases p {
-	width: 90%;
+.pageblock.document p {
+	width: 65%;
 	margin: 30px auto;
 	padding: 20px;
 	position: relative;
