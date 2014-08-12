@@ -1,0 +1,43 @@
+.module-retention-in-care h3 {
+	text-align: center;
+}
+
+#month {
+	width: 95%;
+	display: block;
+	float: left;
+	background-color: #d9eaf5;
+	border-radius: 10px;
+	border: solid 2px #c7e3f5;
+	padding: 10px;
+}
+
+#month div {
+	float: left;
+	display: inline;
+	width: 12.5%;
+	height: 35px;
+	padding: 55px 0;
+	text-align: center;
+	background-color: #fff;
+	border: solid 1px #c7e3f5;
+	margin: .75%;
+	cursor: pointer;
+	color: #333;
+	font-family: Arial, helvetica, sans-serif;
+	font-size: 2em;
+	font-weight: bold;
+}
+
+#month div:hover {
+	float: left;
+	display: inline;
+	width: 12.5%;
+	height: 35px;
+	padding: 55px 0;
+	text-align: center;
+	background-color: #c7e3f5;
+	border: solid 1px #fff;
+	margin: .75%;
+	cursor: pointer;
+}

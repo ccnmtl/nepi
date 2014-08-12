@@ -27,7 +27,7 @@
         {% endif %}
         
         <div class="fieldWrapper control-group {% if form.first_name.errors %}error{% endif %}">
-            <label for="id_first_name"><b>Your name is:</b></label>
+            <label for="id_first_name"><b>Your name is:</b> <small>required</small></label>
             <div class="controls">
                 <span>
                     <input id="id_first_name" maxlength="50" name="first_name" type="text"
@@ -46,7 +46,7 @@
         </div>
 
         <div class="fieldWrapper control-group {% if form.username.errors %}error{% endif %} wide">
-            <label for="id_username"><b>Your username:</b></label>
+            <label for="id_username"><b>Your username:</b> <small>required</small></label>
             <div class="controls">
                 {{form.username}}
                 {% if form.username.errors %}
@@ -56,7 +56,7 @@
         </div>
         
         <div class="fieldWrapper control-group {% if form.email.errors %}error{% endif %} wide">
-            <label for="id_email"><b>Your email address:</b> <small>(optional for students)</small></label>
+            <label for="id_email"><b>Your email address:</b> <small>required for faculty</small></label>
             <div class="controls">
                 {{form.email}}
                 {% if form.email.errors %}
@@ -66,7 +66,7 @@
         </div>
         
         <div class="fieldWrapper control-group {% if form.password1.errors %}error{% endif %} wide">
-            <label for="id_password1"><b>Your password:</b></label>
+            <label for="id_password1"><b>Your password:</b> <small>required</small></label>
             <div class="controls">
                 {{form.password1}}
                 {% if form.password1.errors %}
@@ -76,7 +76,7 @@
         </div>
 
         <div class="fieldWrapper control-group {% if form.password2.errors %}error{% endif %} wide">
-            <label for="id_password2"><b>Confirm your password:</b></label>
+            <label for="id_password2"><b>Confirm your password:</b> <small>required</small></label>
             <div class="controls">
                 {{form.password2}}
                 {% if form.password2.errors %}
@@ -86,7 +86,7 @@
         </div>
         
         <div class="fieldWrapper control-group {% if form.country.errors %}error{% endif %} wide">
-            <label for="id_country"><b>Which country are you in?</b></label>
+            <label for="id_country"><b>Which country are you in?</b> <small>required</small></label>
             <div class="controls">
                 {{form.country}}
                 {% if form.country.errors %}
@@ -113,7 +113,7 @@
                 <br /><br />
                     <div class="fieldWrapper control-group school {% if form.school.errors %}error{% endif %}"
                         {% if form.data.school %}data-school-id='{{form.data.school}}'{% endif %}>
-                    <label><b>What is your school? <small>(faculty only)</small></b></label>
+                    <label><b>What is your school?</b><small>required for faculty</small></label>
                     <div class="controls">
                         {{form.school}}
                         {% if form.school.errors %}
@@ -133,7 +133,7 @@
 
         <div class="fieldWrapper control-group {% if form.captcha.errors %}error{% endif %}">
             <label for="id_captcha_0">
-                <div><b>Please verify you are a person:</b></div>
+                <div><b>Please verify you are a person:</b> &nbsp;&nbsp;<small>required</small></div>
             </label>
             <div class="controls">
                 {{form.captcha}} {% if form.captcha.errors %} <span class="help-inline">{{form.captcha.errors}}</span>{% endif %}

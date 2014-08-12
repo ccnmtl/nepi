@@ -314,6 +314,10 @@ html input[disabled] {
   cursor: default;
 }
 
+input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
+	color: #aaa;
+}
+
 ul.pager li.next a.disabled {
     color: #999;
     cursor: not-allowed;
@@ -467,6 +471,41 @@ h1, h2, h3, h4, h5, h6 {
 	clear: both;
 }
 
+/* Body Text Styles */
+
+.pageblock {
+	clear: both;
+}
+
+.pageblock p, .pageblock ol, .pageblock ul{
+	width: 65%;
+	margin: 0 auto;
+	line-height: 28px;
+}
+
+.pageblock p {
+	margin: 20px auto;
+}
+
+
+.pageblock ul {
+	padding-left: 65px;
+}
+
+.pageblock ol {
+	 margin: 20px auto;
+ 	padding-left: 65px;
+}
+
+.pageblock li {
+	margin: 10px 0;
+	line-height: 22px;
+}
+
+.pageblock > ul > ul {
+	margin-left: -20px;
+}
+
 	/* Slide Out Navigation*/
 	
 .slide-out-menu.open {
@@ -551,7 +590,16 @@ h4.pagetitle {
 	padding: 30px;
 }
 
+.pageblock.imgline {
+	display: inline;
+	float: left;
+	clear: none;
+	margin: 0 20px 20px 0;
+}
+
 /* All quiz styling */
+
+
 ol.caseanswers, ul.caseanswers {
     list-style-type: none;
 }
@@ -596,9 +644,6 @@ div.pageblock.show-correct li.incorrect:after {
 
 .cases>p {
 	width: 90%;
-	margin: 20px auto 0 auto;
-	font-weight: bold;
-	font-color: #999;
 }
 
 .casequestion {
@@ -620,10 +665,10 @@ div.pageblock.show-correct li.incorrect:after {
     box-sizing: border-box;
 }
 
-.cases .caseanswers {
+.cases div.caseanswers {
 	width: 50%;
 	margin: 0 auto;
-	text-align: left;
+	text-align: center;
 	padding: 10px 20px 20px 20px;
 	border-radius: 0 0 10px 10px;
 	border-left: solid 1px #ccc;
@@ -635,15 +680,30 @@ div.pageblock.show-correct li.incorrect:after {
     box-sizing:        border-box;
 }
 
+.cases ol.caseanswers, .cases ul.caseanswers {
+	width: 50%;
+	margin: 0 auto;
+	padding: 10px 20px 20px 20px;
+	border-radius: 0 0 10px 10px;
+	border-left: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+	border-bottom: solid 1px #ccc;
+	border-top: none;
+   -moz-box-sizing:    border-box;
+   -webkit-box-sizing: border-box;
+    box-sizing:        border-box;
+	text-align: left;
+}
+
 .caseuserfeedback {
-	width: 90%;
+	width: 65%;
 	margin: 30px auto;
 	padding: 20px;
 	position: relative;
 	top: 3px;
-	background-color: #d9eaf5;
+	background-color: #fff6cf;
 	border-radius: 10px;
-	border: solid 2px #c7e3f5;
+	border: solid 1px #eecf4b;
 }
 
 .cases .caseanswers li {
@@ -683,6 +743,17 @@ div.pageblock.show-correct li.incorrect:after {
     position: relative;
     top: 3px;
     border-radius: 10px;    
+}
+
+.quizdescription {
+	width: 65%;
+	margin: 30px auto;
+	padding: 20px;
+	position: relative;
+	top: 3px;
+	background-color: #d9eaf5;
+	border-radius: 10px;
+	border: solid 2px #c7e3f5;
 }
 
 /* Basic survey styles */
@@ -887,6 +958,18 @@ input#generic-reset {
 
 /* Registration & Contact Forms*/
 
+div.user-profile-form {
+    width: 453px;
+}
+
+div.user-profile-form label small {
+    float: right;
+}
+
+div.user-profile-form label[for=id_captcha_0] small {
+    float: none;
+}
+
 div.contact-icap div.help-inline,
 div.user-profile-form div.help-inline {
     display: block;
@@ -1086,6 +1169,15 @@ div.dashboard .your-groups-created {
     margin-bottom: 20px;
 }
 
+div.dashboard .your-groups-created .actions {
+    width: 170px;
+}
+
+div.dashboard td.text-center,
+div.dashboard th.text-center {
+    text-align: center;
+}
+
 div.dashboard .your-groups form,
 div.dashboard .your-groups-created form {
     display: inline-block;
@@ -1109,156 +1201,272 @@ div.dashboard .control-group.wide select {
     width: 443px;
 }
 
+#create-a-group .modal-body,
+#edit-a-group .modal-body {
+    max-height: 500px;
+}
+
 form.edit-group input[name='name'],
 form.create-group input[name='name'] {
     width: 234px;
 }
 
+div.find-group div.control-group div.help-inline.error,
 form.edit-group div.control-group div.help-inline.error,
 form.create-group div.control-group div.help-inline.error {
     display: none;
 }
 
+div.find-group div.control-group.error div.help-inline.error,
 form.edit-group div.control-group.error div.help-inline.error,
 form.create-group div.control-group.error div.help-inline.error {
     display: block;
 }
 
-/** dosage activity **/
-.dosage-clipboard {
-    float: right;
-    cursor: pointer;
-}
-
-.dosage-clipboard-popover {
-    position: absolute;
-    width: 400px;
-    z-index: 1010;
-/*     top: 0; */
-/*     left: 0; */
-    padding: 1px;
-    text-align: left;
-    white-space: normal;
-    background-color: #D9EDF6;
-    border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    border-radius: 6px;
-    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding;
-    background-clip: padding-box;
-}
-
-.dosage-clipboard-content {
-    padding: 20px;
-}
-
-.dosage-clipboard-content button.close {
-    float: right;
-    margin-top: -14px;
-    margin-right: -10px;
-}
-
-.dosage-clipboard-content table {
-    border: 0;
-    border-spacing: 5px;
-    border-collapse: separate;
-    margin-left: -5px;
-}
-
-.dosage-clipboard-content table tr {
-    border: 0;
-}
-
-.dosage-clipboard-content table tr td {
-    background-color: #3986AB;
-    color: white;
-    border: 0;
-    padding: 5px;
-    font-size: .9em;
-}
-
-.dosage-activity .dosage-question {
-    width: 50%;
-    margin: 0 auto;
-    padding-bottom: 20px;
-}
-
-.dosage-activity .control-group {
-    clear: both;
-    width: 50%;
-    margin: 0 auto;    
-}
-
-.dosage-activity .control-group label {
-    float: left;
-    width: 200px;
-    margin: 7px 0 32px 0;
-}
-
-.dosage-activity .control-group .controls {
-    float: left;
-}
-
-.dosage-activity .control-group input[type='text'] {
-    width: 50px;
-    margin-right: 5px;
-}
-
-.dosage-activity .explanation {
-    clear: both;
-    color: #BF985E;
-    background-color: #FCF8E4;
-    border: 2px solid #FBEED6;
-    width: 50%;
-    margin: 30px auto;    
-    box-sizing: border-box;
-    padding: 20px;
-    position: relative;
-    top: 3px;
-    border-radius: 10px;    
-}
-
-.dosage-activity .alert {
-    margin-left: 10px;
-}
-
 
 /** Document Adherence Activity **/
+.pageblock.document p {
+	width: 65%;
+	margin: 30px auto;
+	padding: 20px;
+	position: relative;
+	top: 3px;
+	background-color: #d9eaf5;
+	border-radius: 10px;
+	border: solid 2px #c7e3f5;
+}
+	
 .document-adherence .adherence-response {
-    width: 25px;
-    height: 25px;
-    text-align: center;
+	text-align: center;
+}
+
+.adherence-response.one {
+	position: relative;
+	top: -196px;
+	left: 759px;
+}
+
+.adherence-response.two {
+	position: relative;
+	top: -225px;
+	left: 781px;
+}
+
+.adherence-response.three {
+	position: relative;
+	top: -223px;
+	left: 758px;
+}
+
+.adherence-response.four {
+	position: relative;
+	top: -253px;
+	left: 780px;
+}
+
+.adherence-response.five {
+	position: relative;
+	top: -251px;
+	left: 758px;
+}
+
+.adherence-response.six {
+	position: relative;
+	top: -280px;
+	left: 780px;
+}
+
+
+.document-adherence {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #fff;
 }
 
 .document-adherence .adherence-response.current {
-    border: 1px solid red;
 }
 
 .document-adherence .adherence-one {
-    background-color: yellow;
+	width: 22px;
+	height: 29px;
+    background-color: #83D0D7;
 }
 
 .document-adherence .adherence-two {
-    background-color: green;
+	width: 22px;
+	height: 29px;
+    background-color: #F3B564;
 }
 
 .document-adherence .adherence-three {
-    background-color: blue;
+	width: 22px;
+	height: 30px;
+    background-color: #D95F50;
 }
 
 .document-adherence .adherence-four {
-    background-color: aqua;
+	width: 23px;
+	height: 30px;
+    background-color: #64C0F3;
 }
 
 .document-adherence .adherence-five {
-    background-color: coral;
+	width: 22px;
+	height: 29px;
+    background-color: #b4dead;
 }
 
 .document-adherence .adherence-six {
-    background-color: DarkGoldenRod;
+	width: 23px;
+	height: 29px;
+    background-color: #d4adde;
+}
+
+/* Session 4 Content */
+
+.dbs-chart {
+	width: 500px;
+	padding: 15px;
+	margin: 0 auto;
+    text-align: left;
+    background-color: #d9eaf5;
+    border: 1px solid #c7e3f5;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+}
+
+.dbs-chart table {
+	width: 100%;
+}
+
+.dbs-chart table td {
+	width: 50%;
+	margin: 20px;
+	padding: 10px;
+	background-color: #fff;
+}
+
+
+/** JQuery UI DatePicker Styles **/
+.ui-widget-content {
+    border: 1px solid #dddddd;
+    background: white;
+    color: #333333;
+}
+.ui-widget-content a {
+    color: #333333;
+}
+.ui-widget-header {
+    border: 1px solid #dddddd;
+    background: #f9f9f9;
+    font-weight: bold;
+}
+.ui-widget-header a {
+    color: #333333;
+}
+
+.ui-datepicker {
+    width: 17em;
+    padding: .2em .2em 0;
+    display: none;
+}
+.ui-datepicker .ui-datepicker-header {
+    position: relative;
+    padding: .2em 0;
+}
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+    position: absolute;
+    top: 2px;
+    width: 1.8em;
+    height: 1.8em;
+    font-size: .8em;
+}
+ 
+.ui-datepicker .ui-datepicker-prev {
+    left: 2px;
+}
+.ui-datepicker .ui-datepicker-next {
+    right: 12px;
+}
+
+.ui-datepicker .ui-datepicker-prev span,
+.ui-datepicker .ui-datepicker-next span {
+    display: block;
+    position: absolute;
+    left: 50%;
+    margin-left: -8px;
+    top: 50%;
+    margin-top: -8px;
+    cursor: pointer;
+}
+
+.ui-datepicker .ui-datepicker-prev span:hover,
+.ui-datepicker .ui-datepicker-next span:hover {
+    text-decoration: underline;
+}
+
+.ui-datepicker .ui-datepicker-title {
+    margin: 0 2.3em;
+    line-height: 1.8em;
+    text-align: center;
+}
+.ui-datepicker .ui-datepicker-title select {
+    font-size: 1em;
+    margin: 1px 0;
+}
+.ui-datepicker select.ui-datepicker-month,
+.ui-datepicker select.ui-datepicker-year {
+    width: 49%;
+}
+.ui-datepicker table {
+    width: 100%;
+    font-size: .9em;
+    border-collapse: collapse;
+    margin: 0 0 .4em;
+}
+.ui-datepicker th {
+    padding: .7em .3em;
+    text-align: center;
+    font-weight: bold;
+    border: 0;
+}
+.ui-datepicker td {
+    border: 0;
+    padding: 1px;
+}
+.ui-datepicker td span,
+.ui-datepicker td a {
+    display: block;
+    padding: .2em;
+    text-align: right;
+    text-decoration: none;
+}
+
+.ui-datepicker td a:hover {
+    text-decoration: underline;
+}
+
+.ui-datepicker .ui-datepicker-buttonpane {
+    background-image: none;
+    margin: .7em 0 0 0;
+    padding: 0 .2em;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+}
+.ui-datepicker .ui-datepicker-buttonpane button {
+    float: right;
+    margin: .5em .2em .4em;
+    cursor: pointer;
+    padding: .2em .6em .3em .6em;
+    width: auto;
+    overflow: visible;
+}
+.ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current {
+    float: left;
+}
+
+img.calendar {
+    cursor: pointer;
 }
