@@ -346,7 +346,7 @@ class ConfirmFacultyView(LoggedInMixin, JSONResponseMixin, View):
 
         subject = "ICAP Nursing E-Learning Faculty Access"
 
-        ctx = Context({'user': user})
+        ctx = Context({'user': user, 'school': user.profile.school})
         message = template.render(ctx)
 
         sender = settings.NEPI_MAILING_LIST
@@ -458,7 +458,7 @@ class ContactView(FormView):
         message = "First name: %s\nLast name: %s\nMessage: %s" % (
             form_data['first_name'], form_data['last_name'],
             form_data['message'])
-        recipients = [settings.NEPI_MAILING_LIST]
+        recipients = [settings.ICAP_MAILING_LIST]
         send_mail(subject, message, sender, recipients)
         return super(ContactView, self).form_valid(form)
 

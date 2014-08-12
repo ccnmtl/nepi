@@ -1,9 +1,11 @@
 {% load markup %}
 {% load getresponse %}
 
+{% if block.description %}
 <div class="quizdescription">
 {{ block.description|safe }}
 </div>
+{% endif %}
 
 {% if request.user.is_anonymous and not block.rhetorical %}
   <p class="warning">You must be logged in to view this content</p>
