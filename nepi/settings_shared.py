@@ -134,7 +134,6 @@ INSTALLED_APPS = [
     'pagetree',
     'pageblocks',
     'quizblock',
-    'registration',
     'captcha',
     'nepi.activities',
 ]

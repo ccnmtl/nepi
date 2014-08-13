@@ -19,16 +19,13 @@ site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
 redirect_after_logout = getattr(settings, 'LOGOUT_REDIRECT_URL', None)
 auth_urls = (r'^accounts/', include('django.contrib.auth.urls'))
-logout_page = (
-    r'^accounts/logout/$',
-    'django.contrib.auth.views.logout',
-    {'next_page': redirect_after_logout})
+logout_page = (r'^accounts/logout/$', 'django.contrib.auth.views.logout',
+               {'next_page': redirect_after_logout})
+
 if hasattr(settings, 'WIND_BASE'):
     auth_urls = (r'^accounts/', include('djangowind.urls'))
-    logout_page = (
-        r'^accounts/logout/$',
-        'djangowind.views.logout',
-        {'next_page': '/'})
+    logout_page = (r'^accounts/logout/$', 'djangowind.views.logout',
+                   {'next_page': '/'})
 
 urlpatterns = patterns(
     '',
@@ -41,6 +38,10 @@ urlpatterns = patterns(
     (r'^email_sent/',
      TemplateView.as_view(template_name="flatpages/contact_email_sent.html")),
 
+    url(r'^accounts/reset/(?P<uidb36>[0-9A-Za-z]{1,13})'
+        '-(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        'django.contrib.auth.views.password_reset_confirm',
+        name='password_reset_confirm'),
     auth_urls,
     logout_page,
     url(r'^$', HomeView.as_view(), name="home"),
