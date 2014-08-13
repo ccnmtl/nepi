@@ -2,12 +2,15 @@
 
 jQuery(document).ready(function() {
 
-
-
+    var next_true = false;
+    // we need a global way to keep track of whether next button is active or not
+ 
+    jQuery("#page-submit").hide();
 
 
     var calendar = jQuery("#calendar_id").data().calendar;
     var check_val = jQuery("#check_val").data().check;
+
 
     jQuery(".day").on("click",
     
@@ -15,22 +18,43 @@ jQuery(document).ready(function() {
     
             var day = jQuery(this).data().day;
             var date = jQuery(this).data().date;
-            alert(jQuery(this).data().explanation);
+            var explanation = jQuery(this).data().explanation;
+            jQuery('#myModal').on('show', function ()
+            {
 
+                jQuery('.modal-body p').replaceWith("<p>" + explanation + "</p>");
+
+             });
+            
             jQuery.ajax(
             {  
                 url: "/activities/calendar_click/",
                 type: "POST",
                 data: {'calendar' : calendar, 'day' : day },
-                success: function (data){
-                    if (date === check_val) 
-                    {
-                        jQuery("li.next a").removeClass("disabled");
-                    }
-                    else
-                    {
-                        jQuery("li.next a").addClass("disabled");
-                    }
+                success: function (data)
+                {
+                
+                if (date === check_val) 
+                     {
+                         jQuery("li.next a").removeClass("disabled");
+                     }
+                     else
+                     {
+                         jQuery("li.next a").addClass("disabled");
+                     }
+//                     if (date === check_val) 
+//                     {
+//                         jQuery("li.next a").removeClass("disabled");
+//                         next = true;
+//                     }
+//                     if (next_true === true)
+//                     {
+//                         jQuery("li.next a").removeClass("disabled");
+//                     }
+//                     else
+//                     {
+//                         jQuery("li.next a").addClass("disabled");
+//                     }
                 }
             });//end of ajax
             
@@ -41,4 +65,3 @@ jQuery(document).ready(function() {
 });
 
 </script>
-
