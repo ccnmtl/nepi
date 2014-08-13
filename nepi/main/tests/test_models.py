@@ -5,7 +5,7 @@ from nepi.main.models import AggregateQuizScore, PendingTeachers
 from nepi.main.tests.factories import StudentProfileFactory, \
     TeacherProfileFactory, ICAPProfileFactory, \
     CountryAdministratorProfileFactory, \
-    SchoolFactory, InstitutionProfileFactory
+    SchoolFactory, InstitutionAdminProfileFactory
 from pagetree.models import Hierarchy, Section, UserPageVisit
 from pagetree.tests.factories import HierarchyFactory, ModuleFactory
 
@@ -20,7 +20,7 @@ class TestUserProfile(TestCase):
     def setUp(self):
         self.student = StudentProfileFactory().user
         self.teacher = TeacherProfileFactory().user
-        self.school_admin = InstitutionProfileFactory().user
+        self.school_admin = InstitutionAdminProfileFactory().user
         self.icap = ICAPProfileFactory().user
         self.country_admin = CountryAdministratorProfileFactory().user
         ModuleFactory("main", "/")

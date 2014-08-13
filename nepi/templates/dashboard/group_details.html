@@ -4,14 +4,15 @@
 
 {% block content %}
     <ul class="breadcrumb">
-      <li><a href="/dashboard/{{user.profile.id}}/#user-groups">Dashboard</a> <span class="divider">/</span></li>
+      <li><a href="/dashboard/#user-groups">Dashboard</a> <span class="divider">/</span></li>
       <li class="active">Group Detail</li>
     </ul>
 
-    <h3>{{object.name}} Detail</h3>
+    <h3>{{group.name}} Detail</h3>
     <dl class="dl-horizontal">
         <dt>School</dt><dd>{{group.school.name}}</dd>
         <dt>Country</dt><dd>{{group.school.country.display_name}}</dd>
+        <dt>Creator</dt><dd>{{group.creator.get_full_name}} ({{group.creator.username}})</dd>
         <dt>Students</dt><dd>{{student_count}}</dd>
         <dt>Complete</dt><dd>{{complete}}</dd>
         <dt>In Progress</dt><dd>{{in_progress}}%</dd>

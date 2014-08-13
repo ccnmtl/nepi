@@ -13,9 +13,9 @@ from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.template.context import Context
 from django.views.generic import View
+from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView, UpdateView
-from django.views.generic.list import ListView
 from nepi.main.choices import COUNTRY_CHOICES
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
@@ -76,9 +76,9 @@ class HomeView(LoggedInMixin, View):
             return HttpResponseRedirect(reverse('register'))
 
         if user_profile.is_student():
-            url = '/dashboard/%s/#user-modules' % (user_profile.id)
+            url = '/dashboard/#user-modules'
         else:
-            url = '/dashboard/%s/#user-groups' % (user_profile.id)
+            url = '/dashboard/#user-groups'
 
         return HttpResponseRedirect(url)
 
@@ -98,13 +98,11 @@ class UserProfileView(LoggedInMixin, DetailView):
     groups that the user belongs to, and if they do not belong to any
     we are giving the the option to affiliate with one'''
     model = UserProfile
-    template_name = 'dashboard/icap_dashboard.html'
+    template_name = 'dashboard/dashboard.html'
     success_url = '/'
 
-    def dispatch(self, *args, **kwargs):
-        if int(kwargs.get('pk')) != self.request.user.profile.id:
-            return HttpResponseForbidden("forbidden")
-        return super(UserProfileView, self).dispatch(*args, **kwargs)
+    def get_object(self, queryset=None):
+        return self.request.user.profile
 
     def get_faculty_context(self):
         context = {}
@@ -149,8 +147,11 @@ class UserProfileView(LoggedInMixin, DetailView):
 
     def get_icap_context(self):
         context = {}
-        context['managed_groups'] = Group.objects.all().order_by(
+
+        groups = Group.objects.all().order_by(
             'school__country__display_name', 'school__name', 'name')
+        groups = groups.exclude(archived=True)
+        context['managed_groups'] = groups
 
         teachers = PendingTeachers.objects.all()
         teachers = teachers.order_by('school__country__display_name',
@@ -187,15 +188,29 @@ class UserProfileView(LoggedInMixin, DetailView):
 
         if profile_form.is_valid():
             profile_form.save()
-            url = '/dashboard/%s/#user-profile' % (self.object.id)
             messages.add_message(self.request, messages.INFO,
                                  'Your changes have been saved.')
 
-            return HttpResponseRedirect(url)
+            return HttpResponseRedirect('/dashboard/#user-profile')
 
         context = self.get_context_data(object=self.object)
         context['profile_form'] = profile_form
         return self.render_to_response(context)
+
+
+class ReportView(TemplateView):
+    template_name = "dashboard/reports.html"
+
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.profile.is_student():
+            return HttpResponseForbidden("forbidden")
+        return super(ReportView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        return {
+            'user': self.request.user,
+            'countries': COUNTRY_CHOICES
+        }
 
 
 class SchoolChoiceView(JSONResponseMixin, View):
@@ -283,11 +298,15 @@ class CreateGroupView(LoggedInMixin, View):
 
         group.save()
 
-        url = '/dashboard/%s/#user-groups' % (self.request.user.profile.id)
-        return HttpResponseRedirect(url)
+        return HttpResponseRedirect('/dashboard/#user-groups')
 
 
 class UpdateGroupView(LoggedInMixin, View):
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.profile.is_student():
+            return HttpResponseForbidden("forbidden")
+        return super(CreateGroupView, self).dispatch(*args, **kwargs)
+
     def post(self, *args, **kwargs):
         pk = self.request.POST.get('pk')
         group = get_object_or_404(Group, pk=pk)
@@ -306,19 +325,17 @@ class UpdateGroupView(LoggedInMixin, View):
         group.name = self.request.POST.get('name')
         group.save()
 
-        url = '/dashboard/%s/#user-groups' % (self.request.user.profile.id)
-        return HttpResponseRedirect(url)
+        return HttpResponseRedirect('/dashboard/#user-groups')
 
 
 class JoinGroup(LoggedInMixin, View):
-    template_name = 'dashboard/icap_dashboard.html'
+    template_name = 'dashboard/dashboard.html'
 
     def post(self, request):
         group = get_object_or_404(Group, pk=request.POST.get('group'))
         request.user.profile.group.add(group)
 
-        url = '/dashboard/%s/#user-groups' % (request.user.profile.id)
-        return HttpResponseRedirect(url)
+        return HttpResponseRedirect('/dashboard/#user-groups')
 
 
 class DeleteGroupView(LoggedInMixin, JSONResponseMixin, View):
@@ -362,7 +379,8 @@ class ConfirmFacultyView(LoggedInMixin, JSONResponseMixin, View):
         template = loader.get_template(
             'dashboard/faculty_success_email.txt')
 
-        subject = "ICAP Nursing E-Learning Faculty Access"
+        subject = "Your request for faculty access to the " \
+            "ICAP Nursing E-learning system has been approved"
 
         ctx = Context({'user': user, 'school': user.profile.school})
         message = template.render(ctx)
@@ -397,7 +415,8 @@ class DenyFacultyView(LoggedInMixin, JSONResponseMixin, View):
         template = loader.get_template(
             'dashboard/faculty_denied_email.txt')
 
-        subject = "ICAP Nursing E-Learning Faculty Access"
+        subject = "Your request for faculty access to the "\
+            "ICAP Nursing E-learning system has been denied"
 
         ctx = Context({'user': user, 'school': school})
         message = template.render(ctx)
@@ -463,8 +482,7 @@ class RemoveStudent(LoggedInMixin, JSONResponseMixin, View):
 
 
 class ContactView(FormView):
-    '''changed contact view function to
-    generic class based view'''
+    '''changed contact view function to generic class based view'''
     template_name = 'main/contact.html'
     form_class = ContactForm
     success_url = '/email_sent/'
@@ -472,11 +490,11 @@ class ContactView(FormView):
     def form_valid(self, form):
         form_data = form.cleaned_data
 
-        sender = form_data['sender']
-        subject = form_data['subject']
-        message = "First name: %s\nLast name: %s\nMessage: %s" % (
+        sender = settings.NEPI_MAILING_LIST
+        subject = "ICAP Nursing E-learning message: %s" % form_data['subject']
+        message = "From: %s %s\n\nMessage: %s\n\nReply to: %s" % (
             form_data['first_name'], form_data['last_name'],
-            form_data['message'])
+            form_data['message'], form_data['sender'])
         recipients = [settings.ICAP_MAILING_LIST]
         send_mail(subject, message, sender, recipients)
         return super(ContactView, self).form_valid(form)
@@ -495,22 +513,3 @@ class StudentClassStatView(LoggedInMixin, DetailView):
             user = User.objects.get(pk=self.request.user.pk)
             profile = UserProfile.objects.get(user=user)
             return {'module': module, 'user': user, 'profile': profile}
-
-
-class FacultyCountries(LoggedInMixin, ListView):
-    model = Country
-    template_name = 'faculty/country_list.html'
-    success_url = '/'
-
-
-class FacultyCountrySchools(LoggedInMixin, ListView):
-    model = School
-    template_name = 'faculty/school_list.html'
-    success_url = '/'
-
-    def get_context_data(self, **kwargs):
-        if self.request.is_ajax():
-            country_key = self.request.GET.__getitem__('name')
-            country = Country.objects.get(pk=country_key)
-            s = School.objects.filter(country=country)
-            return {'school_list': s}

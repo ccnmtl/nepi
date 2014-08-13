@@ -155,8 +155,7 @@ class TestCreateAccountForm(TestCase):
         self.assertEqual(len(mail.outbox), 2)
         self.assertEqual(mail.outbox[0].subject,
                          'ICAP Nursing E-Learning Registration')
-        self.assertEqual(mail.outbox[1].subject,
-                         'Nursing E-Learning: Faculty Access Request')
+        self.assertTrue('faculty level access' in mail.outbox[1].subject)
 
         self.assertEquals(PendingTeachers.objects.all().count(), 1)
 
@@ -232,7 +231,5 @@ class TestUpdateProfileForm(TestCase):
                                        password="test"))
 
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject,
-                         'Nursing E-Learning: Faculty Access Request')
-
+        self.assertTrue('faculty level access' in mail.outbox[0].subject)
         self.assertEquals(PendingTeachers.objects.all().count(), 1)
