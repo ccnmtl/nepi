@@ -839,7 +839,7 @@ div.pageblock.show-correct li.incorrect:after {
 }
 
 .slide-out-menu .toggle-primary-toc {
-    padding: 5px 7px 9px 5px;
+    padding: 5px 7px 9px 15px;
     -webkit-border-bottom-right-radius: 5px;
     -webkit-border-top-right-radius: 5px;
     -moz-border-radius-bottomright: 5px;
@@ -874,7 +874,7 @@ div.pageblock.show-correct li.incorrect:after {
     height: 90%;
     overflow-y: auto;
     width: 400px;
-	padding: 10px 0 0 0;
+	padding: 10px 10px 0 0;
     font-family: Arial, helvetica, sans-serif;
 }
 
@@ -884,13 +884,24 @@ div.pageblock.show-correct li.incorrect:after {
 
 .slide-out-menu a li {
     display: block;
-	padding: 8px 10px 4px 10px;
+	padding: 9px 10px 7px 10px;
 	margin: -4px 10px 4px 0;
 	border-bottom: dotted 1px #ccc;
+	line-height: 1.25em;
 }
 
 .slide-out-menu a.current li {
     font-weight: bold;
+    border-radius: 5px;
+    border-left: solid 5px #ddd;
+	border-radius: 0px;
+}
+
+.slide-out-menu a.current li:after {
+	margin: 0 0 0 10px;
+	content: "»";
+	position: relative;
+	top: -1px;
 }
 
 .slide-out-menu a:hover {
@@ -899,13 +910,13 @@ div.pageblock.show-correct li.incorrect:after {
 
 .slide-out-menu a:hover li {
     background: #fff;
-    border-radius: 5px;
+   	border-radius: 0px;
     text-decoration: none;
 }
  
 .slide-out-menu a:active li {
-    background: #afdefa;
-    color: #47a3da;
+    background: #fff;
+    color: #333;
 }
 
 .slide-out-menu a.disabled {
@@ -918,12 +929,19 @@ div.pageblock.show-correct li.incorrect:after {
     text-decoration: none;
 }
 
+.slide-out-menu a.primary-menu-2 li {
+	font-size: 1.15em;
+	font-weight: bold;
+}
+
 .slide-out-menu a.primary-menu-3 li {
-    padding-left: 15px;
+    padding-left: 10px;
+    font-size: .9em;
 }
 
 .slide-out-menu a.primary-menu-4 li  {
     padding-left: 25px;
+    font-size: .9em;
 }
 
 .slide-out-menu a.primary-menu-5 li  {
@@ -1210,13 +1228,15 @@ form.create-group input[name='name'] {
     width: 234px;
 }
 
-div.find-group div.control-group div.help-inline.error,
+#report-selector div.control-group div.help-inline.error,
+.find-group div.control-group div.help-inline.error,
 form.edit-group div.control-group div.help-inline.error,
 form.create-group div.control-group div.help-inline.error {
     display: none;
 }
 
-div.find-group div.control-group.error div.help-inline.error,
+#report-selector div.control-group.error div.help-inline.error,
+.find-group div.control-group.error div.help-inline.error,
 form.edit-group div.control-group.error div.help-inline.error,
 form.create-group div.control-group.error div.help-inline.error {
     display: block;

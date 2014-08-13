@@ -2,12 +2,13 @@
 .parts.mouth, .parts.eyes, .parts.chair, .parts.chart {
 	background-color: #fff;
 	border-radius: 10px;
-	color: #888;
-	border: solid 4px #80b6e6;
+	color: #222;
+	background-color: #f5f5f5;
+	border: solid 4px #aaa;
 	float: left;
 	padding: 10px;
 	cursor: pointer;
-	font-weight: 600;
+	font-family: Arial, helvetica, sans-serif;
 	font-size: 1.5em;
 }
 
@@ -36,17 +37,50 @@
 }
 
 .parts:hover {
-	background-color: #80b6e6;
-	color: #fff;
-	border: solid 4px #80b6e6;
-	
+	border: solid 4px #c7e3f5;
 }
 
 #explanation_box {
 	clear: both;
-	width: 500px;
 	min-height: 45px;
 	padding: 10px;
 	margin: 0 auto 35px auto;
 }
+
+
+#explanation_box .title {
+	text-align: center;
+	width: 50%;
+	margin: 0 auto;
+	padding: 20px;
+	border-radius: 10px 10px 0 0;
+	border-left: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+	border-top: solid 1px #ccc;
+	border-bottom: none;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	background-color: #c7e3f5;
+	font-weight: bold;
+	font-family: Arial, helvetica, sans-serif;
+	font-size: 1.25em;
+}
+
+#explanation_box .content {
+	width: 50%;
+	margin: 0 auto;
+	text-align: center;
+	background-color: #f5f5f5;
+	padding: 10px 20px 20px 20px;
+	border-radius: 0 0 10px 10px;
+	border-left: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+	border-bottom: solid 1px #ccc;
+	border-top: none;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
 

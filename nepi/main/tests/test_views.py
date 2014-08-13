@@ -5,12 +5,15 @@ from django.test import TestCase, RequestFactory
 from django.test.client import Client
 from factories import UserFactory, UserProfileFactory, TeacherProfileFactory, \
     ICAPProfileFactory
+from nepi.main.choices import COUNTRY_CHOICES
 from nepi.main.forms import ContactForm
 from nepi.main.models import Country, School, Group, PendingTeachers
 from nepi.main.tests.factories import SchoolFactory, CountryFactory, \
     SchoolGroupFactory, StudentProfileFactory, \
-    CountryAdministratorProfileFactory
-from nepi.main.views import ContactView, ViewPage, CreateSchoolView
+    CountryAdministratorProfileFactory, \
+    InstitutionAdminProfileFactory, PendingTeacherFactory
+from nepi.main.views import ContactView, ViewPage, CreateSchoolView, \
+    UserProfileView
 from pagetree.models import UserPageVisit, Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
 import json
@@ -66,8 +69,8 @@ class TestStudentLoggedInViews(TestCase):
     '''go through some of the views student sees'''
     def setUp(self):
         ModuleFactory("main", "/pages/main/")
-        hierarchy = Hierarchy.objects.get(name='main')
-        self.section = hierarchy.get_root().get_first_leaf()
+        self.hierarchy = Hierarchy.objects.get(name='main')
+        self.section = self.hierarchy.get_root().get_first_leaf()
 
         self.student = StudentProfileFactory().user
         self.client = Client()
@@ -84,9 +87,8 @@ class TestStudentLoggedInViews(TestCase):
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/dashboard/%d/#user-modules'
-                            % self.student.profile.pk, 302)])
-        self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+                          [('http://testserver/dashboard/#user-modules', 302)])
+        self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
     def test_home_noprofile(self):
         user = UserFactory()
@@ -97,24 +99,36 @@ class TestStudentLoggedInViews(TestCase):
         self.assertEquals(response.redirect_chain[0],
                           ('http://testserver/register/', 302))
 
-    def test_profile_access(self):
-        alt_student_profile = StudentProfileFactory()
-
-        profile_url = '/dashboard/%s/' % (self.student.profile.id)
-        response = self.client.get(profile_url)
+    def test_dashboard(self):
+        response = self.client.get('/dashboard/')
         self.assertEquals(response.status_code, 200)
 
-        profile_url = '/dashboard/%s/' % (alt_student_profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
+    def test_dashboard_context(self):
+        request = RequestFactory().get('/dashboard/')
+        request.user = self.student
+
+        view = UserProfileView()
+        view.request = request
+
+        self.assertEquals(view.get_object(), request.user.profile)
+
+        view.object = request.user.profile
+        ctx = view.get_context_data()
+
+        self.assertEquals(ctx['optionb'], self.hierarchy)
+        self.assertIsNotNone(ctx['profile_form'])
+        self.assertEquals(ctx['countries'], COUNTRY_CHOICES)
+        self.assertEquals(ctx['joined_groups'].count(), 0)
+        self.assertTrue('managed_groups' not in ctx)
+        self.assertTrue('pending_teachers' not in ctx)
 
 
 class TestTeacherLoggedInViews(TestCase):
 
     def setUp(self):
         ModuleFactory("main", "/pages/main/")
-        hierarchy = Hierarchy.objects.get(name='main')
-        self.section = hierarchy.get_root().get_first_leaf()
+        self.hierarchy = Hierarchy.objects.get(name='main')
+        self.section = self.hierarchy.get_root().get_first_leaf()
 
         self.teacher = TeacherProfileFactory().user
         self.client = Client()
@@ -127,32 +141,57 @@ class TestTeacherLoggedInViews(TestCase):
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/dashboard/%d/#user-groups'
-                            % self.teacher.profile.pk, 302)])
-        self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+                          [('http://testserver/dashboard/#user-groups', 302)])
+        self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
-    def test_profile_access(self):
-        alt_teacher_profile = TeacherProfileFactory()
-
-        profile_url = '/dashboard/%s/' % (self.teacher.profile.id)
-        response = self.client.get(profile_url)
+    def test_dashboard(self):
+        response = self.client.get('/dashboard/')
         self.assertEquals(response.status_code, 200)
 
-        profile_url = '/dashboard/%s/' % (alt_teacher_profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
+    def test_dashboard_context(self):
+        request = RequestFactory().get('/dashboard/')
+        request.user = self.teacher
+
+        view = UserProfileView()
+        view.request = request
+
+        self.assertEquals(view.get_object(), request.user.profile)
+
+        view.object = request.user.profile
+        ctx = view.get_context_data()
+
+        school_group = SchoolGroupFactory(creator=self.teacher,
+                                          school=self.teacher.profile.school)
+
+        # archived group
+        SchoolGroupFactory(creator=self.teacher,
+                           school=self.teacher.profile.school,
+                           archived=True)
+        # alt_creator
+        SchoolGroupFactory(creator=TeacherProfileFactory().user)
+
+        self.assertEquals(ctx['optionb'], self.hierarchy)
+        self.assertIsNotNone(ctx['profile_form'])
+        self.assertEquals(ctx['countries'], COUNTRY_CHOICES)
+        self.assertEquals(ctx['joined_groups'].count(), 0)
+        self.assertEquals(len(ctx['managed_groups']), 1)
+        self.assertEquals(ctx['managed_groups'][0], school_group)
+        self.assertTrue('pending_teachers' not in ctx)
 
 
-class TestCountryAdminLoggedInViews(TestCase):
+class TestInstitutionAdminLoggedInViews(TestCase):
 
     def setUp(self):
         ModuleFactory("main", "/pages/main/")
-        hierarchy = Hierarchy.objects.get(name='main')
-        self.section = hierarchy.get_root().get_first_leaf()
+        self.hierarchy = Hierarchy.objects.get(name='main')
+        self.section = self.hierarchy.get_root().get_first_leaf()
 
-        self.country = CountryAdministratorProfileFactory().user
+        self.admin = InstitutionAdminProfileFactory().user
         self.client = Client()
-        self.client.login(username=self.country.username, password="test")
+        self.client.login(username=self.admin.username, password="test")
+
+        self.teacher = TeacherProfileFactory(
+            school=self.admin.profile.school).user
 
     def test_page(self):
         response = self.client.get(self.section.get_absolute_url())
@@ -161,28 +200,145 @@ class TestCountryAdminLoggedInViews(TestCase):
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/dashboard/%d/#user-groups'
-                            % self.country.profile.pk, 302)])
-        self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+                          [('http://testserver/dashboard/#user-groups', 302)])
+        self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
-    def test_profile_access(self):
-        alt_country_profile = CountryAdministratorProfileFactory()
-
-        profile_url = '/dashboard/%s/' % (self.country.profile.id)
-        response = self.client.get(profile_url)
+    def test_dashboard(self):
+        response = self.client.get('/dashboard/')
         self.assertEquals(response.status_code, 200)
 
-        profile_url = '/dashboard/%s/' % (alt_country_profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
+    def test_dashboard_context(self):
+        request = RequestFactory().get('/dashboard/')
+        request.user = self.admin
+
+        view = UserProfileView()
+        view.request = request
+
+        self.assertEquals(view.get_object(), request.user.profile)
+
+        view.object = request.user.profile
+        ctx = view.get_context_data()
+
+        admin_group = SchoolGroupFactory(creator=self.admin,
+                                         school=self.admin.profile.school)
+        teacher_group = SchoolGroupFactory(creator=self.teacher,
+                                           school=self.teacher.profile.school)
+
+        # archived groups
+        SchoolGroupFactory(creator=self.teacher,
+                           school=self.teacher.profile.school,
+                           archived=True)
+        SchoolGroupFactory(creator=self.admin,
+                           school=self.admin.profile.school,
+                           archived=True)
+
+        # alt_creator/alt school
+        SchoolGroupFactory(creator=TeacherProfileFactory().user)
+
+        self.assertEquals(ctx['optionb'], self.hierarchy)
+        self.assertIsNotNone(ctx['profile_form'])
+        self.assertEquals(ctx['countries'], COUNTRY_CHOICES)
+        self.assertEquals(ctx['joined_groups'].count(), 0)
+        self.assertEquals(len(ctx['managed_groups']), 2)
+        self.assertEquals(ctx['managed_groups'][0], admin_group)
+        self.assertEquals(ctx['managed_groups'][1], teacher_group)
+
+        # pending teachers
+        PendingTeacherFactory()  # random country/school
+        alt_school = SchoolFactory(country=self.admin.profile.country)
+        PendingTeacherFactory(school=alt_school)  # same country, diff school
+        pt = PendingTeacherFactory(school=self.admin.profile.school)  # visible
+        self.assertEquals(len(ctx['pending_teachers']), 1)
+        self.assertEquals(ctx['pending_teachers'][0], pt)
+
+
+class TestCountryAdminLoggedInViews(TestCase):
+
+    def setUp(self):
+        ModuleFactory("main", "/pages/main/")
+        self.hierarchy = Hierarchy.objects.get(name='main')
+        self.section = self.hierarchy.get_root().get_first_leaf()
+
+        self.school = SchoolFactory()
+        self.country = self.school.country
+        self.alt_school = SchoolFactory(country=self.country)
+
+        self.teacher = TeacherProfileFactory(school=self.school).user
+        self.iadmin = InstitutionAdminProfileFactory(
+            school=self.alt_school).user
+        self.admin = CountryAdministratorProfileFactory(
+            country=self.country).user
+
+        self.client = Client()
+        self.client.login(username=self.admin.username, password="test")
+
+    def test_page(self):
+        response = self.client.get(self.section.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+    def test_home(self):
+        response = self.client.get("/", follow=True)
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/dashboard/#user-groups', 302)])
+        self.assertTemplateUsed(response, 'dashboard/dashboard.html')
+
+    def test_dashboard(self):
+        response = self.client.get('/dashboard/')
+        self.assertEquals(response.status_code, 200)
+
+    def test_dashboard_context(self):
+        request = RequestFactory().get('/dashboard/')
+        request.user = self.admin
+
+        view = UserProfileView()
+        view.request = request
+
+        self.assertEquals(view.get_object(), request.user.profile)
+
+        view.object = request.user.profile
+        ctx = view.get_context_data()
+
+        admin_group = SchoolGroupFactory(creator=self.admin,
+                                         school=self.school)
+        iadmin_group = SchoolGroupFactory(creator=self.iadmin,
+                                          school=self.iadmin.profile.school)
+        teacher_group = SchoolGroupFactory(creator=self.teacher,
+                                           school=self.teacher.profile.school)
+
+        # archived groups
+        SchoolGroupFactory(creator=self.teacher,
+                           school=self.teacher.profile.school,
+                           archived=True)
+        SchoolGroupFactory(creator=self.admin, school=self.school,
+                           archived=True)
+
+        # random groups alt_creator/alt school groups
+        SchoolGroupFactory(creator=TeacherProfileFactory().user)
+
+        self.assertEquals(ctx['optionb'], self.hierarchy)
+        self.assertIsNotNone(ctx['profile_form'])
+        self.assertEquals(ctx['countries'], COUNTRY_CHOICES)
+        self.assertEquals(ctx['joined_groups'].count(), 0)
+        self.assertEquals(len(ctx['managed_groups']), 3)
+        self.assertEquals(ctx['managed_groups'][0], admin_group)
+        self.assertEquals(ctx['managed_groups'][1], teacher_group)
+        self.assertEquals(ctx['managed_groups'][2], iadmin_group)
+
+        # pending teachers
+        PendingTeacherFactory()  # random country/school
+        pt1 = PendingTeacherFactory(school=self.alt_school)
+        pt2 = PendingTeacherFactory(school=self.school)  # visible
+        self.assertEquals(len(ctx['pending_teachers']), 2)
+        self.assertEquals(ctx['pending_teachers'][0], pt2)
+        self.assertEquals(ctx['pending_teachers'][1], pt1)
 
 
 class TestICAPLoggedInViews(TestCase):
 
     def setUp(self):
         ModuleFactory("main", "/pages/main/")
-        hierarchy = Hierarchy.objects.get(name='main')
-        self.section = hierarchy.get_root().get_first_leaf()
+        self.hierarchy = Hierarchy.objects.get(name='main')
+        self.section = self.hierarchy.get_root().get_first_leaf()
 
         self.icap = ICAPProfileFactory().user
         self.client = Client()
@@ -195,20 +351,41 @@ class TestICAPLoggedInViews(TestCase):
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/dashboard/%d/#user-groups'
-                            % self.icap.profile.pk, 302)])
-        self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+                          [('http://testserver/dashboard/#user-groups', 302)])
+        self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
-    def test_profile_access(self):
-        alt_icap_profile = ICAPProfileFactory()
-
-        profile_url = '/dashboard/%s/' % (self.icap.profile.id)
-        response = self.client.get(profile_url)
+    def test_dashboard(self):
+        response = self.client.get('/dashboard/')
         self.assertEquals(response.status_code, 200)
 
-        profile_url = '/dashboard/%s/' % (alt_icap_profile.id)
-        response = self.client.get(profile_url)
-        self.assertEquals(response.status_code, 403)
+    def test_dashboard_context(self):
+        request = RequestFactory().get('/dashboard/')
+        request.user = self.icap
+
+        view = UserProfileView()
+        view.request = request
+
+        self.assertEquals(view.get_object(), request.user.profile)
+
+        view.object = request.user.profile
+        ctx = view.get_context_data()
+
+        a = SchoolGroupFactory()
+        b = SchoolGroupFactory()
+        SchoolGroupFactory(archived=True)
+
+        self.assertEquals(ctx['optionb'], self.hierarchy)
+        self.assertIsNotNone(ctx['profile_form'])
+        self.assertEquals(ctx['countries'], COUNTRY_CHOICES)
+        self.assertEquals(ctx['joined_groups'].count(), 0)
+        self.assertEquals(len(ctx['managed_groups']), 2)
+        self.assertEquals(ctx['managed_groups'][0], a)
+        self.assertEquals(ctx['managed_groups'][1], b)
+
+        # pending teachers
+        pt = PendingTeacherFactory()  # random country/school
+        self.assertEquals(len(ctx['pending_teachers']), 1)
+        self.assertEquals(ctx['pending_teachers'][0], pt)
 
 
 class TestPageView(TestCase):
@@ -501,9 +678,8 @@ class TestCreateGroupView(TestCase):
 
         response = self.client.post("/create_group/", data, follow=True)
         self.assertEquals(response.redirect_chain, [(
-            'http://testserver/dashboard/%d/#user-groups'
-            % self.teacher.profile.pk, 302)])
-        self.assertTemplateUsed(response, 'dashboard/icap_dashboard.html')
+            'http://testserver/dashboard/#user-groups', 302)])
+        self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
         group = Group.objects.get(name='The Group')
         self.assertEquals(group.formatted_start_date(), '09/20/2018')

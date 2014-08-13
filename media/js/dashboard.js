@@ -22,21 +22,26 @@
      
      // Join Group Functionality
      function clearSchoolGroupChoices(elt) {
-         jQuery(elt).find("div.schoolgroup table").find('tr.content-row').remove();
+         jQuery(elt).find(".control-group.schoolgroup").hide();
+         jQuery(elt).find(".control-group.school").removeClass('error');
+         jQuery(elt).find(".control-group.schoolgroup").removeClass('error');
+         jQuery(elt).find(".control-group.schoolgroup table").find('tr.content-row').remove();
+         jQuery(elt).find(".control-group.schoolgroup select").find('option').remove();
      }
 
      function clearSchoolChoices(elt) {
+         jQuery(elt).find(".control-group.school").hide();
+         jQuery(elt).find(".control-group.country").removeClass('error');
+         jQuery(elt).find(".control-group.school").removeClass('error');
          jQuery(elt).find("select[name='school']").find('option').remove();
      }
 
      function populateSchoolChoices(elt, eltCountrySelect, eltSchoolSelect, callback) {
         clearSchoolChoices(elt);
         
-        var countryName = jQuery(eltCountrySelect).val();
-        
         jQuery.ajax({
             type: 'GET',
-            url: '/schools/' + countryName + '/',
+            url: '/schools/' + jQuery(eltCountrySelect).val() + '/',
             dataType: 'json',
             error: function () {
                 // This country does not exist in the database
@@ -47,13 +52,11 @@
                     // There are no schools for this country
                     showError(eltCountrySelect);
                 } else {
-                    jQuery(elt).find("div.control-group").removeClass('error');
                     for (var i=0; i < json.schools.length; i++) {
                         var school = json.schools[i];
                         var option = "<option value='"  + school.id + "'>" + school.name + "</option>";
                         jQuery(eltSchoolSelect).append(option)
                     }
-                    jQuery(eltSchoolSelect).parents(".control-group").removeClass('error');
                     jQuery(eltSchoolSelect).parents(".control-group").fadeIn();
                     if (callback) {
                         callback();
@@ -63,69 +66,59 @@
         });
     }
 
-    function populateSchoolGroupChoices(elt, eltSchoolSelect, eltGroupTable) {
-        clearSchoolGroupChoices(eltGroupTable);
-        
-        var schoolId = jQuery(eltSchoolSelect).val();
+    function populateSchoolGroupChoices(elt, eltSchoolSelect, eltGroup) {
+        clearSchoolGroupChoices(elt);
         
         jQuery.ajax({
             type: 'GET',
-            url: '/groups/' + schoolId + '/',
+            url: '/groups/' + jQuery(eltSchoolSelect).val() + '/',
             dataType: 'json',
             error: function () {
                 // This school does not exist in the database. Unlikely.
                 showError(eltSchoolSelect);
             },
             success: function (json, textStatus, xhr) {
-                if (json['groups'].length < 1) {
+                if (json.groups.length < 1) {
                     // There are no groups for this country
                     showError(eltSchoolSelect);
-                    jQuery(eltGroupTable).parents(".control-group").removeClass('error');
-                    jQuery(eltGroupTable).parents(".control-group").fadeOut();
                 } else {
-                    jQuery(elt).find("div.control-group").removeClass('error');
-                    jQuery(eltGroupTable).find("tr.content-row").remove();
-                    
                     // @todo - a client-side template would do nicely here
                     for (var i=0; i < json.groups.length; i++) {
                         var group = json.groups[i];
-                        var row = "<tr class='content-row'>" + 
+                        var choice = "<tr class='content-row'>" + 
                             "<td>" + group.name + "</td>" + 
                             "<td>" + group.start_date + "</td>" +
                             "<td>" + group.end_date + "</td>" +
                             "<td>" + group.creator + "</td>";
                         if (group.member) {
-                            row += "<td>Joined</td>";
+                            choice += "<td>Joined</td>";
                         } else {
-                            row += "<td><form action='/join_group/' method='post'>" +
+                            choice += "<td><form action='/join_group/' method='post'>" +
                             "<button class='btn btn-primary btn-small'>Join</button>" + 
                             "<input type='hidden' name='group' value='" + group.id + "'></input>" +
                             "</form></td>";
                         }
-                        row += "</tr>";
-                        jQuery(eltGroupTable).append(row);
+                        choice += "</tr>";
+                        jQuery(eltGroup).append(choice);
                     }
-                    jQuery(eltGroupTable).parents(".control-group").removeClass('error');
-                    jQuery(eltGroupTable).parents(".control-group").fadeIn();
+                    jQuery(eltGroup).parents(".control-group").fadeIn();
                 }
             }
         });
     }
 
     jQuery("#user-groups select[name='country']").change(function() {
-        var elt = jQuery(this).parents('div.modal')[0];
+        var elt = jQuery(this).parents('.action-container')[0];
         
         clearSchoolGroupChoices(elt);
         clearSchoolChoices(elt);
-        jQuery(elt).find("div.control-group.school").fadeOut();
-        jQuery(elt).find("div.control-group.schoolgroup").fadeOut();
         
         var eltSchoolChoice = jQuery(elt).find("select[name='school']")[0];
         populateSchoolChoices(elt, this, eltSchoolChoice);
     });
 
-    jQuery("#find-a-group").find("select[name='school']").change(function() {
-        var elt = jQuery(this).parents('div.modal')[0];
+    jQuery("#find-a-group select[name='school']").change(function() {
+        var elt = jQuery(this).parents('.action-container')[0];
         var eltGroupChoice = jQuery(elt).find("div.schoolgroup table")[0];
         populateSchoolGroupChoices(elt, this, eltGroupChoice);
     });
@@ -138,6 +131,24 @@
         jQuery(this).find("div.control-group.school").hide();
         jQuery(this).find("div.control-group.schoolgroup").hide();
     });
+    
+    jQuery("#report-selector select[name='school']").change(function() {
+        var elt = jQuery(this).parents('.action-container')[0];
+        var eltGroupChoice = jQuery(elt).find("div.schoolgroup select")[0];
+        populateSchoolGroupChoices(elt, this, eltGroupChoice);
+    });
+    
+    jQuery("#report-selector select[name='country']").change(function() {
+        var elt = jQuery(this).parents('.action-container')[0];
+        
+        clearSchoolGroupChoices(elt);
+        clearSchoolChoices(elt);
+        
+        var eltSchoolChoice = jQuery(elt).find("select[name='school']")[0];
+        populateSchoolChoices(elt, this, eltSchoolChoice, function() {
+            jQuery(eltSchoolChoice).find('option[value="-----"]').html("All institutions")
+        });
+    });    
     
     jQuery("button.leave-group").on("click", function() {
         if (confirm("Are you sure you want to leave this group?")) {
@@ -338,18 +349,19 @@
         return updateFacultyAccess(msg, url, this);
     });
     
-    // Create group initialization
-    // select the user's country for picking groups
+    // initialize country selectors based on roles
     if (profile_attributes.role == 'faculty' ||
         profile_attributes.role == 'institution' ||
             profile_attributes.role == 'country') {
-        var eltCountrySelect =  jQuery("#create-a-group").find("select[name='country']");
-        var eltSchoolSelect =  jQuery("#create-a-group").find("select[name='school']");
+        
+        var containers = jQuery("#create-a-group, #report-selector");
+        var eltCountrySelect =  jQuery(containers).find("select[name='country']");
+        var eltSchoolSelect =  jQuery(containers).find("select[name='school']");
         
         jQuery(eltCountrySelect).val(profile_attributes.country);
         jQuery(eltCountrySelect).attr('disabled', 'disabled');
         
-        populateSchoolChoices(jQuery("#create-a-group"),
+        populateSchoolChoices(jQuery(containers),
             eltCountrySelect, eltSchoolSelect,
             function() {
                 if (profile_attributes.role == 'faculty' ||
@@ -358,6 +370,6 @@
                     jQuery(eltSchoolSelect).attr('disabled', 'disabled');
                 }
             });
-    }
+     }
  });
     
