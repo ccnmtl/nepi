@@ -11,7 +11,7 @@
 	position: absolute;
 }
 
-.correct_answer1, .correct_answer2, .correct_answer3, .correct_answer4 {
+.correct_answer1, .correct_answer2, .correct_answer3 {
 	border: solid 4px #80b6e6;
 	border-radius: 10px;
 	padding: 10px;
@@ -22,7 +22,7 @@
 	width: 200px;
 }
 
-.wrong_answer1, .wrong_answer2, .wrong_answer3, .wrong_answer4 {
+.wrong_answer1, .wrong_answer2, .wrong_answer3 {
 	border: solid 4px #f5463a;
 	border-radius: 10px;
 	padding: 10px;
@@ -218,6 +218,7 @@ width: 150px;
 .s2_act_02 .correct_answer4 p {
 	margin: 0px;
 	padding: 10px;
+	width: 100%;
 }
 
 .s2_act_02 .correct_answer4 p.nurse {
@@ -308,9 +309,9 @@ width: 150px;
 
 .s2_act_02 .wrong_answer3 {
 	position: absolute;
-top: -400px;
-left: 475px;
-width: 150px;
+	top: -400px;
+	left: 475px;
+	width: 150px;
 }
 
 .s2_act_02 .wrong_answer4 {
@@ -322,6 +323,7 @@ width: 150px;
 .s2_act_02 .wrong_answer4 p {
 	margin: 0px;
 	padding: 10px;
+	width: 100%;
 }
 
 .s2_act_02 .wrong_answer4 p.nurse {
