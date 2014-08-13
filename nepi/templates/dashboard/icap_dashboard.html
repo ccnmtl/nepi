@@ -1,9 +1,5 @@
 {% extends 'base.html' %}
 
-{% block css %}
-    <link href="/site_media/css/datepicker.css" rel="stylesheet">
-{% endblock %}
-
 {% block js %}
     <script src="/site_media/js/jquery-ui-1.10.3.min.js"></script>
     <script type="text/javascript" src="/site_media/js/dashboard.js"></script>
@@ -31,20 +27,23 @@
         {% include "dashboard/tab_groups.html" %}
     
         {% comment %}
-        {% if object.profile_type == "TE" %}
+        {% if user_profile.is_faculty %}
             {% include "dashboard/tab_teacher_reports.html" %}
         {% endif %}
-        {% if object.profile_type == "CA" %}
+        {% if user_profile.is_institution_administrator %}
+            {% include "dashboard/tab_school_reports.html" %}
+        {% endif %}
+        {% if user_profile.is_country_administrator %}
             {% include "dashboard/tab_ca_reports.html" %}
         {% endif %}
-        {% if object.profile_type == "IC" %}
+        {% if user_profile.is_icap %}
             {% include "dashboard/tab_icap_reports.html" %}
         {% endif %}
         {% endcomment %}
     
         {% include "dashboard/tab_profile.html" %}
     
-        {% if object.profile_type == "IC" or object.profile_type == "CA" %}
+        {% if user_profile.is_institution_administrator or user_profile.is_country_administrator or user_profile.is_icap %}
             {% include "dashboard/tab_pending_teachers.html" %}
         {% endif %}
 

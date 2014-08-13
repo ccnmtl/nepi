@@ -1,1 +1,9 @@
-You have been granted faculty access for {{user.profile.school.name}}.                          
+Hello {{user.get_full_name}},
+
+You have been granted faculty access to the ICAP Nursing E-learning system.
+
+Your school is {{school.name}} in {{school.country.display_name}}.
+
+You may now create groups for your students to join, and you may view your students' scores.
+
+Visit http://nepi.ccnmtl.columbia.edu to login.

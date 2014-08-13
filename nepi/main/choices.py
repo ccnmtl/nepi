@@ -67,8 +67,9 @@ COUNTRY_CHOICES = (
 
 
 PROFILE_CHOICES = (
-    ('IC', 'ICAP'),
-    ('TE', 'Teacher'),
-    ('CA', 'Country Administrator'),
     ('ST', 'Student'),
+    ('TE', 'Teacher'),
+    ('IN', 'Institution'),
+    ('CA', 'Country Administrator'),
+    ('IC', 'ICAP')
 )

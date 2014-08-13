@@ -4,7 +4,8 @@ from factories import SchoolGroupFactory
 from nepi.main.models import AggregateQuizScore, PendingTeachers
 from nepi.main.tests.factories import StudentProfileFactory, \
     TeacherProfileFactory, ICAPProfileFactory, \
-    CountryAdministratorProfileFactory, SchoolFactory
+    CountryAdministratorProfileFactory, \
+    SchoolFactory, InstitutionProfileFactory
 from pagetree.models import Hierarchy, Section, UserPageVisit
 from pagetree.tests.factories import HierarchyFactory, ModuleFactory
 
@@ -19,6 +20,7 @@ class TestUserProfile(TestCase):
     def setUp(self):
         self.student = StudentProfileFactory().user
         self.teacher = TeacherProfileFactory().user
+        self.school_admin = InstitutionProfileFactory().user
         self.icap = ICAPProfileFactory().user
         self.country_admin = CountryAdministratorProfileFactory().user
         ModuleFactory("main", "/")
@@ -30,21 +32,33 @@ class TestUserProfile(TestCase):
     def test_user_profile_roles(self):
         self.assertTrue(self.student.profile.is_student())
         self.assertFalse(self.teacher.profile.is_student())
+        self.assertFalse(self.school_admin.profile.is_student())
         self.assertFalse(self.country_admin.profile.is_student())
         self.assertFalse(self.icap.profile.is_student())
 
         self.assertFalse(self.student.profile.is_teacher())
         self.assertTrue(self.teacher.profile.is_teacher())
+        self.assertFalse(self.school_admin.profile.is_teacher())
         self.assertFalse(self.country_admin.profile.is_teacher())
         self.assertFalse(self.icap.profile.is_teacher())
 
+        self.assertFalse(self.student.profile.is_institution_administrator())
+        self.assertFalse(self.teacher.profile.is_institution_administrator())
+        self.assertTrue(
+            self.school_admin.profile.is_institution_administrator())
+        self.assertFalse(
+            self.country_admin.profile.is_institution_administrator())
+        self.assertFalse(self.icap.profile.is_institution_administrator())
+
         self.assertFalse(self.student.profile.is_country_administrator())
         self.assertFalse(self.teacher.profile.is_country_administrator())
+        self.assertFalse(self.school_admin.profile.is_country_administrator())
         self.assertTrue(self.country_admin.profile.is_country_administrator())
         self.assertFalse(self.icap.profile.is_country_administrator())
 
         self.assertFalse(self.student.profile.is_icap())
         self.assertFalse(self.teacher.profile.is_icap())
+        self.assertFalse(self.school_admin.profile.is_icap())
         self.assertFalse(self.country_admin.profile.is_icap())
         self.assertTrue(self.icap.profile.is_icap())
 

@@ -1,20 +1,23 @@
 {% load progressreport %}
 
 <div class="tab-pane" id="user-groups">
-    {% if user_profile.is_teacher or user_profile.is_country_administrator or user_profile.is_icap %}
+    {% if not user_profile.is_student %}
     
         {% if user_profile.is_teacher %}
             <h3 class="role">AS FACULTY</h3>
+        {% else %}{% if user_profile.is_institution_administrator %}
+            <h3 class="role">AS INSTITUTION ADMINISTRATOR</h3>
         {% else %}{% if user_profile.is_country_administrator %}
             <h3 class="role">AS COUNTRY ADMINISTRATOR</h3>
         {% else %}{% if user_profile.is_icap %}
             <h3 class="role">AS ICAP ADMINISTRATOR</h3>
-        {% endif %}{% endif %}{% endif %}
+        {% endif %}{% endif %}{% endif %}{% endif %}
         
         <blockquote>
-            {% if user_profile.is_teacher %}
+            {% if user_profile.is_teacher or user_profile.is_institution_administrator %}
                 <h4>{{user.profile.school.name}}</h4>
                 <h4>{{user.profile.school.country.display_name}}</h4>
+                <br />
             {% else %}{% if user_profile.is_country_administrator %}
                 <h4>{{user.profile.country.display_name}}</h4>
             {% endif %}{% endif %}
@@ -182,7 +185,7 @@
                             Please select an institution.
                         </div>
                     </div>
-                </div>        
+                </div>
                 <div class="fieldWrapper control-group start_date wide">
                     <label><b>Begin Date:</b></label>
                     <div class="controls">

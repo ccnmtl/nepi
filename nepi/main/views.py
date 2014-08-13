@@ -116,6 +116,21 @@ class UserProfileView(LoggedInMixin, DetailView):
         context['managed_groups'] = groups
         return context
 
+    def get_institution_context(self):
+        context = {}
+        groups = Group.objects.filter(
+            Q(creator=self.request.user) |
+            Q(school=self.request.user.profile.school))
+        groups = groups.exclude(archived=True)
+        groups = groups.order_by('school__name', 'name')
+        context['managed_groups'] = groups
+
+        teachers = PendingTeachers.objects.filter(
+            Q(school=self.request.user.profile.school))
+        teachers = teachers.order_by('school__name')
+        context['pending_teachers'] = teachers
+        return context
+
     def get_country_context(self):
         context = {}
         groups = Group.objects.filter(
@@ -156,6 +171,8 @@ class UserProfileView(LoggedInMixin, DetailView):
 
         if self.request.user.profile.is_teacher():
             context.update(self.get_faculty_context())
+        elif self.request.user.profile.is_institution_administrator():
+            context.update(self.get_institution_context())
         elif self.request.user.profile.is_country_administrator():
             context.update(self.get_country_context())
         elif self.request.user.profile.is_icap():
@@ -257,7 +274,8 @@ class CreateGroupView(LoggedInMixin, View):
         group.module = Hierarchy.objects.get(name=module_name)
 
         group.creator = self.request.user
-        if self.request.user.profile.is_teacher():
+        if (self.request.user.profile.is_teacher() or
+                self.request.user.profile.is_institution_administrator()):
             group.school = self.request.user.profile.school
         else:
             school = School.objects.get(id=self.request.POST.get('school'))
@@ -346,7 +364,7 @@ class ConfirmFacultyView(LoggedInMixin, JSONResponseMixin, View):
 
         subject = "ICAP Nursing E-Learning Faculty Access"
 
-        ctx = Context({'user': user})
+        ctx = Context({'user': user, 'school': user.profile.school})
         message = template.render(ctx)
 
         sender = settings.NEPI_MAILING_LIST
@@ -354,7 +372,8 @@ class ConfirmFacultyView(LoggedInMixin, JSONResponseMixin, View):
 
     def post(self, *args, **kwargs):
         if not (self.request.user.profile.is_icap() or
-                self.request.user.profile.is_country_administrator()):
+                self.request.user.profile.is_country_administrator() or
+                self.request.user.profile.is_institution_administrator()):
             return HttpResponseForbidden(
                 'You are not authorized to deny faculty access.')
 
@@ -458,7 +477,7 @@ class ContactView(FormView):
         message = "First name: %s\nLast name: %s\nMessage: %s" % (
             form_data['first_name'], form_data['last_name'],
             form_data['message'])
-        recipients = [settings.NEPI_MAILING_LIST]
+        recipients = [settings.ICAP_MAILING_LIST]
         send_mail(subject, message, sender, recipients)
         return super(ContactView, self).form_valid(form)
 
