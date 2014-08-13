@@ -340,7 +340,9 @@
     
     // Create group initialization
     // select the user's country for picking groups
-    if (profile_attributes.role == 'faculty' || profile_attributes.role == 'country') {
+    if (profile_attributes.role == 'faculty' ||
+        profile_attributes.role == 'institution' ||
+            profile_attributes.role == 'country') {
         var eltCountrySelect =  jQuery("#create-a-group").find("select[name='country']");
         var eltSchoolSelect =  jQuery("#create-a-group").find("select[name='school']");
         
@@ -350,7 +352,8 @@
         populateSchoolChoices(jQuery("#create-a-group"),
             eltCountrySelect, eltSchoolSelect,
             function() {
-                if (profile_attributes.role == 'faculty') {
+                if (profile_attributes.role == 'faculty' ||
+                        profile_attributes.role == 'institution') {
                     jQuery(eltSchoolSelect).val(profile_attributes.school);
                     jQuery(eltSchoolSelect).attr('disabled', 'disabled');
                 }

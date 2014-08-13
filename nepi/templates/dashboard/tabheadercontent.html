@@ -27,7 +27,7 @@
         </a>
     </li>
     
-    {% if user_profile.is_country_administrator or user_profile.is_icap %}
+    {% if user_profile.is_institution_administrator or user_profile.is_country_administrator or user_profile.is_icap %}
     <li>
         <a href="#pending-teachers" data-toggle="tab">
             Pending Teachers

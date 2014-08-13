@@ -59,6 +59,11 @@ class TeacherProfileFactory(UserProfileFactory):
     school = factory.SubFactory(SchoolFactory)
 
 
+class InstitutionProfileFactory(UserProfileFactory):
+    profile_type = 'IN'
+    school = factory.SubFactory(SchoolFactory)
+
+
 class ICAPProfileFactory(UserProfileFactory):
     profile_type = 'IC'
 
