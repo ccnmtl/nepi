@@ -1228,13 +1228,15 @@ form.create-group input[name='name'] {
     width: 234px;
 }
 
-div.find-group div.control-group div.help-inline.error,
+#report-selector div.control-group div.help-inline.error,
+.find-group div.control-group div.help-inline.error,
 form.edit-group div.control-group div.help-inline.error,
 form.create-group div.control-group div.help-inline.error {
     display: none;
 }
 
-div.find-group div.control-group.error div.help-inline.error,
+#report-selector div.control-group.error div.help-inline.error,
+.find-group div.control-group.error div.help-inline.error,
 form.edit-group div.control-group.error div.help-inline.error,
 form.create-group div.control-group.error div.help-inline.error {
     display: block;

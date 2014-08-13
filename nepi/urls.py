@@ -6,9 +6,9 @@ from django.views.generic import TemplateView
 from nepi.main.views import CreateGroupView, UpdateGroupView, \
     DeleteGroupView, CreateSchoolView, UpdateSchoolView, ContactView, \
     RegistrationView, JoinGroup, HomeView, GroupDetail, LeaveGroup, \
-    SchoolChoiceView, SchoolGroupChoiceView, ArchiveGroupView, \
-    ConfirmFacultyView, DenyFacultyView, UserProfileView, \
-    RemoveStudent
+    SchoolChoiceView, SchoolGroupChoiceView, \
+    ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView, \
+    RemoveStudent, ReportView
 import nepi.main.views
 import os.path
 import staticmedia
@@ -56,8 +56,8 @@ urlpatterns = patterns(
     url(r'^groups/(?P<school_id>\d+)/$', SchoolGroupChoiceView.as_view()),
 
     # dashboard base views
-    url(r'^dashboard/(?P<pk>\d+)/$',
-        UserProfileView.as_view(), name='dashboard'),
+    (r'^dashboard/reports/$', ReportView.as_view()),
+    url(r'^dashboard/$', UserProfileView.as_view(), name='dashboard'),
 
     # groups
     url(r'^join_group/$', JoinGroup.as_view(), name='join-group'),

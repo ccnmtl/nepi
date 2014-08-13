@@ -1,6 +1,7 @@
 from datetime import datetime
 from django.contrib.auth.models import User
-from nepi.main.models import Country, School, Group, UserProfile
+from nepi.main.models import Country, School, Group, UserProfile, \
+    PendingTeachers
 import factory
 import random
 import string
@@ -59,7 +60,7 @@ class TeacherProfileFactory(UserProfileFactory):
     school = factory.SubFactory(SchoolFactory)
 
 
-class InstitutionProfileFactory(UserProfileFactory):
+class InstitutionAdminProfileFactory(UserProfileFactory):
     profile_type = 'IN'
     school = factory.SubFactory(SchoolFactory)
 
@@ -70,3 +71,9 @@ class ICAPProfileFactory(UserProfileFactory):
 
 class CountryAdministratorProfileFactory(UserProfileFactory):
     profile_type = 'CA'
+
+
+class PendingTeacherFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = PendingTeachers
+    user_profile = factory.SubFactory(StudentProfileFactory)
+    school = factory.SubFactory(SchoolFactory)

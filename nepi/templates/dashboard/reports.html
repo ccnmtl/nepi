@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block js %}
+    <script src="/site_media/js/jquery-ui-1.10.3.min.js"></script>
+    <script type="text/javascript">
+        var profile_attributes = {
+            'role': "{{user.profile.role}}",
+            {% if user.profile.school %}
+                'school': "{{user.profile.school.id}}",
+            {% endif %}
+            'country': "{{user.profile.country.name}}"
+        }
+    </script>
+    <script type="text/javascript" src="/site_media/js/dashboard.js"></script>
+{% endblock %}
+
+{% block content %}
+    <ul class="nav nav-tabs dashboard-nav">
+        <li><a href="/dashboard/#user-modules">Option B+</a></li>
+
+        <li><a href="/dashboard/#user-groups">Groups</a></li>
+
+        <li><a href="/dashboard/#user-profile">Profile</a></li>
+
+        {% if user.profile.is_institution_administrator or user.profile.is_country_administrator or user.profile.is_icap %}
+            <li><a href="/dashboard/#pending-teachers">Pending Teachers</a></li>
+        {% endif %}
+
+        {% if not user.profile.is_student %}
+            <li class="pull-right active"><a class="reports" href="/dashboard/reports/">Reports</a></li>
+        {% endif %}
+    </ul>
+
+    <div class="dashboard tab-content">
+        {% if user_profile.is_teacher %}
+            <h3 class="role">AS FACULTY</h3>
+        {% else %}{% if user_profile.is_institution_administrator %}
+            <h3 class="role">AS INSTITUTION ADMINISTRATOR</h3>
+        {% else %}{% if user_profile.is_country_administrator %}
+            <h3 class="role">AS COUNTRY ADMINISTRATOR</h3>
+        {% else %}{% if user_profile.is_icap %}
+            <h3 class="role">AS ICAP ADMINISTRATOR</h3>
+        {% endif %}{% endif %}{% endif %}{% endif %}
+        
+        <form id="report-selector" class="action-container" action='.' method="post">{% csrf_token %}
+            <div class="fieldWrapper control-group country wide">
+                <div class="controls">
+                    <label><b>Country</b></label>
+                    <select name="country">
+                        {% for choice in countries %}
+                            {% ifequal choice.0 '-----' %}
+                                <option value="{{choice.0}}">All countries</option>
+                            {% else %}
+                                <option value="{{choice.0}}">{{choice.1}}</option>
+                            {% endifequal %}
+                        {% endfor %}
+                    </select>
+                    <div class="help-inline error no-schools">
+                        Your selected country has no institutions. Select another country or "All countries".
+                    </div>
+                </div>
+            </div>
+            <div class="fieldWrapper control-group school wide" style="display: none">
+                <div class="controls">
+                    <label><b>Institution:</b></label>
+                    <select  name="school"></select>
+                    <div class="help-inline error no-schoolgroups">
+                        Your selected institution has no available groups. Select another institution or <b>All Groups</b>
+                    </div>
+                </div>
+            </div>
+            <div class="fieldWrapper control-group schoolgroup" style="display: none">
+                <label><b>Group:</b></label>
+                <select name="schoolgroup"></select>
+            </div>            
+            <button class="btn btn-primary">View Report</button>     
+        </form>
+    </div>
+{% endblock %}

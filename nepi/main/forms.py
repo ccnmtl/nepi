@@ -99,7 +99,8 @@ class UserProfileForm(forms.Form):
         template = loader.get_template(
             'dashboard/faculty_request_email.txt')
 
-        subject = "Nursing E-Learning: Faculty Access Request"
+        subject = "A request for faculty level access has " \
+            "been submitted to the ICAP Nursing E-Learning system"
 
         ctx = Context({'user': user, 'school': school})
         message = template.render(ctx)

@@ -1,1 +1,11 @@
-{{user.get_full_name}} ({{user.username}}) has requested faculty access for {{school.name}} in {{school.country.display_name}}.
+Hello,
+
+A request for faculty access has been made by a user of the ICAP Nursing E-Learning system.
+
+user: {{user.get_full_name}} ({{user.username}})
+
+country: {{school.country.display_name}}
+
+school: {{school.name}}
+
+To grant or deny this request please log in to the ICAP Nursing E-learning and then visit http://nepi.ccnmtl.columbia.edu/dashboard/#pending.
