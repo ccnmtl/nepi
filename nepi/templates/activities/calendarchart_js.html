@@ -17,6 +17,7 @@ jQuery(document).ready(function() {
     function() {
     
             var day = jQuery(this).data().day;
+            day.addClass(".visited" );
             var date = jQuery(this).data().date;
             var explanation = jQuery(this).data().explanation;
             jQuery('#myModal').on('show', function ()
@@ -42,19 +43,6 @@ jQuery(document).ready(function() {
                      {
                          jQuery("li.next a").addClass("disabled");
                      }
-//                     if (date === check_val) 
-//                     {
-//                         jQuery("li.next a").removeClass("disabled");
-//                         next = true;
-//                     }
-//                     if (next_true === true)
-//                     {
-//                         jQuery("li.next a").removeClass("disabled");
-//                     }
-//                     else
-//                     {
-//                         jQuery("li.next a").addClass("disabled");
-//                     }
                 }
             });//end of ajax
             
