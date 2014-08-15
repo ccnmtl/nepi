@@ -83,7 +83,7 @@ class UserProfile(models.Model):
         visits = UserPageVisit.objects.filter(user=self.user)
 
         if visits.count() < 1:
-            return hierarchy.get_first_leaf(hierarchy.get_root())
+            return hierarchy.get_root()
         else:
             visits = visits.order_by('-last_visit')
             return visits[0].section

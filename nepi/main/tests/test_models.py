@@ -81,9 +81,8 @@ class TestUserProfile(TestCase):
         self.assertEquals(self.icap.profile.role(), 'icap')
 
     def test_last_location(self):
-        first_leaf = Section.objects.get(label='Three')
         self.assertEquals(self.student.profile.last_location(self.hierarchy),
-                          first_leaf)
+                          self.hierarchy.get_root())
 
         section = Section.objects.get(slug='two')
         UserPageVisit.objects.create(user=self.student, section=section)
