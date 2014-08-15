@@ -8,12 +8,21 @@ from nepi.main.tests.factories import StudentProfileFactory, \
     SchoolFactory, InstitutionAdminProfileFactory
 from pagetree.models import Hierarchy, Section, UserPageVisit
 from pagetree.tests.factories import HierarchyFactory, ModuleFactory
+from datetime import date
 
 
 class TestGroup(TestCase):
     def test_unicode(self):
         grp = SchoolGroupFactory()
         self.assertEqual(str(grp), grp.name)
+
+    def test_format_time(self):
+        start = date(2007, 1, 5)
+        end = date(2007, 12, 25)
+        grp = SchoolGroupFactory(start_date=start, end_date=end)
+
+        self.assertEquals(grp.formatted_start_date(), "01/05/2007")
+        self.assertEquals(grp.formatted_end_date(), "12/25/2007")
 
 
 class TestUserProfile(TestCase):
@@ -28,6 +37,10 @@ class TestUserProfile(TestCase):
 
     def test_user_profile_unis(self):
         self.assertEquals(unicode(self.student), self.student.username)
+
+    def test_display_name(self):
+        self.assertEquals(self.student.profile.display_name(),
+                          self.student.username)
 
     def test_user_profile_roles(self):
         self.assertTrue(self.student.profile.is_student())
@@ -184,6 +197,11 @@ class TestAggregateQuizScore(TestCase):
             ],
             'children': [],
         })
+
+    def test_basics(self):
+        aqs = AggregateQuizScore(quiz_class='foo')
+        self.assertFalse(aqs.needs_submit())
+        self.assertTrue(aqs.unlocked(self.user))
 
     def test_quizzes(self):
         quizzes = AggregateQuizScore(quiz_class='foo').quizzes().order_by(

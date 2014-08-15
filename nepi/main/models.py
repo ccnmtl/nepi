@@ -60,8 +60,6 @@ class Group(models.Model):
     def formatted_end_date(self):
         return self.format_time(self.end_date)
 
-'''ADD VALIDATION'''
-
 
 class UserProfile(models.Model):
     '''UserProfile adds exta information to a user,
