@@ -1,11 +1,12 @@
 from django.test import TestCase
 
 from nepi.main.tests.factories import UserFactory
-from nepi.activities.models import ConversationResponse
+from nepi.activities.models import ConversationResponse, Day, \
+    Month, RetentionClick
 
 from factories import ConversationScenarioFactory, \
     ConvClickFactory, GoodConversationFactory, \
-    ConversationPageblockHierarchyFactory
+    ConversationPageblockHierarchyFactory  # , RetentionRateCardFactory
 
 
 class TestConvClick(TestCase):
@@ -81,3 +82,30 @@ class TestLRConversationScenario(TestCase):
 
 class TestDosageActivity(TestCase):
     pass
+
+
+class TestDayAndMonthObjects(TestCase):
+    def setUp(self):
+        self.m = Month(display_name="June")
+        self.d = Day(calendar=self.m, number=1, explanation="Your wrong!")
+
+    def test_unicode(self):
+        self.assertEqual(str(self.m), "June")
+        self.assertEqual(str(self.d), "1 Your wrong!")
+
+
+class TestRetentionResponseAndRetentionClick(TestCase):
+
+    def setUp(self):
+        self.retention_click = RetentionClick(click_string="eligible_click")
+
+    def test_unicode(self):
+        self.assertEqual(str(self.retention_click),
+                         "Click String: eligible_click")
+
+
+# class TestRetentionResposne(TestCase):
+#
+#     def test_retention_response(self):
+#         user = UserFactory()
+#         retention_rate = RetentionRateCardFactory()

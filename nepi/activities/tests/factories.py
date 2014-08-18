@@ -1,6 +1,6 @@
 import factory
 from nepi.activities.models import ConversationScenario, \
-    Conversation, ConvClick, RetentionRateCard
+    Conversation, ConvClick, RetentionRateCard, RetentionClick
 from pagetree.models import Hierarchy
 
 
@@ -64,3 +64,30 @@ class ConversationPageblockHierarchyFactory(factory.DjangoModelFactory):
 
 class RetentionRateCardFactory(factory.DjangoModelFactory):
     FACTORY_FOR = RetentionRateCard
+
+
+class RetentionRatePageblockHierarchyFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = Hierarchy
+    name = "ret_hierarchy"
+    base_url = "/"
+
+    @factory.post_generation
+    def populate(self, create, extracted, **kwargs):
+        self.get_root().add_child_section_from_dict(
+            {
+                'label': 'Testing RetentionRate',
+                'slug': 'testing-retentionrate',
+                'pageblocks': [
+                    {'label': 'Testing RetentionRate',
+                     'css_extra': '',
+                     'block_type': 'activities.RetentionRate',
+                     'body': 'You should now use the edit link to add content',
+                     },
+                ],
+                'children': [],
+            })
+
+
+class RetentionClickFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = RetentionClick
+    click_string = "cohort_click"

@@ -383,6 +383,9 @@ class RetentionClick(models.Model):
     created = models.DateTimeField(default=datetime.now)
     click_string = models.CharField(max_length=50)
 
+    def __unicode__(self):
+        return("Click String: " + str(self.click_string))
+
 
 class RetentionResponse(models.Model):
     retentionrate = models.ForeignKey(RetentionRateCard, null=True, blank=True)
