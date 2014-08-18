@@ -23,13 +23,7 @@ from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
     PendingTeachers
 from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
-<<<<<<< HEAD
-    LoggedInMixinStaff, JSONResponseMixin
-=======
     LoggedInMixinStaff, JSONResponseMixin, AdministrationOnlyMixin
-from pagetree.generic.views import PageView, EditView, InstructorView
-from pagetree.models import Hierarchy, UserPageVisit
->>>>>>> a6d2bf3a417d4271d159ce8d4bc5c6e4be58c652
 
 
 class ViewPage(LoggedInMixin, PageView):
