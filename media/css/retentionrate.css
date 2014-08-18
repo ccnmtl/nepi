@@ -1,0 +1,140 @@
+.pageblock.s3_act_01 {
+	margin: 0 0 450px 0;
+}
+
+#retentionsections {
+	float: left;
+	display: block;
+	position: absolute;
+	width: 1100px;
+}
+
+.artregister {
+	display: block;
+	/*background-color: #fff;*/
+	cursor: pointer;
+}
+
+#cohortblock {
+	position: absolute;
+	left: 86px;
+	top: -298px;
+	width: 152px;
+	height: 28px;
+	border: solid 5px #83D0D7;
+}
+
+#startdateblock {
+	position: absolute;
+	left: 91px;
+	top: -240px;
+	width: 37px;
+	height: 83px;
+	border: solid 5px #F3B564;
+}
+
+#eligibleblock {
+	position: absolute;
+	left: 201px;
+	top: -239px;
+	width: 46px;
+	height: 82px;
+	border: solid 5px #D95F50;
+}
+
+#eddblock{
+	position: absolute;
+	left: 610px;
+	top: -239px;
+	width: 48px;
+	height: 82px;
+	border: solid 5px #b4dead;
+}
+
+#followblock{
+	position: absolute;
+	left: 756px;
+	top: -264px;
+	width: 246px;
+	height: 108px;
+	border: solid 5px #64C0F3;
+}
+
+
+.ex_titlefollow, .ex_titlead, .ex_titlewhy, .ex_titleregimen
+{	
+	text-align: center;
+	width: 50%;
+	margin: 0 auto;
+	padding: 20px;
+	border-radius: 10px 10px 0 0;
+	border-left: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+	border-top: solid 1px #ccc;
+	border-bottom: none;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.ex_content {
+	width: 50%;
+	margin: 0 auto;
+	text-align: center;
+	background-color: #f5f5f5;
+	padding: 10px 20px 20px 20px;
+	border-radius: 0 0 10px 10px;
+	border-left: solid 1px #ccc;
+	border-right: solid 1px #ccc;
+	border-bottom: solid 1px #ccc;
+	border-top: none;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.ex_titlefollow {
+	background-color: #83D0D7;
+	color: #fff;
+	font-weight: bold;
+	font-family: Arial, helvetica, sans-serif;
+	font-size: 1.25em;
+}
+
+.ex_titlead {
+	background-color: #F3B564;
+	color: #fff;
+	font-weight: bold;
+	font-family: Arial, helvetica, sans-serif;
+	font-size: 1.25em;
+}
+
+.ex_titlewhy {
+	background-color: #D95F50;
+	color: #fff;
+	font-weight: bold;
+	font-family: Arial, helvetica, sans-serif;
+	font-size: 1.25em;
+}
+
+.ex_titleregimen {
+	background-color: #64C0F3;
+	color: #fff;
+	font-weight: bold;
+	font-family: Arial, helvetica, sans-serif;
+	font-size: 1.25em;
+}
+
+#followupblock:hover, #adherenceblock:hover, #whyblock:hover, #regimenblock:hover {
+	border: solid 5px #ccc;
+}
+
+.ex_content table {
+	margin: 20px 0 0 0;
+}
+
+.ex_content table td {
+	border: solid 1px #000;
+	padding: 5px;
+	margin: 0 auto;
+}
