@@ -104,7 +104,7 @@ class TestRetentionResponseAndRetentionClick(TestCase):
                          "Click String: eligible_click")
 
 
-# class TestRetentionResposne(TestCase):
+# class TestRetentionResponse(TestCase):
 #
 #     def test_retention_response(self):
 #         user = UserFactory()
