@@ -33,21 +33,30 @@
 	border: solid 5px #F3B564;
 }
 
-#whyblock {
+#eligibleblock {
 	position: absolute;
-	left: 755px;
-	top: -201px;
-	width: 40px;
-	height: 15px;
+	left: 201px;
+	top: -239px;
+	width: 46px;
+	height: 82px;
 	border: solid 5px #D95F50;
 }
 
-#regimenblock {
+#eddblock{
 	position: absolute;
-	left: 804px;
-	top: -223px;
-	width: 56px;
-	height: 77px;
+	left: 610px;
+	top: -239px;
+	width: 48px;
+	height: 82px;
+	border: solid 5px #b4dead;
+}
+
+#followblock{
+	position: absolute;
+	left: 756px;
+	top: -264px;
+	width: 246px;
+	height: 108px;
 	border: solid 5px #64C0F3;
 }
 
