@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http.response import HttpResponseNotAllowed, HttpResponse
+from django.http.response import HttpResponseNotAllowed, HttpResponse, \
+    HttpResponseForbidden
 from django.utils.decorators import method_decorator
 import json
 
@@ -40,6 +41,13 @@ class LoggedInMixin(object):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(LoggedInMixin, self).dispatch(*args, **kwargs)
+
+
+class AdministrationOnlyMixin(object):
+    def dispatch(self, *args, **kwargs):
+        if self.request.user.profile.is_student():
+            return HttpResponseForbidden("forbidden")
+        return super(AdministrationOnlyMixin, self).dispatch(*args, **kwargs)
 
 
 class LoggedInMixinStaff(object):

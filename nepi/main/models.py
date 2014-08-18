@@ -60,8 +60,6 @@ class Group(models.Model):
     def formatted_end_date(self):
         return self.format_time(self.end_date)
 
-'''ADD VALIDATION'''
-
 
 class UserProfile(models.Model):
     '''UserProfile adds exta information to a user,
@@ -85,7 +83,7 @@ class UserProfile(models.Model):
         visits = UserPageVisit.objects.filter(user=self.user)
 
         if visits.count() < 1:
-            return hierarchy.get_first_leaf(hierarchy.get_root())
+            return hierarchy.get_root()
         else:
             visits = visits.order_by('-last_visit')
             return visits[0].section
