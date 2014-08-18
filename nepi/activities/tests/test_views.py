@@ -106,9 +106,9 @@ class TestLastResponseSaveViews(TestCase):
 
 class TestRetentionResponseView(TestCase):
 
-    def setUp(self):
-        self.hierarchy = HierarchyFactory()
-        self.section = self.hierarchy.get_root().get_first_leaf()
+#     def setUp(self):
+#         self.hierarchy = HierarchyFactory()
+#         self.section = self.hierarchy.get_root().get_first_leaf()
 
     def test_retention_response(self):
         rf = RetentionRateCardFactory()
@@ -149,3 +149,12 @@ class TestRetentionResponseView(TestCase):
         self.assertEqual(response.status_code, 200)
         the_json = json.loads(response.content)
         self.assertEqual(the_json, {'success': True})
+
+        '''Test that it is storing the submitted
+        click string values'''
+        self.value = RetentionResponse.objects.filter(retentionrate=rf,
+                                                      user=up.user)
+        self.assertIsNone(self.value[0].cohort_click)
+        self.assertIsNone(self.value[0].jan_click)
+        '''We should also check that the page still needs to be submitted'''
+        self.assertTrue(rf.needs_submit())

@@ -6,7 +6,7 @@ from nepi.activities.models import ConversationResponse, Day, \
 
 from factories import ConversationScenarioFactory, \
     ConvClickFactory, GoodConversationFactory, \
-    ConversationPageblockHierarchyFactory
+    ConversationPageblockHierarchyFactory  # , RetentionRateCardFactory
 
 
 class TestConvClick(TestCase):
@@ -103,7 +103,9 @@ class TestRetentionResponseAndRetentionClick(TestCase):
         self.assertEqual(str(self.retention_click),
                          "Click String: eligible_click")
 
-#     def test_retention_card_response_flow(self):
-#         '''testing assert click of response object'''
+
+# class TestRetentionResposne(TestCase):
+#
+#     def test_retention_response(self):
 #         user = UserFactory()
 #         retention_rate = RetentionRateCardFactory()

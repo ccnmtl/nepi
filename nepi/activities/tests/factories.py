@@ -90,4 +90,4 @@ class RetentionRatePageblockHierarchyFactory(factory.DjangoModelFactory):
 
 class RetentionClickFactory(factory.DjangoModelFactory):
     FACTORY_FOR = RetentionClick
-    conversation = factory.SubFactory(GoodConversationFactory)
+    click_string = "cohort_click"
