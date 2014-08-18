@@ -2,34 +2,34 @@
 	margin: 0 0 450px 0;
 }
 
-#artcardsections {
+#retentionsections {
 	float: left;
 	display: block;
 	position: absolute;
 	width: 1100px;
 }
 
-.artcard.section {
+.artregister {
 	display: block;
 	/*background-color: #fff;*/
 	cursor: pointer;
 }
 
-#followupblock {
+#cohortblock {
 	position: absolute;
-	left: 135px;
-	top: -298px;	
-	width: 53px;
-	height: 45px;
+	left: 86px;
+	top: -298px;
+	width: 152px;
+	height: 28px;
 	border: solid 5px #83D0D7;
 }
 
-#adherenceblock {
+#startdateblock {
 	position: absolute;
-	left: 755px;
-	top: -223px;
-	width: 39px;
-	height: 17px;
+	left: 91px;
+	top: -240px;
+	width: 37px;
+	height: 83px;
 	border: solid 5px #F3B564;
 }
 

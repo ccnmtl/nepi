@@ -1,14 +1,17 @@
+<div id="retentionsections">
 <div id="retention"><input type="hidden" name="retention_id" value="{{block.pk}}"/>{{block.pk}}</div>
-<div class="artregister" id="cohort" data-part="cohort"></div>
-<div class="artregister" id="startdate" data-part="startdate"></div>
+<div class="artregister" id="cohortblock" data-part="cohort"></div>
+<div class="artregister" id="startdateblock" data-part="startdate"></div>
 <div class="artregister" id="eligible" data-part="eligible"></div>
 <div class="artregister" id="delivery-date" data-part="delivery-date"></div>
 <div class="artregister" id="followup" data-part="dec0"></div>
 <div id="explanation_box" class="artregister">explanation</div>
+</div>
 
 <div style="display:none" id="cohort" class="explanation"><div class="title">Cohort</div><div class="content">Patients who started ART in the same month are called a cohort.</div></div>
 <div style="display:none" id="startdate" class="explanation"><div class="title">ART Start Date</div><div class="content">Date that each patient in the cohort was started on ART.</div></div>
 <div style="display:none" id="eligible" class="explanation"><div class="title">Why Eligible?</div><div class="content">Reason the patient was started on ART. The codes for each reason are listed in a box at the bottom of the register and include PG for pregnancy and BF for breastfeeding.</div></div>
 <div style="display:none" id="delivery-date" class="explanation"><div class="title">Estimated Date of Delivery</div><div class="content">Date that women who initiated ART during pregnancy are expected to deliver.</div></div>
-<div style="display:none" id="dec0" class="explanation"><div class="title">Follow-up Status</div><div class="content">Whether or not the patient has remained on ART in the months after starting ART. The codes for follow-up status are listed in a box at the bottom of the register and include XX for patients on ART and other codes for patients not on ART.</div></div>
+<div style="display:none" id="dec0" class="explanation"><div class="title">Follow-up Status</div><div class="content">Whether or not the patient has remained on ART in the months after starting ART. The codes for follow-up status are listed in a box at the bottom of the register and include XX for patients on ART and other codes for patients not on ART.</div>
+</div>
 
