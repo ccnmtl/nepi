@@ -1,27 +1,14 @@
 <div id="retention"><input type="hidden" name="retention_id" value="{{block.pk}}"/>{{block.pk}}</div>
-<div class="artregister" data-part="cohort">cohort</div>
-<div class="artregister" data-part="startdate">startdate</div>
-<div class="artregister" data-part="eligible">eligible</div>
-<div class="artregister" data-part="delivery-date">delivery-date</div>
-<div class="artregister" data-part="dec0">dec0</div>
-<div class="artregister" data-part="jan1">jan1</div>
-<div class="artregister" data-part="feb2">feb2</div>
-<div class="artregister" data-part="mar3">mar3</div>
-<div class="artregister" data-part="apr4">apr4</div>
-<div class="artregister" data-part="may5">may5</div>
-<div class="artregister" data-part="june6">june6</div>
+<div class="artregister" id="cohort" data-part="cohort"></div>
+<div class="artregister" id="startdate" data-part="startdate"></div>
+<div class="artregister" id="eligible" data-part="eligible"></div>
+<div class="artregister" id="delivery-date" data-part="delivery-date"></div>
+<div class="artregister" id="followup" data-part="dec0"></div>
 <div id="explanation_box" class="artregister">explanation</div>
 
-<div style="display:none" id="cohort" class="explanation">"Explanation here - cohort."</div>
-<div style="display:none" id="startdate" class="explanation">"Explanation here - startdate."</div>
-<div style="display:none" id="eligible" class="explanation">"Explanation here - eligible."</div>
-<div style="display:none" id="delivery-date" class="explanation">"Explanation here - delivery-date."</div>
-<div style="display:none" id="dec0" class="explanation">"Explanation here - dec0."</div>
-<div style="display:none" id="jan1" class="explanation">"Explanation here - jan1."</div>
-<div style="display:none" id="feb2" class="explanation">"Explanation here - feb2."</div>
-<div style="display:none" id="mar3" class="explanation">"Explanation here - mar3."</div>
-<div style="display:none" id="apr4" class="explanation">"Explanation here - apr4."</div>
-<div style="display:none" id="may5" class="explanation">"Explanation here - may5."</div>
-<div style="display:none" id="june6" class="explanation">"Explanation here - june6."</div>
-
+<div style="display:none" id="cohort" class="explanation"><div class="title">Cohort</div><div class="content">Patients who started ART in the same month are called a cohort.</div></div>
+<div style="display:none" id="startdate" class="explanation"><div class="title">ART Start Date</div><div class="content">Date that each patient in the cohort was started on ART.</div></div>
+<div style="display:none" id="eligible" class="explanation"><div class="title">Why Eligible?</div><div class="content">Reason the patient was started on ART. The codes for each reason are listed in a box at the bottom of the register and include PG for pregnancy and BF for breastfeeding.</div></div>
+<div style="display:none" id="delivery-date" class="explanation"><div class="title">Estimated Date of Delivery</div><div class="content">Date that women who initiated ART during pregnancy are expected to deliver.</div></div>
+<div style="display:none" id="dec0" class="explanation"><div class="title">Follow-up Status</div><div class="content">Whether or not the patient has remained on ART in the months after starting ART. The codes for follow-up status are listed in a box at the bottom of the register and include XX for patients on ART and other codes for patients not on ART.</div></div>
 
