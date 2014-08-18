@@ -580,7 +580,7 @@ class TestCreateSchoolView(TestCase):
 
     def test_create_school(self):
         '''CreateSchoolView'''
-        u = UserFactory()
+        u = TeacherProfileFactory().user
         request = self.factory.post(
             '/add_school/',
             {"name": "School Needs Name",

@@ -23,7 +23,13 @@ from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
     PendingTeachers
 from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
+<<<<<<< HEAD
     LoggedInMixinStaff, JSONResponseMixin
+=======
+    LoggedInMixinStaff, JSONResponseMixin, AdministrationOnlyMixin
+from pagetree.generic.views import PageView, EditView, InstructorView
+from pagetree.models import Hierarchy, UserPageVisit
+>>>>>>> a6d2bf3a417d4271d159ce8d4bc5c6e4be58c652
 
 
 class ViewPage(LoggedInMixin, PageView):
@@ -182,6 +188,7 @@ class UserProfileView(LoggedInMixin, DetailView):
         return context
 
     def post(self, *args, **kwargs):
+
         self.object = self.get_object()
 
         profile_form = UpdateProfileForm(self.request.POST)
@@ -198,13 +205,8 @@ class UserProfileView(LoggedInMixin, DetailView):
         return self.render_to_response(context)
 
 
-class ReportView(TemplateView):
+class ReportView(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
     template_name = "dashboard/reports.html"
-
-    def dispatch(self, *args, **kwargs):
-        if self.request.user.profile.is_student():
-            return HttpResponseForbidden("forbidden")
-        return super(ReportView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         return {
@@ -249,26 +251,21 @@ class SchoolGroupChoiceView(LoggedInMixin, JSONResponseMixin, View):
         return self.render_to_json_response({'groups': groups})
 
 
-class CreateSchoolView(LoggedInMixin, CreateView):
+class CreateSchoolView(LoggedInMixin, AdministrationOnlyMixin, CreateView):
     '''generic class based view for adding a school'''
     model = School
     template_name = 'icap/add_school.html'
     success_url = '/'
 
 
-class UpdateSchoolView(LoggedInMixin, UpdateView):
+class UpdateSchoolView(LoggedInMixin, AdministrationOnlyMixin, UpdateView):
     '''generic class based view for editing a school'''
     model = School
     template_name = 'icap/add_school.html'
     success_url = '/'
 
 
-class CreateGroupView(LoggedInMixin, View):
-
-    def dispatch(self, *args, **kwargs):
-        if self.request.user.profile.is_student():
-            return HttpResponseForbidden("forbidden")
-        return super(CreateGroupView, self).dispatch(*args, **kwargs)
+class CreateGroupView(LoggedInMixin, AdministrationOnlyMixin, View):
 
     def post(self, *args, **kwargs):
         # validation is taking place client-side
@@ -301,11 +298,7 @@ class CreateGroupView(LoggedInMixin, View):
         return HttpResponseRedirect('/dashboard/#user-groups')
 
 
-class UpdateGroupView(LoggedInMixin, View):
-    def dispatch(self, *args, **kwargs):
-        if self.request.user.profile.is_student():
-            return HttpResponseForbidden("forbidden")
-        return super(CreateGroupView, self).dispatch(*args, **kwargs)
+class UpdateGroupView(LoggedInMixin, AdministrationOnlyMixin, View):
 
     def post(self, *args, **kwargs):
         pk = self.request.POST.get('pk')
@@ -338,7 +331,8 @@ class JoinGroup(LoggedInMixin, View):
         return HttpResponseRedirect('/dashboard/#user-groups')
 
 
-class DeleteGroupView(LoggedInMixin, JSONResponseMixin, View):
+class DeleteGroupView(LoggedInMixin, AdministrationOnlyMixin,
+                      JSONResponseMixin, View):
 
     def post(self, *args, **kwargs):
         group = get_object_or_404(Group, pk=self.request.POST.get('group'))
@@ -351,7 +345,8 @@ class DeleteGroupView(LoggedInMixin, JSONResponseMixin, View):
         return self.render_to_json_response({'success': True})
 
 
-class ArchiveGroupView(LoggedInMixin, JSONResponseMixin, View):
+class ArchiveGroupView(LoggedInMixin, AdministrationOnlyMixin,
+                       JSONResponseMixin, View):
 
     def post(self, *args, **kwargs):
         group = get_object_or_404(Group, pk=self.request.POST.get('group'))
@@ -373,7 +368,8 @@ class LeaveGroup(LoggedInMixin, JSONResponseMixin, View):
         return self.render_to_json_response({'success': True})
 
 
-class ConfirmFacultyView(LoggedInMixin, JSONResponseMixin, View):
+class ConfirmFacultyView(LoggedInMixin, AdministrationOnlyMixin,
+                         JSONResponseMixin, View):
 
     def send_confirmation_email(self, user):
         template = loader.get_template(
@@ -409,7 +405,8 @@ class ConfirmFacultyView(LoggedInMixin, JSONResponseMixin, View):
         return self.render_to_json_response({'success': True})
 
 
-class DenyFacultyView(LoggedInMixin, JSONResponseMixin, View):
+class DenyFacultyView(LoggedInMixin, AdministrationOnlyMixin,
+                      JSONResponseMixin, View):
 
     def send_denied_email(self, user, school):
         template = loader.get_template(
@@ -439,7 +436,7 @@ class DenyFacultyView(LoggedInMixin, JSONResponseMixin, View):
         return self.render_to_json_response({'success': True})
 
 
-class GroupDetail(LoggedInMixin, DetailView):
+class GroupDetail(LoggedInMixin, AdministrationOnlyMixin, DetailView):
     '''generic class based view for
     see group details - students etc'''
     model = Group
@@ -468,7 +465,8 @@ class GroupDetail(LoggedInMixin, DetailView):
         return context
 
 
-class RemoveStudent(LoggedInMixin, JSONResponseMixin, View):
+class RemoveStudent(LoggedInMixin, AdministrationOnlyMixin,
+                    JSONResponseMixin, View):
     template_name = 'dashboard/view_group.html'
 
     '''Remove the student from a course.'''

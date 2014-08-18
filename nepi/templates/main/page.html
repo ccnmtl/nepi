@@ -38,7 +38,8 @@
                     // this scroll needs to be completed after the show
                     // to ensure the position is correct
                     var top = jQuery(initialSection).position().top +
-                        jQuery(".slide-out-menu div.primary-toc").scrollTop();
+                        jQuery(".slide-out-menu div.primary-toc").scrollTop() - 30;
+                    if (top < 0) { top = 0; }
                     jQuery(".slide-out-menu .primary-toc").scrollTop(top);
                     initialSection = undefined;
                 }

@@ -866,7 +866,7 @@ div.pageblock.show-correct li.incorrect:after {
 }
 
 .slide-out-menu.transition .primary-toc a {
-    color: #000;
+    color: #f5f5f5;
 }
 
 .slide-out-menu div.primary-toc {
@@ -912,11 +912,6 @@ div.pageblock.show-correct li.incorrect:after {
     background: #fff;
    	border-radius: 0px;
     text-decoration: none;
-}
- 
-.slide-out-menu a:active li {
-    background: #fff;
-    color: #333;
 }
 
 .slide-out-menu a.disabled {
