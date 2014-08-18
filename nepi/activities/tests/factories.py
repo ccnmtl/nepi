@@ -1,6 +1,7 @@
 import factory
 from nepi.activities.models import ConversationScenario, \
-    Conversation, ConvClick, RetentionRateCard, RetentionClick
+    Conversation, ConvClick, RetentionRateCard, RetentionClick, \
+    CalendarChart, Month, Day  # , CalendarResponse
 from pagetree.models import Hierarchy
 
 
@@ -91,3 +92,35 @@ class RetentionRatePageblockHierarchyFactory(factory.DjangoModelFactory):
 class RetentionClickFactory(factory.DjangoModelFactory):
     FACTORY_FOR = RetentionClick
     click_string = "cohort_click"
+
+
+class MonthFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = Month
+    display_name = "January"
+
+
+class CalendarChartFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = CalendarChart
+    month = factory.SubFactory(MonthFactory)
+    correct_date = '4'
+
+
+class IncorrectDayOneFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = Day
+    calendar = factory.SubFactory(MonthFactory)
+    number = 1
+    explanation = "This is the wrong day"
+
+
+class IncorrectDayTwoFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = Day
+    calendar = factory.SubFactory(MonthFactory)
+    number = 2
+    explanation = "This is the wrong day"
+
+
+class CorrectDayFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = Day
+    calendar = factory.SubFactory(MonthFactory)
+    number = 4
+    explanation = "This is the correct day"
