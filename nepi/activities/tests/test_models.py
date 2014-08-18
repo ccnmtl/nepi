@@ -2,11 +2,11 @@ from django.test import TestCase
 
 from nepi.main.tests.factories import UserFactory
 from nepi.activities.models import ConversationResponse, Day, \
-    Month, RetentionClick
+    Month, RetentionClick, Conversation
 
 from factories import ConversationScenarioFactory, \
     ConvClickFactory, GoodConversationFactory, \
-    ConversationPageblockHierarchyFactory  # , RetentionRateCardFactory
+    ConversationPageblockHierarchyFactory
 
 
 class TestConvClick(TestCase):
@@ -77,9 +77,6 @@ class TestLRConversationScenario(TestCase):
         self.assertTrue(scenario.unlocked(user))
 
 
-# class TestCalendarActivity(TestCase):
-#     pass
-
 class TestDosageActivity(TestCase):
     pass
 
@@ -103,9 +100,24 @@ class TestRetentionResponseAndRetentionClick(TestCase):
         self.assertEqual(str(self.retention_click),
                          "Click String: eligible_click")
 
+'''Trying to see if not using factory boy makes coverage see the tests'''
 
-# class TestRetentionResponse(TestCase):
-#
-#     def test_retention_response(self):
-#         user = UserFactory()
-#         retention_rate = RetentionRateCardFactory()
+
+class TestConversationNoFactory(TestCase):
+
+    def setUp(self):
+        self.test_conversation = Conversation.objects.create()
+        self.test_conversation.scenario_type = 'G'
+        self.test_conversation.text_one = \
+            "We assume text one is the starting text"
+        self.test_conversation.response_one = \
+            "Text 1 is the response to whatever the other party says"
+        self.test_conversation.response_two = \
+            "Text 2 is the response to whatever the other party says"
+        self.test_conversation.response_three = \
+            "Text 3 is an optional response/thought to "
+        self.test_conversation.complete_dialog = \
+            "This is the entire Nurse/Patient exchange"
+
+    def test_conv_unicode(self):
+        self.assertEquals(str(self.test_conversation), 'G')

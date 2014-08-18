@@ -2,7 +2,7 @@ import factory
 from nepi.activities.models import ConversationScenario, \
     Conversation, ConvClick, RetentionRateCard, RetentionClick, \
     CalendarChart, Month, Day  # , CalendarResponse
-from pagetree.models import Hierarchy
+from pagetree.models import Hierarchy, Section
 
 
 class GoodConversationFactory(factory.DjangoModelFactory):
@@ -67,7 +67,7 @@ class RetentionRateCardFactory(factory.DjangoModelFactory):
     FACTORY_FOR = RetentionRateCard
 
 
-class RetentionRatePageblockHierarchyFactory(factory.DjangoModelFactory):
+class RetentionRateHierarchyFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Hierarchy
     name = "ret_hierarchy"
     base_url = "/"
@@ -87,6 +87,13 @@ class RetentionRatePageblockHierarchyFactory(factory.DjangoModelFactory):
                 ],
                 'children': [],
             })
+
+
+class RetentionSectionTest(factory.DjangoModelFactory):
+    FACTORY_FOR = Section
+    hierarchy = factory.SubFactory(RetentionRateHierarchyFactory)
+    depth = 1
+    label = 'Testing RetentionRate'
 
 
 class RetentionClickFactory(factory.DjangoModelFactory):
