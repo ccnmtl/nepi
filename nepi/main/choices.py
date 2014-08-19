@@ -7,7 +7,6 @@
 # http://sustainablesources.com/resources/country-abbreviations/
 # http://www.paladinsoftware.com/Generic/countries.htm
 COUNTRY_CHOICES = (
-    ('-----', '-----'),
     ('DZ', 'Algeria'),
     ('AO', 'Angola'),
     ('BJ', 'Benin'),

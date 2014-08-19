@@ -500,9 +500,7 @@ class TestSchoolChoiceView(TestCase):
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         the_json = json.loads(response.content)
-        self.assertEquals(len(the_json['schools']), 1)
-        self.assertEquals(the_json['schools'][0]['id'], '-----')
-        self.assertEquals(the_json['schools'][0]['name'], '-----')
+        self.assertEquals(len(the_json['schools']), 0)
 
     def test_get_schools(self):
         response = self.client.get('/schools/%s/' % self.school.country.name,
@@ -510,12 +508,10 @@ class TestSchoolChoiceView(TestCase):
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         the_json = json.loads(response.content)
-        self.assertEquals(len(the_json['schools']), 2)
+        self.assertEquals(len(the_json['schools']), 1)
 
-        self.assertEquals(the_json['schools'][0]['id'], '-----')
-        self.assertEquals(the_json['schools'][0]['name'], '-----')
-        self.assertEquals(the_json['schools'][1]['id'], str(self.school.id))
-        self.assertEquals(the_json['schools'][1]['name'], self.school.name)
+        self.assertEquals(the_json['schools'][0]['id'], str(self.school.id))
+        self.assertEquals(the_json['schools'][0]['name'], self.school.name)
 
 
 class TestSchoolGroupChoiceView(TestCase):

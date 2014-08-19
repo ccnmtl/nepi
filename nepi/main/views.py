@@ -209,13 +209,54 @@ class ReportView(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
         }
 
 
+class AggregateReportView(LoggedInMixin, AdministrationOnlyMixin,
+                          JSONResponseMixin, View):
+
+    all = 'all'
+
+    def get_groups(self, request):
+        group_id = request.POST.get('groups', self.all)
+        if group_id != self.all:
+            groups = Group.objects.filter(id=group_id)
+        else:
+            groups = Group.objects.filter(archived=False)
+            country_id = request.POST.get('country', self.all)
+            school_id = request.POST.get('school', self.all)
+            if country_id != self.all:
+                groups = groups.filter(school__country__id=country_id)
+            if school_id != self.all:
+                groups = groups.filter(school__id=school_id)
+
+        return groups
+
+    def post(self, request, *args, **kwargs):
+        data = {'total': 0, 'completed': 0, 'incomplete': 0, 'inprogress': 0}
+
+        for group in self.get_groups(request).all():
+            module_root = group.module.get_root()
+            active = group.is_active()
+            for profile in group.userprofile_set.all():
+                data['total'] += 1
+
+                pct = profile.percent_complete(module_root)
+                if pct == 100:
+                    data['completed'] += 1
+                elif pct > 0:
+                    if active:
+                        data['inprogress'] += 1
+                    else:
+                        data['incomplete'] += 1
+
+        return self.render_to_json_response(data)
+
+
 class SchoolChoiceView(JSONResponseMixin, View):
 
     def get(self, *args, **kwargs):
         country_id = kwargs.pop('country_id', None)
         country = get_object_or_404(Country, name=country_id)
 
-        schools = [{'id': '-----', 'name': '-----'}]
+        schools = []
         for school in School.objects.filter(country=country):
             schools.append({'id': str(school.id), 'name': school.name})
 

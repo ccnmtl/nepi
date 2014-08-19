@@ -969,7 +969,7 @@ input#generic-reset {
 }
 
 /* Registration & Contact Forms*/
-
+#report-selector,
 div.user-profile-form {
     width: 453px;
 }
@@ -1237,6 +1237,9 @@ form.create-group div.control-group.error div.help-inline.error {
     display: block;
 }
 
+#report-select .btn.aggregate {
+    float: right;
+}
 
 /** Document Adherence Activity **/
 .pageblock.document p {

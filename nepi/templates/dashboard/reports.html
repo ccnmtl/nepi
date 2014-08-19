@@ -42,38 +42,39 @@
             <h3 class="role">AS ICAP ADMINISTRATOR</h3>
         {% endif %}{% endif %}{% endif %}{% endif %}
         
-        <form id="report-selector" class="action-container" action='.' method="post">{% csrf_token %}
+        <form id="report-selector" class="action-container" action='/dashboard/reports/aggregate/' method="post">{% csrf_token %}
             <div class="fieldWrapper control-group country wide">
                 <div class="controls">
                     <label><b>Country</b></label>
                     <select name="country">
+                        <option class="all-or-none-option" value="all">All countries</option>
                         {% for choice in countries %}
-                            {% ifequal choice.0 '-----' %}
-                                <option value="{{choice.0}}">All countries</option>
-                            {% else %}
-                                <option value="{{choice.0}}">{{choice.1}}</option>
-                            {% endifequal %}
+                            <option value="{{choice.0}}">{{choice.1}}</option>
                         {% endfor %}
                     </select>
                     <div class="help-inline error no-schools">
-                        Your selected country has no institutions. Select another country or "All countries".
+                        Your selected country has no institutions. Select another country or <b>All countries</b>.
                     </div>
                 </div>
             </div>
             <div class="fieldWrapper control-group school wide" style="display: none">
                 <div class="controls">
                     <label><b>Institution:</b></label>
-                    <select  name="school"></select>
+                    <select  name="school">
+                        <option class="all-or-none-option" value="all">All institutions</option>
+                    </select>
                     <div class="help-inline error no-schoolgroups">
-                        Your selected institution has no available groups. Select another institution or <b>All Groups</b>
+                        Your selected institution has no available groups. Select another institution or <b>All Institutions</b>
                     </div>
                 </div>
             </div>
             <div class="fieldWrapper control-group schoolgroup" style="display: none">
                 <label><b>Group:</b></label>
-                <select name="schoolgroup"></select>
+                <select name="schoolgroup">
+                    <option class="all-or-none-option" value="all">All groups</option>
+                </select>
             </div>            
-            <button class="btn btn-primary">View Report</button>     
+            <button class="btn btn-primary aggregate">View Aggregate Report</button>     
         </form>
     </div>
 {% endblock %}
