@@ -89,7 +89,14 @@
         <div class="fieldWrapper control-group {% if profile_form.country.errors %}error{% endif %} wide">
             <label for="id_country"><b>Which country are you in?</b></label>
             <div class="controls">
-                {{profile_form.country}}
+                <select name="country">
+                    <option class="all-or-none-option" value="-----">-----</option>
+                    {% for choice in countries %}
+                        <option value="{{choice.0}}" {% ifequal user_profile.country.name choice.0 %}selected="selected"{% endifequal %}>
+                            {{choice.1}}
+                        </option>
+                    {% endfor %}
+                </select>
                 {% if profile_form.country.errors %}
                     <div class="help-inline select">{{profile_form.country.errors}}</div>
                 {% endif %}

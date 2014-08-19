@@ -1,7 +1,7 @@
 jQuery(document).ready(function () {
     
     function resetSchoolChoice() {
-        jQuery("div.user-profile-form select[name='school']").find('option').remove();
+        jQuery("div.user-profile-form select[name='school']").find('option').not('.all-or-none-option').remove();
         jQuery("div.user-profile-form input[name='profile_type']").removeAttr('checked');
     }
     

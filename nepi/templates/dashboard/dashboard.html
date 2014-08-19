@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load waffle_tags %}
 {% block js %}
     <script src="/site_media/js/jquery-ui-1.10.3.min.js"></script>
     <script type="text/javascript">
@@ -30,11 +30,11 @@
         <li><a href="#pending" data-toggle="tab">Pending Teachers</a></li>
         {% endif %}
         
-        {% comment %}
+        {% flag "reports" %}
         {% if not user_profile.is_student %}
         <li class="pull-right"><a class="reports" href="/dashboard/reports/">Reports</a></li>
         {% endif %}
-        {% endcomment %}
+        {% endflag %}
     </ul>
 
     <div class="dashboard tab-content">

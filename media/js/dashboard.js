@@ -20,20 +20,24 @@
         jQuery(elt).parents('.control-group').addClass('error');
      }
      
+     function hideError(elt) {
+         jQuery(elt).parents('.control-group').removeClass('error');
+     }
+     
      // Join Group Functionality
      function clearSchoolGroupChoices(elt) {
          jQuery(elt).find(".control-group.schoolgroup").hide();
          jQuery(elt).find(".control-group.school").removeClass('error');
          jQuery(elt).find(".control-group.schoolgroup").removeClass('error');
          jQuery(elt).find(".control-group.schoolgroup table").find('tr.content-row').remove();
-         jQuery(elt).find(".control-group.schoolgroup select").find('option').remove();
+         jQuery(elt).find(".control-group.schoolgroup select").find('option').not('.all-or-none-option').remove();
      }
 
      function clearSchoolChoices(elt) {
          jQuery(elt).find(".control-group.school").hide();
          jQuery(elt).find(".control-group.country").removeClass('error');
          jQuery(elt).find(".control-group.school").removeClass('error');
-         jQuery(elt).find("select[name='school']").find('option').remove();
+         jQuery(elt).find("select[name='school']").find('option').not('.all-or-none-option').remove();
      }
 
      function populateSchoolChoices(elt, eltCountrySelect, eltSchoolSelect, callback) {
@@ -67,8 +71,6 @@
     }
 
     function populateSchoolGroupChoices(elt, eltSchoolSelect, eltGroup) {
-        clearSchoolGroupChoices(elt);
-        
         jQuery.ajax({
             type: 'GET',
             url: '/groups/' + jQuery(eltSchoolSelect).val() + '/',
@@ -83,23 +85,31 @@
                     showError(eltSchoolSelect);
                 } else {
                     // @todo - a client-side template would do nicely here
-                    for (var i=0; i < json.groups.length; i++) {
-                        var group = json.groups[i];
-                        var choice = "<tr class='content-row'>" + 
-                            "<td>" + group.name + "</td>" + 
-                            "<td>" + group.start_date + "</td>" +
-                            "<td>" + group.end_date + "</td>" +
-                            "<td>" + group.creator + "</td>";
-                        if (group.member) {
-                            choice += "<td>Joined</td>";
-                        } else {
-                            choice += "<td><form action='/join_group/' method='post'>" +
-                            "<button class='btn btn-primary btn-small'>Join</button>" + 
-                            "<input type='hidden' name='group' value='" + group.id + "'></input>" +
-                            "</form></td>";
+                    if (eltGroup.tagName === 'SELECT') {
+                        for (var i=0; i < json.groups.length; i++) {
+                            var group = json.groups[i];
+                            var option = "<option value='"  + group.id + "'>" + group.name + "</option>";
+                            jQuery(eltGroup).append(option)
                         }
-                        choice += "</tr>";
-                        jQuery(eltGroup).append(choice);
+                    } else {
+                        for (var i=0; i < json.groups.length; i++) {
+                            var group = json.groups[i];
+                            var choice = "<tr class='content-row'>" + 
+                                "<td>" + group.name + "</td>" + 
+                                "<td>" + group.start_date + "</td>" +
+                                "<td>" + group.end_date + "</td>" +
+                                "<td>" + group.creator + "</td>";
+                            if (group.member) {
+                                choice += "<td>Joined</td>";
+                            } else {
+                                choice += "<td><form action='/join_group/' method='post'>" +
+                                "<button class='btn btn-primary btn-small'>Join</button>" + 
+                                "<input type='hidden' name='group' value='" + group.id + "'></input>" +
+                                "</form></td>";
+                            }
+                            choice += "</tr>";
+                            jQuery(eltGroup).append(choice);
+                        }
                     }
                     jQuery(eltGroup).parents(".control-group").fadeIn();
                 }
@@ -117,10 +127,37 @@
         populateSchoolChoices(elt, this, eltSchoolChoice);
     });
 
+    jQuery("#report-selector select[name='country']").change(function() {
+        var elt = jQuery(this).parents('.action-container')[0];
+        clearSchoolGroupChoices(elt);
+        clearSchoolChoices(elt);
+
+        if (jQuery(this).val() === 'all') {
+            hideError(this);
+        } else {
+            var eltSchoolChoice = jQuery(elt).find("select[name='school']")[0];
+            populateSchoolChoices(elt, this, eltSchoolChoice);
+        }
+    });
+
     jQuery("#find-a-group select[name='school']").change(function() {
         var elt = jQuery(this).parents('.action-container')[0];
+        clearSchoolGroupChoices(elt);
+
         var eltGroupChoice = jQuery(elt).find("div.schoolgroup table")[0];
         populateSchoolGroupChoices(elt, this, eltGroupChoice);
+    });
+    
+    jQuery("#report-selector select[name='school']").change(function() {
+        var elt = jQuery(this).parents('.action-container')[0];
+        clearSchoolGroupChoices(elt);
+
+        if (jQuery(this).val() === 'all') {
+            hideError(this);
+        } else {
+            var eltGroupChoice = jQuery(elt).find("div.schoolgroup select")[0];
+            populateSchoolGroupChoices(elt, this, eltGroupChoice);
+        }
     });
     
     jQuery('#find-a-group').on('show', function () {
@@ -132,23 +169,24 @@
         jQuery(this).find("div.control-group.schoolgroup").hide();
     });
     
-    jQuery("#report-selector select[name='school']").change(function() {
-        var elt = jQuery(this).parents('.action-container')[0];
-        var eltGroupChoice = jQuery(elt).find("div.schoolgroup select")[0];
-        populateSchoolGroupChoices(elt, this, eltGroupChoice);
-    });
-    
-    jQuery("#report-selector select[name='country']").change(function() {
-        var elt = jQuery(this).parents('.action-container')[0];
-        
-        clearSchoolGroupChoices(elt);
-        clearSchoolChoices(elt);
-        
-        var eltSchoolChoice = jQuery(elt).find("select[name='school']")[0];
-        populateSchoolChoices(elt, this, eltSchoolChoice, function() {
-            jQuery(eltSchoolChoice).find('option[value="-----"]').html("All institutions")
-        });
-    });    
+    jQuery('#create-a-group').on('show', function () {
+         jQuery(this).find("div.control-group").removeClass("error");
+         
+         var countryElt = jQuery(this).find("select[name='country']")[0];
+         var schoolElt = jQuery(this).find("select[name='school']")[0];
+         if (jQuery(countryElt).attr('disabled') === undefined) {
+             // country is enabled -- icap member. clear country + school
+             jQuery(countryElt).val('-----');
+             jQuery(schoolElt).find('option').not('.all-or-none-option').remove();
+             jQuery(this).find("div.control-group.school").hide();
+         } else if (jQuery(schoolElt).attr('disabled') === undefined) {
+             // country is disabled & school is enabled -- country admin
+             // clear the school choice
+             jQuery(schoolElt).val('-----');
+         }
+         jQuery(this).find("input[name='name']").val('');
+         jQuery(this).find(".date").datepicker('setValue', '');
+     });
     
     jQuery("button.leave-group").on("click", function() {
         if (confirm("Are you sure you want to leave this group?")) {
@@ -237,24 +275,6 @@
         return false;
     });
 
-    jQuery('#create-a-group').on('show', function () {
-        jQuery(this).find("div.control-group").removeClass("error");
-        
-        var countryElt = jQuery(this).find("select[name='country']")[0];
-        var schoolElt = jQuery(this).find("select[name='school']")[0];
-        if (jQuery(countryElt).attr('disabled') === undefined) {
-            // country is enabled -- icap member. clear country + school
-            jQuery(countryElt).val('-----');
-            jQuery(schoolElt).find('option').remove();
-            jQuery(this).find("div.control-group.school").hide();
-        } else if (jQuery(schoolElt).attr('disabled') === undefined) {
-            // country is disabled & school is enabled -- country admin
-            // clear the school choice
-            jQuery(schoolElt).val('-----');
-        }
-        jQuery(this).find("input[name='name']").val('');
-        jQuery(this).find(".date").datepicker('setValue', '');
-    });
     
     jQuery('button.edit-group-button').click(function () {
         jQuery(this).find("div.control-group").removeClass("error");
@@ -349,6 +369,22 @@
         return updateFacultyAccess(msg, url, this);
     });
     
+    jQuery(".btn.aggregate").on("click", function() {
+        var frm = jQuery(this).parent('form')[0];
+        jQuery.ajax({
+            url: frm.action,
+            data: jQuery(frm).serialize(),
+            type: "POST",
+            success: function (data) {
+                console.log(data);
+            },
+            error: function(data)  {
+                alert("An error occurred. Please try again");
+            }
+        });
+        return false;
+    });    
+    
     // initialize country selectors based on roles
     if (profile_attributes.role == 'faculty' ||
         profile_attributes.role == 'institution' ||
@@ -371,5 +407,6 @@
                 }
             });
      }
+ 
  });
     

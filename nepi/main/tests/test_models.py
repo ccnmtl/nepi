@@ -1,3 +1,4 @@
+from datetime import date
 from django.contrib.auth.models import User
 from django.test import TestCase
 from factories import SchoolGroupFactory
@@ -8,7 +9,7 @@ from nepi.main.tests.factories import StudentProfileFactory, \
     SchoolFactory, InstitutionAdminProfileFactory
 from pagetree.models import Hierarchy, Section, UserPageVisit
 from pagetree.tests.factories import HierarchyFactory, ModuleFactory
-from datetime import date
+import datetime
 
 
 class TestGroup(TestCase):
@@ -23,6 +24,21 @@ class TestGroup(TestCase):
 
         self.assertEquals(grp.formatted_start_date(), "01/05/2007")
         self.assertEquals(grp.formatted_end_date(), "12/25/2007")
+
+    def test_is_active(self):
+        start = date(2007, 1, 5)
+        end = date(2007, 12, 25)
+        grp = SchoolGroupFactory(start_date=start, end_date=end)
+
+        self.assertFalse(grp.is_active())
+
+        delta = datetime.timedelta(days=-90)
+        grp.end_date = datetime.date.today() + delta
+        self.assertTrue(grp.is_active())
+
+        delta = datetime.timedelta(days=90)
+        grp.end_date = datetime.date.today() + delta
+        self.assertTrue(grp.is_active())
 
 
 class TestUserProfile(TestCase):

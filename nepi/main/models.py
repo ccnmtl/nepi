@@ -6,6 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from quizblock.models import Quiz
+import datetime
 
 
 class Country(models.Model):
@@ -59,6 +60,11 @@ class Group(models.Model):
 
     def formatted_end_date(self):
         return self.format_time(self.end_date)
+
+    def is_active(self):
+        today = datetime.date.today()
+        diff = today - self.end_date
+        return diff.days < 365
 
 
 class UserProfile(models.Model):

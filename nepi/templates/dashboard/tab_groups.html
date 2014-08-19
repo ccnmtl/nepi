@@ -127,9 +127,10 @@
                 <label><b>Where is your institution located?</b></label>
                 <div class="controls">
                     <select name="country">
-                    {% for choice in countries %}
-                        <option value="{{choice.0}}">{{choice.1}}</option>
-                    {% endfor %}
+                        <option class="all-or-none-option" value="-----">-----</option>
+                        {% for choice in countries %}
+                            <option value="{{choice.0}}">{{choice.1}}</option>
+                        {% endfor %}
                     </select>
                     <div class="help-inline error no-schools">
                         Your selected country has no institutions.<br />
@@ -140,7 +141,9 @@
             <div class="fieldWrapper control-group school wide" style="display: none">
                 <label><b>Select your institution:</b></label>
                 <div class="controls">
-                    <select  name="school"></select>
+                    <select  name="school">
+                        <option class="all-or-none-option" value="-----">-----</option>
+                    </select>
                     <div class="help-inline error no-schoolgroups">
                         Your selected institution has no available groups.<br />
                         Please ask your instructor to create a group.
@@ -167,6 +170,7 @@
                     <label><b>Country</b></label>
                     <div class="controls">
                         <select name="country">
+                            <option class="all-or-none-option" value="-----">-----</option>
                             {% for choice in countries %}
                                 <option value="{{choice.0}}">{{choice.1}}</option>
                             {% endfor %}
@@ -180,7 +184,9 @@
                 <div class="fieldWrapper control-group school wide" style="display: none">
                     <label><b>Select your institution:</b></label>
                     <div class="controls">
-                        <select name="school"></select>
+                        <select name="school">
+                            <option class="all-or-none-option" value="-----">-----</option>
+                        </select>
                         <div class="help-inline error school">
                             Please select an institution.
                         </div>
