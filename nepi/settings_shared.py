@@ -135,8 +135,7 @@ INSTALLED_APPS = [
     'pageblocks',
     'quizblock',
     'captcha',
-    'nepi.activities',
-    'nepi.results'
+    'nepi.activities'
 ]
 
 INTERNAL_IPS = ('127.0.0.1', )
