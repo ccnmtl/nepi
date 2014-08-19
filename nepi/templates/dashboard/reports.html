@@ -42,7 +42,7 @@
             <h3 class="role">AS ICAP ADMINISTRATOR</h3>
         {% endif %}{% endif %}{% endif %}{% endif %}
         
-        <form id="report-selector" class="action-container" action='/dashboard/reports/aggregate/' method="post">{% csrf_token %}
+        <form id="report-selector" class="action-container" action='/dashboard/reports/download/' method="post">{% csrf_token %}
             <div class="fieldWrapper control-group country wide">
                 <div class="controls">
                     <label><b>Country</b></label>
@@ -74,7 +74,8 @@
                     <option class="all-or-none-option" value="all">All groups</option>
                 </select>
             </div>            
-            <button class="btn btn-primary aggregate">View Aggregate Report</button>     
+            <button class="btn btn-primary aggregate">View Aggregate Report</button> 
+            <button class="btn btn-primary download" type="submit">Download Report</button>   
         </form>
     </div>
 {% endblock %}

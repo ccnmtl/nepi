@@ -384,6 +384,7 @@
         });
         return false;
     });    
+       
     
     // initialize country selectors based on roles
     if (profile_attributes.role == 'faculty' ||

@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.db.models.query_utils import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.http.response import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.template import loader
@@ -21,9 +21,12 @@ from pagetree.models import Hierarchy, UserPageVisit
 from nepi.main.choices import COUNTRY_CHOICES
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
-    PendingTeachers
+    PendingTeachers, OptionBReport
 from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
     LoggedInMixinStaff, JSONResponseMixin, AdministrationOnlyMixin
+from zipfile import ZipFile
+from StringIO import StringIO
+import csv
 
 
 class ViewPage(LoggedInMixin, PageView):
@@ -207,47 +210,6 @@ class ReportView(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
             'user': self.request.user,
             'countries': COUNTRY_CHOICES
         }
-
-
-class AggregateReportView(LoggedInMixin, AdministrationOnlyMixin,
-                          JSONResponseMixin, View):
-
-    all = 'all'
-
-    def get_groups(self, request):
-        group_id = request.POST.get('groups', self.all)
-        if group_id != self.all:
-            groups = Group.objects.filter(id=group_id)
-        else:
-            groups = Group.objects.filter(archived=False)
-            country_id = request.POST.get('country', self.all)
-            school_id = request.POST.get('school', self.all)
-            if country_id != self.all:
-                groups = groups.filter(school__country__id=country_id)
-            if school_id != self.all:
-                groups = groups.filter(school__id=school_id)
-
-        return groups
-
-    def post(self, request, *args, **kwargs):
-        data = {'total': 0, 'completed': 0, 'incomplete': 0, 'inprogress': 0}
-
-        for group in self.get_groups(request).all():
-            module_root = group.module.get_root()
-            active = group.is_active()
-            for profile in group.userprofile_set.all():
-                data['total'] += 1
-
-                pct = profile.percent_complete(module_root)
-                if pct == 100:
-                    data['completed'] += 1
-                elif pct > 0:
-                    if active:
-                        data['inprogress'] += 1
-                    else:
-                        data['incomplete'] += 1
-
-        return self.render_to_json_response(data)
 
 
 class SchoolChoiceView(JSONResponseMixin, View):
@@ -546,3 +508,84 @@ class StudentClassStatView(LoggedInMixin, DetailView):
             user = User.objects.get(pk=self.request.user.pk)
             profile = UserProfile.objects.get(user=user)
             return {'module': module, 'user': user, 'profile': profile}
+
+
+class BaseReportView(LoggedInMixin, AdministrationOnlyMixin, View):
+
+    all = 'all'
+
+    def get_groups(self, request):
+        group_id = request.POST.get('group', self.all)
+        if group_id != self.all:
+            groups = Group.objects.filter(id=group_id)
+        else:
+            groups = Group.objects.filter(archived=False)
+            country_name = request.POST.get('country', self.all)
+            school_id = request.POST.get('school', self.all)
+            if country_name != self.all:
+                groups = groups.filter(school__country__name=country_name)
+            if school_id != self.all:
+                groups = groups.filter(school__id=school_id)
+
+        return groups
+
+
+class AggregateReportView(JSONResponseMixin, BaseReportView):
+
+    def post(self, request, *args, **kwargs):
+        data = {'total': 0, 'completed': 0, 'incomplete': 0, 'inprogress': 0}
+
+        for group in self.get_groups(request).all():
+            module_root = group.module.get_root()
+            active = group.is_active()
+            for profile in group.userprofile_set.all():
+                data['total'] += 1
+                pct = profile.percent_complete(module_root)
+                if pct == 100:
+                    data['completed'] += 1
+                elif pct > 0:
+                    if active:
+                        data['inprogress'] += 1
+                    else:
+                        data['incomplete'] += 1
+
+        return self.render_to_json_response(data)
+
+
+class OptionBReportView(BaseReportView):
+
+    def post(self, request):
+        report = OptionBReport(self.get_groups(request))
+
+        # setup zip file for the key & value file
+        response = HttpResponse(mimetype='application/zip')
+
+        disposition = 'attachment; filename=optionb.zip'
+        response['Content-Disposition'] = disposition
+
+        z = ZipFile(response, 'w')
+
+        output = StringIO()  # temp output file
+        writer = csv.writer(output)
+
+        # report on all hierarchies
+        hierarchies = Hierarchy.objects.all()
+
+        # Key file
+        for row in report.metadata(hierarchies):
+            writer.writerow(row)
+
+        z.writestr("optionb_key.csv", output.getvalue())
+
+        # Results file
+        output.truncate(0)
+        output.seek(0)
+
+        writer = csv.writer(output)
+
+        for row in report.values(hierarchies):
+            writer.writerow(row)
+
+        z.writestr("optionb_values.csv", output.getvalue())
+
+        return response
