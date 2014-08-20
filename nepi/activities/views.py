@@ -1,14 +1,16 @@
+import json
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
+
+from nepi.mixins import JSONResponseMixin
 from nepi.activities.models import Conversation, ConversationScenario, \
     ConvClick, ConversationResponse, ConversationForm, RetentionRateCard, \
     RetentionClick, RetentionResponse, CalendarResponse, CalendarChart, Day
-from nepi.mixins import JSONResponseMixin
-import json
 
 
 class CreateConverstionView(CreateView):
