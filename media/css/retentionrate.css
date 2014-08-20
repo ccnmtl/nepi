@@ -1,5 +1,5 @@
 .pageblock.s5_act_01 {
-	margin: 0 0 350px 0;
+	margin: 0 0 250px 0;
 }
 
 #retentionsections {
@@ -60,6 +60,10 @@
 	border: solid 5px #64C0F3;
 }
 
+
+div#explanation_box {
+	margin: 50px 0 0 0;
+}
 
 .title_cohort, .title_startdate, .title_eligible, .title_edd, .title_follow
 {	
@@ -134,7 +138,7 @@
 }
 
 
-#followupblock:hover, #adherenceblock:hover, #whyblock:hover, #regimenblock:hover {
+#cohortblock:hover, #startdateblock:hover, #eligibleblock:hover, #eddblock:hover, #followblock:hover {
 	border: solid 5px #ccc;
 }
 
