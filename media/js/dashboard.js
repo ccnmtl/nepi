@@ -70,10 +70,11 @@
         });
     }
 
-    function populateSchoolGroupChoices(elt, eltSchoolSelect, eltGroup) {
+    function populateSchoolGroupChoices(elt, eltSchoolSelect, eltGroup, params) {
         jQuery.ajax({
-            type: 'GET',
+            type: 'POST',
             url: '/groups/' + jQuery(eltSchoolSelect).val() + '/',
+            data: params || {},
             dataType: 'json',
             error: function () {
                 // This school does not exist in the database. Unlikely.
@@ -156,7 +157,8 @@
             hideError(this);
         } else {
             var eltGroupChoice = jQuery(elt).find("div.schoolgroup select")[0];
-            populateSchoolGroupChoices(elt, this, eltGroupChoice);
+            var params = {'managed': true};
+            populateSchoolGroupChoices(elt, this, eltGroupChoice, params);
         }
     });
     
@@ -372,7 +374,7 @@
     jQuery(".btn.aggregate").on("click", function() {
         var frm = jQuery(this).parent('form')[0];
         jQuery.ajax({
-            url: frm.action,
+            url: '/dashboard/reports/aggregate/',
             data: jQuery(frm).serialize(),
             type: "POST",
             success: function (data) {
@@ -404,9 +406,15 @@
                         profile_attributes.role == 'institution') {
                     jQuery(eltSchoolSelect).val(profile_attributes.school);
                     jQuery(eltSchoolSelect).attr('disabled', 'disabled');
+                    
+                    var elt = jQuery("#report-selector");
+                    if (elt.length > 0) {
+                        var eltGroupChoice = jQuery(elt).find("div.schoolgroup select")[0];
+                        var params = {'managed': true};
+                        populateSchoolGroupChoices(elt, eltSchoolSelect, eltGroupChoice, params);
+                    }
                 }
             });
-     }
- 
+    }
  });
     

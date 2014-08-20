@@ -46,8 +46,8 @@ class TestUserProfile(TestCase):
         self.student = StudentProfileFactory().user
         self.teacher = TeacherProfileFactory().user
         self.school_admin = InstitutionAdminProfileFactory().user
-        self.icap = ICAPProfileFactory().user
         self.country_admin = CountryAdministratorProfileFactory().user
+        self.icap = ICAPProfileFactory().user
         ModuleFactory("main", "/")
         self.hierarchy = Hierarchy.objects.get(name='main')
 
@@ -154,6 +154,55 @@ class TestUserProfile(TestCase):
         group.archived = True
         group.save()
         self.assertEquals(self.student.profile.joined_groups().count(), 0)
+
+    def test_managed_groups(self):
+        teacher = TeacherProfileFactory().user
+        teacher_grp = SchoolGroupFactory(creator=teacher)
+
+        alt_teacher = TeacherProfileFactory().user  # test noise
+        alt_teacher_grp = SchoolGroupFactory(creator=alt_teacher,
+                                             school=teacher_grp.school)
+
+        school = InstitutionAdminProfileFactory(
+            country=teacher_grp.school.country, school=teacher_grp.school).user
+        school_grp = SchoolGroupFactory(creator=school,
+                                        school=teacher_grp.school)
+
+        country = CountryAdministratorProfileFactory(
+            country=teacher_grp.school.country).user
+        country_school = SchoolFactory(country=teacher_grp.school.country)
+        country_grp = SchoolGroupFactory(creator=country,
+                                         school=country_school)
+
+        icap = ICAPProfileFactory().user
+        icap_grp = SchoolGroupFactory()
+
+        groups = self.student.profile.get_managed_groups()
+        self.assertEquals(groups.count(), 0)
+
+        groups = teacher.profile.get_managed_groups()
+        self.assertEquals(groups[0], teacher_grp)
+
+        groups = school.profile.get_managed_groups()
+        self.assertEquals(groups.count(), 3)
+        self.assertTrue(alt_teacher_grp in groups)
+        self.assertTrue(teacher_grp in groups)
+        self.assertTrue(school_grp in groups)
+
+        groups = country.profile.get_managed_groups()
+        self.assertEquals(groups.count(), 4)
+        self.assertTrue(alt_teacher_grp in groups)
+        self.assertTrue(teacher_grp in groups)
+        self.assertTrue(school_grp in groups)
+        self.assertTrue(country_grp in groups)
+
+        groups = icap.profile.get_managed_groups()
+        self.assertEquals(groups.count(), 5)
+        self.assertTrue(alt_teacher_grp in groups)
+        self.assertTrue(teacher_grp in groups)
+        self.assertTrue(school_grp in groups)
+        self.assertTrue(country_grp in groups)
+        self.assertTrue(icap_grp in groups)
 
 
 class TestPendingTeachers(TestCase):

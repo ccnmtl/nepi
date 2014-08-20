@@ -107,20 +107,14 @@ class UserProfileView(LoggedInMixin, DetailView):
     def get_faculty_context(self):
         context = {}
 
-        groups = Group.objects.filter(
-            creator=self.request.user).exclude(archived=True)
-        groups = groups.order_by('name')
-
+        groups = self.request.user.profile.get_managed_groups()
         context['managed_groups'] = groups
         return context
 
     def get_institution_context(self):
         context = {}
-        groups = Group.objects.filter(
-            Q(creator=self.request.user) |
-            Q(school=self.request.user.profile.school))
-        groups = groups.exclude(archived=True)
-        groups = groups.order_by('school__name', 'name')
+
+        groups = self.request.user.profile.get_managed_groups()
         context['managed_groups'] = groups
 
         teachers = PendingTeachers.objects.filter(
@@ -131,11 +125,8 @@ class UserProfileView(LoggedInMixin, DetailView):
 
     def get_country_context(self):
         context = {}
-        groups = Group.objects.filter(
-            Q(creator=self.request.user) |
-            Q(school__country=self.request.user.profile.country))
-        groups = groups.exclude(archived=True)
-        groups = groups.order_by('school__name', 'name')
+
+        groups = self.request.user.profile.get_managed_groups()
         context['managed_groups'] = groups
 
         teachers = PendingTeachers.objects.filter(
@@ -148,9 +139,7 @@ class UserProfileView(LoggedInMixin, DetailView):
     def get_icap_context(self):
         context = {}
 
-        groups = Group.objects.all().order_by(
-            'school__country__display_name', 'school__name', 'name')
-        groups = groups.exclude(archived=True)
+        groups = self.request.user.profile.get_managed_groups()
         context['managed_groups'] = groups
 
         teachers = PendingTeachers.objects.all()
@@ -265,25 +254,29 @@ class SchoolChoiceView(JSONResponseMixin, View):
 
 class SchoolGroupChoiceView(LoggedInMixin, JSONResponseMixin, View):
 
-    def get(self, *args, **kwargs):
+    def post(self, *args, **kwargs):
         school_id = kwargs.pop('school_id', None)
         school = get_object_or_404(School, id=school_id)
-        user_groups = self.request.user.profile.group.all()
 
-        available_groups = Group.objects.filter(school=school)
-        available_groups = available_groups.exclude(creator=self.request.user)
-        available_groups = available_groups.exclude(archived=True)
+        if self.request.POST.get('managed', False):
+            groups = self.request.user.profile.get_managed_groups()
+        else:
+            user_groups = self.request.user.profile.group.all()
+            groups = Group.objects.all().exclude(id__in=user_groups)
+            groups = groups.exclude(creator=self.request.user)
+            groups = groups.exclude(archived=True)
 
-        groups = []
-        for group in available_groups:
-            if not group in user_groups:
-                groups.append({'id': str(group.id),
-                               'name': group.name,
-                               'start_date': group.formatted_start_date(),
-                               'end_date': group.formatted_end_date(),
-                               'creator': group.creator.get_full_name()})
+        groups = groups.filter(school=school)
 
-        return self.render_to_json_response({'groups': groups})
+        visible_groups = []
+        for group in groups:
+            visible_groups.append({'id': str(group.id),
+                                   'name': group.name,
+                                   'start_date': group.formatted_start_date(),
+                                   'end_date': group.formatted_end_date(),
+                                   'creator': group.creator.get_full_name()})
+
+        return self.render_to_json_response({'groups': visible_groups})
 
 
 class CreateSchoolView(LoggedInMixin, AdministrationOnlyMixin, CreateView):

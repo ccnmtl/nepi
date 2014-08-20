@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.db.models.query_utils import Q
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from quizblock.models import Quiz
 import datetime
@@ -148,6 +149,26 @@ class UserProfile(models.Model):
 
     def is_pending_teacher(self):
         return PendingTeachers.objects.filter(user_profile=self).count() > 0
+
+    def get_managed_groups(self):
+        if self.is_student():
+            return Group.objects.none()
+
+        if self.is_teacher():
+            groups = Group.objects.filter(creator=self.user)
+            groups = groups.order_by('name')
+        elif self.is_institution_administrator():
+            groups = Group.objects.filter(
+                Q(creator=self.user) | Q(school=self.school))
+        elif self.is_country_administrator():
+            groups = Group.objects.filter(
+                Q(creator=self.user) | Q(school__country=self.country))
+        elif self.is_icap():
+            groups = Group.objects.all()
+
+        groups = groups.exclude(archived=True)
+        return groups.order_by(
+            'school__country__display_name', 'school__name', 'name')
 
 
 class PendingTeachers(models.Model):

@@ -23,7 +23,7 @@
         <li><a href="/dashboard/#user-profile">Profile</a></li>
 
         {% if user.profile.is_institution_administrator or user.profile.is_country_administrator or user.profile.is_icap %}
-            <li><a href="/dashboard/#pending-teachers">Pending Teachers</a></li>
+            <li><a href="/dashboard/#pending">Pending Teachers</a></li>
         {% endif %}
 
         {% if not user.profile.is_student %}
@@ -32,13 +32,13 @@
     </ul>
 
     <div class="dashboard tab-content">
-        {% if user_profile.is_teacher %}
+        {% if user.profile.is_teacher %}
             <h3 class="role">AS FACULTY</h3>
-        {% else %}{% if user_profile.is_institution_administrator %}
+        {% else %}{% if user.profile.is_institution_administrator %}
             <h3 class="role">AS INSTITUTION ADMINISTRATOR</h3>
-        {% else %}{% if user_profile.is_country_administrator %}
+        {% else %}{% if user.profile.is_country_administrator %}
             <h3 class="role">AS COUNTRY ADMINISTRATOR</h3>
-        {% else %}{% if user_profile.is_icap %}
+        {% else %}{% if user.profile.is_icap %}
             <h3 class="role">AS ICAP ADMINISTRATOR</h3>
         {% endif %}{% endif %}{% endif %}{% endif %}
         
@@ -53,7 +53,7 @@
                         {% endfor %}
                     </select>
                     <div class="help-inline error no-schools">
-                        Your selected country has no institutions. Select another country or <b>All countries</b>.
+                        Your selected country has no institutions.<br />Select another country or <b>All countries</b>.
                     </div>
                 </div>
             </div>
@@ -64,7 +64,13 @@
                         <option class="all-or-none-option" value="all">All institutions</option>
                     </select>
                     <div class="help-inline error no-schoolgroups">
-                        Your selected institution has no available groups. Select another institution or <b>All Institutions</b>
+                        {% if user.profile.is_teacher %}
+                            You have not created any groups yet.<br />Create groups on the <a href="/dashboard/#user-groups">Groups</a> tab.
+                        {% else %}{% if user.profile.is_institution_administrator %}
+                            Your selected institution has no groups yet.<br />Create groups on the <a href="/dashboard/#user-groups">Groups</a> tab.
+                        {% else %}
+                            Your selected institution has no available groups.<br />Select another institution or <b>All Institutions</b>
+                        {% endif %}{% endif %}
                     </div>
                 </div>
             </div>
@@ -73,7 +79,7 @@
                 <select name="schoolgroup">
                     <option class="all-or-none-option" value="all">All groups</option>
                 </select>
-            </div>            
+            </div>
             <button class="btn btn-primary aggregate">View Aggregate Report</button>     
         </form>
     </div>

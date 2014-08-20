@@ -92,7 +92,10 @@
                 <select name="country">
                     <option class="all-or-none-option" value="-----">-----</option>
                     {% for choice in countries %}
-                        <option value="{{choice.0}}" {% ifequal user_profile.country.name choice.0 %}selected="selected"{% endifequal %}>
+                        <option value="{{choice.0}}"
+                            {% if profile_form.data.country == choice.0 or user_profile.country.name == choice.0 %}
+                                selected="selected"
+                            {% endif %}>
                             {{choice.1}}
                         </option>
                     {% endfor %}
@@ -142,7 +145,9 @@
                             {% if profile_form.data.school %}data-school-id='{{profile_form.data.school}}'{% endif %}>
                             <label><b>What is your school?</b></label>
                             <div class="controls">
-                                {{profile_form.school}}
+                                <select id="id_school" name="school">
+                                    <option value="-----" class="all-or-none-option">-----</option>
+                                </select>
                                 {% if profile_form.school.errors %}
                                     <div class="help-inline select">{{profile_form.school.errors}}</div>
                                 {% endif %}

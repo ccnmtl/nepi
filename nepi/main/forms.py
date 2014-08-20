@@ -63,12 +63,12 @@ class UserProfileForm(forms.Form):
             if email is None or email == "":
                 self._errors["email"] = self.error_class(
                     ["If you are registering as an instructor " +
-                     "you must enter a valid email address"])
+                     "you must enter a valid email address."])
             if (school == '-----' or
                     School.objects.filter(id=school).count() < 1):
                 self._errors["school"] = self.error_class(
                     ["If you are registering as an instructor " +
-                     "you must select a school"])
+                     "you must select a school."])
 
         if password1 != password2:
             self._errors["password1"] = self.error_class(
@@ -78,7 +78,7 @@ class UserProfileForm(forms.Form):
 
         if Country.objects.filter(name=country).count() < 1:
             self._errors['country'] = self.error_class([
-                "This field is required"])
+                "This field is required."])
 
         return cleaned_data
 

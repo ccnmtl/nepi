@@ -517,25 +517,25 @@ class TestSchoolChoiceView(TestCase):
 class TestSchoolGroupChoiceView(TestCase):
 
     def setUp(self):
-        self.user = UserProfileFactory().user
+        self.user = TeacherProfileFactory().user
         self.client = Client()
         self.client.login(username=self.user.username, password="test")
 
     def test_ajax_only(self):
         grp = SchoolGroupFactory()
-        response = self.client.get('/groups/%s/' % grp.school.id)
+        response = self.client.post('/groups/%s/' % grp.school.id)
         self.assertEquals(response.status_code, 405)
 
     def test_get_school_not_found(self):
-        response = self.client.get('/groups/782/', {},
-                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.post('/groups/782/', {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 404)
 
     def test_get_no_groups(self):
         school = SchoolFactory()
-        response = self.client.get('/groups/%s/' % school.id,
-                                   {},
-                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.post('/groups/%s/' % school.id,
+                                    {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         the_json = json.loads(response.content)
         self.assertEquals(len(the_json['groups']), 0)
@@ -543,15 +543,53 @@ class TestSchoolGroupChoiceView(TestCase):
     def test_get_groups(self):
         grp = SchoolGroupFactory()
 
-        response = self.client.get('/groups/%s/' % grp.school.id,
-                                   {},
-                                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.post('/groups/%s/' % grp.school.id,
+                                    {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         the_json = json.loads(response.content)
         self.assertEquals(len(the_json['groups']), 1)
 
         self.assertEquals(the_json['groups'][0]['id'], str(grp.id))
         self.assertEquals(the_json['groups'][0]['name'], grp.name)
+
+    def test_get_visible_groups(self):
+        school = SchoolFactory()
+        joined = SchoolGroupFactory(school=school)
+        joined.userprofile_set.add(self.user.profile)
+        SchoolGroupFactory(archived=True, school=school)  # archived
+        SchoolGroupFactory(creator=self.user, school=school)  # created
+
+        grp = SchoolGroupFactory(school=school)
+
+        response = self.client.post('/groups/%s/' % school.id,
+                                    {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = json.loads(response.content)
+        self.assertEquals(len(the_json['groups']), 1)
+
+        self.assertEquals(the_json['groups'][0]['id'], str(grp.id))
+        self.assertEquals(the_json['groups'][0]['name'], grp.name)
+
+    def test_get_managed_groups(self):
+        school = self.user.profile.school
+        joined = SchoolGroupFactory(school=school)
+        joined.userprofile_set.add(self.user.profile)
+        SchoolGroupFactory(archived=True, school=school)  # archived
+        SchoolGroupFactory(school=school)  # random group
+
+        created = SchoolGroupFactory(creator=self.user, school=school)
+
+        response = self.client.post('/groups/%s/' % school.id,
+                                    {'managed': True},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = json.loads(response.content)
+        self.assertEquals(len(the_json['groups']), 1)
+
+        self.assertEquals(the_json['groups'][0]['id'], str(created.id))
+        self.assertEquals(the_json['groups'][0]['name'], created.name)
 
 
 class TestCreateSchoolView(TestCase):

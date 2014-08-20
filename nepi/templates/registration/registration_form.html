@@ -91,7 +91,7 @@
                 <select name="country">
                     <option class="all-or-none-option" value="-----">-----</option>
                     {% for choice in form.fields.country.choices %}
-                        <option value="{{choice.0}}">{{choice.1}}</option>
+                        <option value="{{choice.0}}" {% ifequal form.data.country choice.0 %}selected="selected"{% endifequal %}>{{choice.1}}</option>
                     {% endfor %}
                 </select>            
                 {% if form.country.errors %}
@@ -120,7 +120,9 @@
                         {% if form.data.school %}data-school-id='{{form.data.school}}'{% endif %}>
                     <label><b>What is your school?</b><small>required for faculty</small></label>
                     <div class="controls">
-                        {{form.school}}
+                        <select id="id_school" name="school">
+                            <option value="-----" class="all-or-none-option">-----</option>
+                        </select>
                         {% if form.school.errors %}
                             <div class="help-inline select">{{form.school.errors}}</div>
                         {% endif %}
