@@ -17,6 +17,11 @@ class TestGroup(TestCase):
         grp = SchoolGroupFactory()
         self.assertEqual(str(grp), grp.name)
 
+        self.assertEqual(
+            grp.description(),
+            "%s at %s in %s" % (grp.name, grp.school.name,
+                                grp.school.country.display_name))
+
     def test_format_time(self):
         start = date(2007, 1, 5)
         end = date(2007, 12, 25)
