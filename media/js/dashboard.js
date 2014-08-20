@@ -130,6 +130,7 @@
 
     jQuery("#report-selector select[name='country']").change(function() {
         var elt = jQuery(this).parents('.action-container')[0];
+        jQuery("#aggregate-report-container").fadeOut();
         clearSchoolGroupChoices(elt);
         clearSchoolChoices(elt);
 
@@ -151,6 +152,7 @@
     
     jQuery("#report-selector select[name='school']").change(function() {
         var elt = jQuery(this).parents('.action-container')[0];
+        jQuery("#aggregate-report-container").fadeOut();
         clearSchoolGroupChoices(elt);
 
         if (jQuery(this).val() === 'all') {
@@ -160,6 +162,10 @@
             var params = {'managed': true};
             populateSchoolGroupChoices(elt, this, eltGroupChoice, params);
         }
+    });
+    
+    jQuery("#report-selector select[name='schoolgroup']").change(function() {
+        jQuery("#aggregate-report-container").fadeOut();
     });
     
     jQuery('#find-a-group').on('show', function () {
@@ -379,6 +385,10 @@
             type: "POST",
             success: function (data) {
                 console.log(data);
+                var html = jQuery("#aggregate-report-template").html();
+                var template = _.template(html);
+                jQuery("#aggregate-report-container").html(template(data));
+                jQuery("#aggregate-report-container").show();
             },
             error: function(data)  {
                 alert("An error occurred. Please try again");

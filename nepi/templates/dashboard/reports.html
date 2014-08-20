@@ -2,6 +2,21 @@
 
 {% block js %}
     <script src="/site_media/js/jquery-ui-1.10.3.min.js"></script>
+    <script src="/site_media/js/underscore-min.js"></script>
+    
+    <script type="text/template" id="aggregate-report-template">
+        <table class="table table-striped table-condensed well">
+            <tr><th>Members</th><th>Total</th><th>Completed</th><th>Incomplete</th><th>In Progress</th></tr>
+            <tr>
+                <td />
+                <td><%= total %></td>
+                <td><%= completed %></td>
+                <td><%= incomplete %></td>
+                <td><%= inprogress %></td>
+            </tr>
+        </table>
+    </script>
+    
     <script type="text/javascript">
         var profile_attributes = {
             'role': "{{user.profile.role}}",
@@ -43,6 +58,7 @@
         {% endif %}{% endif %}{% endif %}{% endif %}
         
         <form id="report-selector" class="action-container" action='/dashboard/reports/download/' method="post">{% csrf_token %}
+            <h4>View aggregate report for...</h4>
             <div class="fieldWrapper control-group country wide">
                 <div class="controls">
                     <label><b>Country</b></label>
@@ -80,8 +96,12 @@
                     <option class="all-or-none-option" value="all">All groups</option>
                 </select>
             </div>            
-            <button class="btn btn-primary aggregate">View Aggregate Report</button> 
-            <button class="btn btn-primary download" type="submit">Download Report</button>   
+            <button class="btn btn-primary aggregate pull-right">View Aggregate Report</button>
+            <button class="btn btn-default download pull-right small" type="submit">Download Full Report (.csv)</button>   
+            <div class="clearfix"></div>
+            <div id="aggregate-report-container"></div> 
         </form>
+        
+        
     </div>
 {% endblock %}

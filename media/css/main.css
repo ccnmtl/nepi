@@ -1236,8 +1236,21 @@ form.create-group div.control-group.error div.help-inline.error {
     display: block;
 }
 
-#report-select .btn.aggregate {
-    float: right;
+#report-selector {
+    margin-top: 20px;
+}
+
+#report-selector .btn.aggregate {
+    margin-left: 10px;
+}
+
+#aggregate-report-container {
+    clear: both;
+    margin-top: 30px;
+}
+
+#aggregate-report-container table tr td {
+    text-align: center;
 }
 
 /** Document Adherence Activity **/
