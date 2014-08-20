@@ -19,8 +19,7 @@ class TestGroup(TestCase):
 
         self.assertEqual(
             grp.description(),
-            "%s at %s in %s" % (grp.name, grp.school.name,
-                                grp.school.country.display_name))
+            "%s" % (grp.name))
 
     def test_format_time(self):
         start = date(2007, 1, 5)
