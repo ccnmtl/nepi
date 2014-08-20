@@ -1,11 +1,16 @@
 from choices import COUNTRY_CHOICES, PROFILE_CHOICES
 from django import forms
+import base64
+import hashlib
+import hmac
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models.query_utils import Q
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
+from pagetree.reports import PagetreeReport, StandaloneReportColumn
 from quizblock.models import Quiz
 import datetime
 
@@ -227,3 +232,37 @@ class AggregateQuizScore(models.Model):
 class AggregateQuizScoreForm(forms.ModelForm):
     class Meta:
         model = AggregateQuizScore
+
+
+def random_user(username):
+    digest = hmac.new(settings.PARTICIPANT_SECRET,
+                      msg=username, digestmod=hashlib.sha256).digest()
+    return base64.b64encode(digest).decode()
+
+
+class OptionBReport(PagetreeReport):
+
+    def __init__(self, groups):
+        self.groups = groups
+
+    def users(self):
+        group_ids = self.groups.values_list('id', flat=True)
+        users = User.objects.filter(profile__group__id__in=group_ids,
+                                    profile__profile_type='ST')
+        return users.order_by('id')
+
+    def standalone_columns(self):
+        return [
+            StandaloneReportColumn(
+                "participant_id", 'profile', 'string',
+                'Randomized Participant Id',
+                lambda x: random_user(x.username)),
+            StandaloneReportColumn(
+                "optionb_percent_complete", 'profile', 'percent',
+                '% of hierarchy completed',
+                lambda x: x.profile.percent_complete_hierarchy('main')),
+            StandaloneReportColumn(
+                "group", 'profile', 'list',
+                'Option B+ Groups',
+                lambda x: ",".join(x.profile.get_groups_by_hierarchy('main'))),
+            ]
