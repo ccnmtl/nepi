@@ -72,6 +72,10 @@ class Group(models.Model):
         diff = today - self.end_date
         return diff.days < 365
 
+    def description(self):
+        return "%s at %s in %s" % (self.name, self.school.name,
+                                   self.school.country.display_name)
+
 
 class UserProfile(models.Model):
     '''UserProfile adds exta information to a user,
@@ -174,6 +178,10 @@ class UserProfile(models.Model):
         groups = groups.exclude(archived=True)
         return groups.order_by(
             'school__country__display_name', 'school__name', 'name')
+
+    def get_groups_by_hierarchy(self, hierarchy_name):
+        groups = self.joined_groups().filter(module__name=hierarchy_name)
+        return [grp.description() for grp in groups]
 
 
 class PendingTeachers(models.Model):
