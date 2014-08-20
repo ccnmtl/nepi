@@ -384,7 +384,6 @@
             data: jQuery(frm).serialize(),
             type: "POST",
             success: function (data) {
-                console.log(data);
                 var html = jQuery("#aggregate-report-template").html();
                 var template = _.template(html);
                 jQuery("#aggregate-report-container").html(template(data));
