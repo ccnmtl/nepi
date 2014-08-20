@@ -1,10 +1,13 @@
+from datetime import datetime
+
+from django import forms
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
-from pagetree.models import PageBlock
-from datetime import datetime
-from django import forms
 from django.core.urlresolvers import reverse
+
+from pagetree.models import PageBlock
+from pagetree.reports import ReportableInterface, ReportColumnInterface
 
 
 CONV_CHOICES = (
@@ -150,6 +153,45 @@ class ConversationScenario(models.Model):
                 return 0
         except ConversationResponse.DoesNotExist:
             return 0
+
+    def report_metadata(self):
+        return [ConversationReportColumn(self.pageblock().section.hierarchy,
+                                         self.good_conversation, self.id),
+                ConversationReportColumn(self.pageblock().section.hierarchy,
+                                         self.bad_conversation, self.id)]
+
+    def report_values(self):
+        return [ConversationReportColumn(self.pageblock().section.hierarchy,
+                                         None, self.id)]
+
+
+class ConversationReportColumn(ReportColumnInterface):
+
+    def __init__(self, hierarchy, conversation, pageblock_id):
+        self.hierarchy = hierarchy
+        self.conversation = conversation
+        self.pageblock = pageblock_id
+
+    def identifier(self):
+        return "%s_%s_conversation" % (self.hierarchy.id, self.pageblock)
+
+    def metadata(self):
+        row = [self.hierarchy.name,
+               self.identifier(),
+               "Conversation",
+               "Single Choice"]
+        if self.conversation:
+            row.append(self.conversation.id)
+            row.append(self.conversation.scenario_type)
+        return row
+
+    def user_value(self, user):
+        response = ConversationResponse.objects.filter(
+            user=user, conv_scen__id=self.pageblock)
+        if response.count() == 0:
+            return None
+        else:
+            return response[0].first_click.conversation.id
 
 
 # dont think I need this
@@ -505,6 +547,41 @@ class CalendarChart(models.Model):
     def redirect_to_self_on_submit(self):
         return True
 
+    def report_metadata(self):
+        '''meta data is for key table?'''
+        return [CalendarReportColumn(self.pageblock().section.hierarchy,
+                                     self.correct_date, self.id)]
+
+    def report_values(self):
+        return [CalendarReportColumn(self.pageblock().section.hierarchy,
+                                     self.correct_date, self.id)]
+
+
+class CalendarReportColumn(ReportColumnInterface):
+
+    def __init__(self, hierarchy, correct_date, pageblock_id):
+        self.hierarchy = hierarchy
+        self.correct_date = correct_date
+        self.pageblock = pageblock_id
+
+    def identifier(self):
+        return "%s_%s_calendar" % (self.hierarchy.id, self.pageblock)
+
+    def metadata(self):
+        row = [self.hierarchy.name,
+               self.identifier(),
+               "Appointment Scheduling",
+               "Boolean"]
+        return row
+
+    def user_value(self, user):
+        response = CalendarResponse.objects.filter(
+            user=user, calendar_activity__id=self.pageblock)
+        if response.count() == 0:
+            return None
+        else:
+            return response[0].first_click.number == self.correct_date
+
 
 class CalendarChartForm(forms.ModelForm):
     class Meta:
@@ -611,6 +688,50 @@ class DosageActivity(models.Model):
         except DosageActivityResponse.DoesNotExist:
             return None
 
+    def report_metadata(self):
+        return [DosageReportColumn(self.pageblock().section.hierarchy,
+                                   "ml_nvp", self.id),
+                DosageReportColumn(self.pageblock().section.hierarchy,
+                                   "times_day", self.id),
+                DosageReportColumn(self.pageblock().section.hierarchy,
+                                   "weeks", self.id)
+                ]
+
+    def report_values(self):
+        return [DosageReportColumn(self.pageblock().section.hierarchy,
+                                   "ml_nvp", self.id),
+                DosageReportColumn(self.pageblock().section.hierarchy,
+                                   "times_day", self.id),
+                DosageReportColumn(self.pageblock().section.hierarchy,
+                                   "weeks", self.id)
+                ]
+
+
+class DosageReportColumn(ReportColumnInterface):
+
+    def __init__(self, hierarchy, field_name, pageblock_id):
+        self.hierarchy = hierarchy
+        self.field_name = field_name
+        self.pageblock = pageblock_id
+
+    def identifier(self):
+        return "%s_%s_dosage" % (self.hierarchy.id, self.pageblock)
+
+    def metadata(self):
+        row = [self.hierarchy.name,
+               self.identifier(),
+               "Dosage Activity %s " % self.field_name,
+               "Short Text Field"]
+        return row
+
+    def user_value(self, user):
+        response = DosageActivityResponse.objects.filter(
+            user=user, dosage_activity__id=self.pageblock)
+        if response.count() == 0:
+            return None
+        else:
+            return getattr(response[0], self.field_name)
+
 
 class DosageActivityForm(forms.ModelForm):
     class Meta:
@@ -625,3 +746,8 @@ class DosageActivityResponse(models.Model):
     ml_nvp = models.IntegerField()
     times_day = models.IntegerField()
     weeks = models.IntegerField()
+
+
+ReportableInterface.register(ConversationScenario)
+ReportableInterface.register(CalendarChart)
+ReportableInterface.register(DosageActivity)

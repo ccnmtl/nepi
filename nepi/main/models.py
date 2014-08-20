@@ -1,18 +1,21 @@
-from choices import COUNTRY_CHOICES, PROFILE_CHOICES
-from django import forms
 import base64
 import hashlib
 import hmac
+import datetime
+
+from django import forms
+from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
-from django.db import models
 from django.db.models.query_utils import Q
+
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from pagetree.reports import PagetreeReport, StandaloneReportColumn
 from quizblock.models import Quiz
-import datetime
+
+from choices import COUNTRY_CHOICES, PROFILE_CHOICES
 
 
 class Country(models.Model):
@@ -73,8 +76,10 @@ class Group(models.Model):
         return diff.days < 365
 
     def description(self):
-        return "%s at %s in %s" % (self.name, self.school.name,
-                                   self.school.country.display_name)
+        return "%s" % (self.name)
+
+    def students(self):
+        return self.userprofile_set.filter(profile_type='ST')
 
 
 class UserProfile(models.Model):
@@ -113,6 +118,10 @@ class UserProfile(models.Model):
             return len(visits) / float(len(sections)) * 100
         else:
             return 100  # this section has no children.
+
+    def percent_complete_optionb(self):
+        hierachy = Hierarchy.objects.get(name='main')
+        return self.percent_complete(hierachy.get_root())
 
     def sessions_completed(self, hierarchy):
         complete = 0
@@ -268,7 +277,7 @@ class OptionBReport(PagetreeReport):
             StandaloneReportColumn(
                 "optionb_percent_complete", 'profile', 'percent',
                 '% of hierarchy completed',
-                lambda x: x.profile.percent_complete_hierarchy('main')),
+                lambda x: x.profile.percent_complete_optionb()),
             StandaloneReportColumn(
                 "group", 'profile', 'list',
                 'Option B+ Groups',

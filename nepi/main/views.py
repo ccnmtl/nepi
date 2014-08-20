@@ -1,6 +1,10 @@
 '''Views for NEPI, should probably break up
 into smaller pieces.'''
+import csv
 from datetime import datetime
+from StringIO import StringIO
+from zipfile import ZipFile
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -16,17 +20,16 @@ from django.views.generic import View
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView, UpdateView
+
 from pagetree.generic.views import PageView, EditView, InstructorView
 from pagetree.models import Hierarchy, UserPageVisit
+
+from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
+    LoggedInMixinStaff, JSONResponseMixin, AdministrationOnlyMixin
 from nepi.main.choices import COUNTRY_CHOICES
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
     PendingTeachers, OptionBReport
-from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
-    LoggedInMixinStaff, JSONResponseMixin, AdministrationOnlyMixin
-from zipfile import ZipFile
-from StringIO import StringIO
-import csv
 
 
 class ViewPage(LoggedInMixin, PageView):
@@ -531,7 +534,7 @@ class AggregateReportView(JSONResponseMixin, BaseReportView):
         for group in self.get_groups(request).all():
             module_root = group.module.get_root()
             active = group.is_active()
-            for profile in group.userprofile_set.all():
+            for profile in group.students():
                 data['total'] += 1
                 pct = profile.percent_complete(module_root)
                 if pct == 100:

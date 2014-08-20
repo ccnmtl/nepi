@@ -17,7 +17,7 @@ jQuery(document).ready(function() {
     function() {
     
             var day = jQuery(this).data().day;
-            day.addClass(".visited" );
+            jQuery(day).addClass("visited" );
             var date = jQuery(this).data().date;
             var explanation = jQuery(this).data().explanation;
             jQuery('#myModal').on('show', function ()

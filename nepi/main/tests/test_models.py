@@ -19,8 +19,7 @@ class TestGroup(TestCase):
 
         self.assertEqual(
             grp.description(),
-            "%s at %s in %s" % (grp.name, grp.school.name,
-                                grp.school.country.display_name))
+            "%s" % (grp.name))
 
     def test_format_time(self):
         start = date(2007, 1, 5)
@@ -44,6 +43,23 @@ class TestGroup(TestCase):
         delta = datetime.timedelta(days=90)
         grp.end_date = datetime.date.today() + delta
         self.assertTrue(grp.is_active())
+
+    def test_students(self):
+        grp = SchoolGroupFactory()
+
+        icap = ICAPProfileFactory()
+        country = CountryAdministratorProfileFactory()
+        dean = InstitutionAdminProfileFactory()
+        teacher = TeacherProfileFactory()
+        student = StudentProfileFactory()
+
+        icap.group.add(grp)
+        country.group.add(grp)
+        dean.group.add(grp)
+        teacher.group.add(grp)
+        student.group.add(grp)
+
+        self.assertEquals(grp.students().count(), 1)
 
 
 class TestUserProfile(TestCase):
