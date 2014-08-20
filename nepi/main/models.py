@@ -76,6 +76,9 @@ class Group(models.Model):
         return "%s at %s in %s" % (self.name, self.school.name,
                                    self.school.country.display_name)
 
+    def students(self):
+        return self.userprofile_set.filter(profile_type='ST')
+
 
 class UserProfile(models.Model):
     '''UserProfile adds exta information to a user,
