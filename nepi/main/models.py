@@ -80,9 +80,9 @@ class Group(models.Model):
 
 
 class UserProfile(models.Model):
-    '''UserProfile adds exta information to a user,
+    '''UserProfile adds extra information to a user,
     and associates the user with a group, school,
-    and counrty.'''
+    and country.'''
     user = models.OneToOneField(User, related_name="profile")
     profile_type = models.CharField(max_length=2, choices=PROFILE_CHOICES)
     country = models.ForeignKey(Country)
