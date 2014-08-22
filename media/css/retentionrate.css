@@ -1,5 +1,5 @@
-.pageblock.s3_act_01 {
-	margin: 0 0 450px 0;
+.pageblock.s5_act_01 {
+	margin: 0 0 250px 0;
 }
 
 #retentionsections {
@@ -61,7 +61,11 @@
 }
 
 
-.ex_titlefollow, .ex_titlead, .ex_titlewhy, .ex_titleregimen
+div#explanation_box {
+	margin: 50px 0 0 0;
+}
+
+.title_cohort, .title_startdate, .title_eligible, .title_edd, .title_follow
 {	
 	text-align: center;
 	width: 50%;
@@ -93,7 +97,7 @@
 	box-sizing: border-box;
 }
 
-.ex_titlefollow {
+.title_cohort {
 	background-color: #83D0D7;
 	color: #fff;
 	font-weight: bold;
@@ -101,7 +105,7 @@
 	font-size: 1.25em;
 }
 
-.ex_titlead {
+.title_startdate {
 	background-color: #F3B564;
 	color: #fff;
 	font-weight: bold;
@@ -109,7 +113,7 @@
 	font-size: 1.25em;
 }
 
-.ex_titlewhy {
+.title_eligible {
 	background-color: #D95F50;
 	color: #fff;
 	font-weight: bold;
@@ -117,7 +121,15 @@
 	font-size: 1.25em;
 }
 
-.ex_titleregimen {
+.title_edd {
+	background-color: #b4dead;
+	color: #fff;
+	font-weight: bold;
+	font-family: Arial, helvetica, sans-serif;
+	font-size: 1.25em;
+}
+
+.title_follow {
 	background-color: #64C0F3;
 	color: #fff;
 	font-weight: bold;
@@ -125,7 +137,8 @@
 	font-size: 1.25em;
 }
 
-#followupblock:hover, #adherenceblock:hover, #whyblock:hover, #regimenblock:hover {
+
+#cohortblock:hover, #startdateblock:hover, #eligibleblock:hover, #eddblock:hover, #followblock:hover {
 	border: solid 5px #ccc;
 }
 

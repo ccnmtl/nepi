@@ -78,6 +78,9 @@ class Group(models.Model):
     def description(self):
         return "%s" % (self.name)
 
+    def students(self):
+        return self.userprofile_set.filter(profile_type='ST')
+
 
 class UserProfile(models.Model):
     '''UserProfile adds extra information to a user,

@@ -44,6 +44,23 @@ class TestGroup(TestCase):
         grp.end_date = datetime.date.today() + delta
         self.assertTrue(grp.is_active())
 
+    def test_students(self):
+        grp = SchoolGroupFactory()
+
+        icap = ICAPProfileFactory()
+        country = CountryAdministratorProfileFactory()
+        dean = InstitutionAdminProfileFactory()
+        teacher = TeacherProfileFactory()
+        student = StudentProfileFactory()
+
+        icap.group.add(grp)
+        country.group.add(grp)
+        dean.group.add(grp)
+        teacher.group.add(grp)
+        student.group.add(grp)
+
+        self.assertEquals(grp.students().count(), 1)
+
 
 class TestUserProfile(TestCase):
     def setUp(self):

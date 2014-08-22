@@ -534,7 +534,7 @@ class AggregateReportView(JSONResponseMixin, BaseReportView):
         for group in self.get_groups(request).all():
             module_root = group.module.get_root()
             active = group.is_active()
-            for profile in group.userprofile_set.all():
+            for profile in group.students():
                 data['total'] += 1
                 pct = profile.percent_complete(module_root)
                 if pct == 100:
