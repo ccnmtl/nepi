@@ -29,6 +29,14 @@
 	font-weight: bold;
 }
 
+#month div:first-child {
+	margin-left: 307px;
+}
+
+#month:hover div:first-child {
+margin-left: 307px;
+}
+
 #month div:hover {
 	float: left;
 	display: inline;
