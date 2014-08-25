@@ -92,7 +92,7 @@
                             <td>{{group.formatted_end_date}}</td>
                             <td>
                                 <div class="progress progress-striped">
-                                    <div class="bar" style="width: {{user_profile|percent_complete_group:group}}%"></div>
+                                    <div class="bar" style="width: {{user_profile|percent_complete:group.module.get_root}}%"></div>
                                 </div>
                             </td>
                             <td>

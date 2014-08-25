@@ -1,12 +1,11 @@
 from django.test import TestCase
-
+from factories import ConversationScenarioFactory, ConvClickFactory, \
+    GoodConversationFactory, ConversationPageblockHierarchyFactory
+from nepi.activities.models import ConversationResponse, Day, Month, \
+    RetentionClick, Conversation, ConvClick, CalendarResponse, \
+    DosageActivityResponse, DosageActivity
+from nepi.activities.tests.factories import CalendarChartFactory, MonthFactory
 from nepi.main.tests.factories import UserFactory
-from nepi.activities.models import ConversationResponse, Day, \
-    Month, RetentionClick, Conversation
-
-from factories import ConversationScenarioFactory, \
-    ConvClickFactory, GoodConversationFactory, \
-    ConversationPageblockHierarchyFactory
 
 
 class TestConvClick(TestCase):
@@ -22,9 +21,30 @@ class TestConversation(TestCase):
 
 
 class TestConversationScenario(TestCase):
+
     def test_unicode(self):
         c = ConversationPageblockHierarchyFactory()
         self.assertEqual(str(c), "conv_hierarchy")
+
+    def test_score(self):
+        user = UserFactory()
+        scenario = ConversationScenarioFactory()
+
+        self.assertEquals(scenario.score(user), None)
+
+        resp = ConversationResponse.objects.create(user=user,
+                                                   conv_scen=scenario)
+        self.assertEquals(scenario.score(user), None)
+
+        clk = ConvClick.objects.create(conversation=scenario.good_conversation)
+        resp.first_click = clk
+        resp.save()
+        self.assertEquals(scenario.score(user), 1)
+
+        clk = ConvClick.objects.create(conversation=scenario.bad_conversation)
+        resp.first_click = clk
+        resp.save()
+        self.assertEquals(scenario.score(user), 0)
 
 
 # class TestConversationResponse(TestCase):
@@ -78,7 +98,25 @@ class TestLRConversationScenario(TestCase):
 
 
 class TestDosageActivity(TestCase):
-    pass
+
+    def test_score(self):
+        user = UserFactory()
+        activity = DosageActivity.objects.create(
+            ml_nvp=0.4, times_day=2, weeks=1)
+        self.assertEquals(activity.score(user), None)
+
+        resp = DosageActivityResponse.objects.create(user=user,
+                                                     dosage_activity=activity,
+                                                     ml_nvp=1,
+                                                     times_day=2,
+                                                     weeks=4)
+        self.assertEquals(activity.score(user), 0)
+
+        resp.ml_nvp = 0.4
+        resp.times_day = 2
+        resp.weeks = 1
+        resp.save()
+        self.assertEquals(activity.score(user), 1)
 
 
 class TestDayAndMonthObjects(TestCase):
@@ -121,3 +159,27 @@ class TestConversationNoFactory(TestCase):
 
     def test_conv_unicode(self):
         self.assertEquals(str(self.test_conversation), 'G')
+
+
+class TestCalendarChart(TestCase):
+
+    def test_score(self):
+        user = UserFactory()
+        month = MonthFactory()
+        chart = CalendarChartFactory(month=month)
+
+        self.assertEquals(chart.score(user), None)
+
+        resp = CalendarResponse.objects.create(user=user,
+                                               calendar_activity=chart)
+        self.assertEquals(chart.score(user), None)
+
+        clk = Day.objects.create(calendar=month, number=4)
+        resp.first_click = clk
+        resp.save()
+        self.assertEquals(chart.score(user), 1)
+
+        clk = Day.objects.create(calendar=month, number=1)
+        resp.first_click = clk
+        resp.save()
+        self.assertEquals(chart.score(user), 0)

@@ -1,5 +1,5 @@
 {% load progressreport %}
 
 <div class="quizscore">
-    {{block.quizzes|aggregate_score:request.user}}%
+    {% display_average_quiz_score request.user section.hierarchy block.quiz_class %}
 </div>

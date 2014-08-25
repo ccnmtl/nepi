@@ -1,9 +1,13 @@
 from django.contrib.auth.models import User
 from django.test.client import RequestFactory
 from django.test.testcases import TestCase
+from nepi.activities.models import ConversationResponse, ConvClick, \
+    DosageActivity, DosageActivityResponse, Day, CalendarResponse
+from nepi.activities.tests.factories import ConversationScenarioFactory, \
+    MonthFactory, CalendarChartFactory
 from nepi.main.templatetags.accessible import SubmittedNode
-from nepi.main.templatetags.progressreport import is_user_correct, \
-    aggregate_score
+from nepi.main.templatetags.progressreport import get_scorable_blocks, \
+    average_quiz_score, aggregate_scorable_blocks, average_session_score
 from nepi.main.tests.factories import UserFactory
 from pagetree.models import Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
@@ -11,115 +15,162 @@ from quizblock.models import Quiz, Question, Submission, Response, Answer
 from quizblock.tests.test_templatetags import MockNodeList
 
 
-class TestIsUserCorrect(TestCase):
+class TestScorableMethods(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create(username="testuser")
+        ModuleFactory("one", "/pages/one/")
+        self.hierarchy = Hierarchy.objects.get(name='one')
+        self.section = self.hierarchy.get_root().get_first_leaf()
+
+        # quiz
         self.quiz = Quiz.objects.create()
-
-    def test_short_text(self):
-        question = Question.objects.create(quiz=self.quiz,
-                                           text="question_one",
-                                           question_type="short text")
-
-        self.assertFalse(is_user_correct(question, self.user))
-
-        sub = Submission.objects.create(quiz=self.quiz, user=self.user)
-        Response.objects.create(question=question, submission=sub, value="a")
-
-        self.assertTrue(is_user_correct(question, self.user))
-
-    def test_long_text(self):
-        question = Question.objects.create(quiz=self.quiz,
-                                           text="question_one",
-                                           question_type="long text")
-
-        self.assertFalse(is_user_correct(question, self.user))
-
-        sub = Submission.objects.create(quiz=self.quiz, user=self.user)
-        Response.objects.create(question=question, submission=sub, value="b")
-
-        self.assertTrue(is_user_correct(question, self.user))
-
-    def test_single_choice_no_correct_answers(self):
-        question = Question.objects.create(quiz=self.quiz,
-                                           text="question_one",
-                                           question_type="single choice")
-        Answer.objects.create(question=question, label="a", value="a")
-        Answer.objects.create(question=question, label="b", value="b")
-        Answer.objects.create(question=question, label="c", value="c")
-
-        # no response
-        self.assertFalse(is_user_correct(question, self.user))
-
-        # user responded
-        sub = Submission.objects.create(quiz=self.quiz, user=self.user)
-        Response.objects.create(question=question, submission=sub, value="b")
-
-        self.assertTrue(is_user_correct(question, self.user))
-
-    def test_single_choice_correct_answers(self):
-        question = Question.objects.create(quiz=self.quiz,
-                                           text="question_one",
-                                           question_type="single choice")
-        Answer.objects.create(question=question, label="a", value="a",
+        self.question = Question.objects.create(
+            quiz=self.quiz, text="single", question_type="single choice")
+        Answer.objects.create(question=self.question, label="a", value="a",
                               correct=True)
-        Answer.objects.create(question=question, label="b", value="b")
-        Answer.objects.create(question=question, label="c", value="c")
+        Answer.objects.create(question=self.question, label="b", value="b")
+        self.section.append_pageblock("Quiz One", "pretest", self.quiz)
 
-        # no response
-        self.assertFalse(is_user_correct(question, self.user))
+        # conversation
+        self.scenario = ConversationScenarioFactory()
+        good_click = ConvClick.objects.create(
+            conversation=self.scenario.good_conversation)
+        bad_click = ConvClick.objects.create(
+            conversation=self.scenario.bad_conversation)
+        self.section.append_pageblock("Conversation", "bar", self.scenario)
 
-        # user responded
-        sub = Submission.objects.create(quiz=self.quiz, user=self.user)
-        response = Response.objects.create(question=question,
-                                           submission=sub, value="a")
+        # dosage activity
+        self.dosage = DosageActivity.objects.create(
+            ml_nvp=0.4, times_day=2, weeks=1)
+        self.section.append_pageblock("Dosage", "", self.dosage)
 
-        self.assertTrue(is_user_correct(question, self.user))
+        # calendar activity
+        month = MonthFactory()
+        self.chart = CalendarChartFactory(month=month)
+        chart_good_click = Day.objects.create(calendar=month, number=4)
+        self.section.append_pageblock("Calendar", "", self.chart)
 
-        response.value = 'b'
-        response.save()
-        self.assertFalse(is_user_correct(question, self.user))
+        self.userNoAnswers = UserFactory()
+        self.userIncomplete = UserFactory()
+        self.set_quiz_response(self.userIncomplete, 'b')
+        self.set_conversation_response(self.userIncomplete, good_click)
 
-    def test_multiple_choice_correct_answers(self):
-        question = Question.objects.create(quiz=self.quiz,
-                                           text="question_one",
-                                           question_type="multiple choice")
-        Answer.objects.create(question=question, label="a", value="a",
-                              correct=True)
-        Answer.objects.create(question=question, label="b", value="b",
-                              correct=True)
-        Answer.objects.create(question=question, label="c", value="c")
+        self.userBadScore = UserFactory()
+        self.set_quiz_response(self.userBadScore, 'a')
+        self.set_conversation_response(self.userBadScore, bad_click)
+        self.set_dosage_response(self.userBadScore, 0.4, 2, 2)
+        self.set_calendar_response(self.userBadScore, chart_good_click)
 
-        # no response
-        self.assertFalse(is_user_correct(question, self.user))
+        self.userGoodScore = UserFactory()
+        self.set_quiz_response(self.userGoodScore, 'a')
+        self.set_conversation_response(self.userGoodScore, good_click)
+        self.set_dosage_response(self.userGoodScore, 0.4, 2, 1)
+        self.set_calendar_response(self.userGoodScore, chart_good_click)
 
-        # user responded - incorrectly
-        sub = Submission.objects.create(quiz=self.quiz, user=self.user)
-        c = Response.objects.create(question=question,
-                                    submission=sub, value="c")
-        self.assertFalse(is_user_correct(question, self.user))
+    def set_quiz_response(self, user, value):
+        # complete + right quiz
+        submission = Submission.objects.create(quiz=self.quiz, user=user)
+        Response.objects.create(question=self.question,
+                                submission=submission, value=value)
 
-        # user responded - partially incorrectly
-        Response.objects.create(question=question, submission=sub, value="a")
-        self.assertFalse(is_user_correct(question, self.user))
+    def set_conversation_response(self, user, click):
+        ConversationResponse.objects.create(user=user,
+                                            conv_scen=self.scenario,
+                                            first_click=click)
 
-        # user responded - partially incorrectly
-        Response.objects.create(question=question, submission=sub, value="b")
-        self.assertFalse(is_user_correct(question, self.user))
+    def set_dosage_response(self, user, ml_nvp, times_day, weeks):
+        DosageActivityResponse.objects.create(user=user,
+                                              dosage_activity=self.dosage,
+                                              ml_nvp=ml_nvp,
+                                              times_day=times_day,
+                                              weeks=weeks)
 
-        # kill the incorrect one
-        c.delete()
-        self.assertTrue(is_user_correct(question, self.user))
+    def set_calendar_response(self, user, click):
+        CalendarResponse.objects.create(user=user,
+                                        calendar_activity=self.chart,
+                                        first_click=click)
+
+    def test_get_scorable_blocks(self):
+        root = self.hierarchy.get_root()
+        blocks = get_scorable_blocks(root)
+        self.assertEquals(blocks.count(), 4)
+        self.assertEquals(blocks[0].label, "Quiz One")
+        self.assertEquals(blocks[1].label, "Conversation")
+        self.assertEquals(blocks[2].label, "Dosage")
+        self.assertEquals(blocks[3].label, "Calendar")
+
+        blocks = get_scorable_blocks(root, css_extra_contains="pretest")
+        self.assertEquals(blocks.count(), 1)
+        self.assertEquals(blocks[0].label, "Quiz One")
+
+        blocks = get_scorable_blocks(root, css_extra_exclude=["pretest"])
+        self.assertEquals(blocks.count(), 3)
+        self.assertEquals(blocks[0].label, "Conversation")
+        self.assertEquals(blocks[1].label, "Dosage")
+        self.assertEquals(blocks[2].label, "Calendar")
+
+        blocks = get_scorable_blocks(root, css_extra_exclude=["pretest",
+                                                              "bar"])
+        self.assertEquals(blocks.count(), 2)
+        self.assertEquals(blocks[0].label, "Dosage")
+        self.assertEquals(blocks[1].label, "Calendar")
+
+    def test_get_no_scorable_blocks(self):
+        blocks = get_scorable_blocks(Section.objects.get(slug='two'))
+        self.assertEquals(blocks.count(), 0)
+
+    def test_aggregate_scorable_blocks_no_answers(self):
+        blocks = get_scorable_blocks(self.hierarchy.get_root())
+        users = [self.userNoAnswers]
+        self.assertEquals(aggregate_scorable_blocks(users, blocks), 0)
+
+    def test_aggregate_scorable_blocks_incomplete(self):
+        blocks = get_scorable_blocks(self.hierarchy.get_root())
+        users = [self.userIncomplete]
+        self.assertEquals(aggregate_scorable_blocks(users, blocks), 0)
+
+    def test_aggregate_scorable_blocks_badscore(self):
+        blocks = get_scorable_blocks(self.hierarchy.get_root())
+        users = [self.userBadScore]
+        self.assertEquals(aggregate_scorable_blocks(users, blocks), .50)
+
+    def test_aggregate_scorable_blocks_goodscore(self):
+        blocks = get_scorable_blocks(self.hierarchy.get_root())
+        users = [self.userGoodScore]
+        self.assertEquals(aggregate_scorable_blocks(users, blocks), 1)
+
+    def test_aggregate_scorable_blocks_all(self):
+        root = self.hierarchy.get_root()
+        blocks = get_scorable_blocks(root)
+        users = [self.userNoAnswers, self.userIncomplete,
+                 self.userBadScore, self.userGoodScore]
+        self.assertEquals(aggregate_scorable_blocks(users, blocks), .75)
+
+    def test_average_session_scores(self):
+        users = [self.userNoAnswers, self.userIncomplete,
+                 self.userBadScore, self.userGoodScore]
+
+        ctx = average_session_score(users, self.hierarchy)
+        self.assertEquals(ctx['sessions'][0], 67)
+        self.assertEquals(ctx['sessions'][1], None)
+        self.assertEquals(ctx['sessions'][2], None)
+        self.assertEquals(ctx['average_score'], 67.0)
 
 
-class TestAggregateQuizScoreFilter(TestCase):
+class TestAverageQuizScore(TestCase):
 
     def setUp(self):
+        ModuleFactory("one", "/pages/one/")
+        self.hierarchy = Hierarchy.objects.get(name='one')
+        self.section = self.hierarchy.get_root().get_first_leaf()
+
         self.user = User.objects.create(username="testuser")
+        self.user2 = User.objects.create(username="testuser2")
+
         self.quiz1 = Quiz.objects.create()
         self.quiz2 = Quiz.objects.create()
-        self.quizzes = Quiz.objects.all()
+        self.section.append_pageblock("Quiz One", 'foo', self.quiz1)
+        self.section.append_pageblock("Quiz Two", 'foo', self.quiz2)
 
         # 4 questions
         self.single = Question.objects.create(quiz=self.quiz1,
@@ -147,7 +198,9 @@ class TestAggregateQuizScoreFilter(TestCase):
                                                  question_type="long text")
 
     def test_no_responses(self):
-        self.assertEquals(aggregate_score(self.quizzes, self.user), 0)
+        self.assertEquals(average_quiz_score([self.user],
+                                             self.hierarchy,
+                                             'foo'), "Incomplete")
 
     def test_incomplete_one(self):
         submission = Submission.objects.create(quiz=self.quiz1, user=self.user)
@@ -159,7 +212,9 @@ class TestAggregateQuizScoreFilter(TestCase):
                                 submission=submission,
                                 value="foo")
 
-        self.assertEquals(aggregate_score(self.quizzes, self.user), 25)
+        self.assertEquals(average_quiz_score([self.user],
+                                             self.hierarchy,
+                                             'foo'), "Incomplete")
 
     def test_incomplete_two(self):
         submission = Submission.objects.create(quiz=self.quiz1, user=self.user)
@@ -173,7 +228,9 @@ class TestAggregateQuizScoreFilter(TestCase):
                                 submission=submission,
                                 value="foo")
 
-        self.assertEquals(aggregate_score(self.quizzes, self.user), 50)
+        self.assertEquals(average_quiz_score([self.user],
+                                             self.hierarchy,
+                                             'foo'), "Incomplete")
 
     def test_incomplete_three(self):
         submission = Submission.objects.create(quiz=self.quiz1, user=self.user)
@@ -189,9 +246,16 @@ class TestAggregateQuizScoreFilter(TestCase):
                                 submission=submission,
                                 value="foo")
 
-        self.assertEquals(aggregate_score(self.quizzes, self.user), 75)
+        self.assertEquals(average_quiz_score([self.user],
+                                             self.hierarchy,
+                                             'foo'), "Incomplete")
 
     def test_complete(self):
+        submission = Submission.objects.create(
+            quiz=self.quiz1, user=self.user2)
+        Response.objects.create(question=self.single, submission=submission,
+                                value="b")
+
         submission = Submission.objects.create(quiz=self.quiz1, user=self.user)
         Response.objects.create(question=self.single, submission=submission,
                                 value="a")
@@ -208,7 +272,112 @@ class TestAggregateQuizScoreFilter(TestCase):
                                 submission=submission,
                                 value="bar")
 
-        self.assertEquals(aggregate_score(self.quizzes, self.user), 100)
+        self.assertEquals(average_quiz_score([self.user],
+                                             self.hierarchy,
+                                             'foo'), "100%")
+
+        self.assertEquals(average_quiz_score([self.user, self.user2],
+                                             self.hierarchy,
+                                             'foo'), "100%")
+
+    def test_complete_one_incorrect(self):
+        submission = Submission.objects.create(
+            quiz=self.quiz1, user=self.user2)
+        Response.objects.create(question=self.single, submission=submission,
+                                value="b")
+
+        submission = Submission.objects.create(quiz=self.quiz1, user=self.user)
+        Response.objects.create(question=self.single, submission=submission,
+                                value="b")
+        Response.objects.create(question=self.multiple, submission=submission,
+                                value="a")
+        Response.objects.create(question=self.multiple, submission=submission,
+                                value="b")
+
+        submission = Submission.objects.create(quiz=self.quiz2, user=self.user)
+        Response.objects.create(question=self.short_text,
+                                submission=submission,
+                                value="foo")
+        Response.objects.create(question=self.long_text,
+                                submission=submission,
+                                value="bar")
+
+        self.assertEquals(average_quiz_score([self.user],
+                                             self.hierarchy,
+                                             'foo'), "75%")
+
+        self.assertEquals(average_quiz_score([self.user, self.user2],
+                                             self.hierarchy,
+                                             'foo'), "75%")
+
+    def test_complete_two_incorrect(self):
+        submission = Submission.objects.create(
+            quiz=self.quiz1, user=self.user2)
+        Response.objects.create(question=self.single, submission=submission,
+                                value="b")
+
+        submission = Submission.objects.create(quiz=self.quiz1, user=self.user)
+        Response.objects.create(question=self.single, submission=submission,
+                                value="b")
+        Response.objects.create(question=self.multiple, submission=submission,
+                                value="a")
+        Response.objects.create(question=self.multiple, submission=submission,
+                                value="c")
+
+        submission = Submission.objects.create(quiz=self.quiz2, user=self.user)
+        Response.objects.create(question=self.short_text,
+                                submission=submission,
+                                value="foo")
+        Response.objects.create(question=self.long_text,
+                                submission=submission,
+                                value="bar")
+
+        self.assertEquals(average_quiz_score([self.user],
+                                             self.hierarchy,
+                                             'foo'), "50%")
+
+        self.assertEquals(average_quiz_score([self.user, self.user2],
+                                             self.hierarchy,
+                                             'foo'), "50%")
+
+    def test_multiple_complete_submissions(self):
+        submission = Submission.objects.create(quiz=self.quiz1, user=self.user)
+        Response.objects.create(question=self.single, submission=submission,
+                                value="a")
+        Response.objects.create(question=self.multiple, submission=submission,
+                                value="a")
+        Response.objects.create(question=self.multiple, submission=submission,
+                                value="b")
+
+        submission = Submission.objects.create(quiz=self.quiz2, user=self.user)
+        Response.objects.create(question=self.short_text,
+                                submission=submission,
+                                value="foo")
+        Response.objects.create(question=self.long_text,
+                                submission=submission,
+                                value="bar")
+
+        submission = Submission.objects.create(
+            quiz=self.quiz1, user=self.user2)
+        Response.objects.create(question=self.single, submission=submission,
+                                value="b")
+        Response.objects.create(question=self.multiple, submission=submission,
+                                value="a")
+        Response.objects.create(question=self.multiple, submission=submission,
+                                value="c")
+
+        submission = Submission.objects.create(
+            quiz=self.quiz2, user=self.user2)
+        Response.objects.create(question=self.short_text,
+                                submission=submission,
+                                value="foo")
+        Response.objects.create(question=self.long_text,
+                                submission=submission,
+                                value="bar")
+
+        self.assertEquals(average_quiz_score([self.user, self.user2],
+                                             self.hierarchy,
+                                             'foo'), "75%")
 
 
 class TestAccessible(TestCase):

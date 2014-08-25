@@ -155,31 +155,43 @@ class ConversationScenario(models.Model):
             return 0
 
     def report_metadata(self):
-        return [ConversationReportColumn(self.pageblock().section.hierarchy,
-                                         self.good_conversation, self.id),
-                ConversationReportColumn(self.pageblock().section.hierarchy,
-                                         self.bad_conversation, self.id)]
+        return [ConversationReportColumn(self.pageblock(),
+                                         self.good_conversation),
+                ConversationReportColumn(self.pageblock(),
+                                         self.bad_conversation)]
 
     def report_values(self):
-        return [ConversationReportColumn(self.pageblock().section.hierarchy,
-                                         None, self.id)]
+        return [ConversationReportColumn(self.pageblock())]
+
+    def score(self, user):
+        resp = ConversationResponse.objects.filter(conv_scen=self,
+                                                   user=user)
+
+        if len(resp) == 0 or resp[0].first_click is None:
+            return None
+
+        if (resp[0].first_click.conversation == self.good_conversation):
+            return 1
+        else:
+            return 0
 
 
 class ConversationReportColumn(ReportColumnInterface):
 
-    def __init__(self, hierarchy, conversation, pageblock_id):
-        self.hierarchy = hierarchy
+    def __init__(self, pageblock, conversation=None):
+        self.hierarchy = pageblock.section.hierarchy
+        self.section = pageblock.section
         self.conversation = conversation
-        self.pageblock = pageblock_id
+        self.pageblock_id = pageblock.id
 
     def identifier(self):
-        return "%s_%s_conversation" % (self.hierarchy.id, self.pageblock)
+        return "%s_%s_conversation" % (self.hierarchy.id, self.pageblock_id)
 
     def metadata(self):
         row = [self.hierarchy.name,
                self.identifier(),
-               "Conversation",
-               "Single Choice"]
+               self.section.label,
+               "Conversation Activity single choice"]
         if self.conversation:
             row.append(self.conversation.id)
             row.append(self.conversation.scenario_type)
@@ -187,7 +199,7 @@ class ConversationReportColumn(ReportColumnInterface):
 
     def user_value(self, user):
         response = ConversationResponse.objects.filter(
-            user=user, conv_scen__id=self.pageblock)
+            user=user, conv_scen__id=self.pageblock_id)
         if response.count() == 0:
             return None
         else:
@@ -549,34 +561,43 @@ class CalendarChart(models.Model):
 
     def report_metadata(self):
         '''meta data is for key table?'''
-        return [CalendarReportColumn(self.pageblock().section.hierarchy,
-                                     self.correct_date, self.id)]
+        return [CalendarReportColumn(self.pageblock(), self.correct_date)]
 
     def report_values(self):
-        return [CalendarReportColumn(self.pageblock().section.hierarchy,
-                                     self.correct_date, self.id)]
+        return [CalendarReportColumn(self.pageblock(), self.correct_date)]
+
+    def score(self, user):
+        response = CalendarResponse.objects.filter(
+            user=user, calendar_activity=self)
+        if response.count() == 0 or response[0].first_click is None:
+            return None
+        elif response[0].first_click.number == self.correct_date:
+            return 1
+        else:
+            return 0
 
 
 class CalendarReportColumn(ReportColumnInterface):
 
-    def __init__(self, hierarchy, correct_date, pageblock_id):
-        self.hierarchy = hierarchy
+    def __init__(self, pageblock, correct_date):
+        self.hierarchy = pageblock.section.hierarchy
+        self.section = pageblock.section
+        self.pageblock_id = pageblock.id
         self.correct_date = correct_date
-        self.pageblock = pageblock_id
 
     def identifier(self):
-        return "%s_%s_calendar" % (self.hierarchy.id, self.pageblock)
+        return "%s_%s_calendar" % (self.hierarchy.id, self.pageblock_id)
 
     def metadata(self):
         row = [self.hierarchy.name,
                self.identifier(),
-               "Appointment Scheduling",
-               "Boolean"]
+               self.section.label,
+               "Appointment Scheduling boolean"]
         return row
 
     def user_value(self, user):
         response = CalendarResponse.objects.filter(
-            user=user, calendar_activity__id=self.pageblock)
+            user=user, calendar_activity__id=self.pageblock_id)
         if response.count() == 0:
             return None
         else:
@@ -689,44 +710,49 @@ class DosageActivity(models.Model):
             return None
 
     def report_metadata(self):
-        return [DosageReportColumn(self.pageblock().section.hierarchy,
-                                   "ml_nvp", self.id),
-                DosageReportColumn(self.pageblock().section.hierarchy,
-                                   "times_day", self.id),
-                DosageReportColumn(self.pageblock().section.hierarchy,
-                                   "weeks", self.id)
-                ]
+        return [DosageReportColumn(self.pageblock(), "ml_nvp"),
+                DosageReportColumn(self.pageblock(), "times_day"),
+                DosageReportColumn(self.pageblock(), "weeks")]
 
     def report_values(self):
-        return [DosageReportColumn(self.pageblock().section.hierarchy,
-                                   "ml_nvp", self.id),
-                DosageReportColumn(self.pageblock().section.hierarchy,
-                                   "times_day", self.id),
-                DosageReportColumn(self.pageblock().section.hierarchy,
-                                   "weeks", self.id)
-                ]
+        return [DosageReportColumn(self.pageblock(), "ml_nvp"),
+                DosageReportColumn(self.pageblock(), "times_day"),
+                DosageReportColumn(self.pageblock(), "weeks")]
+
+    def score(self, user):
+        response = DosageActivityResponse.objects.filter(
+            user=user, dosage_activity=self)
+        if response.count() == 0:
+            return None
+        elif (float(response[0].ml_nvp) == float(self.ml_nvp) and
+              response[0].times_day == self.times_day and
+                response[0].weeks == self.weeks):
+            return 1
+        else:
+            return 0
 
 
 class DosageReportColumn(ReportColumnInterface):
 
-    def __init__(self, hierarchy, field_name, pageblock_id):
-        self.hierarchy = hierarchy
+    def __init__(self, pageblock, field_name):
+        self.hierarchy = pageblock.section.hierarchy
+        self.section = pageblock.section
+        self.pageblock_id = pageblock.id
         self.field_name = field_name
-        self.pageblock = pageblock_id
 
     def identifier(self):
-        return "%s_%s_dosage" % (self.hierarchy.id, self.pageblock)
+        return "%s_%s_dosage" % (self.hierarchy.id, self.pageblock_id)
 
     def metadata(self):
         row = [self.hierarchy.name,
                self.identifier(),
-               "Dosage Activity %s " % self.field_name,
-               "Short Text Field"]
+               self.section.label,
+               "Dosage Activity %s short text" % self.field_name]
         return row
 
     def user_value(self, user):
         response = DosageActivityResponse.objects.filter(
-            user=user, dosage_activity__id=self.pageblock)
+            user=user, dosage_activity__id=self.pageblock_id)
         if response.count() == 0:
             return None
         else:
@@ -743,7 +769,7 @@ class DosageActivityResponse(models.Model):
                                         null=True, blank=True,
                                         related_name='dosage_resp')
     user = models.ForeignKey(User, null=True, blank=True)
-    ml_nvp = models.IntegerField()
+    ml_nvp = models.DecimalField(default=0.0, max_digits=4, decimal_places=2)
     times_day = models.IntegerField()
     weeks = models.IntegerField()
 

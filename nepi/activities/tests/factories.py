@@ -109,7 +109,7 @@ class MonthFactory(factory.DjangoModelFactory):
 class CalendarChartFactory(factory.DjangoModelFactory):
     FACTORY_FOR = CalendarChart
     month = factory.SubFactory(MonthFactory)
-    correct_date = '4'
+    correct_date = 4
 
 
 class IncorrectDayOneFactory(factory.DjangoModelFactory):

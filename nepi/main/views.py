@@ -1,10 +1,7 @@
 '''Views for NEPI, should probably break up
 into smaller pieces.'''
-import csv
-from datetime import datetime
 from StringIO import StringIO
-from zipfile import ZipFile
-
+from datetime import datetime
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -20,16 +17,17 @@ from django.views.generic import View
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView, UpdateView
-
-from pagetree.generic.views import PageView, EditView, InstructorView
-from pagetree.models import Hierarchy, UserPageVisit
-
-from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
-    LoggedInMixinStaff, JSONResponseMixin, AdministrationOnlyMixin
 from nepi.main.choices import COUNTRY_CHOICES
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
     PendingTeachers, OptionBReport
+from nepi.main.templatetags.progressreport import get_progress_report
+from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
+    LoggedInMixinStaff, JSONResponseMixin, AdministrationOnlyMixin
+from pagetree.generic.views import PageView, EditView, InstructorView
+from pagetree.models import Hierarchy, UserPageVisit
+from zipfile import ZipFile
+import csv
 
 
 class ViewPage(LoggedInMixin, PageView):
@@ -110,6 +108,11 @@ class UserProfileView(LoggedInMixin, DetailView):
     def get_object(self, queryset=None):
         return self.request.user.profile
 
+    def get_student_context(self):
+        hierarchy = Hierarchy.objects.get(name='main')
+        return {'optionb_progress_report':
+                get_progress_report([self.request.user], hierarchy)}
+
     def get_faculty_context(self):
         context = {}
 
@@ -165,7 +168,9 @@ class UserProfileView(LoggedInMixin, DetailView):
         context['countries'] = COUNTRY_CHOICES
         context['joined_groups'] = self.request.user.profile.joined_groups()
 
-        if self.request.user.profile.is_teacher():
+        if self.request.user.profile.is_student():
+            context.update(self.get_student_context())
+        elif self.request.user.profile.is_teacher():
             context.update(self.get_faculty_context())
         elif self.request.user.profile.is_institution_administrator():
             context.update(self.get_institution_context())
@@ -565,7 +570,7 @@ class OptionBReportView(BaseReportView):
         writer = csv.writer(output)
 
         # report on all hierarchies
-        hierarchies = Hierarchy.objects.all()
+        hierarchies = Hierarchy.objects.filter(name='main')
 
         # Key file
         for row in report.metadata(hierarchies):

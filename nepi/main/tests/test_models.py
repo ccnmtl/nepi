@@ -17,10 +17,6 @@ class TestGroup(TestCase):
         grp = SchoolGroupFactory()
         self.assertEqual(str(grp), grp.name)
 
-        self.assertEqual(
-            grp.description(),
-            "%s" % (grp.name))
-
     def test_format_time(self):
         start = date(2007, 1, 5)
         end = date(2007, 12, 25)
@@ -287,11 +283,3 @@ class TestAggregateQuizScore(TestCase):
         aqs = AggregateQuizScore(quiz_class='foo')
         self.assertFalse(aqs.needs_submit())
         self.assertTrue(aqs.unlocked(self.user))
-
-    def test_quizzes(self):
-        quizzes = AggregateQuizScore(quiz_class='foo').quizzes().order_by(
-            'description')
-        self.assertEquals(quizzes.count(), 2)
-
-        self.assertEquals(quizzes[0].description, 'the first quiz')
-        self.assertEquals(quizzes[1].description, 'the second quiz')

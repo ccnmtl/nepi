@@ -8,12 +8,10 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
-from django.contrib.contenttypes.models import ContentType
 from django.db.models.query_utils import Q
 
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from pagetree.reports import PagetreeReport, StandaloneReportColumn
-from quizblock.models import Quiz
 
 from choices import COUNTRY_CHOICES, PROFILE_CHOICES
 
@@ -76,7 +74,7 @@ class Group(models.Model):
         return diff.days < 365
 
     def description(self):
-        return "%s" % (self.name)
+        return "%s %s" % (self.name, self.school)
 
     def students(self):
         return self.userprofile_set.filter(profile_type='ST')
@@ -237,13 +235,6 @@ class AggregateQuizScore(models.Model):
 
     def unlocked(self, user):
         return True
-
-    def quizzes(self):
-        ctype = ContentType.objects.get_for_model(Quiz)
-        blocks = PageBlock.objects.filter(content_type__pk=ctype.pk,
-                                          css_extra__contains=self.quiz_class)
-        ids = blocks.values_list('object_id', flat=True)
-        return Quiz.objects.filter(id__in=ids)
 
 
 class AggregateQuizScoreForm(forms.ModelForm):

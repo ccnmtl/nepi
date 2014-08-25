@@ -1,95 +1,121 @@
 from django import template
-from django.contrib.contenttypes.models import ContentType
 from pagetree.models import PageBlock
-from quizblock.models import Answer, Quiz
+from quizblock.models import Answer
 
 register = template.Library()
 
 
-def get_quizzes_by_css_class(hierarchy, cls):
-    ctype = ContentType.objects.get_for_model(Quiz)
-    blocks = PageBlock.objects.filter(content_type__pk=ctype.pk,
-                                      css_extra__contains=cls,
-                                      section__hierarchy=hierarchy)
-    ids = blocks.values_list('object_id', flat=True)
-    return Quiz.objects.filter(id__in=ids)
+def get_scorable_blocks(session,
+                        css_extra_contains=None,
+                        css_extra_exclude=None):
+
+    scorable = []
+    for page in session.get_descendants():
+        for pb in page.pageblock_set.all():
+            if (hasattr(pb.block(), 'score')):
+                scorable.append(pb.id)
+
+    blocks = PageBlock.objects.filter(id__in=scorable)
+
+    if css_extra_contains:
+        blocks = blocks.filter(css_extra__contains=css_extra_contains)
+
+    if css_extra_exclude:
+        for css in css_extra_exclude:
+            blocks = blocks.exclude(css_extra__contains=css)
+
+    return blocks
 
 
-def get_quizzes_by_parent(parent, exclude_cls):
-    section_ids = [section.id for section in parent.get_descendants()]
+def aggregate_scorable_blocks(users, blocks):
+    # only users who are complete are included in the session score
+    total_completed = 0
+    total_score = 0.0
 
-    ctype = ContentType.objects.get_for_model(Quiz)
-    blocks = PageBlock.objects.filter(
-        content_type__pk=ctype.pk, section__id=section_ids).exclude(
-        css_extra__contains=exclude_cls)
-    ids = blocks.values_list('object_id', flat=True)
-    return Quiz.objects.filter(id__in=ids)
+    if blocks.count() == 0:
+        return None  # nothing to see here
 
+    for u in users:
+        completed = 0
+        score = 0
+        for pb in blocks:
+            block_score = pb.block().score(u)
+            if block_score is None:
+                completed = 0
+                score = 0
+                break  # incomplete users are not counted
+            else:
+                score += block_score
+                completed += 1
+        total_completed += completed
+        total_score += score
 
-def is_user_correct(question, user):
-    responses = question.user_responses(user)
-    answers = question.correct_answer_values()
-
-    if not question.answerable() or len(answers) == 0:
-        # no correct answer. but user needs to have answered the question
-        return len(responses) > 0
-
-    if len(answers) != len(responses):
-        # The user hasn't completely answered the question yet
-        return False
-
-    correct = True
-    for resp in responses:
-        correct = correct and str(resp.value) in answers
-    return correct
-
-
-@register.filter
-def aggregate_score(quizzes, user):
-    question_count = 0.0
-    questions_correct = 0
-    for quiz in quizzes:
-        for question in quiz.question_set.all():
-            question_count += 1
-            if is_user_correct(question, user):
-                questions_correct += 1
-
-    if question_count == 0:
+    if total_completed == 0:
         return 0
     else:
-        return int(questions_correct / question_count * 100)
+        return total_score / total_completed
 
 
-@register.filter
-def pretest_score(user_profile, hierarchy):
-    quizzes = get_quizzes_by_css_class(hierarchy, 'pretest')
-    return aggregate_score(quizzes, user_profile.user)
+def average_session_score(users, hierarchy):
+    sessions = hierarchy.get_root().get_children()
+
+    ctx = {'sessions': []}
+    exclude = ['pretest', 'posttest']
+    session_count = len(sessions)
+    completed = 0
+    total_score = 0.0
+
+    for session in sessions:
+        blocks = get_scorable_blocks(session, css_extra_exclude=exclude)
+        session_score = aggregate_scorable_blocks(users, blocks)
+
+        if session_score is None:  # nothing to score here
+            ctx['sessions'].append(None)
+            session_count -= 1
+        elif session_score == 0:  # incomplete
+            ctx['sessions'].append(session_score)
+        else:
+            ctx['sessions'].append(int(round(session_score * 100)))
+            total_score += session_score
+            completed += 1
+
+    if completed == session_count and completed > 0:
+        ctx['average_score'] = round(total_score / completed * 100)
+
+    return ctx
 
 
-@register.filter
-def posttest_score(user_profile, hierarchy):
-    quizzes = get_quizzes_by_css_class(hierarchy, 'posttest')
-    return aggregate_score(quizzes, user_profile.user)
+def average_quiz_score(users, hierarchy, css_extra_contains):
+    blocks = get_scorable_blocks(hierarchy.get_root(),
+                                 css_extra_contains=css_extra_contains)
+    session_score = aggregate_scorable_blocks(users, blocks)
 
-
-@register.filter
-def session_score(user_profile, session):
-    if user_profile.percent_complete(session) == 100:
-        quizzes = get_quizzes_by_parent(session, ['pretest', 'posttest'])
-        return aggregate_score(quizzes, user_profile.user)
-    else:
+    if session_score is None:  # nothing to score here
+        return 'n/a'
+    elif session_score == 0:  # incomplete
         return 'Incomplete'
+    else:
+        return str(int(round(session_score * 100))) + "%"
+
+
+def get_progress_report(users, hierarchy):
+    ctx = {'total_users': len(users)}
+
+    ctx.update(average_session_score(users, hierarchy))
+    ctx['pretest'] = average_quiz_score(users, hierarchy, 'pretest')
+    ctx['posttest'] = average_quiz_score(users, hierarchy, 'posttest')
+    return ctx
+
+
+@register.simple_tag
+def display_average_quiz_score(user, hierarchy, css_extra_contains):
+    return average_quiz_score([user], hierarchy, css_extra_contains)
 
 
 @register.filter
 def percent_complete(user_profile, hierarchy):
     pct = user_profile.percent_complete(hierarchy.get_root())
     return "{0:.2f}".format(round(pct, 2))
-
-
-@register.filter
-def percent_complete_group(user_profile, group):
-    return user_profile.percent_complete(group.module.get_root())
 
 
 @register.filter
