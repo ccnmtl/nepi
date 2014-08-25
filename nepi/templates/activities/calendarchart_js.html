@@ -2,10 +2,11 @@
 
 jQuery(document).ready(function() {
 
-    var next_true = false;
-    // we need a global way to keep track of whether next button is active or not
- 
     jQuery("#page-submit").hide();
+    // we need a global way to keep track of whether next button is active or not
+    // so it does not get deactivated when a user clicks the wrong one after clicking the right one
+    var next_true = false;
+   
 
 
     var calendar = jQuery("#calendar_id").data().calendar;
@@ -38,9 +39,14 @@ jQuery(document).ready(function() {
                 if (date === check_val) 
                      {
                          jQuery("li.next a").removeClass("disabled");
+                         next_true = true;
                      }
                      else
                      {
+                         if (next_true === true)
+                         {
+                             return;
+                         }
                          jQuery("li.next a").addClass("disabled");
                      }
                 }
