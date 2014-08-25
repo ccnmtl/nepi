@@ -1499,3 +1499,45 @@ form.create-group div.control-group.error div.help-inline.error {
 img.calendar {
     cursor: pointer;
 }
+
+/* Footer */
+footer.icapnel-footer .container {
+	background-color: #00284c;
+}
+
+footer.icapnel-footer .container a:link, footer.icapnel-footer .container a:active, footer.icapnel-footer .container a:visited {
+	color: #fff;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: .875em;
+}
+
+footer.icapnel-footer .container a:hover {
+	text-decoration: none;
+	color: #ccc;
+}
+
+.left-footer-menu {
+	float: left;
+	margin:40px;
+}
+
+.left-footer-menu li {
+	display: inline;
+	list-style-type: none;
+	padding: 0 10px 0 0;
+}
+
+.right-footer-menu {
+	float: right;
+	margin: 20px;
+}
+
+.right-footer-menu li {
+	display: inline;
+	list-style-type: none;
+	padding: 0 0 0 20px;
+}
+
+img.footer-logo {
+	width: 125px;
+}
