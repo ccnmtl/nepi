@@ -487,6 +487,9 @@ class RetentionResponse(models.Model):
 class Month(models.Model):
     display_name = models.CharField(max_length=255, default="")
 
+    def month_name(self):
+        return self.display_name.split(' ')[0]
+
     def __unicode__(self):
         return"%s" % self.display_name
 
@@ -575,6 +578,10 @@ class CalendarChart(models.Model):
             return 1
         else:
             return 0
+
+    def clear_user_submissions(self, user):
+        CalendarResponse.objects.filter(calendar_activity=self,
+                                        user=user).delete()
 
 
 class CalendarReportColumn(ReportColumnInterface):

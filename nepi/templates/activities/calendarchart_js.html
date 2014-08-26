@@ -3,12 +3,6 @@
 jQuery(document).ready(function() {
 
     jQuery("#page-submit").hide();
-    // we need a global way to keep track of whether next button is active or not
-    // so it does not get deactivated when a user clicks the wrong one after clicking the right one
-    var next_true = false;
-   
-
-
     var calendar = jQuery("#calendar_id").data().calendar;
     var check_val = jQuery("#check_val").data().check;
 
@@ -16,16 +10,21 @@ jQuery(document).ready(function() {
     jQuery(".day").on("click",
     
     function() {
-    
+            jQuery(this).addClass("visited" );
+        
             var day = jQuery(this).data().day;
-            jQuery(day).addClass("visited" );
             var date = jQuery(this).data().date;
             var explanation = jQuery(this).data().explanation;
             jQuery('#myModal').on('show', function ()
             {
 
                 jQuery('.modal-body p').replaceWith("<p>" + explanation + "</p>");
-
+                jQuery('.modal-header span.selected-day').html(date);
+                if (date === check_val) {
+                    jQuery('.modal-footer button').html("Continue");
+                } else {
+                    jQuery('.modal-footer button').html("Try again");
+                }
              });
             
             jQuery.ajax(
@@ -36,18 +35,10 @@ jQuery(document).ready(function() {
                 success: function (data)
                 {
                 
-                if (date === check_val) 
+                    if (date === check_val) 
                      {
                          jQuery("li.next a").removeClass("disabled");
-                         next_true = true;
-                     }
-                     else
-                     {
-                         if (next_true === true)
-                         {
-                             return;
-                         }
-                         jQuery("li.next a").addClass("disabled");
+                         
                      }
                 }
             });//end of ajax

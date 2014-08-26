@@ -1,19 +1,18 @@
 {% load markup %}
+
 {% if block.label %}<div id="month_title"><h3>{{block.label}}</h3></div>{% endif %}
 
     <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>Modal header</h3>
-    </div>
-    <div class="modal-body">
-        
-    <p></p>
-    <button type="button" class="btn-primary btn-lg" data-dismiss="modal" aria-hidden="true">Ok</button>
-    </div>
-    <div class="modal-footer">
-    
-    </div>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>{{block.month.month_name}} <span class="selected-day"></span></h3>
+        </div>
+        <div class="modal-body">
+            <p></p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-primary btn-lg" data-dismiss="modal" aria-hidden="true">Try Again</button>
+        </div>
     </div>
 
 
@@ -26,12 +25,11 @@
 <div id="check_val" value="{{ block.correct_date }}" data-check="{{ block.correct_date }}" style="visibility: hidden">  </div>
 <div id="calendar_id" value="{{ block.pk }}" data-calendar="{{ block.pk }}" style="visibility: hidden">  </div>
     <h3>{{block.month.display_name}}</h3>
-    <div id="month">
+    <div id="month" class="{{block.month.month_name}}">
     {% for day in block.month.day_set.all %}
         <div data-day="{{ day.pk }}" data-date="{{ day.number }}" data-explanation="{{ day.explanation }}" data-toggle="modal" data-target="#myModal" class="day">
         {{ day.number }}
         </div>
-
 {% endfor %}
 </div>
 
