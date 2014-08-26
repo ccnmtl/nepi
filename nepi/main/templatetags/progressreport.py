@@ -1,13 +1,19 @@
 from django import template
+from django.contrib.contenttypes.models import ContentType
 from pagetree.models import PageBlock
-from quizblock.models import Answer
+from quizblock.models import Answer, Quiz
 
 register = template.Library()
 
 
-def get_scorable_blocks(session,
-                        css_extra_contains=None,
-                        css_extra_exclude=None):
+def get_quizzes_by_css_class(hierarchy, cls):
+    ctype = ContentType.objects.get_for_model(Quiz)
+    return PageBlock.objects.filter(content_type__pk=ctype.pk,
+                                    css_extra__contains=cls,
+                                    section__hierarchy=hierarchy)
+
+
+def get_scorable_blocks(session, css_extra_exclude=None):
 
     scorable = []
     for page in session.get_descendants():
@@ -16,9 +22,6 @@ def get_scorable_blocks(session,
                 scorable.append(pb.id)
 
     blocks = PageBlock.objects.filter(id__in=scorable)
-
-    if css_extra_contains:
-        blocks = blocks.filter(css_extra__contains=css_extra_contains)
 
     if css_extra_exclude:
         for css in css_extra_exclude:
@@ -85,17 +88,45 @@ def average_session_score(users, hierarchy):
     return ctx
 
 
-def average_quiz_score(users, hierarchy, css_extra_contains):
-    blocks = get_scorable_blocks(hierarchy.get_root(),
-                                 css_extra_contains=css_extra_contains)
-    session_score = aggregate_scorable_blocks(users, blocks)
+def average_quiz_score(users, hierarchy, cls):
+    blocks = get_quizzes_by_css_class(hierarchy, cls)
+    score = aggregate_scorable_blocks(users, blocks)
+    if score is not None:
+        score = int(round(score * 100))
+    return score
 
-    if session_score is None:  # nothing to score here
-        return 'n/a'
-    elif session_score == 0:  # incomplete
-        return 'Incomplete'
+
+def satisfaction_rating(users, hierarchy):
+    '''
+        Satisfaction Score: only use question 1,
+        if 4 or 5 (agree or strongly agree) was selected, this is Y,
+        if anything below 4 was selected this is no.
+        Percent reporting satisfaction is percent Y out of total group.
+    '''
+    blocks = get_quizzes_by_css_class(hierarchy, 'satisfaction')
+
+    if blocks.count() == 0:
+        return None
+
+    quiz = blocks[0].block()
+    if quiz.question_set.count() == 0:
+        return None
+
+    total = 0.0
+    completed = 0
+
+    question = quiz.question_set.all()[0]
+    for user in users:
+        responses = question.user_responses(user)
+        if len(responses) > 0:
+            completed += 1
+            if responses[0].value == "4" or responses[0].value == "5":
+                total += 1
+
+    if completed == 0:
+        return 0
     else:
-        return str(int(round(session_score * 100))) + "%"
+        return int(round(total / completed * 100))
 
 
 def get_progress_report(users, hierarchy):
@@ -104,31 +135,23 @@ def get_progress_report(users, hierarchy):
     ctx.update(average_session_score(users, hierarchy))
     ctx['pretest'] = average_quiz_score(users, hierarchy, 'pretest')
     ctx['posttest'] = average_quiz_score(users, hierarchy, 'posttest')
+
+    if ctx['pretest'] is not None and ctx['posttest'] is not None:
+        ctx['prepostchange'] = ctx['posttest'] - ctx['pretest']
+    ctx['satisfaction'] = satisfaction_rating(users, hierarchy)
     return ctx
-
-
-def aggregate_group_report(groups):
-    data = {'total': 0, 'completed': 0, 'incomplete': 0, 'inprogress': 0}
-
-    for group in groups:
-        module_root = group.module.get_root()
-        active = group.is_active()
-        for profile in group.students():
-            data['total'] += 1
-            pct = profile.percent_complete(module_root)
-            if pct == 100:
-                data['completed'] += 1
-            elif pct > 0:
-                if active:
-                    data['inprogress'] += 1
-                else:
-                    data['incomplete'] += 1
-    return data
 
 
 @register.simple_tag
 def display_average_quiz_score(user, hierarchy, css_extra_contains):
-    return average_quiz_score([user], hierarchy, css_extra_contains)
+    score = average_quiz_score([user], hierarchy, css_extra_contains)
+
+    if score is None:  # nothing to score here
+        return 'n/a'
+    elif score == 0:  # incomplete
+        return 'Incomplete'
+    else:
+        return str(score) + "%"
 
 
 @register.filter

@@ -1222,6 +1222,10 @@ form.create-group input[name='name'] {
     width: 234px;
 }
 
+#report-selector div.control-group {
+    margin-top: 20px;
+}
+
 #report-selector div.control-group div.help-inline.error,
 .find-group div.control-group div.help-inline.error,
 form.edit-group div.control-group div.help-inline.error,

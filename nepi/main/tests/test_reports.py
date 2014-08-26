@@ -40,7 +40,8 @@ class TestAggregateReportView(TestCase):
                                      section=descendants[0])
 
         self.icap = ICAPProfileFactory().user
-        self.student = StudentProfileFactory().user
+        self.student = StudentProfileFactory(
+            country=self.old_group.school.country).user  # unaffiliated user
 
     def test_report_access(self):
         # not logged in
@@ -67,10 +68,24 @@ class TestAggregateReportView(TestCase):
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         ctx = json.loads(response.content)
-        self.assertEquals(ctx['total'], 3)
+        self.assertEquals(ctx['total'], 4)
         self.assertEquals(ctx['completed'], 1)
-        self.assertEquals(ctx['incomplete'], 1)
-        self.assertEquals(ctx['inprogress'], 1)
+        self.assertEquals(ctx['incomplete'], 0)
+        self.assertEquals(ctx['inprogress'], 2)
+
+    def test_report_country_unaffiliated(self):
+        self.client.login(username=self.icap.username, password="test")
+
+        data = {'country': self.old_group.school.country.name,
+                'school': 'unaffiliated'}
+        response = self.client.post('/dashboard/reports/aggregate/', data,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        ctx = json.loads(response.content)
+        self.assertEquals(ctx['total'], 1)
+        self.assertEquals(ctx['completed'], 0)
+        self.assertEquals(ctx['incomplete'], 0)
+        self.assertEquals(ctx['inprogress'], 0)
 
     def test_report_all_schools(self):
         self.client.login(username=self.icap.username, password="test")

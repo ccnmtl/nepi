@@ -7,7 +7,8 @@ from nepi.activities.tests.factories import ConversationScenarioFactory, \
     MonthFactory, CalendarChartFactory
 from nepi.main.templatetags.accessible import SubmittedNode
 from nepi.main.templatetags.progressreport import get_scorable_blocks, \
-    average_quiz_score, aggregate_scorable_blocks, average_session_score
+    average_quiz_score, aggregate_scorable_blocks, average_session_score, \
+    satisfaction_rating, get_quizzes_by_css_class
 from nepi.main.tests.factories import UserFactory
 from pagetree.models import Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
@@ -99,7 +100,7 @@ class TestScorableMethods(TestCase):
         self.assertEquals(blocks[2].label, "Dosage")
         self.assertEquals(blocks[3].label, "Calendar")
 
-        blocks = get_scorable_blocks(root, css_extra_contains="pretest")
+        blocks = get_quizzes_by_css_class(self.hierarchy, "pretest")
         self.assertEquals(blocks.count(), 1)
         self.assertEquals(blocks[0].label, "Quiz One")
 
@@ -200,7 +201,7 @@ class TestAverageQuizScore(TestCase):
     def test_no_responses(self):
         self.assertEquals(average_quiz_score([self.user],
                                              self.hierarchy,
-                                             'foo'), "Incomplete")
+                                             'foo'), 0)
 
     def test_incomplete_one(self):
         submission = Submission.objects.create(quiz=self.quiz1, user=self.user)
@@ -214,7 +215,7 @@ class TestAverageQuizScore(TestCase):
 
         self.assertEquals(average_quiz_score([self.user],
                                              self.hierarchy,
-                                             'foo'), "Incomplete")
+                                             'foo'), 0)
 
     def test_incomplete_two(self):
         submission = Submission.objects.create(quiz=self.quiz1, user=self.user)
@@ -230,7 +231,7 @@ class TestAverageQuizScore(TestCase):
 
         self.assertEquals(average_quiz_score([self.user],
                                              self.hierarchy,
-                                             'foo'), "Incomplete")
+                                             'foo'), 0)
 
     def test_incomplete_three(self):
         submission = Submission.objects.create(quiz=self.quiz1, user=self.user)
@@ -248,7 +249,7 @@ class TestAverageQuizScore(TestCase):
 
         self.assertEquals(average_quiz_score([self.user],
                                              self.hierarchy,
-                                             'foo'), "Incomplete")
+                                             'foo'), 0)
 
     def test_complete(self):
         submission = Submission.objects.create(
@@ -274,11 +275,11 @@ class TestAverageQuizScore(TestCase):
 
         self.assertEquals(average_quiz_score([self.user],
                                              self.hierarchy,
-                                             'foo'), "100%")
+                                             'foo'), 100)
 
         self.assertEquals(average_quiz_score([self.user, self.user2],
                                              self.hierarchy,
-                                             'foo'), "100%")
+                                             'foo'), 100)
 
     def test_complete_one_incorrect(self):
         submission = Submission.objects.create(
@@ -304,11 +305,11 @@ class TestAverageQuizScore(TestCase):
 
         self.assertEquals(average_quiz_score([self.user],
                                              self.hierarchy,
-                                             'foo'), "75%")
+                                             'foo'), 75)
 
         self.assertEquals(average_quiz_score([self.user, self.user2],
                                              self.hierarchy,
-                                             'foo'), "75%")
+                                             'foo'), 75)
 
     def test_complete_two_incorrect(self):
         submission = Submission.objects.create(
@@ -334,11 +335,11 @@ class TestAverageQuizScore(TestCase):
 
         self.assertEquals(average_quiz_score([self.user],
                                              self.hierarchy,
-                                             'foo'), "50%")
+                                             'foo'), 50)
 
         self.assertEquals(average_quiz_score([self.user, self.user2],
                                              self.hierarchy,
-                                             'foo'), "50%")
+                                             'foo'), 50)
 
     def test_multiple_complete_submissions(self):
         submission = Submission.objects.create(quiz=self.quiz1, user=self.user)
@@ -377,7 +378,53 @@ class TestAverageQuizScore(TestCase):
 
         self.assertEquals(average_quiz_score([self.user, self.user2],
                                              self.hierarchy,
-                                             'foo'), "75%")
+                                             'foo'), 75)
+
+
+class TestSatisfactionRating(TestCase):
+
+    def setUp(self):
+        ModuleFactory("one", "/pages/one/")
+        self.hierarchy = Hierarchy.objects.get(name='one')
+        section = self.hierarchy.get_root().get_first_leaf()
+
+        self.user = User.objects.create(username="testuser")
+        self.user2 = User.objects.create(username="testuser2")
+
+        self.quiz = Quiz.objects.create()
+        section.append_pageblock("Quiz One", "satisfaction", self.quiz)
+
+        # 2 questions
+        self.question = Question.objects.create(quiz=self.quiz,
+                                                text="single answer",
+                                                question_type="single choice")
+        Answer.objects.create(question=self.question, label="1", value="1")
+        Answer.objects.create(question=self.question, label="4", value="4")
+        Answer.objects.create(question=self.question, label="5", value="5")
+
+        Question.objects.create(quiz=self.quiz, text="s",
+                                question_type="long text")
+
+    def test_no_responses(self):
+        rating = satisfaction_rating([self.user, self.user2], self.hierarchy)
+        self.assertEquals(rating, 0)
+
+    def test_one_complete(self):
+        submission = Submission.objects.create(quiz=self.quiz, user=self.user)
+        Response.objects.create(question=self.question,
+                                submission=submission, value="4")
+        rating = satisfaction_rating([self.user, self.user2], self.hierarchy)
+        self.assertEquals(rating, 100)
+
+    def test_two_complete(self):
+        submission = Submission.objects.create(quiz=self.quiz, user=self.user)
+        Response.objects.create(question=self.question,
+                                submission=submission, value="5")
+        submission = Submission.objects.create(quiz=self.quiz, user=self.user2)
+        Response.objects.create(question=self.question,
+                                submission=submission, value="1")
+        rating = satisfaction_rating([self.user, self.user2], self.hierarchy)
+        self.assertEquals(rating, 50)
 
 
 class TestAccessible(TestCase):

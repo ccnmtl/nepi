@@ -182,7 +182,7 @@ class ConversationReportColumn(ReportColumnInterface):
         self.hierarchy = pageblock.section.hierarchy
         self.section = pageblock.section
         self.conversation = conversation
-        self.pageblock_id = pageblock.id
+        self.pageblock_id = pageblock.block().id
 
     def identifier(self):
         return "%s_%s_conversation" % (self.hierarchy.id, self.pageblock_id)
@@ -589,7 +589,7 @@ class CalendarReportColumn(ReportColumnInterface):
     def __init__(self, pageblock, correct_date):
         self.hierarchy = pageblock.section.hierarchy
         self.section = pageblock.section
-        self.pageblock_id = pageblock.id
+        self.pageblock_id = pageblock.block().id
         self.correct_date = correct_date
 
     def identifier(self):
@@ -673,13 +673,9 @@ class DosageActivity(models.Model):
             form.save()
 
     def submit(self, user, data):
-        for k in data.keys():
-            if k == "times_day":
-                td = int(data[k])
-            if k == 'mlnvp':
-                ml = int(data[k])
-            if k == 'weeks':
-                wks = int(data[k])
+        td = int(data["times_day"])
+        ml = float(data['mlnvp'])
+        wks = int(data['weeks'])
         dr = DosageActivityResponse(dosage_activity=self,
                                     user=user, times_day=td,
                                     weeks=wks, ml_nvp=ml)
@@ -744,7 +740,7 @@ class DosageReportColumn(ReportColumnInterface):
     def __init__(self, pageblock, field_name):
         self.hierarchy = pageblock.section.hierarchy
         self.section = pageblock.section
-        self.pageblock_id = pageblock.id
+        self.pageblock_id = pageblock.block().id
         self.field_name = field_name
 
     def identifier(self):

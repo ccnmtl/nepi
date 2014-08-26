@@ -155,7 +155,7 @@
         jQuery("#aggregate-report-container").fadeOut();
         clearSchoolGroupChoices(elt);
 
-        if (jQuery(this).val() === 'all') {
+        if (jQuery(this).val() === 'all' || jQuery(this).val() === 'unaffiliated') {
             hideError(this);
         } else {
             var eltGroupChoice = jQuery(elt).find("div.schoolgroup select")[0];

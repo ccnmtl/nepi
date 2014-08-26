@@ -17,6 +17,19 @@
 
 {% block content %}
 {% with user_profile=object %}
+    
+    {% if user_profile.is_student %}
+        <h3 class="role">STUDENT</h3>
+    {% else %}{% if user_profile.is_teacher %}
+        <h3 class="role">FACULTY</h3>
+    {% else %}{% if user_profile.is_institution_administrator %}
+        <h3 class="role">INSTITUTION ADMINISTRATOR</h3>
+    {% else %}{% if user_profile.is_country_administrator %}
+        <h3 class="role">COUNTRY ADMINISTRATOR</h3>
+    {% else %}{% if user_profile.is_icap %}
+        <h3 class="role">ICAP ADMINISTRATOR</h3>
+    {% endif %}{% endif %}{% endif %}{% endif %}{% endif %}
+    <div class="clearfix"></div>
 
     <ul class="nav nav-tabs dashboard-nav">
         {% comment %}If you make changes here, go make them in reports.html too{% endcomment %}

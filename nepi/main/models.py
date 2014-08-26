@@ -248,16 +248,13 @@ def random_user(username):
     return base64.b64encode(digest).decode()
 
 
-class OptionBReport(PagetreeReport):
+class DetailedReport(PagetreeReport):
 
-    def __init__(self, groups):
-        self.groups = groups
+    def __init__(self, users):
+        self.all_users = users
 
     def users(self):
-        group_ids = self.groups.values_list('id', flat=True)
-        users = User.objects.filter(profile__group__id__in=group_ids,
-                                    profile__profile_type='ST')
-        return users.order_by('id')
+        return self.all_users
 
     def standalone_columns(self):
         return [

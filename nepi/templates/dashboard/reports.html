@@ -15,6 +15,43 @@
                 <td><%= inprogress %></td>
             </tr>
         </table>
+        <% if (completed > 0) { %>
+            <br />
+            <br />
+            <h4>Averages for <%= completed %> users </h4>
+            <table class="table table-striped table-condensed">
+            <tr>
+                <td>Pre-test score</td>
+                <td>
+                    <% if (progress_report.pretest == 0) { %>
+                        Incomplete
+                    <% } else { %>
+                        <%= progress_report.pretest %>%
+                    <% } %>
+                </td>
+            </tr>
+            <tr>
+                <td>Post-test score</td>
+                <td>
+                    <% if (progress_report.posttest == 0) { %>
+                        Incomplete
+                    <% } else { %>
+                        <%= progress_report.posttest %>%
+                    <% } %>
+                </td>
+            </tr>        
+            <tr>
+                <td>Pre/Post change</td>
+                <td>
+                    <%= progress_report.prepostchange %>%
+                </td>
+            </tr>        
+            <tr>
+                <td>Satisfaction score</td>
+                <td><%= progress_report.satisfaction %>%</td>
+            </tr>        
+            </table>
+        <% } %>
     </script>
     
     <script type="text/javascript">
@@ -47,18 +84,17 @@
     </ul>
 
     <div class="dashboard tab-content">
-        {% if user.profile.is_teacher %}
-            <h3 class="role">AS FACULTY</h3>
-        {% else %}{% if user.profile.is_institution_administrator %}
-            <h3 class="role">AS INSTITUTION ADMINISTRATOR</h3>
-        {% else %}{% if user.profile.is_country_administrator %}
-            <h3 class="role">AS COUNTRY ADMINISTRATOR</h3>
-        {% else %}{% if user.profile.is_icap %}
-            <h3 class="role">AS ICAP ADMINISTRATOR</h3>
-        {% endif %}{% endif %}{% endif %}{% endif %}
+        <h3>Aggregate Report</h3>
         
         <form id="report-selector" class="action-container" action='/dashboard/reports/download/' method="post">{% csrf_token %}
-            <h4>View aggregate report for...</h4>
+            <div class="fieldWrapper control-group module wide">
+                <div class="controls">
+                    <label><b>Module</b></label>
+                    <select name="module" disabled="disabled">
+                        <option value="main">Option B+</option>
+                    </select>
+                </div>
+            </div>            
             <div class="fieldWrapper control-group country wide">
                 <div class="controls">
                     <label><b>Country</b></label>
@@ -75,9 +111,10 @@
             </div>
             <div class="fieldWrapper control-group school wide" style="display: none">
                 <div class="controls">
-                    <label><b>Institution:</b></label>
+                    <label><b>Institution</b></label>
                     <select  name="school">
                         <option class="all-or-none-option" value="all">All institutions</option>
+                        <option class="all-or-none-option" value="unaffiliated">Unaffiliated Students</option>
                     </select>
                     <div class="help-inline error no-schoolgroups">
                         {% if user.profile.is_teacher %}
@@ -95,16 +132,23 @@
                 <select name="schoolgroup">
                     <option class="all-or-none-option" value="all">All groups</option>
                 </select>
-            </div>            
+            </div>
+            {% comment %}
+            <div class="fieldWrapper control-group completed_date wide">
+                <label><b>Users completing by...</b></label>
+                <div class="controls">
+                    <input name="completed_date" type="text" size="16" class="datepicker" placeholder="Any Time"/> 
+                    <img class="calendar"  style="vertical-align:middle;" src="/site_media/img/calendar.gif" alt="calendar icon"/>
+                    <div class="help-inline error completed_date">
+                        Please specify a valid date or no date.
+                    </div>
+                </div>
+            </div>
+            {% endcomment %}
             <button class="btn btn-primary aggregate pull-right">View Aggregate Report</button>
             <button class="btn btn-default download pull-right small" type="submit">Download Full Report (.csv)</button>   
             <div class="clearfix"></div>
             <div id="aggregate-report-container"></div>
-            
-            <br /><br />
-            <h4>View progress report for...</h4>
-            <p>Users completing...   [date control] </p>
-            <div id="progress-report-container"></div> 
         </form>
     </div>
 {% endblock %}

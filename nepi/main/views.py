@@ -20,9 +20,8 @@ from django.views.generic.edit import FormView, CreateView, UpdateView
 from nepi.main.choices import COUNTRY_CHOICES
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
-    PendingTeachers, OptionBReport
-from nepi.main.templatetags.progressreport import get_progress_report, \
-    aggregate_group_report
+    PendingTeachers, DetailedReport
+from nepi.main.templatetags.progressreport import get_progress_report
 from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
     LoggedInMixinStaff, JSONResponseMixin, AdministrationOnlyMixin
 from pagetree.generic.views import PageView, EditView, InstructorView
@@ -110,9 +109,11 @@ class UserProfileView(LoggedInMixin, DetailView):
         return self.request.user.profile
 
     def get_student_context(self):
+        context = {}
         hierarchy = Hierarchy.objects.get(name='main')
-        return {'optionb_progress_report':
-                get_progress_report([self.request.user], hierarchy)}
+        context['optionb_progress_report'] = get_progress_report(
+            [self.request.user], hierarchy)
+        return context
 
     def get_faculty_context(self):
         context = {}
@@ -455,11 +456,11 @@ class StudentGroupDetail(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(StudentGroupDetail, self).get_context_data(**kwargs)
         group = get_object_or_404(Group, id=kwargs.get('group_id'))
-        student = get_object_or_404(User, id=kwargs.get('student_id'))
+        user = get_object_or_404(User, id=kwargs.get('student_id'))
 
         context['group'] = group
-        context['student'] = student
-        context['report'] = get_progress_report([student], group.module)
+        context['student'] = user
+        context['progress_report'] = get_progress_report([user], group.module)
         return context
 
 
@@ -498,34 +499,107 @@ class ContactView(FormView):
 class BaseReportView(LoggedInMixin, AdministrationOnlyMixin, View):
 
     all = 'all'
+    unaffiliated = 'unaffiliated'
 
-    def get_groups(self, request):
+    def get_users_and_groups(self, request, hierarchy):
         group_id = request.POST.get('group', self.all)
-        if group_id != self.all:
+        country_name = request.POST.get('country', self.all)
+        school_id = request.POST.get('school', self.all)
+        groups = None
+
+        if group_id != self.all:  # a single group
             groups = Group.objects.filter(id=group_id)
-        else:
-            groups = Group.objects.filter(archived=False)
-            country_name = request.POST.get('country', self.all)
-            school_id = request.POST.get('school', self.all)
+        elif country_name == self.all:  # all users in all countries
+            users = User.objects.all()
+        elif school_id == self.unaffiliated:  # all users/no groups in country
+            users = User.objects.filter(profile__country__name=country_name,
+                                        profile__group=None)
+        else:  # group based queries
+            groups = Group.objects.filter(archived=False, module=hierarchy)
             if country_name != self.all:
                 groups = groups.filter(school__country__name=country_name)
             if school_id != self.all:
                 groups = groups.filter(school__id=school_id)
 
-        return groups
+        if groups:
+            users = User.objects.filter(profile__group__in=groups)
+
+        # students only
+        users = users.filter(profile__profile_type='ST').distinct()
+        return (users, groups)
 
 
 class AggregateReportView(JSONResponseMixin, BaseReportView):
 
+    def percent_complete(self, user, sections):
+        visits = UserPageVisit.objects.filter(user=user,
+                                              section__in=sections)
+        return len(visits) / float(len(sections)) * 100
+
+    def classify_group_users(self, groups, sections):
+        ctx = {'total': 0, 'completed': 0, 'completed_users': [],
+               'incomplete': 0, 'inprogress': 0}
+
+        for group in groups:
+            active = group.is_active()
+            for profile in group.students():
+                ctx['total'] += 1
+                pct = self.percent_complete(profile.user, sections)
+                if pct == 100:
+                    ctx['completed'] += 1
+                    ctx['completed_users'].append(profile.user)
+                elif pct > 0:
+                    if active:
+                        ctx['inprogress'] += 1
+                    else:
+                        ctx['incomplete'] += 1
+        return ctx
+
+    def classify_unaffiliated_users(self, users, sections):
+        ctx = {'total': 0, 'completed': 0, 'completed_users': [],
+               'incomplete': 0, 'inprogress': 0}
+
+        for user in users:
+            ctx['total'] += 1
+            pct = self.percent_complete(user, sections)
+            if pct == 100:
+                ctx['completed'] += 1
+                ctx['completed_users'].append(user)
+            elif pct > 0:
+                ctx['inprogress'] += 1
+
+        return ctx
+
     def post(self, request, *args, **kwargs):
-        ctx = aggregate_group_report(self.get_groups(request).all())
+        hierarchy_name = request.POST.get('module', 'main')
+        hierarchy = get_object_or_404(Hierarchy, name=hierarchy_name)
+        sections = [s.id for s in hierarchy.get_root().get_descendants()]
+
+        users, groups = self.get_users_and_groups(request, hierarchy)
+
+        if groups is None:  # reporting on unaffiliated users
+            ctx = self.classify_unaffiliated_users(users, sections)
+        else:
+            ctx = self.classify_group_users(groups, sections)
+
+        if ctx['completed'] > 0:
+            ctx['progress_report'] = get_progress_report(
+                ctx['completed_users'], hierarchy)
+            ctx.pop('completed_users')
+
         return self.render_to_json_response(ctx)
 
 
-class OptionBReportView(BaseReportView):
+class DownloadableReportView(BaseReportView):
 
     def post(self, request):
-        report = OptionBReport(self.get_groups(request))
+        hierarchy_name = request.POST.get('module', 'main')
+        hierarchy = get_object_or_404(Hierarchy, name=hierarchy_name)
+
+        users, groups = self.get_users_and_groups(request, hierarchy)
+
+        #report = DetailedReport(users)
+        report = DetailedReport(User.objects.filter(username='student'))
 
         # setup zip file for the key & value file
         response = HttpResponse(mimetype='application/zip')
