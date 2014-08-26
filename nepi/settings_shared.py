@@ -56,7 +56,9 @@ PROJECT_APPS = [
     'nepi.main', 'nepi.activities',
 ]
 
-ALLOWED_HOSTS = ['localhost', '.ccnmtl.columbia.edu']
+ALLOWED_HOSTS = ['localhost',
+                 '.ccnmtl.columbia.edu',
+                 'elearning.icap.columbia.edu']
 
 USE_TZ = True
 TIME_ZONE = 'America/New_York'
