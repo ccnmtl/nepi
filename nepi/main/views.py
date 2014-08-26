@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
 from django.http import HttpResponseRedirect, HttpResponse
 from django.http.response import HttpResponseForbidden
@@ -21,7 +21,8 @@ from nepi.main.choices import COUNTRY_CHOICES
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
     PendingTeachers, OptionBReport
-from nepi.main.templatetags.progressreport import get_progress_report
+from nepi.main.templatetags.progressreport import get_progress_report, \
+    aggregate_group_report
 from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
     LoggedInMixinStaff, JSONResponseMixin, AdministrationOnlyMixin
 from pagetree.generic.views import PageView, EditView, InstructorView
@@ -182,7 +183,6 @@ class UserProfileView(LoggedInMixin, DetailView):
         return context
 
     def post(self, *args, **kwargs):
-
         self.object = self.get_object()
 
         profile_form = UpdateProfileForm(self.request.POST)
@@ -436,36 +436,35 @@ class DenyFacultyView(LoggedInMixin, AdministrationOnlyMixin,
 
 class GroupDetail(LoggedInMixin, AdministrationOnlyMixin, DetailView):
     '''generic class based view for
-    see group details - students etc'''
+    see group details - student roster. add/remove students etc'''
     model = Group
     template_name = 'dashboard/group_details.html'
     success_url = '/'
 
     def get_context_data(self, **kwargs):
         context = super(GroupDetail, self).get_context_data(**kwargs)
-        context['students'] = self.object.userprofile_set.all()
-        context['student_count'] = self.object.userprofile_set.all().count()
+        return context
 
-        context['not_started'] = 0
-        context['in_progress'] = 0
-        context['complete'] = 0
 
-        module_root = self.object.module.get_root()
-        for profile in self.object.userprofile_set.all():
-            pct = profile.percent_complete(module_root)
-            if pct == 0:
-                context['not_started'] += 1
-            elif pct == 100:
-                context['complete'] += 1
-            else:
-                context['in_progress'] += 1
+class StudentGroupDetail(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
+    '''generic class based view for
+    see group details - student roster. add/remove students etc'''
+    model = User
+    template_name = 'dashboard/student_details.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(StudentGroupDetail, self).get_context_data(**kwargs)
+        group = get_object_or_404(Group, id=kwargs.get('group_id'))
+        student = get_object_or_404(User, id=kwargs.get('student_id'))
+
+        context['group'] = group
+        context['student'] = student
+        context['report'] = get_progress_report([student], group.module)
         return context
 
 
 class RemoveStudent(LoggedInMixin, AdministrationOnlyMixin,
                     JSONResponseMixin, View):
-    template_name = 'dashboard/view_group.html'
 
     '''Remove the student from a course.'''
     def post(self, request):
@@ -496,21 +495,6 @@ class ContactView(FormView):
         return super(ContactView, self).form_valid(form)
 
 
-class StudentClassStatView(LoggedInMixin, DetailView):
-    '''This view is for students to see their progress,
-    should be included in main base template.'''
-    model = Group
-    template_name = 'view_group_stats.html'
-    success_url = reverse_lazy('home')
-
-    def get_context_data(self, **kwargs):
-        if self.request.is_ajax():
-            module = self.group.__module
-            user = User.objects.get(pk=self.request.user.pk)
-            profile = UserProfile.objects.get(user=user)
-            return {'module': module, 'user': user, 'profile': profile}
-
-
 class BaseReportView(LoggedInMixin, AdministrationOnlyMixin, View):
 
     all = 'all'
@@ -534,23 +518,8 @@ class BaseReportView(LoggedInMixin, AdministrationOnlyMixin, View):
 class AggregateReportView(JSONResponseMixin, BaseReportView):
 
     def post(self, request, *args, **kwargs):
-        data = {'total': 0, 'completed': 0, 'incomplete': 0, 'inprogress': 0}
-
-        for group in self.get_groups(request).all():
-            module_root = group.module.get_root()
-            active = group.is_active()
-            for profile in group.students():
-                data['total'] += 1
-                pct = profile.percent_complete(module_root)
-                if pct == 100:
-                    data['completed'] += 1
-                elif pct > 0:
-                    if active:
-                        data['inprogress'] += 1
-                    else:
-                        data['incomplete'] += 1
-
-        return self.render_to_json_response(data)
+        ctx = aggregate_group_report(self.get_groups(request).all())
+        return self.render_to_json_response(ctx)
 
 
 class OptionBReportView(BaseReportView):

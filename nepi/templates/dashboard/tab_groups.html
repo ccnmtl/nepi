@@ -41,11 +41,12 @@
                             <tr id="faculty-group-{{group.id}}" class="content-row">
                                 <td>{{group.school.country.display_name}}</td>
                                 <td>{{group.school.name}}</td>
-                                <td><a href="{% url 'group-details' group.id %}">{{group.name}}</a></td>                                
+                                <td>{{group.name}}</td>                                
                                 <td>{{group.formatted_start_date}}</td>
                                 <td>{{group.formatted_end_date}}</td>
                                 <td class="text-center">{{group.students.count}}</td>
                                 <td>
+                                    <a class="btn btn-default btn-small" href="{% url 'group-details' group.id %}">Roster</a>
                                     <button class="btn btn-default btn-small edit-group-button"
                                         data-pk="{{group.pk}}" data-start-date="{{group.formatted_start_date}}"
                                         data-end-date="{{group.formatted_end_date}}" data-name="{{group.name}}">

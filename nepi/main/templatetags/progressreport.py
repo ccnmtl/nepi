@@ -107,6 +107,25 @@ def get_progress_report(users, hierarchy):
     return ctx
 
 
+def aggregate_group_report(groups):
+    data = {'total': 0, 'completed': 0, 'incomplete': 0, 'inprogress': 0}
+
+    for group in groups:
+        module_root = group.module.get_root()
+        active = group.is_active()
+        for profile in group.students():
+            data['total'] += 1
+            pct = profile.percent_complete(module_root)
+            if pct == 100:
+                data['completed'] += 1
+            elif pct > 0:
+                if active:
+                    data['inprogress'] += 1
+                else:
+                    data['incomplete'] += 1
+    return data
+
+
 @register.simple_tag
 def display_average_quiz_score(user, hierarchy, css_extra_contains):
     return average_quiz_score([user], hierarchy, css_extra_contains)

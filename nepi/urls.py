@@ -8,7 +8,8 @@ from nepi.main.views import CreateGroupView, UpdateGroupView, \
     RegistrationView, JoinGroup, HomeView, GroupDetail, LeaveGroup, \
     SchoolChoiceView, SchoolGroupChoiceView, \
     ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView, \
-    RemoveStudent, ReportView, AggregateReportView, OptionBReportView
+    RemoveStudent, ReportView, AggregateReportView, OptionBReportView, \
+    StudentGroupDetail
 import nepi.main.views
 import os.path
 import staticmedia
@@ -71,6 +72,8 @@ urlpatterns = patterns(
     url(r'^archive_group/$', ArchiveGroupView.as_view()),
     url(r'^group_details/(?P<pk>\d+)/$',
         GroupDetail.as_view(), name='group-details'),
+    url(r'^student_details/(?P<group_id>\d+)/(?P<student_id>\d+)/$',
+        StudentGroupDetail.as_view(), name='student-group-details'),
     (r'^remove_student/$', RemoveStudent.as_view()),
 
     # ICAP related pages

@@ -42,7 +42,9 @@
             {% endif %}
         </div>
     </div>
-        
+    
+    {% ifnotequal user_profile|percent_complete:optionb '0.00' %}
+    <h4>Progress Report</h4>
     <div class="row-fluid">
         <div class="span4">Pre-test score</div>
         <div class="span4">{{optionb_progress_report.pretest}}</div>
@@ -75,4 +77,5 @@
             {% endif %}
             </div>
     </div>
+    {% endifnotequal %}
 </div>
