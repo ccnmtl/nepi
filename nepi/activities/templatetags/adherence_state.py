@@ -1,6 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from pagetree.models import PageBlock
-from quizblock.models import Quiz, Submission, Response
+from quizblock.models import Quiz, Submission, Response, Question
 from django import template
 register = template.Library()
 
@@ -21,6 +21,7 @@ class GetUserResponse(template.Node):
 
             quizzes = Quiz.objects.filter(id__in=ids)
             quiz = quizzes[0]  # there should just be one
+            user = context['request'].user
             user_submission = Submission.objects.get(user=user, quiz=quiz)
             response = Response.objects.get(submission=user_submission)
             question = Question.objects.get(id=response.question.id)
