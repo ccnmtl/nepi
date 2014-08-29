@@ -2,4 +2,4 @@ Hello {{user.get_full_name}},
 
 Your request for faculty level access to the ICAP Nursing E-learning system has been denied.
 
-If you think this is in error please contact an ICAP administrator by visiting the Contact Us page. (http://nepi.ccnmtl.columbia.edu/contact/).
+If you think this is in error please contact an ICAP administrator by visiting the Contact Us page. (https://elearning.icap.columbia.edu/contact/).

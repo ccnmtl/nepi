@@ -6,4 +6,4 @@ Your school is {{school.name}} in {{school.country.display_name}}.
 
 You may now create groups for your students to join, and you may view your students' scores.
 
-Visit http://nepi.ccnmtl.columbia.edu to login.
+Visit https://elearning.icap.columbia.edu to login.

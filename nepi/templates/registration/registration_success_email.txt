@@ -4,4 +4,4 @@ Thank you for registering for ICAP Nursing E-learning.
 
 Your username is {{user.username}}.
 
-Visit http://nepi.ccnmtl.columbia.edu to login.
+Visit https://elearning.icap.columbia.edu to login.

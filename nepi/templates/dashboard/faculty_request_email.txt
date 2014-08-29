@@ -8,4 +8,4 @@ country: {{school.country.display_name}}
 
 school: {{school.name}}
 
-To grant or deny this request please log in to the ICAP Nursing E-learning and then visit http://nepi.ccnmtl.columbia.edu/dashboard/#pending.
+To grant or deny this request please log in to the ICAP Nursing E-learning and then visit https://elearning.icap.columbia.edu/dashboard/#pending.
