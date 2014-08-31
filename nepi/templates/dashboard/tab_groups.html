@@ -36,7 +36,7 @@
                                 <td>{{group.formatted_end_date}}</td>
                                 <td class="text-center">{{group.students.count}}</td>
                                 <td>
-                                    <a class="btn btn-default btn-small" href="{% url 'group-details' group.id %}">Roster</a>
+                                    <a class="btn btn-default btn-small" href="{% url 'group-details' group.id %}">Details</a>
                                     <button class="btn btn-default btn-small edit-group-button"
                                         data-pk="{{group.pk}}" data-start-date="{{group.formatted_start_date}}"
                                         data-end-date="{{group.formatted_end_date}}" data-name="{{group.name}}">

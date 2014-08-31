@@ -46,7 +46,7 @@ class TestAggregateReportView(TestCase):
     def test_report_access(self):
         # not logged in
         response = self.client.post('/dashboard/reports/aggregate/')
-        self.assertEquals(response.status_code, 405)
+        self.assertEquals(response.status_code, 302)
 
         # non-ajax
         self.client.login(username=self.icap.username, password="test")

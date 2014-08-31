@@ -435,35 +435,6 @@ class DenyFacultyView(LoggedInMixin, AdministrationOnlyMixin,
         return self.render_to_json_response({'success': True})
 
 
-class GroupDetail(LoggedInMixin, AdministrationOnlyMixin, DetailView):
-    '''generic class based view for
-    see group details - student roster. add/remove students etc'''
-    model = Group
-    template_name = 'dashboard/group_details.html'
-    success_url = '/'
-
-    def get_context_data(self, **kwargs):
-        context = super(GroupDetail, self).get_context_data(**kwargs)
-        return context
-
-
-class StudentGroupDetail(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
-    '''generic class based view for
-    see group details - student roster. add/remove students etc'''
-    model = User
-    template_name = 'dashboard/student_details.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(StudentGroupDetail, self).get_context_data(**kwargs)
-        group = get_object_or_404(Group, id=kwargs.get('group_id'))
-        user = get_object_or_404(User, id=kwargs.get('student_id'))
-
-        context['group'] = group
-        context['student'] = user
-        context['progress_report'] = get_progress_report([user], group.module)
-        return context
-
-
 class RemoveStudent(LoggedInMixin, AdministrationOnlyMixin,
                     JSONResponseMixin, View):
 
@@ -496,7 +467,7 @@ class ContactView(FormView):
         return super(ContactView, self).form_valid(form)
 
 
-class BaseReportView(LoggedInMixin, AdministrationOnlyMixin, View):
+class BaseReportMixin():
 
     all = 'all'
     unaffiliated = 'unaffiliated'
@@ -526,10 +497,8 @@ class BaseReportView(LoggedInMixin, AdministrationOnlyMixin, View):
 
         # students only
         users = users.filter(profile__profile_type='ST').distinct()
+
         return (users, groups)
-
-
-class AggregateReportView(JSONResponseMixin, BaseReportView):
 
     def percent_complete(self, user, sections):
         visits = UserPageVisit.objects.filter(user=user,
@@ -570,6 +539,50 @@ class AggregateReportView(JSONResponseMixin, BaseReportView):
 
         return ctx
 
+
+class GroupDetail(LoggedInMixin, AdministrationOnlyMixin,
+                  BaseReportMixin, DetailView):
+    '''generic class based view for
+    see group details - student roster. add/remove students etc'''
+    model = Group
+    template_name = 'dashboard/group_details.html'
+    success_url = '/'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(GroupDetail, self).get_context_data(**kwargs)
+
+        hierarchy = self.object.module
+        sections = [s.id for s in hierarchy.get_root().get_descendants()]
+        ctx.update(self.classify_group_users([self.object], sections))
+
+        if ctx['completed'] > 0:
+            ctx['progress_report'] = get_progress_report(
+                ctx['completed_users'], hierarchy)
+            ctx.pop('completed_users')
+
+        return ctx
+
+
+class StudentGroupDetail(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
+    '''generic class based view for
+    see group details - student roster. add/remove students etc'''
+    model = User
+    template_name = 'dashboard/student_details.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(StudentGroupDetail, self).get_context_data(**kwargs)
+        group = get_object_or_404(Group, id=kwargs.get('group_id'))
+        user = get_object_or_404(User, id=kwargs.get('student_id'))
+
+        context['group'] = group
+        context['student'] = user
+        context['progress_report'] = get_progress_report([user], group.module)
+        return context
+
+
+class AggregateReportView(LoggedInMixin, AdministrationOnlyMixin,
+                          JSONResponseMixin, BaseReportMixin, View):
+
     def post(self, request, *args, **kwargs):
         hierarchy_name = request.POST.get('module', 'main')
         hierarchy = get_object_or_404(Hierarchy, name=hierarchy_name)
@@ -590,7 +603,8 @@ class AggregateReportView(JSONResponseMixin, BaseReportView):
         return self.render_to_json_response(ctx)
 
 
-class DownloadableReportView(BaseReportView):
+class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
+                             BaseReportMixin, View):
 
     def post(self, request):
         hierarchy_name = request.POST.get('module', 'main')
