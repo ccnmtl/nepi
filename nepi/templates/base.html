@@ -90,6 +90,17 @@
     {% block js %}
     {% endblock %}
 
+    <script type="text/javascript">     
+         // setup some ajax progress indicator
+         jQuery(document).ajaxStart(function() {
+             jQuery('html').addClass("busy");
+         });
+         jQuery(document).ajaxStop(function() {
+             jQuery('html').removeClass("busy");
+         });
+     </script>
+    
+
     {% if STAGING_ENV %}
         <div class="alert alert-error" style="position: fixed; bottom: 0px;">
             <h4>Warning: Staging Site</h4>
