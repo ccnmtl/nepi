@@ -43,11 +43,9 @@
         <li><a href="#pending" data-toggle="tab">Pending Teachers</a></li>
         {% endif %}
         
-        {% flag "reports" %}
         {% if not user_profile.is_student %}
         <li class="pull-right"><a class="reports" href="/dashboard/reports/">Reports</a></li>
         {% endif %}
-        {% endflag %}
     </ul>
 
     <div class="dashboard tab-content">

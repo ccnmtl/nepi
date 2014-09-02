@@ -23,6 +23,7 @@ class TestScorableMethods(TestCase):
         self.hierarchy = Hierarchy.objects.get(name='one')
         self.section = self.hierarchy.get_root().get_first_leaf()
 
+        # Setup 4 scorable blocks
         # quiz
         self.quiz = Quiz.objects.create()
         self.question = Question.objects.create(
@@ -54,19 +55,24 @@ class TestScorableMethods(TestCase):
         self.userNoAnswers = UserFactory()
         self.userIncomplete = UserFactory()
         self.set_quiz_response(self.userIncomplete, 'b')
-        self.set_conversation_response(self.userIncomplete, good_click)
+        self.set_conversation_response(self.userIncomplete,
+                                       good_click, bad_click)
 
         self.userBadScore = UserFactory()
         self.set_quiz_response(self.userBadScore, 'a')
-        self.set_conversation_response(self.userBadScore, bad_click)
+        self.set_conversation_response(self.userBadScore,
+                                       bad_click, good_click)
         self.set_dosage_response(self.userBadScore, 0.4, 2, 2)
-        self.set_calendar_response(self.userBadScore, chart_good_click)
+        self.set_calendar_response(self.userBadScore,
+                                   chart_good_click, chart_good_click)
 
         self.userGoodScore = UserFactory()
         self.set_quiz_response(self.userGoodScore, 'a')
-        self.set_conversation_response(self.userGoodScore, good_click)
+        self.set_conversation_response(self.userGoodScore,
+                                       good_click, bad_click)
         self.set_dosage_response(self.userGoodScore, 0.4, 2, 1)
-        self.set_calendar_response(self.userGoodScore, chart_good_click)
+        self.set_calendar_response(self.userGoodScore,
+                                   chart_good_click, chart_good_click)
 
     def set_quiz_response(self, user, value):
         # complete + right quiz
@@ -74,10 +80,11 @@ class TestScorableMethods(TestCase):
         Response.objects.create(question=self.question,
                                 submission=submission, value=value)
 
-    def set_conversation_response(self, user, click):
+    def set_conversation_response(self, user, first_click, second_click):
         ConversationResponse.objects.create(user=user,
                                             conv_scen=self.scenario,
-                                            first_click=click)
+                                            first_click=first_click,
+                                            second_click=second_click)
 
     def set_dosage_response(self, user, ml_nvp, times_day, weeks):
         DosageActivityResponse.objects.create(user=user,
@@ -86,10 +93,11 @@ class TestScorableMethods(TestCase):
                                               times_day=times_day,
                                               weeks=weeks)
 
-    def set_calendar_response(self, user, click):
+    def set_calendar_response(self, user, first_click, correct_click):
         CalendarResponse.objects.create(user=user,
                                         calendar_activity=self.chart,
-                                        first_click=click)
+                                        first_click=first_click,
+                                        correct_click=correct_click)
 
     def test_get_scorable_blocks(self):
         root = self.hierarchy.get_root()
@@ -123,29 +131,39 @@ class TestScorableMethods(TestCase):
     def test_aggregate_scorable_blocks_no_answers(self):
         blocks = get_scorable_blocks(self.hierarchy.get_root())
         users = [self.userNoAnswers]
-        self.assertEquals(aggregate_scorable_blocks(users, blocks), 0)
+        (score, completed) = aggregate_scorable_blocks(users, blocks)
+        self.assertEquals(score, 0)
+        self.assertEquals(completed, 0)
 
     def test_aggregate_scorable_blocks_incomplete(self):
         blocks = get_scorable_blocks(self.hierarchy.get_root())
         users = [self.userIncomplete]
-        self.assertEquals(aggregate_scorable_blocks(users, blocks), 0)
+        (score, completed) = aggregate_scorable_blocks(users, blocks)
+        self.assertEquals(score, 0)
+        self.assertEquals(completed, 0)
 
     def test_aggregate_scorable_blocks_badscore(self):
         blocks = get_scorable_blocks(self.hierarchy.get_root())
         users = [self.userBadScore]
-        self.assertEquals(aggregate_scorable_blocks(users, blocks), .50)
+        (score, completed) = aggregate_scorable_blocks(users, blocks)
+        self.assertEquals(score, .50)
+        self.assertEquals(completed, 4)
 
     def test_aggregate_scorable_blocks_goodscore(self):
         blocks = get_scorable_blocks(self.hierarchy.get_root())
         users = [self.userGoodScore]
-        self.assertEquals(aggregate_scorable_blocks(users, blocks), 1)
+        (score, completed) = aggregate_scorable_blocks(users, blocks)
+        self.assertEquals(score, 1)
+        self.assertEquals(completed, 4)
 
     def test_aggregate_scorable_blocks_all(self):
         root = self.hierarchy.get_root()
         blocks = get_scorable_blocks(root)
         users = [self.userNoAnswers, self.userIncomplete,
                  self.userBadScore, self.userGoodScore]
-        self.assertEquals(aggregate_scorable_blocks(users, blocks), .75)
+        (score, completed) = aggregate_scorable_blocks(users, blocks)
+        self.assertEquals(score, .75)
+        self.assertEquals(completed, 8)
 
     def test_average_session_scores(self):
         users = [self.userNoAnswers, self.userIncomplete,
@@ -156,6 +174,14 @@ class TestScorableMethods(TestCase):
         self.assertEquals(ctx['sessions'][1], None)
         self.assertEquals(ctx['sessions'][2], None)
         self.assertEquals(ctx['average_score'], 67.0)
+
+    def test_average_session_score_incomplete(self):
+        users = [self.userIncomplete, self.userNoAnswers]
+        ctx = average_session_score(users, self.hierarchy)
+        self.assertEquals(ctx['sessions'][0], -1)
+        self.assertEquals(ctx['sessions'][1], None)
+        self.assertEquals(ctx['sessions'][2], None)
+        self.assertTrue('average_score' not in ctx)
 
 
 class TestAverageQuizScore(TestCase):
@@ -199,9 +225,10 @@ class TestAverageQuizScore(TestCase):
                                                  question_type="long text")
 
     def test_no_responses(self):
+        # considered incomplete
         self.assertEquals(average_quiz_score([self.user],
                                              self.hierarchy,
-                                             'foo'), 0)
+                                             'foo'), -1)
 
     def test_incomplete_one(self):
         submission = Submission.objects.create(quiz=self.quiz1, user=self.user)
@@ -215,7 +242,7 @@ class TestAverageQuizScore(TestCase):
 
         self.assertEquals(average_quiz_score([self.user],
                                              self.hierarchy,
-                                             'foo'), 0)
+                                             'foo'), -1)
 
     def test_incomplete_two(self):
         submission = Submission.objects.create(quiz=self.quiz1, user=self.user)
@@ -231,7 +258,7 @@ class TestAverageQuizScore(TestCase):
 
         self.assertEquals(average_quiz_score([self.user],
                                              self.hierarchy,
-                                             'foo'), 0)
+                                             'foo'), -1)
 
     def test_incomplete_three(self):
         submission = Submission.objects.create(quiz=self.quiz1, user=self.user)
@@ -249,7 +276,7 @@ class TestAverageQuizScore(TestCase):
 
         self.assertEquals(average_quiz_score([self.user],
                                              self.hierarchy,
-                                             'foo'), 0)
+                                             'foo'), -1)
 
     def test_complete(self):
         submission = Submission.objects.create(
@@ -407,7 +434,7 @@ class TestSatisfactionRating(TestCase):
 
     def test_no_responses(self):
         rating = satisfaction_rating([self.user, self.user2], self.hierarchy)
-        self.assertEquals(rating, 0)
+        self.assertEquals(rating, None)
 
     def test_one_complete(self):
         submission = Submission.objects.create(quiz=self.quiz, user=self.user)

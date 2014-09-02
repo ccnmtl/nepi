@@ -36,7 +36,7 @@ def aggregate_scorable_blocks(users, blocks):
     total_score = 0.0
 
     if blocks.count() == 0:
-        return None  # nothing to see here
+        return (None, 0)  # nothing to see here
 
     for u in users:
         completed = 0
@@ -50,13 +50,14 @@ def aggregate_scorable_blocks(users, blocks):
             else:
                 score += block_score
                 completed += 1
+
         total_completed += completed
         total_score += score
 
     if total_completed == 0:
-        return 0
+        return (0, 0)
     else:
-        return total_score / total_completed
+        return (total_score / total_completed, total_completed)
 
 
 def average_session_score(users, hierarchy):
@@ -65,35 +66,50 @@ def average_session_score(users, hierarchy):
     ctx = {'sessions': []}
     exclude = ['pretest', 'posttest']
     session_count = len(sessions)
-    completed = 0
+    total_completed = 0
     total_score = 0.0
 
     for session in sessions:
         blocks = get_scorable_blocks(session, css_extra_exclude=exclude)
-        session_score = aggregate_scorable_blocks(users, blocks)
+        (session_score, session_completed) = \
+            aggregate_scorable_blocks(users, blocks)
 
-        if session_score is None:  # nothing to score here
+        if session_score is None:  # nothing to score
             ctx['sessions'].append(None)
             session_count -= 1
-        elif session_score == 0:  # incomplete
-            ctx['sessions'].append(session_score)
+        elif session_completed == 0:  # incomplete
+            ctx['sessions'].append(-1)
         else:
             ctx['sessions'].append(int(round(session_score * 100)))
             total_score += session_score
-            completed += 1
+            total_completed += 1
 
-    if completed == session_count and completed > 0:
-        ctx['average_score'] = round(total_score / completed * 100)
+    if total_completed == session_count and total_completed > 0:
+        ctx['average_score'] = round(total_score / total_completed * 100)
 
     return ctx
 
 
 def average_quiz_score(users, hierarchy, cls):
     blocks = get_quizzes_by_css_class(hierarchy, cls)
-    score = aggregate_scorable_blocks(users, blocks)
-    if score is not None:
-        score = int(round(score * 100))
-    return score
+    (score, completed) = aggregate_scorable_blocks(users, blocks)
+    if score is None:
+        return None
+    elif completed == 0:
+        return -1
+    else:
+        return int(round(score * 100))
+
+
+@register.simple_tag
+def display_average_quiz_score(user, hierarchy, css_extra_contains):
+    score = average_quiz_score([user], hierarchy, css_extra_contains)
+    if score is None:
+        return "n/a"
+    elif score < 0:
+        return "Incomplete"
+    else:
+        return "%s%%" % score
 
 
 def satisfaction_rating(users, hierarchy):
@@ -124,7 +140,7 @@ def satisfaction_rating(users, hierarchy):
                 total += 1
 
     if completed == 0:
-        return 0
+        return None
     else:
         return int(round(total / completed * 100))
 
@@ -136,22 +152,11 @@ def get_progress_report(users, hierarchy):
     ctx['pretest'] = average_quiz_score(users, hierarchy, 'pretest')
     ctx['posttest'] = average_quiz_score(users, hierarchy, 'posttest')
 
-    if ctx['pretest'] is not None and ctx['posttest'] is not None:
+    if (ctx['pretest'] is not None and ctx['pretest'] >= 0
+            and ctx['posttest'] is not None and ctx['posttest'] >= 0):
         ctx['prepostchange'] = ctx['posttest'] - ctx['pretest']
     ctx['satisfaction'] = satisfaction_rating(users, hierarchy)
     return ctx
-
-
-@register.simple_tag
-def display_average_quiz_score(user, hierarchy, css_extra_contains):
-    score = average_quiz_score([user], hierarchy, css_extra_contains)
-
-    if score is None:  # nothing to score here
-        return 'n/a'
-    elif score == 0:  # incomplete
-        return 'Incomplete'
-    else:
-        return str(score) + "%"
 
 
 @register.filter

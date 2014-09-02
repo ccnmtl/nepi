@@ -22,39 +22,42 @@ class TestConversation(TestCase):
 
 class TestConversationScenario(TestCase):
 
+    def setUp(self):
+        self.user = UserFactory()
+        self.scenario = ConversationScenarioFactory()
+        self.good = ConvClick.objects.create(
+            conversation=self.scenario.good_conversation)
+        self.bad = ConvClick.objects.create(
+            conversation=self.scenario.bad_conversation)
+
     def test_unicode(self):
         c = ConversationPageblockHierarchyFactory()
         self.assertEqual(str(c), "conv_hierarchy")
 
-    def test_score(self):
-        user = UserFactory()
-        scenario = ConversationScenarioFactory()
+    def test_score_incomplete(self):
+        self.assertEquals(self.scenario.score(self.user), None)
 
-        self.assertEquals(scenario.score(user), None)
+        resp = ConversationResponse.objects.create(user=self.user,
+                                                   conv_scen=self.scenario)
+        self.assertEquals(self.scenario.score(self.user), None)
 
-        resp = ConversationResponse.objects.create(user=user,
-                                                   conv_scen=scenario)
-        self.assertEquals(scenario.score(user), None)
-
-        clk = ConvClick.objects.create(conversation=scenario.good_conversation)
-        resp.first_click = clk
+        resp.first_click = self.good
         resp.save()
-        self.assertEquals(scenario.score(user), 1)
+        self.assertEquals(self.scenario.score(self.user), None)
 
-        clk = ConvClick.objects.create(conversation=scenario.bad_conversation)
-        resp.first_click = clk
-        resp.save()
-        self.assertEquals(scenario.score(user), 0)
+    def test_score_correct(self):
+        ConversationResponse.objects.create(user=self.user,
+                                            conv_scen=self.scenario,
+                                            first_click=self.good,
+                                            second_click=self.bad)
+        self.assertEquals(self.scenario.score(self.user), 1)
 
-
-# class TestConversationResponse(TestCase):
-#    def test_unicode(self):
-#        cr = ConversationResponse(conv_scen = ConversationScenarioFactory(),
-#                                         user = UserFactory(),
-#                                         first_click = ConvClickFactory(),
-#                                         second_click = ConvClickFactory(),
-#                                         third_click = ConvClickFactory())
-#        # self.assertEqual(str(cr), conv_hierarchy)
+    def test_score_incorrect(self):
+        ConversationResponse.objects.create(user=self.user,
+                                            conv_scen=self.scenario,
+                                            first_click=self.bad,
+                                            second_click=self.good)
+        self.assertEquals(self.scenario.score(self.user), 0)
 
 
 class TestLRConversationScenario(TestCase):
@@ -65,13 +68,10 @@ class TestLRConversationScenario(TestCase):
         '''testing assert click of response object'''
         user = UserFactory()
         scenario = ConversationScenarioFactory()
-        click_one = ConvClickFactory()
-        click_two = ConvClickFactory()
-        click_three = ConvClickFactory()
-        '''go through conditionals'''
-        with self.assertRaises(ConversationResponse.DoesNotExist):
-            ConversationResponse.objects.get(conv_scen=scenario, user=user)
-            '''how to we test that the except returns 0?'''
+        click_one = ConvClickFactory(conversation=scenario.good_conversation)
+        click_two = ConvClickFactory(conversation=scenario.bad_conversation)
+        click_three = ConvClickFactory(conversation=scenario.good_conversation)
+
         '''Test first click'''
         cr = ConversationResponse.objects.create(conv_scen=scenario,
                                                  user=user,
@@ -80,7 +80,7 @@ class TestLRConversationScenario(TestCase):
                           cr.first_click.conversation.scenario_type)
         self.assertIsNone(cr.second_click)
         self.assertFalse(scenario.unlocked(user))
-        # self.assertTrue(scenario.needs_submit())
+
         '''Test second click'''
         cr.second_click = click_two
         cr.save()
@@ -88,12 +88,34 @@ class TestLRConversationScenario(TestCase):
                           cr.second_click.conversation.scenario_type)
         self.assertIsNone(cr.third_click)
         self.assertTrue(scenario.unlocked(user))
+
         '''Test third click'''
         cr.third_click = click_three
         cr.save()
         self.assertEquals(click_three.conversation.scenario_type,
                           cr.third_click.conversation.scenario_type)
         self.assertIsNotNone(cr.third_click)
+        self.assertTrue(scenario.unlocked(user))
+
+    def test_both_responses_clicked(self):
+        user = UserFactory()
+        scenario = ConversationScenarioFactory()
+        one = ConvClickFactory(conversation=scenario.good_conversation)
+        two = ConvClickFactory(conversation=scenario.good_conversation)
+        three = ConvClickFactory(conversation=scenario.good_conversation)
+        four = ConvClickFactory(conversation=scenario.bad_conversation)
+
+        cr = ConversationResponse.objects.create(conv_scen=scenario,
+                                                 user=user,
+                                                 first_click=one,
+                                                 second_click=two,
+                                                 third_click=three)
+
+        self.assertFalse(scenario.unlocked(user))
+
+        cr.third_click = four
+        cr.save()
+
         self.assertTrue(scenario.unlocked(user))
 
 
@@ -163,6 +185,27 @@ class TestConversationNoFactory(TestCase):
 
 class TestCalendarChart(TestCase):
 
+    def test_unlocked(self):
+        user = UserFactory()
+        month = MonthFactory()
+        chart = CalendarChartFactory(month=month)
+
+        self.assertFalse(chart.unlocked(user))
+
+        resp = CalendarResponse.objects.create(user=user,
+                                               calendar_activity=chart)
+        self.assertFalse(chart.unlocked(user))
+
+        clk = Day.objects.create(calendar=month, number=2)
+        resp.first_click = clk
+        resp.save()
+        self.assertFalse(chart.unlocked(user))
+
+        clk = Day.objects.create(calendar=month, number=4)
+        resp.correct_click = clk
+        resp.save()
+        self.assertTrue(chart.unlocked(user))
+
     def test_score(self):
         user = UserFactory()
         month = MonthFactory()
@@ -174,12 +217,16 @@ class TestCalendarChart(TestCase):
                                                calendar_activity=chart)
         self.assertEquals(chart.score(user), None)
 
-        clk = Day.objects.create(calendar=month, number=4)
-        resp.first_click = clk
+        incorrect = Day.objects.create(calendar=month, number=1)
+        resp.first_click = incorrect
         resp.save()
-        self.assertEquals(chart.score(user), 1)
+        self.assertEquals(chart.score(user), None)
 
-        clk = Day.objects.create(calendar=month, number=1)
-        resp.first_click = clk
+        correct = Day.objects.create(calendar=month, number=4)
+        resp.correct_click = correct
         resp.save()
         self.assertEquals(chart.score(user), 0)
+
+        resp.first_click = correct
+        resp.save()
+        self.assertEquals(chart.score(user), 1)

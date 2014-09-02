@@ -1,11 +1,10 @@
 from datetime import datetime
-
 from django import forms
-from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
-
+from django.db import models
+from django.db.models.query_utils import Q
 from pagetree.models import PageBlock
 from pagetree.reports import ReportableInterface, ReportColumnInterface
 
@@ -130,14 +129,15 @@ class ConversationScenario(models.Model):
     def unlocked(self, user):
         '''We want to make sure the user has selected both dialogs
            from the conversation before they can proceed.'''
-        response = ConversationResponse.objects.filter(
-            conv_scen=self, user=user)
-        if (len(response) == 1
-                and response[0].first_click is not None
-                and response[0].second_click is not None):
-            return True
-        else:
-            return False
+        qs = ConversationResponse.objects.filter(conv_scen=self, user=user)
+
+        good = qs.filter(Q(first_click__conversation=self.good_conversation) |
+                         Q(second_click__conversation=self.good_conversation) |
+                         Q(third_click__conversation=self.good_conversation))
+        bad = qs.filter(Q(first_click__conversation=self.bad_conversation) |
+                        Q(second_click__conversation=self.bad_conversation) |
+                        Q(third_click__conversation=self.bad_conversation))
+        return good.count() > 0 and bad.count() > 0
 
     def last_response(self, user):
         try:
@@ -164,13 +164,14 @@ class ConversationScenario(models.Model):
         return [ConversationReportColumn(self.pageblock())]
 
     def score(self, user):
-        resp = ConversationResponse.objects.filter(conv_scen=self,
-                                                   user=user)
+        if not self.unlocked(user):
+            return None  # incomplete
 
-        if len(resp) == 0 or resp[0].first_click is None:
-            return None
+        responses = ConversationResponse.objects.filter(
+            conv_scen=self, user=user,
+            first_click__conversation=self.good_conversation)
 
-        if (resp[0].first_click.conversation == self.good_conversation):
+        if responses.count() > 0:
             return 1
         else:
             return 0
@@ -535,14 +536,11 @@ class CalendarChart(models.Model):
     def unlocked(self, user):
         '''Make sure the user has selected the correct
         date before they can proceed.'''
-        response = CalendarResponse.objects.filter(
-            calendar_activity=self, user=user)
-        if (len(response) == 1
-                and response[0].first_click is not None
-                and response[0].correct_click is not None):
-            return True
-        else:
-            return False
+        responses = CalendarResponse.objects.filter(
+            calendar_activity=self, user=user,
+            correct_click__number=self.correct_date)
+
+        return responses.count() > 0
 
     def submit(self, user, data):
         for k in data.keys():
@@ -570,11 +568,14 @@ class CalendarChart(models.Model):
         return [CalendarReportColumn(self.pageblock(), self.correct_date)]
 
     def score(self, user):
-        response = CalendarResponse.objects.filter(
-            user=user, calendar_activity=self)
-        if response.count() == 0 or response[0].first_click is None:
+        if not self.unlocked(user):
             return None
-        elif response[0].first_click.number == self.correct_date:
+
+        responses = CalendarResponse.objects.filter(
+            user=user, calendar_activity=self,
+            first_click__number=self.correct_date)
+
+        if responses.count() > 0:
             return 1
         else:
             return 0

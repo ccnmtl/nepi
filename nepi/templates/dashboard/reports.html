@@ -23,7 +23,9 @@
             <tr>
                 <td>Pre-test score</td>
                 <td>
-                    <% if (progress_report.pretest == 0) { %>
+                    <% if (progress_report.pretest === null) { %>
+                        n/a
+                    <% } else if (progress_report.pretest < 0) { %>
                         Incomplete
                     <% } else { %>
                         <%= progress_report.pretest %>%
@@ -33,7 +35,9 @@
             <tr>
                 <td>Post-test score</td>
                 <td>
-                    <% if (progress_report.posttest == 0) { %>
+                    <% if (progress_report.posttest === null) { %>
+                        n/a
+                    <% } else if (progress_report.posttest < 0) { %>
                         Incomplete
                     <% } else { %>
                         <%= progress_report.posttest %>%
@@ -43,13 +47,23 @@
             <tr>
                 <td>Pre/Post change</td>
                 <td>
-                    <%= progress_report.prepostchange %>%
+                    <% if (progress_report.prepostchange === undefined || progress_report.prepostchange === null) { %>
+                        n/a
+                    <% } else { %>
+                        <%= progress_report.prepostchange %>%
+                    <% } %>
                 </td>
-            </tr>        
+            </tr>
             <tr>
                 <td>Satisfaction score</td>
-                <td><%= progress_report.satisfaction %>%</td>
-            </tr>        
+                <td>
+                    <% if (progress_report.satisfaction === null) { %>
+                        n/a
+                    <% } else { %>
+                        <%= progress_report.satisfaction %>%
+                    <% } %>
+                </td>
+            </tr>     
             </table>
         <% } %>
     </script>
