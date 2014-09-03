@@ -472,31 +472,61 @@ class BaseReportMixin():
     all = 'all'
     unaffiliated = 'unaffiliated'
 
-    def get_users_and_groups(self, request, hierarchy):
-        group_id = request.POST.get('group', self.all)
-        country_name = request.POST.get('country', self.all)
-        school_id = request.POST.get('school', self.all)
-        groups = None
+    def get_country_and_school(self, request):
+        profile = request.user.profile
 
-        if group_id != self.all:  # a single group
+        if profile.is_teacher() or profile.is_institution_administrator():
+            country_name = profile.school.country.name
+            school_id = profile.school.id
+        elif profile.is_country_administrator():
+            country_name = profile.country.name
+            school_id = request.POST.get('school', self.all)
+        else:
+            country_name = request.POST.get('country', self.all)
+            school_id = request.POST.get('school', self.all)
+
+        return (country_name, school_id)
+
+    def filter_by_country(self, groups, country_name):
+        if country_name != self.all:
+            groups = groups.filter(school__country__name=country_name)
+        return groups
+
+    def filter_by_school(self, groups, school_id):
+        if school_id != self.all and school_id != self.unaffiliated:
+            groups = groups.filter(school__id=school_id)
+        return groups
+
+    def filter_by_creator(self, groups, user):
+        # Teachers can only see their own groups
+        if user.profile.is_teacher():
+            groups = groups.filter(creator=user)
+        return groups
+
+    def get_users_and_groups(self, request, hierarchy):
+        group_id = request.POST.get('schoolgroup', self.all)
+        (country_name, school_id) = self.get_country_and_school(request)
+        groups = None
+        users = None
+
+        if group_id != self.all:  # requesting a single group
             groups = Group.objects.filter(id=group_id)
         elif country_name == self.all:  # all users in all countries
             users = User.objects.all()
-        elif school_id == self.unaffiliated:  # all users/no groups in country
+        elif school_id == self.unaffiliated:  # all solo users in country
             users = User.objects.filter(profile__country__name=country_name,
                                         profile__group=None)
         else:  # group based queries
             groups = Group.objects.filter(archived=False, module=hierarchy)
-            if country_name != self.all:
-                groups = groups.filter(school__country__name=country_name)
-            if school_id != self.all:
-                groups = groups.filter(school__id=school_id)
+            groups = self.filter_by_country(groups, country_name)
+            groups = self.filter_by_school(groups, school_id)
+            groups = self.filter_by_creator(groups, request.user)
 
         if groups:
             users = User.objects.filter(profile__group__in=groups)
 
-        # students only
-        users = users.filter(profile__profile_type='ST').distinct()
+        if users:
+            users = users.filter(profile__profile_type='ST').distinct()
 
         return (users, groups)
 
@@ -612,8 +642,7 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
 
         users, groups = self.get_users_and_groups(request, hierarchy)
 
-        #report = DetailedReport(users)
-        report = DetailedReport(User.objects.filter(username='student'))
+        report = DetailedReport(users)
 
         # setup zip file for the key & value file
         response = HttpResponse(mimetype='application/zip')

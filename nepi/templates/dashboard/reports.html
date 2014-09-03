@@ -20,8 +20,12 @@
         <% if (completed > 0) { %>
             <br />
             <br />
-            <h4>Averages for  <%= completed %> users </h4>
+            <h4>Completed User Averages</h4>
             <table class="table table-striped table-condensed">
+            <tr>
+                <td>Completed</td>
+                <td><%= completed %></td>
+            </tr>
             <tr>
                 <td>Pre-test score</td>
                 <td>
@@ -75,8 +79,10 @@
             'role': "{{user.profile.role}}",
             {% if user.profile.school %}
                 'school': "{{user.profile.school.id}}",
+                'country': "{{user.profile.school.country.name}}"
+            {% else %}
+                'country': "{{user.profile.country.name}}"
             {% endif %}
-            'country': "{{user.profile.country.name}}"
         }
     </script>
     <script type="text/javascript" src="/site_media/js/dashboard.js"></script>
@@ -138,12 +144,12 @@
                         {% else %}{% if user.profile.is_institution_administrator %}
                             Your selected institution has no groups yet.<br />Create groups on the <a href="/dashboard/#user-groups">Groups</a> tab.
                         {% else %}
-                            Your selected institution has no available groups.<br />Select another institution or <b>All Institutions</b>
+                            Your selected institution has no available groups.<br />Select another institution or <b>All Institutions</b> or <b>Unaffiliated Students</b>
                         {% endif %}{% endif %}
                     </div>
                 </div>
             </div>
-            <div class="fieldWrapper control-group schoolgroup" style="display: none">
+            <div class="fieldWrapper control-group schoolgroup wide" style="display: none">
                 <label><b>Group:</b></label>
                 <select name="schoolgroup">
                     <option class="all-or-none-option" value="all">All groups</option>

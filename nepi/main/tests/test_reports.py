@@ -1,7 +1,10 @@
 from datetime import date
+from django.test.client import RequestFactory
 from django.test.testcases import TestCase
 from nepi.main.tests.factories import SchoolGroupFactory, \
-    StudentProfileFactory, ICAPProfileFactory
+    StudentProfileFactory, ICAPProfileFactory, TeacherProfileFactory, \
+    InstitutionAdminProfileFactory, CountryAdministratorProfileFactory
+from nepi.main.views import BaseReportMixin
 from pagetree.models import Hierarchy, UserPageVisit
 from pagetree.tests.factories import ModuleFactory
 import datetime
@@ -11,6 +14,8 @@ import json
 class TestAggregateReportView(TestCase):
 
     def setUp(self):
+        self.factory = RequestFactory()
+
         ModuleFactory("main", "/pages/main/")
         self.hierarchy = Hierarchy.objects.get(name='main')
         root = self.hierarchy.get_root()
@@ -39,7 +44,8 @@ class TestAggregateReportView(TestCase):
         UserPageVisit.objects.create(user=inprogress_user,
                                      section=descendants[0])
 
-        self.icap = ICAPProfileFactory().user
+        self.icap = ICAPProfileFactory(
+            country=self.new_group.school.country).user
         self.student = StudentProfileFactory(
             country=self.old_group.school.country).user  # unaffiliated user
 
@@ -119,7 +125,7 @@ class TestAggregateReportView(TestCase):
     def test_report_single_group(self):
         # group id is specified
         self.client.login(username=self.icap.username, password="test")
-        data = {'group': self.old_group.pk}
+        data = {'schoolgroup': self.old_group.pk}
         response = self.client.post('/dashboard/reports/aggregate/', data,
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
@@ -128,3 +134,45 @@ class TestAggregateReportView(TestCase):
         self.assertEquals(ctx['completed'], 0)
         self.assertEquals(ctx['incomplete'], 1)
         self.assertEquals(ctx['inprogress'], 0)
+
+    def test_get_country_and_school(self):
+        data = {'school': self.new_group.school.id,
+                'country': self.new_group.school.country.name}
+        request = self.factory.post('/dashboard/reports/aggregate/', data)
+
+        mixin = BaseReportMixin()
+
+        teacher = TeacherProfileFactory(school=self.old_group.school,
+                                        country=self.old_group.school.country)
+        request.user = teacher.user
+        (country_name, school_id) = mixin.get_country_and_school(request)
+        self.assertEquals(country_name, self.old_group.school.country.name)
+        self.assertEquals(school_id, self.old_group.school.id)
+
+        school = InstitutionAdminProfileFactory(
+            school=self.old_group.school,
+            country=self.old_group.school.country)
+        request.user = school.user
+        (country_name, school_id) = mixin.get_country_and_school(request)
+        self.assertEquals(country_name, self.old_group.school.country.name)
+        self.assertEquals(school_id, self.old_group.school.id)
+
+        country = CountryAdministratorProfileFactory(
+            country=self.old_group.school.country)
+        request.user = country.user
+        (country_name, school_id) = mixin.get_country_and_school(request)
+        self.assertEquals(country_name, self.old_group.school.country.name)
+        self.assertEquals(int(school_id), self.new_group.school.id)
+
+        data = {'school': self.old_group.school.id,
+                'country': self.old_group.school.country.name}
+        request = self.factory.post('/dashboard/reports/aggregate/', data)
+        request.user = country.user
+        (country_name, school_id) = mixin.get_country_and_school(request)
+        self.assertEquals(country_name, self.old_group.school.country.name)
+        self.assertEquals(int(school_id), self.old_group.school.id)
+
+        request.user = self.icap
+        (country_name, school_id) = mixin.get_country_and_school(request)
+        self.assertEquals(country_name, self.old_group.school.country.name)
+        self.assertEquals(int(school_id), self.old_group.school.id)
