@@ -25,6 +25,15 @@
 <div id="check_val" value="{{ block.correct_date }}" data-check="{{ block.correct_date }}" style="visibility: hidden">  </div>
 <div id="calendar_id" value="{{ block.pk }}" data-calendar="{{ block.pk }}" style="visibility: hidden">  </div>
     <h3>{{block.month.display_name}}</h3>
+      <div class="daysofweek">
+          <div>Sunday</div>
+          <div>Monday</div>
+          <div>Tuesday</div>
+          <div>Wednesday</div>
+          <div>Thursday</div>
+          <div>Friday</div>
+          <div>Saturday</div>
+      </div>
     <div id="month" class="{{block.month.month_name}}">
     {% for day in block.month.day_set.all %}
         <div data-day="{{ day.pk }}" data-date="{{ day.number }}" data-explanation="{{ day.explanation }}" data-toggle="modal" data-target="#myModal" class="day">
