@@ -621,6 +621,9 @@ class Day(models.Model):
     calendar = models.ForeignKey(Month)
     number = models.IntegerField(default=1)
     explanation = models.CharField(max_length=255, default="")
+    
+    class Meta:
+        ordering = ['number']
 
     def __unicode__(self):
         return"%s %s" % (self.number, self.explanation)
