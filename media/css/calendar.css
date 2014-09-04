@@ -20,7 +20,7 @@
 	padding: 55px 0;
 	text-align: center;
 	background-color: #fff;
-	border: solid 1px #c7e3f5;
+	border: solid 3px #c7e3f5;
 	margin: .75%;
 	cursor: pointer;
 	color: #333;
@@ -48,4 +48,8 @@ margin-left: 307px;
 	border: solid 1px #fff;
 	margin: .75%;
 	cursor: pointer;
+}
+
+.day.visited {
+	background-color: #
 }
