@@ -21,9 +21,9 @@ jQuery(document).ready(function() {
                 jQuery('.modal-body p').replaceWith("<p>" + explanation + "</p>");
                 jQuery('.modal-header span.selected-day').html(date);
                 if (date === check_val) {
-                    jQuery('.modal-footer button').html("Continue");
+                    jQuery('.modal-body button').html("Continue");
                 } else {
-                    jQuery('.modal-footer button').html("Try again");
+                    jQuery('.modal-body button').html("Try again");
                 }
              });
             

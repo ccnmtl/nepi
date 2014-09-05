@@ -20,6 +20,7 @@
 	border-radius: 10px;
 	border: solid 2px #c7e3f5;
 	padding: 10px;
+	margin: 0 0 45px 0;
 }
 
 #month div {
@@ -39,13 +40,22 @@
 	font-weight: bold;
 }
 
-#month div:first-child {
+#month.April div:first-child {
 	margin-left: 307px;
 }
 
-#month:hover div:first-child {
+#month.August div:first-child {
+	margin-left: 900px;
+}
+
+#month.April:hover div:first-child {
 margin-left: 307px;
 }
+
+#month.August:hover div:first-child {
+margin-left: 900px;
+}
+
 
 #month div:hover {
 	float: left;
@@ -63,4 +73,11 @@ margin-left: 307px;
 #month div.day.visited {
 	background-color: #c7e3f5;
 	color: #f5f5f5;
+}
+
+
+/* Modal */
+
+#myModal {
+	
 }
