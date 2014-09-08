@@ -205,8 +205,10 @@ left: 800px;
 .s2_act_02 .correct_answer3 {
 	position: absolute;
 	top: -408px;
-	left: 464px;
+	left: 476px;
 	width: 150px;
+	background-color: #d9eaf5;
+	border: none;
 }
 
 .s2_act_02 .correct_answer4 {
@@ -309,9 +311,11 @@ left: 800px;
 
 .s2_act_02 .wrong_answer3 {
 	position: absolute;
-	top: -400px;
-	left: 475px;
+	top: -415px;
+	left: 469px;
 	width: 150px;
+	background-color: #f6d4ca;
+	border: none;
 }
 
 .s2_act_02 .wrong_answer4 {
@@ -467,8 +471,8 @@ padding: 40px 30px;
 .s2_act_03 .correct_answer1:before {
 	content: "";
 	position: absolute;
-	bottom: 100px;
-	left: 215px;
+	bottom: 105px;
+	left: 217px;
 	width: 30px;
 	height: 30px;
 	border: solid 4px #80b6e6;
@@ -482,8 +486,8 @@ padding: 40px 30px;
 .s2_act_03 .correct_answer1:after {
 	content: "";
 	position: absolute;
-	bottom: 125px;
-	left: 255px;
+	bottom: 140px;
+	left: 247px;
 	width: 15px;
 	height: 15px;
 	border: solid 4px #80b6e6;
@@ -494,8 +498,8 @@ padding: 40px 30px;
 
 .s2_act_03 .correct_answer2 {
 	position: absolute;
-top: -440px;
-left: 85px;
+	top: -405px;
+	left: 85px;
 }
 .s2_act_03 .correct_answer3 {
 	border: none;
@@ -508,7 +512,7 @@ left: 85px;
 
 .s2_act_03 .wrong_answer1 {
 	position: absolute;
-	top: -250px;
+	top: -235px;
 	left: 55px;
 	width: 200px;
 	padding: 40px 30px;
@@ -523,8 +527,8 @@ left: 85px;
 .s2_act_03 .wrong_answer1:before {
 	content: "";
 	position: absolute;
-	bottom: 100px;
-	left: 160px;
+	bottom: 105px;
+	left: 217px;
 	width: 30px;
 	height: 30px;
 	border: solid 4px #f5463a;
@@ -537,8 +541,8 @@ left: 85px;
 .s2_act_03 .wrong_answer1:after {
 	content: "";
 	position: absolute;
-	bottom: 125px;
-	left: 195px;
+	bottom: 140px;
+	left: 247px;
 	width: 15px;
 	height: 15px;
 	border: solid 4px #f5463a;
@@ -548,7 +552,7 @@ left: 85px;
 }
 .s2_act_03 .wrong_answer2 {
 	position: absolute;
-	top: -440px;
+	top: -405px;
 	left: 85px;
 }
 	

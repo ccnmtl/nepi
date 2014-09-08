@@ -958,11 +958,11 @@ div.pageblock.show-correct li.incorrect:after {
 }
 
 .act_desc {
-	padding: 20px;
+	padding: 10px;
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;
-	background-color: #eee;
+	border: solid 3px #eee;
 	text-align: center;
 	margin-bottom: 20px;
 }
