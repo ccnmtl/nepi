@@ -111,9 +111,11 @@ class UserProfileForm(forms.Form):
 
     def create_pending_teacher(self, user, school_id):
         school = School.objects.get(id=school_id)
-        PendingTeachers.objects.create(user_profile=user.profile,
-                                       school=school)
-        self.send_teacher_notifiction(user, school)
+        pending, created = PendingTeachers.objects.get_or_create(
+            user_profile=user.profile, school=school)
+
+        if created:
+            self.send_teacher_notifiction(user, school)
 
 
 class CreateAccountForm(UserProfileForm):

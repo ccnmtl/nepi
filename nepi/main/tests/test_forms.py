@@ -73,6 +73,11 @@ class TestUserProfileForm(TestCase):
         self.assertEquals(PendingTeachers.objects.count(), 1)
         self.assertEqual(len(mail.outbox), 1)
 
+        # duplicate -- only 1 object & 1 email
+        form.create_pending_teacher(self.student, self.school.id)
+        self.assertEquals(PendingTeachers.objects.count(), 1)
+        self.assertEqual(len(mail.outbox), 1)
+
     def test_send_success_email(self):
         form = UserProfileForm(self.student)
         form.send_success_email(self.student)
