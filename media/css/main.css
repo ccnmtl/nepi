@@ -1305,13 +1305,13 @@ form.create-group div.control-group.error div.help-inline.error {
 .adherence-response.one {
 	position: relative;
 	top: -196px;
-	left: 759px;
+	left: 758px;
 }
 
 .adherence-response.two {
 	position: relative;
 	top: -225px;
-	left: 781px;
+	left: 780px;
 }
 
 .adherence-response.three {
@@ -1342,7 +1342,8 @@ form.create-group div.control-group.error div.help-inline.error {
 .document-adherence {
 	font-family: Arial, Helvetica, sans-serif;
 	font-weight: bold;
-	color: #fff;
+	color: #333;
+	height: 0px;
 }
 
 .document-adherence .adherence-response.current {
@@ -1351,37 +1352,37 @@ form.create-group div.control-group.error div.help-inline.error {
 .document-adherence .adherence-one {
 	width: 22px;
 	height: 29px;
-    background-color: #83D0D7;
+    background-color: #d9eaf5;
 }
 
 .document-adherence .adherence-two {
-	width: 22px;
+	width: 23px;
 	height: 29px;
-    background-color: #F3B564;
+    background-color: #c7e3f5;
 }
 
 .document-adherence .adherence-three {
 	width: 22px;
 	height: 30px;
-    background-color: #D95F50;
+    background-color: #d9eaf5;
 }
 
 .document-adherence .adherence-four {
 	width: 23px;
 	height: 30px;
-    background-color: #64C0F3;
+    background-color: #c7e3f5;
 }
 
 .document-adherence .adherence-five {
 	width: 22px;
 	height: 29px;
-    background-color: #b4dead;
+    background-color: #d9eaf5;
 }
 
 .document-adherence .adherence-six {
 	width: 23px;
 	height: 29px;
-    background-color: #d4adde;
+    background-color: #c7e3f5;
 }
 
 /* Session 4 Content */
