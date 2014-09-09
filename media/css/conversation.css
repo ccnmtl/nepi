@@ -989,14 +989,14 @@ left: 247px;
 /* Pt6: Empathize */ 
 
 .pageblock.pre-con.s2_act_06 {
+	position: relative;
 	border: solid 4px #ccc;
 	border-radius: 10px;
 	padding: 10px;
 	text-align: center;
-	position: absolute;
 	width: 200px;
-top: 275px;
-left: 270px;
+	top: -390px;
+	left: 110px;
 }
 
 .pageblock.pre-con.s2_act_06:before {
@@ -1096,9 +1096,9 @@ left: 835px;
 }
 
 .s2_act_06 .correct_answer1 {
-position: absolute;
-	top: -342px;
-	left: 15px;
+	position: absolute;
+	top: -334px;
+	left: 34px;
 	width: 200px;
 	padding: 40px 30px;
 	-webkit-border-top-left-radius: 220px 120px;
@@ -1152,8 +1152,8 @@ position: absolute;
 
 .s2_act_06 .wrong_answer1 {
 	position: absolute;
-top: -340px;
-left: 55px;
+	top: -340px;
+	left: 40px;
 	width: 200px;
 	padding: 40px 30px;
 	-webkit-border-top-left-radius: 220px 120px;
