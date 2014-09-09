@@ -981,6 +981,15 @@ div.pageblock.show-correct li.incorrect:after {
 	text-align:center;
 }
 
+.retentionimg {
+	height: 155px;
+	overflow: auto;
+	padding: 20px;
+	border: solid 3px #eee;
+	margin: 40px;
+	text-align: center;
+}
+
 .act_desc {
 	padding: 10px;
 	border-radius: 10px;
