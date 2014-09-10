@@ -1011,19 +1011,18 @@ input#generic-reset {
 .btn {
   display: inline-block;
   *display: inline;
-  padding: 4px 12px;
+  padding: 12px 20px;
   margin-bottom: 0;
   *margin-left: .3em;
   font-size: 14px;
   line-height: 20px;
-  color: #333333;
+  color: #f5f5f5;
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
-  background-color: #f5f5f5;
-  border: 1px solid #cccccc;
+  background-color: #00437e;
+  border: 1px solid #003463;
   *border: 0;
-  border-color: #e6e6e6 #e6e6e6 #bfbfbf;
 	 -webkit-border-radius: 4px;
      -moz-border-radius: 4px;
           border-radius: 4px;
@@ -1035,14 +1034,14 @@ input#generic-reset {
 .btn.active,
 .btn.disabled,
 .btn[disabled] {
-  color: #333333;
-  background-color: #e6e6e6;
-  *background-color: #d9d9d9;
+  color: #f5f5f5;
+  background-color: #01539b;
+  *background-color: #01539b;
 }
 
 .btn:active,
 .btn.active {
-  background-color: #cccccc \9;
+  background-color: #014785 \9;
 }
 
 .btn:first-child {
@@ -1051,7 +1050,7 @@ input#generic-reset {
 
 .btn:hover,
 .btn:focus {
-  color: #333333;
+  color: #f5f5f5;
   text-decoration: none;
   background-position: 0 -15px;
   -webkit-transition: background-position 0.1s linear;
@@ -1061,18 +1060,15 @@ input#generic-reset {
 }
 
 .btn:focus {
-  outline: thin dotted #333;
+  outline: thin dotted #f5f5f5;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
 
 .btn.active,
 .btn:active {
-  background-image: none;
+  background-color: #00284c;
   outline: 0;
-  -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
-     -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
-          box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .btn.disabled,
