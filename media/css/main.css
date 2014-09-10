@@ -1007,10 +1007,56 @@ input#generic-reset {
 }
 
 /* Registration & Contact Forms*/
+
+.btn, .btn-primary {
+	color: #333;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	background-color: #e5eff8;
+	background-image: -moz-linear-gradient(top, #fefeff, #e5eff8);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fefeff), to(#e5eff8));
+	background-image: -webkit-linear-gradient(top, #fefeff, #e5eff8);
+	background-image: -o-linear-gradient(top, #fefeff, #e5eff8);
+	background-image: linear-gradient(to bottom, #fefeff, #e5eff8);
+	background-repeat: repeat-x;
+	border-color: #fff #fff #fefeff;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fefeff', endColorstr='#e5eff8', GradientType=0);
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+.btn:hover, .btn:focus {
+	color: #333333;
+	text-decoration: none;
+	background-position: 0 -15px;
+	-webkit-transition: background-position 0.1s linear;
+	-moz-transition: background-position 0.1s linear;
+	-o-transition: background-position 0.1s linear;
+	transition: background-position 0.1s linear;
+}
+
+.btn:hover, .btn:focus, .btn:active, .btn.active, .btn.disabled, .btn[disabled] {
+	color: #333333;
+	background-color: #fefeff;
+}
+
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input
+{
+	border-radius: 0;
+}
+
 #report-selector,
 div.user-profile-form {
-    width: 453px;
+	width: 453px;
+	margin: 0 auto;
+	background-color: #f5f5f5;
+	padding: 30px;
+	border-radius: 4px;
 }
+
+div.user-profile-form label {
+	cursor: default;
+}
+
 
 div.user-profile-form label small {
     float: right;
