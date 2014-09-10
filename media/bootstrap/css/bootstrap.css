@@ -3194,7 +3194,7 @@ button.close {
   border: 0;
   -webkit-appearance: none;
 }
-/*
+
 .btn {
   display: inline-block;
   *display: inline;
@@ -3873,7 +3873,7 @@ input[type="submit"].btn.btn-mini {
           border-radius: 0 0 6px 6px;
 }
 
-*/
+
 
 .alert {
   padding: 8px 35px 8px 14px;
