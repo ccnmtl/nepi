@@ -78,6 +78,6 @@ margin-left: 900px;
 
 /* Modal */
 
-#myModal .modal-body button {
-	margin: 0 auto;
+#myModal .modal-body {
+	text-align: center;
 }
