@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.core import mail
@@ -16,7 +17,7 @@ from nepi.main.views import ContactView, ViewPage, CreateSchoolView, \
     UserProfileView
 from pagetree.models import UserPageVisit, Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
-import json
+
 
 
 class TestBasicViews(TestCase):

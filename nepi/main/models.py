@@ -2,17 +2,14 @@ import base64
 import hashlib
 import hmac
 import datetime
-
 from django import forms
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.db.models.query_utils import Q
-
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from pagetree.reports import PagetreeReport, StandaloneReportColumn
-
 from choices import COUNTRY_CHOICES, PROFILE_CHOICES
 
 

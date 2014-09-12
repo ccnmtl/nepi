@@ -14,18 +14,38 @@ jQuery(document).ready(function() {
         jQuery('.dosage-clipboard-popover').toggle('slide', {direction: 'right'}, 500);
     });
     
-    jQuery("input[type='text']")
+    jQuery("input[type='text']")//?
 
     jQuery('form').submit(function(evt) {
         var inputs = jQuery(evt.currentTarget).find("input[type='text']");
         
         for (var i=0; i < inputs.length; i++) {
-            var value = jQuery(inputs[i]).val();
-			
-            if (value.length > 3)  {
-                alert("Values should consist of one or two digits.");
+        	
+        	var re = new RegExp(/^\d*\.?\d*$/);
+        	var dig = new RegExp(/^\d+$/);
+        	
+        	var nvp = jQuery(inputs[0]).val();
+        	var tpd = jQuery(inputs[1]).val();
+        	var wks = jQuery(inputs[2]).val();
+        	
+            
+            if (!nvp.match(re))  {
+                alert("Please enter a valid digit or decimal for ml of NVP.");
                 return false;
             }
+
+            if ((!tpd.match(dig)) || (tpd.length > 3))  {
+                alert("Values times for day and number of digits should consist of one or two digits.");
+                return false;
+                
+            }
+            
+            if ((!wks.match(dig)) || (wks.length > 3))  {
+                alert("Values times for day and number of digits should consist of one or two digits.");
+                return false;
+            }
+
+            
         }
     });
 });
