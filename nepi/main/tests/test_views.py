@@ -19,7 +19,6 @@ from pagetree.models import UserPageVisit, Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
 
 
-
 class TestBasicViews(TestCase):
 
     def setUp(self):
