@@ -468,6 +468,49 @@ h1, h2, h3, h4, h5, h6 {
 	font-family: 'Arial', 'helvetica', sans-serif;
 }
 
+h1 {	
+	font-size: 22px;
+	margin: 20px auto;
+	width: 65%;
+	text-align: center;
+	line-height: 34px;
+}
+
+
+h2 {
+	font-size: 18px;
+	margin: 30px auto 0 auto;
+	width: 65%;
+	line-height: 22px;
+	padding: 10px;
+	background: #d9eaf5;
+}
+
+h3 {
+	font-size: 16px;
+	margin: 30px auto 0 auto;
+	width: 65%;
+	line-height: 20px;
+}
+
+
+h4 {
+	font-size: 14px;
+	margin: 30px auto 0 auto;
+	width: 65%;
+	line-height: 18px;
+}
+
+
+h4.pagetitle {
+	margin-top: -30px;
+	width: 98%;
+	padding: 10px;
+	background: #f5f5f5;
+	margin-bottom: 30px;
+}
+
+
 #titlebar {
 	padding: 25px 0 10px 0;
 }
@@ -594,11 +637,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .pageblock {
 	line-height: 22px;
-}
-
-h4.pagetitle {
-	margin-top: -5px;
-	margin-bottom: 30px;
 }
 
 	/*Content Styles*/
@@ -880,14 +918,11 @@ div.pageblock.show-correct li.incorrect:after {
     display: inline-block;
     width: 40px;
     height: 30px;    
+    opacity: .9
 }
 
-.slide-out-menu .toggle-primary-toc .bar {
-    background: white;
-    border-radius: 5px;
-    width: 40px;
-    height: 5px;
-    margin: 5px 0 0 0;
+.slide-out-menu .toggle-primary-toc:hover {
+	opacity: 1
 }
 
 .slide-out-menu .toggle-primary-toc img {
