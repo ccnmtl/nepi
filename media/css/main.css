@@ -868,7 +868,7 @@ div.pageblock.show-correct li.incorrect:after {
 }
 
 .slide-out-menu .toggle-primary-toc {
-    padding: 5px 7px 9px 15px;
+    padding: 10px 11px 20px 15px;
     -webkit-border-bottom-right-radius: 5px;
     -webkit-border-top-right-radius: 5px;
     -moz-border-radius-bottomright: 5px;
@@ -889,6 +889,11 @@ div.pageblock.show-correct li.incorrect:after {
     height: 5px;
     margin: 5px 0 0 0;
 }
+
+.slide-out-menu .toggle-primary-toc img {
+	padding: 0;
+}
+
 
 .slide-out-menu.open {
     left: 0px;
