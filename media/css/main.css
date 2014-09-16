@@ -555,6 +555,10 @@ h4.pagetitle {
 }
 
 	/*Body table styles*/
+.table-style {
+	margin: 0 auto;
+}	
+	
 .table-style th {
 	background: #d9eaf5;
 	padding: 1em;
