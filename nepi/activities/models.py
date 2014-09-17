@@ -391,6 +391,9 @@ class RetentionRateCard(models.Model):
 
     def edit_form(self):
         return RetentionRateCardForm(instance=self)
+    
+    def clear_user_submissions(self, user):
+        RetentionResponse.objects.filter(user=user, retentionrate=self).delete()
 
     @classmethod
     def create(self, request):
@@ -411,7 +414,7 @@ class RetentionRateCard(models.Model):
         '''We want to make sure the user has selected all clickable
            parts of the table before they are allowed to proceed.'''
         response = RetentionResponse.objects.filter(
-            conv_scen=self, user=user)
+            retentionrate=self, user=user)
         if (len(response) == 1
                 and response[0].cohort_click is not None
                 and response[0].start_date_click is not None

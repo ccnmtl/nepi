@@ -1,4 +1,40 @@
 <script type="text/javascript" language="javascript">
+    var is_unlocked = false;
+
+    function maybeActivateNextButton() {
+        if (is_unlocked) {
+                jQuery("li.next a").removeClass("disabled");
+           } else {
+                jQuery("li.next a").addClass("disabled");
+           }
+    }
+
+    function test_lock(){
+    	
+    	var retention_id = jQuery("#retention input[name='retention_id']").val();
+    	
+    	jQuery.ajax(
+    	        {
+    	            url: "/activities/retention_locked/",
+    	            type: "POST",
+    	            data: {'retention_id' : retention_id},
+    	            success: function (data) 
+    	            {
+    	            	is_unlocked = true;
+    	                //alert("success!");
+    	                maybeActivateNextButton();
+    	            },
+
+    	            error: function(data) 
+    	            {
+    	            	is_unlocked = false;
+    	                //alert("There was an error submitting your form.");
+    	                maybeActivateNextButton();
+    	            }
+    	        });//end of ajax
+    }
+    
+    
     function send_click(click_string)
     {
         var retention_id = jQuery("#retention input[name='retention_id']").val();
@@ -10,6 +46,7 @@
             data: {'click_string' : click_string, 'retention_id' : retention_id},
             success: function (data) 
             {
+            	test_lock();
                 //alert("success!");
             },
 

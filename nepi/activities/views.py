@@ -171,6 +171,21 @@ class SaveRetentionResponse(View, JSONResponseMixin):
             return render_to_json_response({'success': False})
 
 
+class TestRetentionResponse(View, JSONResponseMixin):
+    '''If all parts have been clicked on, unlock pageblock'''
+
+    def post(self, request):
+        retention = get_object_or_404(RetentionRateCard,
+                                      pk=request.POST['retention_id'])
+        done = retention.unlocked(user=request.user)
+        
+        if done:
+            return render_to_json_response({'success': True})
+        else:
+            '''If not done return false.'''
+            return render_to_json_response({'success': False})
+
+
 class SaveCalendarResponse(View, JSONResponseMixin):
     def post(self, request):
         calendar = get_object_or_404(CalendarChart,

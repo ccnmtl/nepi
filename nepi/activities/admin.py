@@ -4,7 +4,10 @@ from nepi.activities.models import (ConversationScenario,
                                     ImageInteractive,
                                     CalendarChart,
                                     Month,
-                                    Day)
+                                    Day,
+                                    RetentionRateCard,
+                                    RetentionResponse,
+                                    RetentionClick)
 from django.contrib import admin
 
 
@@ -15,3 +18,6 @@ admin.site.register(ImageInteractive)
 admin.site.register(CalendarChart)
 admin.site.register(Month)
 admin.site.register(Day)
+admin.site.register(RetentionRateCard)
+admin.site.register(RetentionResponse)
+admin.site.register(RetentionClick)

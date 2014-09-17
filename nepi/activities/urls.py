@@ -10,6 +10,7 @@ from nepi.activities.views import (UpdateConversationView,
                                    LastResponse,
                                    CreateCalendar,
                                    SaveRetentionResponse,
+                                   TestRetentionResponse,
                                    SaveCalendarResponse)
 
 
@@ -40,6 +41,9 @@ urlpatterns = patterns(
     url(r'^retention_click/$',
         SaveRetentionResponse.as_view(),
         name='retention_click'),
+    url(r'^retention_locked/$',
+        TestRetentionResponse.as_view(),
+        name='retention_locked'),
     url(r'^calendar_click/$',
         SaveCalendarResponse.as_view(),
         name='calendar_click'),

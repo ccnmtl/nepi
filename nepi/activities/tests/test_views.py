@@ -1,13 +1,16 @@
+import json
+
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
+
+from pagetree.tests.factories import HierarchyFactory
+
 from nepi.activities.models import ConversationResponse, RetentionResponse, \
     CalendarResponse
 from nepi.activities.tests.factories import ConversationScenarioFactory, \
     RetentionRateCardFactory, CalendarChartFactory, IncorrectDayOneFactory, \
     IncorrectDayTwoFactory, CorrectDayFactory
 from nepi.main.tests.factories import UserProfileFactory
-from pagetree.tests.factories import HierarchyFactory
-import json
 
 
 class TestLastResponseSaveViews(TestCase):
