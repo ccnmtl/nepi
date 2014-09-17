@@ -457,9 +457,10 @@ class RetentionResponse(models.Model):
         RetentionClick,
         related_name="retention_delivery_date_click",
         null=True, blank=True)
-    follow_up_click = models.ForeignKey(RetentionClick,
-                                  related_name="retention_follow_up_click",
-                                  null=True, blank=True)
+    follow_up_click = models.ForeignKey(
+        RetentionClick,
+        related_name="retention_follow_up_click",
+        null=True, blank=True)
 
     def __unicode__(self):
         return("Response to " + str(self.retentionrate))

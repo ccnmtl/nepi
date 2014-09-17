@@ -8,31 +8,6 @@
                 jQuery("li.next a").addClass("disabled");
            }
     }
-
-    function test_lock(){
-    	
-    	var retention_id = jQuery("#retention input[name='retention_id']").val();
-    	
-    	jQuery.ajax(
-    	        {
-    	            url: "/activities/retention_locked/",
-    	            type: "POST",
-    	            data: {'retention_id' : retention_id},
-    	            success: function (data) 
-    	            {
-    	            	is_unlocked = true;
-    	                //alert("success!");
-    	                maybeActivateNextButton();
-    	            },
-
-    	            error: function(data) 
-    	            {
-    	            	is_unlocked = false;
-    	                //alert("There was an error submitting your form.");
-    	                maybeActivateNextButton();
-    	            }
-    	        });//end of ajax
-    }
     
     
     function send_click(click_string)
@@ -46,7 +21,8 @@
             data: {'click_string' : click_string, 'retention_id' : retention_id},
             success: function (data) 
             {
-            	test_lock();
+            	console.log(data)
+            	is_unlocked = data.done
                 //alert("success!");
             },
 
@@ -89,7 +65,7 @@ jQuery(document).ready(function() {
             if (jQuery(this).data().part == "follow-up")
             {
                 exp.html(jQuery("#follow-up").html());
-                send_click("follow-up");
+                send_click("follow_up_click");
             }
 
    });
