@@ -164,25 +164,16 @@ class SaveRetentionResponse(View, JSONResponseMixin):
                 click_string=click_string)
             rr, created = RetentionResponse.objects.get_or_create(
                 retentionrate=retention, user=request.user)
-            return self.compare_strings(rr, click_string, retentionclick)
+            done = rr.unlocked(user=request.user)
+            if done:
+                return render_to_json_response({'success': True, 'done': True})
+            elif not done:
+                return render_to_json_response({'success': True, 'done': False})
+            else:
+                return self.compare_strings(rr, click_string, retentionclick)
         else:
             '''If submitted string is not in the acceptable strings list
             something is very funny.'''
-            return render_to_json_response({'success': False})
-
-
-class TestRetentionResponse(View, JSONResponseMixin):
-    '''If all parts have been clicked on, unlock pageblock'''
-
-    def post(self, request):
-        retention = get_object_or_404(RetentionRateCard,
-                                      pk=request.POST['retention_id'])
-        done = retention.unlocked(user=request.user)
-
-        if done:
-            return render_to_json_response({'success': True})
-        else:
-            '''If not done return false.'''
             return render_to_json_response({'success': False})
 
 

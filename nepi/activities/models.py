@@ -421,13 +421,7 @@ class RetentionRateCard(models.Model):
                 and response[0].start_date_click is not None
                 and response[0].eligible_click is not None
                 and response[0].delivery_date_click is not None
-                and response[0].dec_click is not None
-                and response[0].jan_click is not None
-                and response[0].feb_click is not None
-                and response[0].mar_click is not None
-                and response[0].apr_click is not None
-                and response[0].may_click is not None
-                and response[0].jun_click is not None):
+                and response[0].follow_up_click is not None):
             return True
         else:
             return False
@@ -463,26 +457,8 @@ class RetentionResponse(models.Model):
         RetentionClick,
         related_name="retention_delivery_date_click",
         null=True, blank=True)
-    dec_click = models.ForeignKey(RetentionClick,
-                                  related_name="retention_dec_click",
-                                  null=True, blank=True)
-    jan_click = models.ForeignKey(RetentionClick,
-                                  related_name="retention_jan_click",
-                                  null=True, blank=True)
-    feb_click = models.ForeignKey(RetentionClick,
-                                  related_name="retention_feb_click",
-                                  null=True, blank=True)
-    mar_click = models.ForeignKey(RetentionClick,
-                                  related_name="retention_mar_click",
-                                  null=True, blank=True)
-    apr_click = models.ForeignKey(RetentionClick,
-                                  related_name="retention_apr_click",
-                                  null=True, blank=True)
-    may_click = models.ForeignKey(RetentionClick,
-                                  related_name="retention_may_click",
-                                  null=True, blank=True)
-    jun_click = models.ForeignKey(RetentionClick,
-                                  related_name="retention_jun_click",
+    follow_up_click = models.ForeignKey(RetentionClick,
+                                  related_name="retention_follow_up_click",
                                   null=True, blank=True)
 
     def __unicode__(self):
