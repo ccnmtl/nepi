@@ -391,9 +391,10 @@ class RetentionRateCard(models.Model):
 
     def edit_form(self):
         return RetentionRateCardForm(instance=self)
-    
+
     def clear_user_submissions(self, user):
-        RetentionResponse.objects.filter(user=user, retentionrate=self).delete()
+        RetentionResponse.objects.filter(
+            user=user, retentionrate=self).delete()
 
     @classmethod
     def create(self, request):

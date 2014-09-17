@@ -178,7 +178,7 @@ class TestRetentionResponse(View, JSONResponseMixin):
         retention = get_object_or_404(RetentionRateCard,
                                       pk=request.POST['retention_id'])
         done = retention.unlocked(user=request.user)
-        
+
         if done:
             return render_to_json_response({'success': True})
         else:
