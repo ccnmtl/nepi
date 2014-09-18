@@ -498,7 +498,10 @@ h4 {
 	font-size: 14px;
 
 }
-
+h5 {
+	font-size: 18px;
+	line-height: 28px;
+}
 
 h4.pagetitle {
 	margin-top: -30px;
@@ -630,6 +633,44 @@ h4.pagetitle {
 	background-color: #e5e5e5;
 	background-image: none;
 }
+
+/* Login/Landing */
+
+
+.login-welcome {
+	padding: 20px;
+	width: 60%;
+	float: left;
+}
+
+.login-welcome h4 {
+	font-size: 48px;
+	font-weight: 100;
+	margin: 0px 0 30px 0;
+	line-height: 60px;
+	width: 80%;
+}
+
+.login-welcome p {
+	line-height: 28px;
+}
+
+.login-form {
+	width: 30%;
+	float: left;
+	margin: 0 0 0 15px;
+	padding: 2%;
+	background-color: #7cb1e3;
+}
+
+.login-form input {
+	background-color: #e4eef8;
+	border: solid 1px #fefaf9;
+	border-radius: 7px;
+}
+
+
+
 	/*Text Styles*/
 
 .small-text {
@@ -1051,11 +1092,6 @@ input#generic-reset {
 /* Registration & Contact Forms*/
 
 
-
-select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input
-{
-	border-radius: 0;
-}
 
 #report-selector,
 div.user-profile-form {
