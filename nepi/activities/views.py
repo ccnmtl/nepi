@@ -139,50 +139,49 @@ class CreateCalendar(CreateView):
 class SaveRetentionResponse(View, JSONResponseMixin):
     '''There must be a way to make a simple short generic method'''
 
-    def compare_strings(self, retresponse, click_string, click_reference):
-        click_saved = getattr(retresponse, click_string)
-        if click_saved is None:
-            retresponse.click_saved = click_reference
-            retresponse.click_saved.save()
-            click_reference.save()
-            return render_to_json_response({'success': True})
-        elif click_saved is not None:
-            '''We can assume that this attribute already has a value'''
-            return render_to_json_response({'success': True})
+    acceptable_clicks = ["cohort_click", "start_date_click",
+                         "eligible_click", "delivery_date_click",
+                         "follow_up_click"]
+
+    def compare_strings(self, click_string, retentionclick, rr):
+        if click_string == "cohort_click":
+            rr.cohort_click = retentionclick
+        elif click_string == "start_date_click":
+            rr.start_date_click = retentionclick
+        elif click_string == "eligible_click":
+            rr.eligible_click = retentionclick
+        elif click_string == "delivery_date_click":
+            rr.delivery_date_click = retentionclick
+        elif click_string == "follow_up_click":
+                    rr.follow_up_click = retentionclick
 
     def post(self, request):
-        acceptable_clicks = ["cohort_click", "start_date_click",
-                             "eligible_click", "delivery_date_click",
-                             "dec_click", "jan_click", "feb_click",
-                             "mar_click", "apr_click", "may_click",
-                             "jun_click"]
         retention = get_object_or_404(RetentionRateCard,
                                       pk=request.POST['retention_id'])
         click_string = request.POST['click_string']
-        if click_string in acceptable_clicks:
+        if click_string in self.acceptable_clicks:
             retentionclick = RetentionClick.objects.create(
                 click_string=click_string)
             rr, created = RetentionResponse.objects.get_or_create(
                 retentionrate=retention, user=request.user)
-            return self.compare_strings(rr, click_string, retentionclick)
+            click_saved = getattr(rr, click_string)
+            if click_saved is None:
+                '''For some reason trying to use retresponse.click_string
+                or retresponse.click_saved to assign the value no long works'''
+                self.compare_strings(click_string, retentionclick, rr)
+                rr.save()
+                is_done = retention.unlocked(user=request.user)
+                retentionclick.save()
+                return render_to_json_response({'success': True,
+                                                'done': is_done})
+            elif click_saved is not None:
+                '''We can assume that this attribute already has a value'''
+                is_done = retention.unlocked(user=request.user)
+                return render_to_json_response({'success': True,
+                                                'done': is_done})
         else:
             '''If submitted string is not in the acceptable strings list
             something is very funny.'''
-            return render_to_json_response({'success': False})
-
-
-class TestRetentionResponse(View, JSONResponseMixin):
-    '''If all parts have been clicked on, unlock pageblock'''
-
-    def post(self, request):
-        retention = get_object_or_404(RetentionRateCard,
-                                      pk=request.POST['retention_id'])
-        done = retention.unlocked(user=request.user)
-
-        if done:
-            return render_to_json_response({'success': True})
-        else:
-            '''If not done return false.'''
             return render_to_json_response({'success': False})
 
 

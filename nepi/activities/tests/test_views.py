@@ -124,7 +124,7 @@ class TestRetentionResponseView(TestCase):
         '''Make sure RetentionResponse returns correctly'''
         response = client.post(
             "/activities/retention_click/",
-            data={'click_string': "jan_click",
+            data={'click_string': "cohort_click",
                   'retention_id': rf.pk}
             )
         self.assertEqual(response.status_code, 200)
@@ -132,7 +132,7 @@ class TestRetentionResponseView(TestCase):
         self.assertTrue(RetentionResponse.objects.filter(retentionrate=rf,
                                                          user=up.user))
         the_json = json.loads(response.content)
-        self.assertEqual(the_json, {'success': True})
+        self.assertEqual(the_json, {'done': False, 'success': True})
 
         '''See what happens with unacceptable click'''
         response = client.post(
@@ -148,12 +148,12 @@ class TestRetentionResponseView(TestCase):
         user clicks on the same thing twice'''
         response = client.post(
             "/activities/retention_click/",
-            data={'click_string': "jan_click",
+            data={'click_string': "cohort_click",
                   'retention_id': rf.pk}
             )
         self.assertEqual(response.status_code, 200)
         the_json = json.loads(response.content)
-        self.assertEqual(the_json, {'success': True})
+        self.assertEqual(the_json, {'done': False, 'success': True})
 
         '''Test that it is storing the submitted
         click string values'''
