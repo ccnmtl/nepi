@@ -23,30 +23,29 @@
         {% endif %}    
         
         <form method="post" action=".">
-            <table>
-            <tr><td style="border: hidden;"><label for="id_username">Username:&nbsp;</label></td><td style="border: hidden">{{ form.username }}</td></tr>
-            <tr>
-                <td style="border: hidden; padding-top: 3px;"><label for="id_password">Password:&nbsp;</label>
-                </td>
-                <td style="border: hidden; padding-top: 5px;">
-                    {{ form.password }}<br />
-                    <div class="pull-right">
-                        <a href="/accounts/password_reset/">Forgot Password?</a>
-                    </div>
-                    
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" style="border: hidden; text-align: right; padding-top: 7px;">
-                    <input class="btn" type="submit" value="Log In"></input>
-                </td>
-            </tr>
+        <div class="login-form-div">
+            <table class="login-form-table">
+                <tr>
+                <td><label for="id_username">Username:&nbsp;</label></td><td>{{ form.username }}</td>
+                </tr>
+                 <tr>
+                <td><label for="id_password">Password:&nbsp;</label></td><td>{{ form.password }}</td>
+                </tr>
             </table>
+            <div class="login-form-forgot">
+                <a href="/accounts/password_reset/">Forgot Password?</a>
+           </div>
+            <div class="login-form-submit">
+                    <input class="btn" type="submit" value="Log In"></input>
+            </div>
+         </div>
             <input type="hidden" name="next" value="{{ next }}"></input>
         </form>
+        
+        <div class="login-form-ques">
         <a href="/register/">Need an account?</a><br /> 
         {% comment %}<a href="/forgot_unipass/">Forgot username or password?</a><br />{% endcomment %} 
         <a href="/contact/">Contact ICAP</a><br /> 
-</div>
+        </div>
 
 {% endblock %}
