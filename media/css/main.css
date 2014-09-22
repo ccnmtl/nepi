@@ -7,7 +7,7 @@
  */
 
 html {
- font-family: Georgia, Times, "Times New Roman", serif;
+  font-family: adobe-garamond-pro, Cambria, Georgia, Times, "Times New Roman", serif;
   -ms-text-size-adjust: 100%; /* 2 */
   -webkit-text-size-adjust: 100%; /* 2 */
 }
@@ -461,7 +461,11 @@ th {
 body  {
 	background-image: url(../img/bg-blue-stripe.png);
 	background-repeat: repeat;
-	font-family: Georgia, Times, "Times New Roman", serif;
+	font-family: adobe-garamond-pro, Cambria, Georgia, Times, "Times New Roman", serif;
+}
+
+p {
+	font-size: 16px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -513,7 +517,18 @@ h4.pagetitle {
 
 
 #titlebar {
-	padding: 25px 0 10px 0;
+	background-color: #f9f9f9;
+	padding: 25px 15px 10px 45px;
+}
+
+.right-header-menu {
+	float: right;
+}
+
+.right-header-menu li {
+	display: inline;
+	list-style-type: none;
+	padding: 0 60px 0 0;
 }
 
 .pager {
@@ -635,7 +650,14 @@ h4.pagetitle {
 }
 
 /* Login/Landing */
-
+#landing-logos {
+	display: block;
+	position: absolute;
+	top: 0;
+	width: 400px;
+	height: 200px;
+	border: solid 1px red;
+}
 
 .login-welcome {
 	padding: 20px;
@@ -643,12 +665,11 @@ h4.pagetitle {
 	float: left;
 }
 
-.login-welcome h4 {
-	font-size: 48px;
+.login-welcome h5 {
+	font-size: 24px;
 	font-weight: 100;
 	margin: 0px 0 30px 0;
-	line-height: 60px;
-	width: 80%;
+	line-height: 26px;
 }
 
 .login-welcome p {

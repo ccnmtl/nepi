@@ -31,7 +31,11 @@
     <div class="container" id="outer-container">
         {% block masthead %}
             <div id="titlebar">
-                <a href="/" title="nepi"><img src="/site_media/img/icap-nursing-elearning.png" alt="nepi-logo"></a>
+                <a href="/" title="ICAP Nursing E-Learning"><img src="/site_media/img/icap-nursing-elearning.png" title="ICAP Nursing E-Learning"></a>
+             <ul class="right-header-menu">
+                 <li><a href="http://ccnmtl.columbia.edu" target="_blank" title="CCNMTL"><img src="/site_media/img/pepfar.png" class="footer-logo"></a></li>
+                <li><a href="http://icap.columbia.edu" target="_blank" title="ICAP"><img src="/site_media/img/icap-full.png" alt="ICAP" class="footer-logo"></a></li>
+            </ul>
         		{% block usernav %}
                     <div class="pull-right small-text">
         			    {% if not request.user.is_anonymous %}
