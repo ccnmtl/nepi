@@ -29,28 +29,34 @@
 </head>
 <body>
     <div class="container" id="outer-container">
-        {% block masthead %}
+        {% block masthead %}        
             <div id="titlebar">
+                <div class="title-left">
                 <a href="/" title="ICAP Nursing E-Learning"><img src="/site_media/img/icap-nursing-elearning.png" title="ICAP Nursing E-Learning"></a>
-             <ul class="right-header-menu">
-                 <li><a href="http://ccnmtl.columbia.edu" target="_blank" title="CCNMTL"><img src="/site_media/img/pepfar.png" class="footer-logo"></a></li>
-                <li><a href="http://icap.columbia.edu" target="_blank" title="ICAP"><img src="/site_media/img/icap-full.png" alt="ICAP" class="footer-logo"></a></li>
-            </ul>
+                </div>
+                <div class="title-right">
         		{% block usernav %}
-                    <div class="pull-right small-text">
+                <ul class="title-user">   
         			    {% if not request.user.is_anonymous %}
-              		        {{request.user.first_name}} {{request.user.last_name}}
+              		        <li>{{request.user.first_name}} {{request.user.last_name}}</li>
                             
-                            {% block usernav_extra %}
+                            <li>{% block usernav_extra %}
                             {% endblock %}
-                            
+                            </li>
                             {% if request.user.is_superuser %}
-              		            <a href="{% url "impersonate-list" %}">[impersonate]</a>
+              		           <li> <a href="{% url "impersonate-list" %}">[impersonate]</a>
+              		            </li>
         			        {% endif %}
-              		        <a href="/accounts/logout/?next=/" class="btn btn-inverse">logout</a>
+              		        <li><a href="/accounts/logout/?next=/" class="btn btn-inverse">logout</a></li>
               		    {% endif %}
-        			</div>
+              		    </ul>
         		{% endblock %}
+        	  <ul class="title-logos">
+                <li><a href="http://www.pepfar.gov/" target="_blank" title="PEPFAR"><img src="/site_media/img/pepfar.png" class="header-logo"></a></li>
+                <li><a href="http://icap.columbia.edu" target="_blank" title="ICAP"><img src="/site_media/img/icap-full.png" alt="ICAP" class="header-logo"></a></li>
+            </ul>
+                                </div>
+
             </div>
     
         	{% block primarynav %}
@@ -80,7 +86,6 @@
                 <li><a href="mailto:ccnmtl-nepi@columbia.edu">Contact</a></li>
             </ul>
             <ul class="right-footer-menu">
-                <li><a href="http://icap.columbia.edu" target="_blank" title="ICAP"><img src="/site_media/img/logo-icap.png" alt="ICAP" class="footer-logo"></a></li>
                 <li><a href="http://ccnmtl.columbia.edu" target="_blank" title="CCNMTL"><img src="/site_media/img/logo_ccnmtl_white.png" class="footer-logo"></a></li>
             </ul>
         </div>
