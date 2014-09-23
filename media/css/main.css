@@ -131,6 +131,16 @@ dfn {
 }
 
 /**
+ * Address variable `h1` font-size and margin within `section` and `article`
+ * contexts in Firefox 4+, Safari, and Chrome.
+ */
+
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+/**
  * Address styling not present in IE 8/9.
  */
 
@@ -451,9 +461,10 @@ th {
 body  {
 	background-image: url(../img/bg-blue-stripe.png);
 	background-repeat: repeat;
-	font-family: adobe-garamond-pro, Cambria, Georgia, Times, "Times New Roman", serif;
-	font-size: 1.15em;
+	font-family: 'Adobe Garamond Pro', Cambria, Georgia, Times, "Times New Roman", serif;
+	font-size: 100%;
 }
+
 
 
 h1, h2, h3, h4, h5, h6 {
@@ -461,16 +472,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {	
-	font-size: 1.222em;
+	font-size: 22px;
 	margin: 20px auto;
 	width: 65%;
 	text-align: center;
 	line-height: 34px;
 }
 
-
 h2 {
-	font-size: 1em;
+	font-size: 18px;
 	margin: 30px auto 0 auto;
 	width: 65%;
 	line-height: 22px;
@@ -479,15 +489,14 @@ h2 {
 }
 
 h3 {
-	font-size: .8889em;
+	font-size: 16px;
 	margin: 30px auto 0 auto;
 	width: 65%;
 	line-height: 20px;
 }
 
-
 h4 {
-	font-size: .777em;
+	font-size: 14px;
 
 }
 
@@ -501,6 +510,7 @@ h4.pagetitle {
 	width: 98%;
 	padding: 10px;
 	margin-bottom: 30px;
+	font-size: 1.15em;
 }
 
 
@@ -829,14 +839,14 @@ div.pageblock.show-correct li.incorrect:after {
 }
 
 .casequestiontext {
-	background-color: #f5f5f5;
+	background-color: #f9f9f9;
 	width: 50%;
 	margin: 0 auto;
 	padding: 20px;
-	border-radius: 10px 10px 0 0;
-	border-left: solid 1px #ccc;
-	border-right: solid 1px #ccc;
-	border-top: solid 1px #ccc;
+	border-radius: 5px 5px 0 0;
+	border-left: solid 1px #ddd;
+	border-right: solid 1px #ddd;
+	border-top: solid 1px #ddd;
 	border-bottom: none;
 	-moz-box-sizing: border-box;
    	-webkit-box-sizing: border-box;
@@ -848,10 +858,10 @@ div.pageblock.show-correct li.incorrect:after {
 	margin: 0 auto;
 	text-align: center;
 	padding: 10px 20px 20px 20px;
-	border-radius: 0 0 10px 10px;
-	border-left: solid 1px #ccc;
-	border-right: solid 1px #ccc;
-	border-bottom: solid 1px #ccc;
+	border-radius: 0 0 5px 5px;
+	border-left: solid 1px #ddd;
+	border-right: solid 1px #ddd;
+	border-bottom: solid 1px #ddd;
 	border-top: none;
    -moz-box-sizing:    border-box;
    -webkit-box-sizing: border-box;
@@ -874,13 +884,13 @@ div.pageblock.show-correct li.incorrect:after {
 }
 
 .caseuserfeedback {
-	width: 65%;
+	width: 46%;
 	margin: 30px auto;
 	padding: 20px;
 	position: relative;
 	top: 3px;
 	background-color: #fff6cf;
-	border-radius: 10px;
+	border-radius: 5px;
 	border: solid 1px #eecf4b;
 }
 
@@ -902,12 +912,12 @@ div.pageblock.show-correct li.incorrect:after {
     background-color: #dff0d8;
     border: 2px solid #d6e9c6;
     width: 50%;
-    margin: 30px auto;    
+    margin: 15px auto;    
     box-sizing: border-box;
     padding: 20px;
     position: relative;
     top: 3px;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 .cases div.user-incorrect {
@@ -915,23 +925,23 @@ div.pageblock.show-correct li.incorrect:after {
     background-color: #f2dede;
     border: 1px solid #eed3d7;
     width: 50%;
-    margin: 30px auto;    
+    margin: 15px auto;    
     box-sizing: border-box;
     padding: 20px;
     position: relative;
     top: 3px;
-    border-radius: 10px;    
+    border-radius: 5px;    
 }
 
 .quizdescription {
-	width: 45%;
+	width: 90%;
 	margin: 30px auto;
 	padding: 20px;
 	position: relative;
 	top: 3px;
-	background-color: #d9eaf5;
-	border-radius: 10px;
-	border: solid 2px #c7e3f5;
+	background-color: #f9f9f9;
+	border-radius: 0px;
+	border: solid 1px #ddd;
 }
 
 /* Basic survey styles */
@@ -1114,28 +1124,26 @@ div.pageblock.show-correct li.incorrect:after {
 }
 
 .slide-out-menu a.primary-menu-2 li {
-	font-size: 1em;
+	font-size: 1.15em;
 	font-weight: bold;
 }
 
 .slide-out-menu a.primary-menu-3 li {
     padding-left: 10px;
-    font-size: .75em;
+    font-size: .9em;
 }
 
 .slide-out-menu a.primary-menu-4 li  {
     padding-left: 25px;
-    font-size: .75em;
+    font-size: .9em;
 }
 
 .slide-out-menu a.primary-menu-5 li  {
     padding-left: 35px;
-    font-size: .75em;
 }
 
 .slide-out-menu a.primary-menu-6 li  {
     padding-left: 45px;
-    font-size: .75em;
 }
 
 /* Overall activity styles*/
@@ -1153,13 +1161,14 @@ div.pageblock.show-correct li.incorrect:after {
 }
 
 .act_desc {
-	padding: 10px;
-	border-radius: 10px;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	border: solid 3px #eee;
-	text-align: center;
-	margin-bottom: 20px;
+	width: 90%;
+	margin: 30px auto;
+	padding: 20px;
+	position: relative;
+	top: 3px;
+	background-color: #f9f9f9;
+	border-radius: 0px;
+	border: solid 1px #ddd;
 }
 
 input#generic-reset {
@@ -1478,14 +1487,14 @@ form.create-group div.control-group.error div.help-inline.error {
 
 /** Document Adherence Activity **/
 .pageblock.document p {
-	width: 65%;
+	width: 90%;
 	margin: 30px auto;
 	padding: 20px;
 	position: relative;
 	top: 3px;
-	background-color: #d9eaf5;
-	border-radius: 10px;
-	border: solid 2px #c7e3f5;
+	background-color: #f9f9f9;
+	border-radius: 0px;
+	border: solid 1px #ddd;
 }
 	
 .document-adherence .adherence-response {
