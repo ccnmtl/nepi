@@ -131,16 +131,6 @@ dfn {
 }
 
 /**
- * Address variable `h1` font-size and margin within `section` and `article`
- * contexts in Firefox 4+, Safari, and Chrome.
- */
-
-h1 {
-  font-size: 2em;
-  margin: 0.67em 0;
-}
-
-/**
  * Address styling not present in IE 8/9.
  */
 
@@ -462,18 +452,16 @@ body  {
 	background-image: url(../img/bg-blue-stripe.png);
 	background-repeat: repeat;
 	font-family: adobe-garamond-pro, Cambria, Georgia, Times, "Times New Roman", serif;
+	font-size: 1.15em;
 }
 
-p {
-	font-size: 16px;
-}
 
 h1, h2, h3, h4, h5, h6 {
-	font-family: 'Arial', 'helvetica', sans-serif;
+	font-family: 'Arial Narrow', 'Arial', 'helvetica', sans-serif;
 }
 
 h1 {	
-	font-size: 22px;
+	font-size: 1.222em;
 	margin: 20px auto;
 	width: 65%;
 	text-align: center;
@@ -482,7 +470,7 @@ h1 {
 
 
 h2 {
-	font-size: 18px;
+	font-size: 1em;
 	margin: 30px auto 0 auto;
 	width: 65%;
 	line-height: 22px;
@@ -491,7 +479,7 @@ h2 {
 }
 
 h3 {
-	font-size: 16px;
+	font-size: .8889em;
 	margin: 30px auto 0 auto;
 	width: 65%;
 	line-height: 20px;
@@ -499,9 +487,10 @@ h3 {
 
 
 h4 {
-	font-size: 14px;
+	font-size: .777em;
 
 }
+
 h5 {
 	font-size: 18px;
 	line-height: 28px;
@@ -1125,26 +1114,28 @@ div.pageblock.show-correct li.incorrect:after {
 }
 
 .slide-out-menu a.primary-menu-2 li {
-	font-size: 1.15em;
+	font-size: 1em;
 	font-weight: bold;
 }
 
 .slide-out-menu a.primary-menu-3 li {
     padding-left: 10px;
-    font-size: .9em;
+    font-size: .75em;
 }
 
 .slide-out-menu a.primary-menu-4 li  {
     padding-left: 25px;
-    font-size: .9em;
+    font-size: .75em;
 }
 
 .slide-out-menu a.primary-menu-5 li  {
     padding-left: 35px;
+    font-size: .75em;
 }
 
 .slide-out-menu a.primary-menu-6 li  {
     padding-left: 45px;
+    font-size: .75em;
 }
 
 /* Overall activity styles*/
