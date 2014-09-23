@@ -45,8 +45,10 @@
         <li><a href="#pending" data-toggle="tab">Pending Teachers</a></li>
         {% endif %}
         
+        <li><a href="#resources" data-toggle="tab">Resources</a></li>
+        
         {% if not user_profile.is_student %}
-        <li class="pull-right"><a class="reports" href="/dashboard/reports/">Reports</a></li>
+            <li class="pull-right"><a class="reports" href="/dashboard/reports/">Reports</a></li>
         {% endif %}
     </ul>
 
@@ -61,21 +63,7 @@
             {% include "dashboard/tab_pending_teachers.html" %}
         {% endif %}
 
-        {% comment %}
-            @todo - make resources visible when we get them
-            {% if object.profile_type == "ST" %}
-                {% include "dashboard/tab_student_resources.html" %}
-            {% endif %}
-            {% if object.profile_type == "TE" %}
-                {% include "dashboard/tab_teacher_resources.html" %}
-            {% endif %}
-            {% if object.profile_type == "CA" %}
-                {% include "dashboard/tab_ca_resources.html" %}
-            {% endif %}
-            {% if object.profile_type == "IC" %}
-                {% include "dashboard/tab_icap_resources.html" %}
-            {% endif %}
-        {% endcomment %}
+        {% include "dashboard/tab_resources.html" %}
     </div>
 {% endwith %}
 {% endblock%}

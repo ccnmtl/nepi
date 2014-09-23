@@ -89,6 +89,20 @@
 {% endblock %}
 
 {% block content %}
+    
+    {% if user.profile.is_student %}
+        <h3 class="role">STUDENT</h3>
+    {% else %}{% if user.profile.is_teacher %}
+        <h3 class="role">FACULTY</h3>
+    {% else %}{% if user.profile.is_institution_administrator %}
+        <h3 class="role">INSTITUTION ADMINISTRATOR</h3>
+    {% else %}{% if user.profile.is_country_administrator %}
+        <h3 class="role">COUNTRY ADMINISTRATOR</h3>
+    {% else %}{% if user.profile.is_icap %}
+        <h3 class="role">ICAP ADMINISTRATOR</h3>
+    {% endif %}{% endif %}{% endif %}{% endif %}{% endif %}
+    <div class="clearfix"></div>
+
     <ul class="nav nav-tabs dashboard-nav">
         <li><a href="/dashboard/#user-modules">Option B+</a></li>
 
@@ -99,6 +113,8 @@
         {% if user.profile.is_institution_administrator or user.profile.is_country_administrator or user.profile.is_icap %}
             <li><a href="/dashboard/#pending">Pending Teachers</a></li>
         {% endif %}
+        
+        {% include "dashboard/tab_resources.html" %}
 
         {% if not user.profile.is_student %}
             <li class="pull-right active"><a class="reports" href="/dashboard/reports/">Reports</a></li>

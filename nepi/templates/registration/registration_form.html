@@ -14,9 +14,9 @@
 {% block content %}
 <div class="user-registration user-profile-form">
     <h1>Create your account</h1>
-    
+
     <form action="." method="post">{% csrf_token %}
-        
+
         {% if form.errors|length %}
             <div class="alert alert-block alert-error">
               <strong>Please correct errors before continuing</strong>
@@ -25,7 +25,7 @@
               {% endif %}
             </div>
         {% endif %}
-        
+
         <div class="fieldWrapper control-group {% if form.first_name.errors %}error{% endif %}">
             <label for="id_first_name"><b>Your name is:</b> <small>required</small></label>
             <div class="controls">

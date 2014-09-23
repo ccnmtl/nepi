@@ -1,0 +1,17 @@
+<div class="tab-pane" id="resources">
+    <h3>Resources</h3>
+    
+    
+    {% if user.profile.is_student %}
+        Student Resources
+    {% else %}{% if user.profile.is_teacher %}
+        Faculty Resources
+    {% else %}{% if user.profile.is_institution_administrator %}
+        Institution Administrator Resources
+    {% else %}{% if user.profile.is_country_administrator %}
+        Country Administrator Resources
+    {% else %}{% if user.profile.is_icap %}
+        ICAP Resources
+    {% endif %}{% endif %}{% endif %}{% endif %}{% endif %}
+
+</div>
