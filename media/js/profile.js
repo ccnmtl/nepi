@@ -25,7 +25,7 @@ jQuery(document).ready(function () {
                 disableFacultyAccess();
             },
             success: function (json, textStatus, xhr) {
-                if (json['schools'].length < 2) {
+                if (json['schools'].length < 1) {
                     // There are no schools for this country
                     disableFacultyAccess();
                 } else {
