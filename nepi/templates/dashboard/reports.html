@@ -114,7 +114,7 @@
             <li><a href="/dashboard/#pending">Pending Teachers</a></li>
         {% endif %}
         
-        {% include "dashboard/tab_resources.html" %}
+        <li><a href="/dashboard/#resources">Resources</a></li>
 
         {% if not user.profile.is_student %}
             <li class="pull-right active"><a class="reports" href="/dashboard/reports/">Reports</a></li>
