@@ -496,9 +496,25 @@ h2 {
 	background: #d9eaf5;
 }
 
+h2.pageheader {
+	font-size: 18px;
+	margin: 30px 0;
+	width: 100%;
+	line-height: 22px;
+}
+
+
 h3 {
 	font-size: 16px;
 	margin: 30px auto 0 auto;
+	width: 65%;
+	line-height: 20px;
+}
+
+
+h3.pageheader {
+	font-size: 16px;
+	margin: 20px 0 10px 0;
 	width: 65%;
 	line-height: 20px;
 }
