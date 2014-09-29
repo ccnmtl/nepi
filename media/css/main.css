@@ -703,6 +703,7 @@ ul.title-logos li {
 }
 
 /* Login/Landing */
+
 #landing-logos {
 	display: block;
 	position: absolute;
@@ -732,16 +733,18 @@ ul.title-logos li {
 .login-form {
 	width: 30%;
 	float: left;
-	margin: 0 0 0 15px;
+	margin: 20px 10px 20px 10px;
 	padding: 2%;
-	background-color: #7cb1e3;
-	color: #fff;
+	font-size: 1em;
+	background-color: #d9eaf5;
 }
 
 .login-form a:link, .login-form a:active, .login-form a:visited {
-	color: #00284c;
-	font-size: 12px;
-	font-family: Arial, Helvetica, sans-serif;
+	color: #00284c;	
+}
+
+.login-form label {
+	font-size: 1em;
 }
 
 .login-form h4 {
@@ -766,7 +769,16 @@ ul.title-logos li {
 .login-form-submit {
 	clear: both;
 	float: left;
-	padding: 10px 0 10px 0;
+	padding: 0 0 10px 0;
+	font-family: 'Arial Narrow', Arial, Helvetica, sans-serif;
+}
+
+.login-form-submit input {
+	font-size: .875em;
+	text-transform: uppercase;
+	font-weight: bold;
+	clear: both;
+	color: #00284c;
 }
 
 .login-form-ques {
@@ -774,8 +786,13 @@ ul.title-logos li {
 	float: left;
 }
 
+.login-form-ques ul li {
+	list-style-type: none;
+	margin: 5px 0 0 -15px;
+}
+
 .login-form input {
-	background-color: #e4eef8;
+	background-color: #fff;
 	border: solid 1px #fefaf9;
 	border-radius: 7px;
 }

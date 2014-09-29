@@ -6,7 +6,8 @@
 
 
 <div class="login-welcome">
-<h5>Welcome!</h5>
+    <img src="/site_media/img/landingphoto.jpg" />
+<h1 class="pageheader">Welcome!</h2>
 <p>Nursing education and training is an essential part of ICAP’s mission to ensure the health of families and communities around the world.</p>
 <p> This platform was developed to support online learning for nurses and midwives and to share resources with nursing education institutions.</p>
 <p> ICAP is based at Columbia University and a global leader in HIV/AIDS and health systems strengthening.
@@ -48,9 +49,11 @@ institutions and ensure the production of sufficient numbers of well-trained, cl
         </form>
         
         <div class="login-form-ques">
-        <a href="/register/">Need an account?</a><br /> 
-        {% comment %}<a href="/forgot_unipass/">Forgot username or password?</a><br />{% endcomment %} 
-        <a href="/contact/">Contact ICAP</a><br /> 
+            <ul>
+        <li><a href="/register/">Need an account?</a></li>
+        <li>{% comment %}<a href="/forgot_unipass/">Forgot username or password?</a><br />{% endcomment %}</li> 
+        <li><a href="/contact/">Contact ICAP</a></li>
+        </ul> 
         </div>
-
+</div>
 {% endblock %}
