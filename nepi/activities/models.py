@@ -601,7 +601,7 @@ class CalendarChartForm(forms.ModelForm):
 class Day(models.Model):
     calendar = models.ForeignKey(Month)
     number = models.IntegerField(default=1)
-    explanation = models.CharField(max_length=255, default="")
+    explanation = models.TextField(default="")
 
     class Meta:
         ordering = ['number']

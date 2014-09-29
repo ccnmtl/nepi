@@ -30,10 +30,6 @@ if hasattr(settings, 'WIND_BASE'):
 
 urlpatterns = patterns(
     '',
-    (r'^about/',
-     TemplateView.as_view(template_name="flatpages/about.html")),
-    (r'^help/',
-     TemplateView.as_view(template_name="flatpages/help.html")),
     (r'^account_created/',
      TemplateView.as_view(template_name="flatpages/account_created.html")),
     (r'^email_sent/',

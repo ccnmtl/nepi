@@ -31,16 +31,6 @@ class TestBasicViews(TestCase):
         self.assertEquals(response.redirect_chain[0],
                           ('http://testserver/accounts/login/?next=/', 302))
 
-    def test_about(self):
-        response = self.client.get("/about/")
-        self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed('flatpages/about.html')
-
-    def test_help(self):
-        response = self.client.get("/help/")
-        self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed('flatpages/help.html')
-
     def test_contact(self):
         response = self.client.post('/contact/',
                                     {"subject": "new_student",
