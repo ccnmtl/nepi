@@ -479,6 +479,14 @@ h1 {
 	line-height: 34px;
 }
 
+
+h1.pageheader {	
+	font-size: 22px;
+	margin: 20px 0;
+	text-align: left;
+	line-height: 34px;
+}
+
 h2 {
 	font-size: 18px;
 	margin: 30px auto 0 auto;
