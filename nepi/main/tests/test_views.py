@@ -74,8 +74,8 @@ class TestStudentLoggedInViews(TestCase):
         response = self.client.get(self.section.get_absolute_url(),
                                    follow=True)
         self.assertEqual(response.status_code, 200)
-        # self.assertEquals(response.redirect_chain,
-        #                  [('http://testserver/pages/main/one/', 302)])
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/pages/main/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
@@ -131,8 +131,8 @@ class TestTeacherLoggedInViews(TestCase):
         response = self.client.get(self.section.get_absolute_url(),
                                    follow=True)
         self.assertEqual(response.status_code, 200)
-        # self.assertEquals(response.redirect_chain,
-        #                  [('http://testserver/pages/main/one/', 302)])
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/pages/main/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
@@ -194,8 +194,8 @@ class TestInstitutionAdminLoggedInViews(TestCase):
                                    follow=True)
 
         self.assertEqual(response.status_code, 200)
-        # self.assertEquals(response.redirect_chain,
-        #                  [('http://testserver/pages/main/one/', 302)])
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/pages/main/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
@@ -276,8 +276,8 @@ class TestCountryAdminLoggedInViews(TestCase):
         response = self.client.get(self.section.get_absolute_url(),
                                    follow=True)
         self.assertEqual(response.status_code, 200)
-        # self.assertEquals(response.redirect_chain,
-        #                  [('http://testserver/pages/main/one/', 302)])
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/pages/main/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
@@ -351,8 +351,8 @@ class TestICAPLoggedInViews(TestCase):
         response = self.client.get(self.section.get_absolute_url(),
                                    follow=True)
         self.assertEqual(response.status_code, 200)
-        # self.assertEquals(response.redirect_chain,
-        #                  [('http://testserver/pages/main/one/', 302)])
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/pages/main/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)

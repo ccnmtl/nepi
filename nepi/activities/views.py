@@ -6,11 +6,12 @@ from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
+from pagetree.models import UserPageVisit
 
-from nepi.mixins import JSONResponseMixin
 from nepi.activities.models import Conversation, ConversationScenario, \
     ConvClick, ConversationResponse, ConversationForm, RetentionRateCard, \
     RetentionClick, RetentionResponse, CalendarResponse, CalendarChart, Day
+from nepi.mixins import JSONResponseMixin
 
 
 class CreateConverstionView(CreateView):
@@ -103,6 +104,14 @@ class SaveResponse(View, JSONResponseMixin):
         elif rs.second_click is not None:
             rs.third_click = conclick
             rs.save()
+
+        if scenario.unlocked(request.user):
+            upv = UserPageVisit.objects.get(
+                user=request.user,
+                section=scenario.pageblock().section)
+            upv.status = 'complete'
+            upv.save()
+
         return render_to_json_response({'success': True})
 
 
@@ -153,7 +162,9 @@ class SaveRetentionResponse(View, JSONResponseMixin):
         elif click_string == "delivery_date_click":
             rr.delivery_date_click = retentionclick
         elif click_string == "follow_up_click":
-                    rr.follow_up_click = retentionclick
+            rr.follow_up_click = retentionclick
+
+        rr.save()
 
     def post(self, request):
         retention = get_object_or_404(RetentionRateCard,
@@ -169,16 +180,17 @@ class SaveRetentionResponse(View, JSONResponseMixin):
                 '''For some reason trying to use retresponse.click_string
                 or retresponse.click_saved to assign the value no long works'''
                 self.compare_strings(click_string, retentionclick, rr)
-                rr.save()
-                is_done = retention.unlocked(user=request.user)
-                retentionclick.save()
-                return render_to_json_response({'success': True,
-                                                'done': is_done})
-            elif click_saved is not None:
-                '''We can assume that this attribute already has a value'''
-                is_done = retention.unlocked(user=request.user)
-                return render_to_json_response({'success': True,
-                                                'done': is_done})
+
+            is_done = retention.unlocked(user=request.user)
+            if is_done:
+                upv = UserPageVisit.objects.get(
+                    user=request.user,
+                    section=retention.pageblock().section)
+                upv.status = 'complete'
+                upv.save()
+
+            return render_to_json_response({'success': True,
+                                            'done': is_done})
         else:
             '''If submitted string is not in the acceptable strings list
             something is very funny.'''
@@ -199,4 +211,12 @@ class SaveCalendarResponse(View, JSONResponseMixin):
         if day.number == calendar.correct_date:
             cr.correct_click = day
             cr.save()
+
+        if calendar.unlocked(request.user):
+            upv = UserPageVisit.objects.get(
+                user=request.user,
+                section=calendar.pageblock().section)
+            upv.status = 'complete'
+            upv.save()
+
         return render_to_json_response({'success': True})

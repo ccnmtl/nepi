@@ -2,8 +2,8 @@ import json
 
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
-
-from pagetree.tests.factories import HierarchyFactory
+from pagetree.models import Hierarchy, UserPageVisit
+from pagetree.tests.factories import ModuleFactory
 
 from nepi.activities.models import ConversationResponse, RetentionResponse, \
     CalendarResponse
@@ -21,17 +21,25 @@ class TestLastResponseSaveViews(TestCase):
         4. admin then edits the conversations
     '''
     def setUp(self):
-        self.hierarchy = HierarchyFactory()
+        ModuleFactory("main", "/pages/main/")
+        self.hierarchy = Hierarchy.objects.get(name='main')
         self.section = self.hierarchy.get_root().get_first_leaf()
         self.factory = RequestFactory()
 
     def test_save_response_and_last_response_via_post(self):
         cs = ConversationScenarioFactory()
+
         up = UserProfileFactory()
         client = Client()
         self.assertTrue(client.login(username=up.user.username,
                                      password="test"))
-        '''Make sure LastResposne returns correctly'''
+
+        self.section.append_pageblock(label="Conversation Scenario",
+                                      css_extra='',
+                                      content_object=cs)
+        UserPageVisit.objects.create(user=up.user, section=self.section)
+
+        '''Make sure LastResponse returns correctly'''
 
         response = client.post(
             "/activities/get_click/",
@@ -49,6 +57,9 @@ class TestLastResponseSaveViews(TestCase):
         self.assertIsNotNone(cr.first_click)
         self.assertIsNone(cr.second_click)
         self.assertIsNone(cr.third_click)
+
+        upv = UserPageVisit.objects.get(user=up.user, section=self.section)
+        self.assertEquals(upv.status, "incomplete")
 
         '''Now check that get last response works'''
         response = client.post(
@@ -108,12 +119,11 @@ class TestLastResponseSaveViews(TestCase):
                                     cr.third_click.conversation.scenario_type
                                     })
 
+        upv = UserPageVisit.objects.get(user=up.user, section=self.section)
+        self.assertEquals(upv.status, "complete")
+
 
 class TestRetentionResponseView(TestCase):
-
-#     def setUp(self):
-#         self.hierarchy = HierarchyFactory()
-#         self.section = self.hierarchy.get_root().get_first_leaf()
 
     def test_retention_response(self):
         rf = RetentionRateCardFactory()
@@ -167,6 +177,11 @@ class TestRetentionResponseView(TestCase):
 
 class TestCalendarResponseView(TestCase):
 
+    def setUp(self):
+        ModuleFactory("main", "/pages/main/")
+        self.hierarchy = Hierarchy.objects.get(name='main')
+        self.section = self.hierarchy.get_root().get_first_leaf()
+
     def test_calendar_response(self):
         cal_chart = CalendarChartFactory()
         inc_day_1 = IncorrectDayOneFactory()
@@ -176,6 +191,12 @@ class TestCalendarResponseView(TestCase):
         client = Client()
         self.assertTrue(client.login(username=up.user.username,
                                      password="test"))
+
+        self.section.append_pageblock(label="Calendar View",
+                                      css_extra='',
+                                      content_object=cal_chart)
+        UserPageVisit.objects.create(user=up.user, section=self.section)
+
         '''Make sure SaveCalendarResponse returns correctly'''
         response = client.post(
             "/activities/calendar_click/",
@@ -188,6 +209,9 @@ class TestCalendarResponseView(TestCase):
             calendar_activity=cal_chart, user=up.user))
         the_json = json.loads(response.content)
         self.assertEqual(the_json, {'success': True})
+
+        upv = UserPageVisit.objects.get(user=up.user, section=self.section)
+        self.assertEquals(upv.status, "incomplete")
 
         '''Make sure it still needs to be submitted since we
         only have one user response'''
@@ -218,32 +242,5 @@ class TestCalendarResponseView(TestCase):
         the_json = json.loads(response.content)
         self.assertEqual(the_json, {'success': True})
 
-        '''Make sure first_click and correct_click have been saved'''
-#        test_vals = CalendarResponse.objects.filter(
-#            calendar_activity=cal_chart, user=up.user)
-        # self.assertIsNotNone(self.test_vals[0].first_click )
-        # self.assertIsNotNone(self.test_vals[0].correct_click)
-
-#         '''Make sure it still needs to be submitted and doesn't
-#         count second wrong click as correct answer'''
-        # self.assertFalse(cal_chart.needs_submit())
-
-#         '''This is to check that ajax returns true if
-#         user clicks on the same thing twice'''
-#         response = client.post(
-#             "/activities/retention_click/",
-#             data={'click_string': "jan_click",
-#                   'retention_id': rf.pk}
-#             )
-#         self.assertEqual(response.status_code, 200)
-#         the_json = json.loads(response.content)
-#         self.assertEqual(the_json, {'success': True})
-#
-#         '''Test that it is storing the submitted
-#         click string values'''
-#         self.value = RetentionResponse.objects.filter(retentionrate=rf,
-#                                                       user=up.user)
-#         self.assertIsNone(self.value[0].cohort_click)
-#         self.assertIsNone(self.value[0].jan_click)
-#         '''We should also check that the page still needs to be submitted'''
-#         self.assertTrue(rf.needs_submit())
+        upv = UserPageVisit.objects.get(user=up.user, section=self.section)
+        self.assertEquals(upv.status, "complete")

@@ -124,7 +124,7 @@ class ConversationScenario(models.Model):
     def redirect_to_self_on_submit(self):
         '''Show student feedback before proceeding,
         not sure if this is ever called since there is no "submit"'''
-        return True
+        return False
 
     def unlocked(self, user):
         '''We want to make sure the user has selected both dialogs
