@@ -22,11 +22,17 @@ redirect_after_logout = getattr(settings, 'LOGOUT_REDIRECT_URL', None)
 auth_urls = (r'^accounts/', include('django.contrib.auth.urls'))
 logout_page = (r'^accounts/logout/$', 'django.contrib.auth.views.logout',
                {'next_page': redirect_after_logout})
+admin_logout_page = (r'^accounts/logout/$',
+                     'django.contrib.auth.views.logout',
+                     {'next_page': '/admin/'})
 
-if hasattr(settings, 'WIND_BASE'):
+if hasattr(settings, 'CAS_BASE'):
     auth_urls = (r'^accounts/', include('djangowind.urls'))
     logout_page = (r'^accounts/logout/$', 'djangowind.views.logout',
                    {'next_page': '/'})
+    admin_logout_page = (r'^admin/logout/$',
+                         'djangowind.views.logout',
+                         {'next_page': redirect_after_logout})
 
 urlpatterns = patterns(
     '',
@@ -39,8 +45,9 @@ urlpatterns = patterns(
         '-(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         'django.contrib.auth.views.password_reset_confirm',
         name='password_reset_confirm'),
-    auth_urls,
+    admin_logout_page,
     logout_page,
+    auth_urls,
     url(r'^$', HomeView.as_view(), name="home"),
     (r'^admin/', include(admin.site.urls)),
 
