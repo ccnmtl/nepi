@@ -484,7 +484,7 @@ h1.pageheader {
 	font-size: 22px;
 	margin: 20px 0;
 	text-align: left;
-	line-height: 30px;
+	line-height: 20px;
 }
 
 h2 {
@@ -717,6 +717,7 @@ ul.title-logos li {
 	padding: 20px;
 	width: 60%;
 	float: left;
+	margin: 0 0 30px 0;
 }
 
 .login-welcome h5 {
@@ -727,7 +728,12 @@ ul.title-logos li {
 }
 
 .login-welcome p {
-	line-height: 28px;
+	line-height: 24px;
+}
+
+.login-welcome small {
+	margin: 20px 0 0 0;
+	display: block;
 }
 
 .login-form {
