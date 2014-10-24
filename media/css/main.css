@@ -484,7 +484,7 @@ h1.pageheader {
 	font-size: 22px;
 	margin: 20px 0;
 	text-align: left;
-	line-height: 34px;
+	line-height: 30px;
 }
 
 h2 {
@@ -745,6 +745,22 @@ ul.title-logos li {
 
 .login-form label {
 	font-size: 1em;
+}
+
+.login-form-register {
+	width: 100%;
+	margin: 0 0 20px 0;
+	text-align: center;
+}
+
+.login-form-register .btn {
+	font-family: 'Arial Narrow', Arial, Helvetica, sans-serif;'
+	font-size: .875em;
+	font-weight: bold;
+	clear: both;
+	color: #00284c;
+	margin: 0 auto;
+	padding: 10px;
 }
 
 .login-form h4 {

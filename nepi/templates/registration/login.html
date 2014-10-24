@@ -8,15 +8,17 @@
 <div class="login-welcome">
     <img src="/site_media/img/landingphoto.jpg" />
 <h1 class="pageheader">Welcome!</h2>
-<p>Nursing education and training is an essential part of ICAP’s mission to ensure the health of families and communities around the world.</p>
+<p>Nursing education and training is an essential part of <a href="http://icap.columbia.edu" target="_blank">ICAP</a>’s mission to ensure the health of families and communities around the world.</p>
 <p> This platform was developed to support online learning for nurses and midwives and to share resources with nursing education institutions.</p>
-<p> ICAP is based at Columbia University and a global leader in HIV/AIDS and health systems strengthening.
+<p> <a href="http://icap.columbia.edu" target="_blank">ICAP</a> is based at Columbia University and a global leader in HIV/AIDS and health systems strengthening.
 Our Global Nurse Capacity Building Program is a multi-country initiative to strengthen and sustain nursing’s role in the care of people living with HIV. It is composed of two projects: the Nursing Education Partnership Initiative (NEPI), which is working to strengthen the capacity of nursing and midwifery educational
 institutions and ensure the production of sufficient numbers of well-trained, clinically competent graduates in sub-Saharan Africa; and our General Nursing capacity program, which promotes the maintenance of a skilled nursing workforce through on-going training.</p>
 <small>This work has been supported by the President’s Emergency Plan for AIDS Relief (PEPFAR) through the U.S. Department of Health and Human Services, Health Resources and Services Administration (HRSA) under the terms of the Global Nurse Capacity Building Program, cooperative agreement #U92HA12772. The contents are the responsibility of ICAP and do not necessarily reflect the views of the United States Government.</small>
 </div>
 <div class="login-form">
-       
+    <div class="login-form-register">
+       <a href="/register/" class="btn">Click here to register for a free account.</a>
+       </div>
         <h4>Log In</h4>
         
         {% if form.errors %}
@@ -30,6 +32,7 @@ institutions and ensure the production of sufficient numbers of well-trained, cl
         
         <form method="post" action=".">
         <div class="login-form-div">
+            
             <table class="login-form-table">
                 <tr>
                 <td><label for="id_username">Username:&nbsp;</label></td><td>{{ form.username }}</td>
@@ -50,7 +53,6 @@ institutions and ensure the production of sufficient numbers of well-trained, cl
         
         <div class="login-form-ques">
             <ul>
-        <li><a href="/register/">Need an account?</a></li>
         <li>{% comment %}<a href="/forgot_unipass/">Forgot username or password?</a><br />{% endcomment %}</li> 
         <li><a href="/contact/">Contact ICAP</a></li>
         </ul> 
