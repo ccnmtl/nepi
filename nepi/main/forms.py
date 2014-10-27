@@ -1,5 +1,6 @@
+import re
+
 from captcha.fields import CaptchaField
-from choices import COUNTRY_CHOICES
 from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -7,6 +8,8 @@ from django.core.mail import send_mail
 from django.forms.fields import ChoiceField
 from django.template import loader
 from django.template.context import Context
+
+from choices import COUNTRY_CHOICES
 from nepi.main.models import UserProfile, Country, School, PendingTeachers
 
 
@@ -125,9 +128,14 @@ class CreateAccountForm(UserProfileForm):
         cleaned_data = super(CreateAccountForm, self).clean()
 
         username = cleaned_data.get("username")
-        if User.objects.filter(username=username).count() > 0:
+
+        if not re.search(r'^[\w.@+-]+$', username):
             self._errors["username"] = self.error_class(
-                ["This username is taken. Please select a different one"])
+                ["Usernames can contain alphanumeric characters only "
+                 "(letters, digits and underscores)."])
+        elif User.objects.filter(username=username).count() > 0:
+            self._errors["username"] = self.error_class(
+                ["This username is taken. Please select a different one."])
 
         return cleaned_data
 
