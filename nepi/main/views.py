@@ -3,15 +3,12 @@ into smaller pieces.'''
 from StringIO import StringIO
 import csv
 from datetime import datetime
-from pickle import NONE
 from zipfile import ZipFile
 
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.core import serializers
 from django.core.mail import send_mail
-from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
 from django.http import HttpResponseRedirect, HttpResponse
@@ -230,10 +227,26 @@ class PeopleView(LoggedInMixin, IcapAdministrationOnlyMixin, TemplateView):
 class PeopleFilterView(LoggedInMixin, IcapAdministrationOnlyMixin,
                        JSONResponseMixin, View):
 
+    def serialize_participants(self, participants):
+        the_json = []
+        for participant in participants:
+            values = {
+                'last_name': participant.user.last_name,
+                'first_name': participant.user.first_name,
+                'role': participant.role(),
+                'email': participant.user.email
+            }
+
+            if participant.country:
+                values['country'] = participant.country.display_name
+            if participant.school:
+                values['school'] = participant.school.name
+
+            the_json.append(values)
+        return the_json
+
     def get(self, *args, **kwargs):
-        participants = UserProfile.objects.all().order_by('user__last_name',
-                                                          'user__first_name',
-                                                          'user__username')
+        participants = UserProfile.objects.all()
 
         profile_type = self.request.GET.get('role', 'all')
         if profile_type != 'all':
@@ -254,33 +267,21 @@ class PeopleFilterView(LoggedInMixin, IcapAdministrationOnlyMixin,
             participants = participants.filter(
                 user__last_name__istartswith=filter_by)
 
+        participants = participants.order_by('user__last_name',
+                                             'user__first_name',
+                                             'user__username')
+
         offset = int(self.request.GET.get('offset', 0))
-        limit = 20
+        limit = 40
 
         total = participants.count()
         participants = participants[offset:offset + limit]
-
-        the_json = []
-        for participant in participants:
-            values = {
-                'last_name': participant.user.last_name,
-                'first_name': participant.user.first_name,
-                'role': participant.role(),
-                'email': participant.user.email
-            }
-
-            if participant.country:
-                values['country'] = participant.country.display_name
-            if participant.school:
-                values['school'] = participant.school.name
-
-            the_json.append(values)
 
         return self.render_to_json_response({
             'offset': offset,
             'total': total,
             'count': limit,
-            'participants': the_json,
+            'participants': self.serialize_participants(participants),
         })
 
 

@@ -129,7 +129,7 @@ class CreateAccountForm(UserProfileForm):
 
         username = cleaned_data.get("username")
 
-        if not re.search(r'^[\w.@+-]+$', username):
+        if len(username) > 0 and not re.search(r'^[\w.@+-]+$', username):
             self._errors["username"] = self.error_class(
                 ["Usernames can contain alphanumeric characters only "
                  "(letters, digits and underscores)."])
