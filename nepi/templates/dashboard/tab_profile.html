@@ -1,5 +1,5 @@
 <div class="tab-pane user-profile-form" id="user-profile">
-    <h3 class="role">Your Profile</h3>
+    <h1 class="pageheader">Your Profile</h1>
     
     {% if messages %}
         <div class="alert alert-info">
@@ -15,7 +15,7 @@
             <div class="alert alert-block alert-error">
               <strong>Please correct errors before continuing</strong>
               {% if profile_form.non_field_errors %}
-                <div>{{ profile_form.non_field_errors}}</div>
+                <div>{{profile_form.non_field_errors}}</div>
               {% endif %}
             </div>
         {% endif %}

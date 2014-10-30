@@ -1,11 +1,17 @@
 '''Views for NEPI, should probably break up
 into smaller pieces.'''
 from StringIO import StringIO
+import csv
 from datetime import datetime
+from pickle import NONE
+from zipfile import ZipFile
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.core import serializers
 from django.core.mail import send_mail
+from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
 from django.http import HttpResponseRedirect, HttpResponse
@@ -17,17 +23,17 @@ from django.views.generic import View
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView, UpdateView
-from nepi.main.choices import COUNTRY_CHOICES
+from pagetree.generic.views import PageView, EditView, InstructorView
+from pagetree.models import Hierarchy, UserPageVisit
+
+from nepi.main.choices import COUNTRY_CHOICES, PROFILE_CHOICES
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
     PendingTeachers, DetailedReport
 from nepi.main.templatetags.progressreport import get_progress_report
 from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
-    LoggedInMixinStaff, JSONResponseMixin, AdministrationOnlyMixin
-from pagetree.generic.views import PageView, EditView, InstructorView
-from pagetree.models import Hierarchy, UserPageVisit
-from zipfile import ZipFile
-import csv
+    LoggedInMixinStaff, JSONResponseMixin, AdministrationOnlyMixin, \
+    IcapAdministrationOnlyMixin
 
 
 class ViewPage(LoggedInMixin, PageView):
@@ -208,6 +214,74 @@ class ReportView(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
             'user': self.request.user,
             'countries': COUNTRY_CHOICES
         }
+
+
+class PeopleView(LoggedInMixin, IcapAdministrationOnlyMixin, TemplateView):
+    template_name = "dashboard/people.html"
+
+    def get_context_data(self, **kwargs):
+        return {
+            'user': self.request.user,
+            'countries': COUNTRY_CHOICES,
+            'roles': PROFILE_CHOICES
+        }
+
+
+class PeopleFilterView(LoggedInMixin, IcapAdministrationOnlyMixin,
+                       JSONResponseMixin, View):
+
+    def get(self, *args, **kwargs):
+        participants = UserProfile.objects.all().order_by('user__last_name',
+                                                          'user__first_name',
+                                                          'user__username')
+
+        profile_type = self.request.GET.get('role', 'all')
+        if profile_type != 'all':
+            participants = participants.filter(profile_type=profile_type)
+
+        country_id = self.request.GET.get('country', 'all')
+        if country_id != 'all':
+            participants = participants.filter(country__name=country_id)
+
+        school_id = self.request.GET.get('school', 'all')
+        if school_id == 'unaffiliated':
+            participants = participants.filter(school__isnull=True)
+        elif school_id != 'all':
+            participants = participants.filter(school__id=school_id)
+
+        filter_by = self.request.GET.get('filterby', None)
+        if filter_by:
+            participants = participants.filter(
+                user__last_name__istartswith=filter_by)
+
+        offset = int(self.request.GET.get('offset', 0))
+        limit = 20
+
+        total = participants.count()
+        participants = participants[offset:offset + limit]
+
+        the_json = []
+        for participant in participants:
+            values = {
+                'last_name': participant.user.last_name,
+                'first_name': participant.user.first_name,
+                'role': participant.role(),
+                'email': participant.user.email
+            }
+
+            if participant.country:
+                values['country'] = participant.country.display_name
+            if participant.school:
+                values['school'] = participant.school.name
+
+            the_json.append(values)
+
+        return self.render_to_json_response({
+            'offset': offset,
+            'total': total,
+            'count': limit,
+            'participants': the_json,
+        })
 
 
 class SchoolChoiceView(JSONResponseMixin, View):
@@ -472,21 +546,6 @@ class BaseReportMixin():
     all = 'all'
     unaffiliated = 'unaffiliated'
 
-    def get_country_and_school(self, request):
-        profile = request.user.profile
-
-        if profile.is_teacher() or profile.is_institution_administrator():
-            country_name = profile.school.country.name
-            school_id = profile.school.id
-        elif profile.is_country_administrator():
-            country_name = profile.country.name
-            school_id = request.POST.get('school', self.all)
-        else:
-            country_name = request.POST.get('country', self.all)
-            school_id = request.POST.get('school', self.all)
-
-        return (country_name, school_id)
-
     def filter_by_country(self, groups, country_name):
         if country_name != self.all:
             groups = groups.filter(school__country__name=country_name)
@@ -502,6 +561,21 @@ class BaseReportMixin():
         if user.profile.is_teacher():
             groups = groups.filter(creator=user)
         return groups
+
+    def get_country_and_school(self, request):
+        profile = request.user.profile
+
+        if profile.is_teacher() or profile.is_institution_administrator():
+            country_name = profile.school.country.name
+            school_id = profile.school.id
+        elif profile.is_country_administrator():
+            country_name = profile.country.name
+            school_id = request.POST.get('school', self.all)
+        else:
+            country_name = request.POST.get('country', self.all)
+            school_id = request.POST.get('school', self.all)
+
+        return (country_name, school_id)
 
     def get_users_and_groups(self, request, hierarchy):
         group_id = request.POST.get('schoolgroup', self.all)

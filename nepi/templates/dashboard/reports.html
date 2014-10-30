@@ -118,13 +118,17 @@
 
         {% if not user.profile.is_student %}
             <li class="pull-right active"><a class="reports" href="/dashboard/reports/">Reports</a></li>
+            {% if user.profile.is_icap %}
+                <li class="pull-right"><a class="people" href="/dashboard/people/">People</a></li>
+            {% endif %}
         {% endif %}
     </ul>
 
-    <div class="dashboard tab-content">
-        <h3>Aggregate Report</h3>
+    <div class="dashboard tab-content reports">
         
         <form id="report-selector" class="action-container" action='/dashboard/reports/download/' method="post">{% csrf_token %}
+            <h1 class="pageheader">Participant Activity Reports</h1>
+        
             <div class="fieldWrapper control-group module wide">
                 <div class="controls">
                     <label><b>Module</b></label>

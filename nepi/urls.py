@@ -1,18 +1,22 @@
+import os.path
+
 from django.conf import settings
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import TemplateView
+import staticmedia
+
 from nepi.main.views import CreateGroupView, UpdateGroupView, \
     DeleteGroupView, CreateSchoolView, UpdateSchoolView, ContactView, \
     RegistrationView, JoinGroup, HomeView, GroupDetail, LeaveGroup, \
     SchoolChoiceView, SchoolGroupChoiceView, \
     ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView, \
     RemoveStudent, ReportView, AggregateReportView, DownloadableReportView, \
-    StudentGroupDetail
+    StudentGroupDetail, PeopleView, PeopleFilterView
 import nepi.main.views
-import os.path
-import staticmedia
+
+
 admin.autodiscover()
 
 
@@ -62,6 +66,8 @@ urlpatterns = patterns(
     # dashboard base views
     (r'^dashboard/reports/aggregate/$', AggregateReportView.as_view()),
     (r'^dashboard/reports/$', ReportView.as_view()),
+    (r'^dashboard/people/$', PeopleView.as_view()),
+    (r'^dashboard/people/filter/', PeopleFilterView.as_view()),
     url(r'^dashboard/$', UserProfileView.as_view(), name='dashboard'),
     (r'^dashboard/reports/download/$', DownloadableReportView.as_view()),
 

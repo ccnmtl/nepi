@@ -49,6 +49,9 @@
         
         {% if not user_profile.is_student %}
             <li class="pull-right"><a class="reports" href="/dashboard/reports/">Reports</a></li>
+            {% if user.profile.is_icap %}
+                <li class="pull-right"><a class="people" href="/dashboard/people/">People</a></li>
+            {% endif %}
         {% endif %}
     </ul>
 

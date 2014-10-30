@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}People{% endblock %}
+
+{% block js %}
+    <script src="/site_media/js/jquery-ui-1.10.3.min.js"></script>
+    <script src="/site_media/js/underscore-min.js"></script>
+    <script src="/site_media/js/backbone-min.js"></script>
+    <script src="/site_media/js/jquery.tablesorter.js"></script>
+    <script src="/site_media/js/people.js"></script>
+    
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            var view = new PeopleView({
+                el: 'div.people',
+                el_participants: jQuery("#people-report-container")[0]
+            });
+            
+            // setup some ajax progress indicator
+            jQuery("html").bind("ajaxStart", function(){  
+               jQuery(this).addClass("busy");
+            }).bind("ajaxStop", function(){  
+               jQuery(this).removeClass("busy");
+            });
+        });
+    </script>
+    
+    <script type="text/template" id="people-template">
+        <% if (participants.length < 1) { %>
+            <div style="clear: both"></div>
+            <h4>No Participants Found</h4>
+        <% } else { %>
+            <div class="result-total"><%= total %> participants</div> 
+            <% if (pages > 1) { %>
+                <ul class="pagination pagination-sm pull-right">
+                <% for (var i=1; i <= pages; i++) { %>
+                    <% if (page === i) { %>
+                        <li class="active"><a class="page-link disabled"
+                    <% } else { %>
+                        <li><a class="page-link"
+                    <% } %>
+                        href="/dashboard/people/?page=<%=i%>"><%=i%></a></li>
+                <% } %>
+                </ul>
+                <div class="clearfix"></div>
+            <% } %>
+
+            <table class="tablesorter tablesorter-bootstrap table table-bordered table-striped table-condensed">
+                <thead>
+                    <tr class="tab">
+                        <th>Last Name</th>
+                        <th>First Name</th>
+                        <th>Role</th>
+                        <th>Email</th>
+                        <th>Country</th>
+                        <th>School</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i=0; i < participants.length; i++) { %>
+                        <tr>
+                            <td><%= participants[i].last_name %></td>
+                            <td><%= participants[i].first_name %></td>
+                            <td><%= participants[i].role %></td>
+                            <td><%= participants[i].email %></td>
+                            <td><%= participants[i].country %></td>
+                            <td><%= participants[i].school %></td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        <% } %>
+    </script>
+
+    <script type="text/javascript">
+        var profile_attributes = {
+            'role': "{{user.profile.role}}",
+            {% if user.profile.school %}
+                'school': "{{user.profile.school.id}}",
+                'country': "{{user.profile.school.country.name}}"
+            {% else %}
+                'country': "{{user.profile.country.name}}"
+            {% endif %}
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    
+    <h3 class="role">ICAP ADMINISTRATOR</h3>
+    
+    <div class="clearfix"></div>
+
+    <ul class="nav nav-tabs dashboard-nav">
+        <li><a href="/dashboard/#user-modules">Option B+</a></li>
+
+        <li><a href="/dashboard/#user-groups">Groups</a></li>
+
+        <li><a href="/dashboard/#user-profile">Profile</a></li>
+
+        <li><a href="/dashboard/#pending">Pending Teachers</a></li>
+        
+        <li><a href="/dashboard/#resources">Resources</a></li>
+
+        <li class="pull-right"><a class="reports" href="/dashboard/reports/">Reports</a></li>
+        <li class="pull-right active"><a class="people" href="/dashboard/people/">People</a></li>
+    </ul>
+
+    <div class="dashboard tab-content people">
+        <form id="report-selector" class="action-container" method="post">
+            <div class="fieldWrapper control-group role pull-left">
+                <div class="controls">
+                    <select name="role">
+                        <option class="all-or-none-option" value="all">All Roles</option>
+                        {% for choice in roles %}
+                            <option value="{{choice.0}}">{{choice.1}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="fieldWrapper control-group country pull-left">
+                <div class="controls">
+                    <select name="country">
+                        <option class="all-or-none-option" value="all">All Countries</option>
+                        {% for choice in countries %}
+                            <option value="{{choice.0}}">{{choice.1}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="fieldWrapper control-group school pull-left">
+                <div class="controls">
+                    <select  name="school">
+                        <option class="all" value="all">All Institutions</option>
+                        <option class="unaffiliated" value="unaffiliated">Unaffiliated Students</option>
+                    </select>
+                </div>
+            </div>
+            <button id="participant-search-button" type="submit" class="btn btn-default" data-loading-text="searching...">
+                <span class="glyphicon glyphicon-search"></span> Search
+            </button>
+            <button id="participant-clear-button" type="submit" class="btn btn-default">
+                <span class="glyphicon glyphicon-remove"></span> Clear
+            </button>
+            
+            <div class="clearfix"></div>
+        </form>
+        
+        <div id="people-report-container"></div>
+    </div>
+{% endblock %}

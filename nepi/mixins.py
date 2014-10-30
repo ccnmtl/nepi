@@ -50,6 +50,14 @@ class AdministrationOnlyMixin(object):
         return super(AdministrationOnlyMixin, self).dispatch(*args, **kwargs)
 
 
+class IcapAdministrationOnlyMixin(object):
+    def dispatch(self, *args, **kwargs):
+        if not self.request.user.profile.is_icap():
+            return HttpResponseForbidden("forbidden")
+        return super(IcapAdministrationOnlyMixin, self).dispatch(*args,
+                                                                 **kwargs)
+
+
 class LoggedInMixinStaff(object):
     @method_decorator(user_passes_test(lambda u: u.is_staff))
     def dispatch(self, *args, **kwargs):
