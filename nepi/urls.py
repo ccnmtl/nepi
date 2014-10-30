@@ -1,8 +1,13 @@
+import os.path
+
+import debug_toolbar
 from django.conf import settings
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.contrib.auth.views import password_change, password_change_done, \
+    password_reset_done, password_reset_confirm, password_reset_complete
 from django.views.generic import TemplateView
+
 from nepi.main.views import CreateGroupView, UpdateGroupView, \
     DeleteGroupView, CreateSchoolView, UpdateSchoolView, ContactView, \
     RegistrationView, JoinGroup, HomeView, GroupDetail, LeaveGroup, \
@@ -11,8 +16,8 @@ from nepi.main.views import CreateGroupView, UpdateGroupView, \
     RemoveStudent, ReportView, AggregateReportView, DownloadableReportView, \
     StudentGroupDetail
 import nepi.main.views
-import os.path
-import staticmedia
+
+
 admin.autodiscover()
 
 
@@ -53,6 +58,20 @@ urlpatterns = patterns(
 
     (r'^contact/$', ContactView.as_view()),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
+
+    # password change & reset. overriding to gate them.
+    url(r'^accounts/password_change/$', password_change,
+        name='password_change'),
+    url(r'^accounts/password_change/done/$',
+        password_change_done,
+        name='password_change_done'),
+    url(r'^password/reset/done/$', password_reset_done,
+        name='password_reset_done'),
+    url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
+        password_reset_confirm,
+        name='password_reset_confirm'),
+    url(r'^password/reset/complete/$',
+        password_reset_complete, name='password_reset_complete'),
 
     # json object delivery
     url(r'^schools/(?P<country_id>\w[^/]*)/$',
@@ -108,8 +127,8 @@ urlpatterns = patterns(
      {}, 'edit-page'),
 
     (r'^pages/main/(?P<path>.*)$', nepi.main.views.ViewPage.as_view()),
+)
 
-
-) + staticmedia.serve()
-
-urlpatterns += staticfiles_urlpatterns()
+if settings.DEBUG:
+    urlpatterns += patterns('',
+                            url(r'^__debug__/', include(debug_toolbar.urls)))
