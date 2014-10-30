@@ -36,6 +36,10 @@ class TestRegistrationView(TestCase):
             "country": self.country.name, "nepi_affiliated": False,
             "captcha_0": 'dummy_value', "captcha_1": 'PASSED'}
 
+        data['username'] = ''
+        response = self.client.post('/register/', data, follow=True)
+        self.assertTrue('username' in response.context_data['form']._errors)
+
         data['username'] = ' spaces '
         response = self.client.post('/register/', data, follow=True)
         self.assertTrue('username' in response.context_data['form']._errors)
