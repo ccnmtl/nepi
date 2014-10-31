@@ -7,12 +7,12 @@ jQuery(document).ready(function () {
     
     function disableFacultyAccess() {
         jQuery("div.user-profile-form input[name='profile_type']").attr('disabled', 'disabled');
-        jQuery("div.user-profile-form .faculty-access").addClass('disabled')
+        jQuery("div.user-profile-form .faculty-access").addClass('disabled');
     }
 
     function enableFacultyAccess() {
         jQuery("div.user-profile-form input[name='profile_type']").removeAttr('disabled');
-        jQuery("div.user-profile-form .faculty-access").removeClass('disabled')
+        jQuery("div.user-profile-form .faculty-access").removeClass('disabled');
     }
 
     function profileSchoolChoices(countryName) {
@@ -25,14 +25,14 @@ jQuery(document).ready(function () {
                 disableFacultyAccess();
             },
             success: function (json, textStatus, xhr) {
-                if (json['schools'].length < 1) {
+                if (json.schools.length < 1) {
                     // There are no schools for this country
                     disableFacultyAccess();
                 } else {
                     for (var i=0; i < json.schools.length; i++) {
                         var school = json.schools[i];
                         var option = "<option value='"  + school.id + "'>" + school.name + "</option>";
-                        jQuery("div.user-profile-form select[name='school']").append(option)
+                        jQuery("div.user-profile-form select[name='school']").append(option);
                     }
         
                     if (currentSchoolId) {

@@ -11,6 +11,8 @@ class UserFactory(factory.DjangoModelFactory):
     FACTORY_FOR = User
     username = factory.Sequence(lambda n: "user%d" % n)
     password = factory.PostGenerationMethodCall('set_password', 'test')
+    last_name = factory.Sequence(lambda n: "Last%d" % n)
+    first_name = factory.Sequence(lambda n: "First%d" % n)
 
 
 def country_choice(n):

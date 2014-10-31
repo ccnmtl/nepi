@@ -8,7 +8,7 @@
      jQuery('.dashboard-nav a').on('shown', function (e) {
          window.location.hash = e.target.hash;
          scrollTo(0,0);
-     })
+     });
      
      // initialize date pickers for create & edit group
      jQuery(".datepicker").datepicker({dateFormat: "mm/dd/yy"});
@@ -52,14 +52,14 @@
                 showError(eltCountrySelect);
             },
             success: function (json, textStatus, xhr) {
-                if (json['schools'].length < 1) {
+                if (json.schools.length < 1) {
                     // There are no schools for this country
                     showError(eltCountrySelect);
                 } else {
                     for (var i=0; i < json.schools.length; i++) {
                         var school = json.schools[i];
                         var option = "<option value='"  + school.id + "'>" + school.name + "</option>";
-                        jQuery(eltSchoolSelect).append(option)
+                        jQuery(eltSchoolSelect).append(option);
                     }
                     jQuery(eltSchoolSelect).parents(".control-group").fadeIn();
                     if (callback) {
@@ -90,7 +90,7 @@
                         for (var i=0; i < json.groups.length; i++) {
                             var group = json.groups[i];
                             var option = "<option value='"  + group.id + "'>" + group.name + "</option>";
-                            jQuery(eltGroup).append(option)
+                            jQuery(eltGroup).append(option);
                         }
                     } else {
                         for (var i=0; i < json.groups.length; i++) {

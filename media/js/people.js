@@ -8,16 +8,21 @@
         urlRoot: '/dashboard/people/filter/',
         model: Participant,
         offset: 0,
-        count: 20,
+        limit: 40,
         context: function () {
             var context = {'participants': this.toJSON(), 'page': 1};
             
             context.offset = this.offset;
             context.total = this.total;
-            context.pages = Math.ceil(this.total / this.count);
+            context.limit = this.limit;
             
-            if (this.count > 0) {
-                context.page = (this.offset / this.count) + 1
+            context.pages = Math.ceil(this.total / this.limit);
+            
+            context.first = this.offset + 1;
+            context.last = this.offset + Math.min(this.limit, this.count);
+            
+            if (this.limit > 0) {
+                context.page = (this.offset / this.limit) + 1;
             }
 
             if (this.hasOwnProperty('country')) {
@@ -28,18 +33,22 @@
             
             return context;
         },
+        parse: function(response) {
+            this.total = response.total;
+            this.offset = response.offset;
+            this.limit = response.limit;
+            this.count = response.count;
+            return response.participants;
+        },
         refresh: function() {
             this.fetch({
-                data: {page_size: this.count},
+                data: {page_size: this.limit},
                 processData: true,
                 reset: true
             });
         },
-        parse: function(response) {
-            this.total = response.total;
-            this.offset = response.offset;
-            this.count = response.count;
-            return response.participants;
+        set_page: function(page_no) {
+            this.offset = (page_no - 1) * this.limit;
         },
         url: function() {
             var url = this.urlRoot + '?offset=' + this.offset;
@@ -125,7 +134,7 @@
         },
         onCountryChange: function(evt) {
             this.clearSchoolChoices();
-            var countryId = jQuery("select[name='country']").val()
+            var countryId = jQuery("select[name='country']").val();
             
             jQuery.ajax({
                 type: 'GET',
@@ -135,12 +144,12 @@
                     // This country does not exist in the database
                 },
                 success: function (json, textStatus, xhr) {
-                    var eltSchoolSelect = jQuery(this.el).find("select[name='school']")[0];
-                    if (json['schools'].length > 0) {
+                    var eltSchoolSelect = jQuery("select[name='school']")[0];
+                    if (json.schools.length > 0) {
                         for (var i=0; i < json.schools.length; i++) {
                             var school = json.schools[i];
                             var option = "<option value='"  + school.id + "'>" + school.name + "</option>";
-                            jQuery(eltSchoolSelect).append(option)
+                            jQuery(eltSchoolSelect).append(option);
                         }
                     }
                 }
@@ -155,15 +164,11 @@
         onTurnPage: function(evt) {
             evt.preventDefault();
             
-            if (jQuery(evt.currentTarget).hasClass("disabled")) {
-                return false;
-            }
-            
             // parse the page number out of the url
             var href = jQuery(evt.currentTarget).attr("href");
             var page = this.getParameterByName("page", href);
             if (page !== null) {
-                this.participants.page = parseInt(page, 10);
+                this.participants.set_page(parseInt(page, 10));
                 this.participants.refresh();
             }
             return false;

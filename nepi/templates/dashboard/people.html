@@ -6,7 +6,6 @@
     <script src="/site_media/js/jquery-ui-1.10.3.min.js"></script>
     <script src="/site_media/js/underscore-min.js"></script>
     <script src="/site_media/js/backbone-min.js"></script>
-    <script src="/site_media/js/jquery.tablesorter.js"></script>
     <script src="/site_media/js/people.js"></script>
     
     <script type="text/javascript">
@@ -30,7 +29,7 @@
             <div style="clear: both"></div>
             <h4>No Participants Found</h4>
         <% } else { %>
-            <div class="result-total"><%= total %> participants</div> 
+            <div class="result-total"><%= first %> - <%= last %> of <%= total %> participants found</div> 
             <% if (pages > 1) { %>
                 <ul class="pagination pagination-sm pull-right">
                 <% for (var i=1; i <= pages; i++) { %>
@@ -134,15 +133,22 @@
                         <option class="all" value="all">All Institutions</option>
                         <option class="unaffiliated" value="unaffiliated">Unaffiliated Students</option>
                     </select>
+                    <br />
+                    <div class="help-inline">
+                        Choosing a specific institution will limit results to faculty and administrators.
+                    </div>
                 </div>
             </div>
-            <button id="participant-search-button" type="submit" class="btn btn-default" data-loading-text="searching...">
-                <span class="glyphicon glyphicon-search"></span> Search
-            </button>
-            <button id="participant-clear-button" type="submit" class="btn btn-default">
-                <span class="glyphicon glyphicon-remove"></span> Clear
-            </button>
-            
+            <div class="fieldWrapper control-group pull-left">
+                <div class="controls">
+                    <button id="participant-search-button" type="submit" class="btn btn-default" data-loading-text="searching...">
+                        <span class="glyphicon glyphicon-search"></span> Search
+                    </button>
+                    <button id="participant-clear-button" type="submit" class="btn btn-default">
+                        <span class="glyphicon glyphicon-remove"></span> Clear
+                    </button>
+                </div>
+            </div>
             <div class="clearfix"></div>
         </form>
         

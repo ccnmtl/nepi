@@ -1243,13 +1243,23 @@ input#generic-reset {
 /* Registration & Contact Forms*/
 
 div.people #report-selector {
-    width: 100%;
+    width: 96%;
     padding: 10px 20px;
 }
 
+div.people div.school select,
 div.people div.country select {
     width: 270px;
 }
+
+div.people div.control-group.school {
+    width: 270px;
+} 
+
+div.people div.control-group div.help-inline {
+    font-size: 80%;
+    margin-top: 2px;
+} 
 
 div.people #report-selector input[type='text'] {
     margin-top: 10px;        
@@ -1274,6 +1284,10 @@ div.people div.result-total {
     background-color: #ffffff;
     border: 1px solid #dddddd;
     margin: 20px 0;
+}
+
+div.people button#participant-search-button {
+    margin-right: 5px;
 }
 
 .pagination {

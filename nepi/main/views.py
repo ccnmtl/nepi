@@ -1,5 +1,3 @@
-'''Views for NEPI, should probably break up
-into smaller pieces.'''
 from StringIO import StringIO
 import csv
 from datetime import datetime
@@ -227,6 +225,8 @@ class PeopleView(LoggedInMixin, IcapAdministrationOnlyMixin, TemplateView):
 class PeopleFilterView(LoggedInMixin, IcapAdministrationOnlyMixin,
                        JSONResponseMixin, View):
 
+    MAX_PEOPLE = 40
+
     def serialize_participants(self, participants):
         the_json = []
         for participant in participants:
@@ -237,15 +237,16 @@ class PeopleFilterView(LoggedInMixin, IcapAdministrationOnlyMixin,
                 'email': participant.user.email
             }
 
-            if participant.country:
-                values['country'] = participant.country.display_name
             if participant.school:
                 values['school'] = participant.school.name
+                values['country'] = participant.country.display_name
+            if participant.country:
+                values['country'] = participant.country.display_name
 
             the_json.append(values)
         return the_json
 
-    def get(self, *args, **kwargs):
+    def filter(self):
         participants = UserProfile.objects.all()
 
         profile_type = self.request.GET.get('role', 'all')
@@ -254,34 +255,33 @@ class PeopleFilterView(LoggedInMixin, IcapAdministrationOnlyMixin,
 
         country_id = self.request.GET.get('country', 'all')
         if country_id != 'all':
-            participants = participants.filter(country__name=country_id)
+            participants = participants.filter(
+                Q(country__name=country_id))
 
         school_id = self.request.GET.get('school', 'all')
         if school_id == 'unaffiliated':
             participants = participants.filter(school__isnull=True)
         elif school_id != 'all':
-            participants = participants.filter(school__id=school_id)
+            participants = participants.filter(Q(school__id=school_id))
 
-        filter_by = self.request.GET.get('filterby', None)
-        if filter_by:
-            participants = participants.filter(
-                user__last_name__istartswith=filter_by)
+        participants = participants.order_by(
+            'user__last_name', 'user__first_name')
 
-        participants = participants.order_by('user__last_name',
-                                             'user__first_name',
-                                             'user__username')
+        return participants
 
+    def get(self, *args, **kwargs):
+        participants = self.filter()
+
+        # slice the list
         offset = int(self.request.GET.get('offset', 0))
-        limit = 40
-
-        total = participants.count()
-        participants = participants[offset:offset + limit]
+        the_page = participants[offset:offset + self.MAX_PEOPLE]
 
         return self.render_to_json_response({
             'offset': offset,
-            'total': total,
-            'count': limit,
-            'participants': self.serialize_participants(participants),
+            'total': participants.count(),
+            'count': len(the_page),
+            'limit': self.MAX_PEOPLE,
+            'participants': self.serialize_participants(the_page),
         })
 
 

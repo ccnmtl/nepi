@@ -1,9 +1,13 @@
-import json
 from datetime import datetime
+import json
+
 from django.contrib.auth.models import User
 from django.core import mail
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
+from pagetree.models import UserPageVisit, Section, Hierarchy
+from pagetree.tests.factories import ModuleFactory
+
 from factories import UserFactory, UserProfileFactory, TeacherProfileFactory, \
     ICAPProfileFactory
 from nepi.main.choices import COUNTRY_CHOICES
@@ -14,9 +18,7 @@ from nepi.main.tests.factories import SchoolFactory, CountryFactory, \
     CountryAdministratorProfileFactory, \
     InstitutionAdminProfileFactory, PendingTeacherFactory
 from nepi.main.views import ContactView, ViewPage, CreateSchoolView, \
-    UserProfileView
-from pagetree.models import UserPageVisit, Section, Hierarchy
-from pagetree.tests.factories import ModuleFactory
+    UserProfileView, PeopleView, PeopleFilterView
 
 
 class TestBasicViews(TestCase):
@@ -725,3 +727,144 @@ class TestCreateGroupView(TestCase):
         self.assertEquals(group.formatted_start_date(), '09/20/2018')
         self.assertEquals(group.formatted_end_date(), '09/29/2018')
         self.assertEquals(group.module, self.hierarchy)
+
+
+class TestPeopleViews(TestCase):
+
+    def setUp(self):
+        self.country = CountryFactory()
+        self.school = SchoolFactory(country=self.country)
+        self.affiliated_student = StudentProfileFactory(country=self.country)
+        self.affiliated_teacher = TeacherProfileFactory(school=self.school,
+                                                        country=self.country)
+        self.random_student = StudentProfileFactory()
+        self.icap = ICAPProfileFactory(school=self.school,
+                                       country=self.country)
+
+        self.client = Client()
+        self.client.login(username=self.icap.user.username, password="test")
+
+    def test_people_view(self):
+        request = RequestFactory().get('/dashboard/people/')
+        request.user = self.icap.user
+
+        view = PeopleView()
+        view.request = request
+
+        ctx = view.get_context_data()
+        self.assertTrue('countries' in ctx)
+        self.assertTrue('roles' in ctx)
+        self.assertEquals(ctx['user'], self.icap.user)
+
+    def test_serialize(self):
+        request = RequestFactory().get('/dashboard/people/filter/')
+        request.user = self.icap.user
+
+        view = PeopleFilterView()
+        view.request = request
+
+        profiles = [self.affiliated_student, self.affiliated_teacher,
+                    self.icap]
+        the_json = view.serialize_participants(profiles)
+        self.assertEquals(len(the_json), 3)
+
+        # student with an associated country
+        self.assertEquals(the_json[0]['last_name'],
+                          self.affiliated_student.user.last_name)
+        self.assertTrue('school' not in the_json)
+        self.assertEquals(the_json[0]['country'],
+                          self.affiliated_student.country.display_name)
+
+        # teacher with an associated country + school
+        self.assertEquals(the_json[1]['last_name'],
+                          self.affiliated_teacher.user.last_name)
+        self.assertEquals(the_json[1]['school'],
+                          self.affiliated_teacher.school.name)
+        self.assertEquals(the_json[1]['country'],
+                          self.affiliated_teacher.country.display_name)
+
+        # icap admin
+        self.assertEquals(the_json[2]['last_name'],
+                          self.icap.user.last_name)
+        self.assertEquals(the_json[2]['school'],
+                          self.icap.school.name)
+        self.assertEquals(the_json[2]['country'],
+                          self.icap.country.display_name)
+
+    def test_filter_by_role(self):
+        request = RequestFactory().get('/dashboard/people/filter/',
+                                       {'role': 'ST'})
+        request.user = self.icap.user
+
+        view = PeopleFilterView()
+        view.request = request
+
+        results = view.filter()
+
+        self.assertEquals(results.count(), 2)
+        self.assertTrue(results.get(id=self.affiliated_student.id))
+        self.assertTrue(results.get(id=self.random_student.id))
+
+    def test_filter_by_country(self):
+        request = RequestFactory().get('/dashboard/people/filter/',
+                                       {'country': self.country.name})
+        request.user = self.icap.user
+
+        view = PeopleFilterView()
+        view.request = request
+
+        results = view.filter()
+
+        self.assertEquals(results.count(), 3)
+        self.assertTrue(results.get(id=self.affiliated_student.id))
+        self.assertTrue(results.get(id=self.affiliated_teacher.id))
+        self.assertTrue(results.get(id=self.icap.id))
+
+    def test_filter_by_country_and_institution(self):
+        request = RequestFactory().get('/dashboard/people/filter/',
+                                       {'country': self.country.name,
+                                        'school': self.school.id})
+        request.user = self.icap.user
+
+        view = PeopleFilterView()
+        view.request = request
+
+        results = view.filter()
+
+        self.assertEquals(results.count(), 2)
+        self.assertTrue(results.get(id=self.affiliated_teacher.id))
+        self.assertTrue(results.get(id=self.icap.id))
+
+    def test_filter_by_role_country_and_institution(self):
+        request = RequestFactory().get('/dashboard/people/filter/',
+                                       {'role': 'IC',
+                                        'country': self.country.name,
+                                        'school': self.school.id})
+        request.user = self.icap.user
+
+        view = PeopleFilterView()
+        view.request = request
+
+        results = view.filter()
+
+        self.assertEquals(results.count(), 1)
+        self.assertTrue(results.get(id=self.icap.id))
+
+    def test_get(self):
+        request = RequestFactory().get('/dashboard/people/filter/',
+                                       {'role': 'IC',
+                                        'country': self.country.name,
+                                        'school': self.school.id})
+        request.user = self.icap.user
+
+        view = PeopleFilterView()
+        view.request = request
+
+        response = view.get()
+
+        the_json = json.loads(response.content)
+        self.assertEquals(the_json['offset'], 0)
+        self.assertEquals(the_json['total'], 1)
+        self.assertEquals(the_json['count'], 1)
+        self.assertEquals(the_json['limit'], view.MAX_PEOPLE)
+        self.assertEquals(len(the_json['participants']), 1)
