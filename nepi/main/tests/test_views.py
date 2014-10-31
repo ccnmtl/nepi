@@ -868,3 +868,26 @@ class TestPeopleViews(TestCase):
         self.assertEquals(the_json['count'], 1)
         self.assertEquals(the_json['limit'], view.MAX_PEOPLE)
         self.assertEquals(len(the_json['participants']), 1)
+
+    def test_forbidden(self):
+        self.client.login(username=self.random_student.user.username,
+                          password="test")
+        response = self.client.get('/dashboard/people/')
+        self.assertEquals(response.status_code, 403)
+        response = self.client.get('/dashboard/people/filter/')
+        self.assertEquals(response.status_code, 403)
+
+        self.client.login(username=self.affiliated_teacher.user.username,
+                          password="test")
+        response = self.client.get('/dashboard/people/')
+        self.assertEquals(response.status_code, 403)
+        response = self.client.get('/dashboard/people/filter/')
+        self.assertEquals(response.status_code, 403)
+
+        country_admin = CountryAdministratorProfileFactory()
+        self.client.login(username=country_admin.user.username,
+                          password="test")
+        response = self.client.get('/dashboard/people/')
+        self.assertEquals(response.status_code, 403)
+        response = self.client.get('/dashboard/people/filter/')
+        self.assertEquals(response.status_code, 403)
