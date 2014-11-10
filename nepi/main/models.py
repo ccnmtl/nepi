@@ -10,13 +10,21 @@ from django.contrib.contenttypes import generic
 from django.db.models.query_utils import Q
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from pagetree.reports import PagetreeReport, StandaloneReportColumn
-from choices import COUNTRY_CHOICES, PROFILE_CHOICES
+
+
+PROFILE_CHOICES = (
+    ('ST', 'Student'),
+    ('TE', 'Teacher'),
+    ('IN', 'Institution'),
+    ('CA', 'Country Administrator'),
+    ('IC', 'ICAP')
+)
 
 
 class Country(models.Model):
     '''Users can select counties from drop down menu,
     countries are stored by their official 2 letter codes.'''
-    name = models.CharField(max_length=2, choices=COUNTRY_CHOICES, unique=True)
+    name = models.CharField(max_length=2, unique=True)
     display_name = models.TextField()
 
     class Meta:
@@ -24,6 +32,11 @@ class Country(models.Model):
 
     def __unicode__(self):
         return self.display_name
+
+    @classmethod
+    def choices(cls):
+        return [(c.name, c.display_name)
+                for c in Country.objects.all().order_by('display_name')]
 
 
 class School(models.Model):

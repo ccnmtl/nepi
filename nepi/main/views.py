@@ -21,10 +21,9 @@ from django.views.generic.edit import FormView, CreateView, UpdateView
 from pagetree.generic.views import PageView, EditView, InstructorView
 from pagetree.models import Hierarchy, UserPageVisit
 
-from nepi.main.choices import COUNTRY_CHOICES, PROFILE_CHOICES
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
-    PendingTeachers, DetailedReport
+    PendingTeachers, DetailedReport, PROFILE_CHOICES
 from nepi.main.templatetags.progressreport import get_progress_report
 from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
     LoggedInMixinStaff, JSONResponseMixin, AdministrationOnlyMixin, \
@@ -168,7 +167,7 @@ class UserProfileView(LoggedInMixin, DetailView):
         context['optionb'] = hierarchy
 
         context['profile_form'] = UpdateProfileForm(instance=self.request.user)
-        context['countries'] = COUNTRY_CHOICES
+        context['countries'] = Country.choices()
         context['joined_groups'] = self.request.user.profile.joined_groups()
 
         if self.request.user.profile.is_student():
@@ -207,7 +206,7 @@ class ReportView(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
     def get_context_data(self, **kwargs):
         return {
             'user': self.request.user,
-            'countries': COUNTRY_CHOICES
+            'countries': Country.choices()
         }
 
 
@@ -217,7 +216,7 @@ class PeopleView(LoggedInMixin, IcapAdministrationOnlyMixin, TemplateView):
     def get_context_data(self, **kwargs):
         return {
             'user': self.request.user,
-            'countries': COUNTRY_CHOICES,
+            'countries': Country.choices(),
             'roles': PROFILE_CHOICES
         }
 

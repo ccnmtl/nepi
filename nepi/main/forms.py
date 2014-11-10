@@ -9,7 +9,6 @@ from django.forms.fields import ChoiceField
 from django.template import loader
 from django.template.context import Context
 
-from choices import COUNTRY_CHOICES
 from nepi.main.models import UserProfile, Country, School, PendingTeachers
 
 
@@ -40,7 +39,7 @@ class UserProfileForm(forms.Form):
     username = forms.CharField(
         max_length=25, required=True)
     email = forms.EmailField(required=False)
-    country = forms.ChoiceField(required=True, choices=COUNTRY_CHOICES)
+    country = forms.ChoiceField(required=True)
 
     # School is not validated as it is variably required
     # Yes for teachers, No for students
@@ -52,6 +51,10 @@ class UserProfileForm(forms.Form):
     password2 = forms.CharField(
         max_length=25, widget=forms.PasswordInput, required=True)
     profile_type = forms.BooleanField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        self.fields["country"].choices = Country.choices()
 
     def clean(self):
         cleaned_data = super(UserProfileForm, self).clean()

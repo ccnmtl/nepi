@@ -10,7 +10,6 @@ from pagetree.tests.factories import ModuleFactory
 
 from factories import UserFactory, UserProfileFactory, TeacherProfileFactory, \
     ICAPProfileFactory
-from nepi.main.choices import COUNTRY_CHOICES
 from nepi.main.forms import ContactForm
 from nepi.main.models import Country, School, Group, PendingTeachers
 from nepi.main.tests.factories import SchoolFactory, CountryFactory, \
@@ -112,7 +111,7 @@ class TestStudentLoggedInViews(TestCase):
 
         self.assertEquals(ctx['optionb'], self.hierarchy)
         self.assertIsNotNone(ctx['profile_form'])
-        self.assertEquals(ctx['countries'], COUNTRY_CHOICES)
+        self.assertEquals(ctx['countries'], Country.choices())
         self.assertEquals(ctx['joined_groups'].count(), 0)
         self.assertTrue('managed_groups' not in ctx)
         self.assertTrue('pending_teachers' not in ctx)
@@ -150,14 +149,6 @@ class TestTeacherLoggedInViews(TestCase):
         request = RequestFactory().get('/dashboard/')
         request.user = self.teacher
 
-        view = UserProfileView()
-        view.request = request
-
-        self.assertEquals(view.get_object(), request.user.profile)
-
-        view.object = request.user.profile
-        ctx = view.get_context_data()
-
         school_group = SchoolGroupFactory(creator=self.teacher,
                                           school=self.teacher.profile.school)
 
@@ -168,9 +159,17 @@ class TestTeacherLoggedInViews(TestCase):
         # alt_creator
         SchoolGroupFactory(creator=TeacherProfileFactory().user)
 
+        view = UserProfileView()
+        view.request = request
+
+        self.assertEquals(view.get_object(), request.user.profile)
+
+        view.object = request.user.profile
+        ctx = view.get_context_data()
+
         self.assertEquals(ctx['optionb'], self.hierarchy)
         self.assertIsNotNone(ctx['profile_form'])
-        self.assertEquals(ctx['countries'], COUNTRY_CHOICES)
+        self.assertEquals(ctx['countries'], Country.choices())
         self.assertEquals(ctx['joined_groups'].count(), 0)
         self.assertEquals(len(ctx['managed_groups']), 1)
         self.assertEquals(ctx['managed_groups'][0], school_group)
@@ -213,14 +212,6 @@ class TestInstitutionAdminLoggedInViews(TestCase):
         request = RequestFactory().get('/dashboard/')
         request.user = self.admin
 
-        view = UserProfileView()
-        view.request = request
-
-        self.assertEquals(view.get_object(), request.user.profile)
-
-        view.object = request.user.profile
-        ctx = view.get_context_data()
-
         admin_group = SchoolGroupFactory(creator=self.admin,
                                          school=self.admin.profile.school)
         teacher_group = SchoolGroupFactory(creator=self.teacher,
@@ -237,9 +228,17 @@ class TestInstitutionAdminLoggedInViews(TestCase):
         # alt_creator/alt school
         SchoolGroupFactory(creator=TeacherProfileFactory().user)
 
+        view = UserProfileView()
+        view.request = request
+
+        self.assertEquals(view.get_object(), request.user.profile)
+
+        view.object = request.user.profile
+        ctx = view.get_context_data()
+
         self.assertEquals(ctx['optionb'], self.hierarchy)
         self.assertIsNotNone(ctx['profile_form'])
-        self.assertEquals(ctx['countries'], COUNTRY_CHOICES)
+        self.assertEquals(ctx['countries'], Country.choices())
         self.assertEquals(ctx['joined_groups'].count(), 0)
         self.assertEquals(len(ctx['managed_groups']), 2)
         self.assertEquals(ctx['managed_groups'][0], admin_group)
@@ -295,14 +294,6 @@ class TestCountryAdminLoggedInViews(TestCase):
         request = RequestFactory().get('/dashboard/')
         request.user = self.admin
 
-        view = UserProfileView()
-        view.request = request
-
-        self.assertEquals(view.get_object(), request.user.profile)
-
-        view.object = request.user.profile
-        ctx = view.get_context_data()
-
         admin_group = SchoolGroupFactory(creator=self.admin,
                                          school=self.school)
         iadmin_group = SchoolGroupFactory(creator=self.iadmin,
@@ -320,9 +311,17 @@ class TestCountryAdminLoggedInViews(TestCase):
         # random groups alt_creator/alt school groups
         SchoolGroupFactory(creator=TeacherProfileFactory().user)
 
+        view = UserProfileView()
+        view.request = request
+
+        self.assertEquals(view.get_object(), request.user.profile)
+
+        view.object = request.user.profile
+        ctx = view.get_context_data()
+
         self.assertEquals(ctx['optionb'], self.hierarchy)
         self.assertIsNotNone(ctx['profile_form'])
-        self.assertEquals(ctx['countries'], COUNTRY_CHOICES)
+        self.assertEquals(ctx['countries'], Country.choices())
         self.assertEquals(ctx['joined_groups'].count(), 0)
         self.assertEquals(len(ctx['managed_groups']), 3)
         self.assertEquals(ctx['managed_groups'][0], admin_group)
@@ -370,6 +369,10 @@ class TestICAPLoggedInViews(TestCase):
         request = RequestFactory().get('/dashboard/')
         request.user = self.icap
 
+        a = SchoolGroupFactory()
+        b = SchoolGroupFactory()
+        SchoolGroupFactory(archived=True)
+
         view = UserProfileView()
         view.request = request
 
@@ -378,13 +381,9 @@ class TestICAPLoggedInViews(TestCase):
         view.object = request.user.profile
         ctx = view.get_context_data()
 
-        a = SchoolGroupFactory()
-        b = SchoolGroupFactory()
-        SchoolGroupFactory(archived=True)
-
         self.assertEquals(ctx['optionb'], self.hierarchy)
         self.assertIsNotNone(ctx['profile_form'])
-        self.assertEquals(ctx['countries'], COUNTRY_CHOICES)
+        self.assertEquals(ctx['countries'], Country.choices())
         self.assertEquals(ctx['joined_groups'].count(), 0)
         self.assertEquals(len(ctx['managed_groups']), 2)
         self.assertEquals(ctx['managed_groups'][0], a)

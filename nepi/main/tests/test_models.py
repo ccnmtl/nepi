@@ -1,15 +1,29 @@
 from datetime import date
+import datetime
+
 from django.contrib.auth.models import User
 from django.test import TestCase
+from pagetree.models import Hierarchy, Section, UserPageVisit
+from pagetree.tests.factories import HierarchyFactory, ModuleFactory
+
 from factories import SchoolGroupFactory
-from nepi.main.models import AggregateQuizScore, PendingTeachers
+from nepi.main.models import AggregateQuizScore, PendingTeachers, Country
 from nepi.main.tests.factories import StudentProfileFactory, \
     TeacherProfileFactory, ICAPProfileFactory, \
     CountryAdministratorProfileFactory, \
-    SchoolFactory, InstitutionAdminProfileFactory
-from pagetree.models import Hierarchy, Section, UserPageVisit
-from pagetree.tests.factories import HierarchyFactory, ModuleFactory
-import datetime
+    SchoolFactory, InstitutionAdminProfileFactory, CountryFactory
+
+
+class TestCountry(TestCase):
+    def test_choices(self):
+        country1 = CountryFactory(display_name="Beta")
+        country2 = CountryFactory(display_name="Alpha")
+
+        choices = Country.choices()
+
+        self.assertEquals(len(choices), 2)
+        self.assertEquals(choices[0], (country2.name, country2.display_name))
+        self.assertEquals(choices[1], (country1.name, country1.display_name))
 
 
 class TestGroup(TestCase):
