@@ -819,7 +819,22 @@ ul.title-logos li {
 	border-radius: 7px;
 }
 
+.acct_created {
+	width: 55%;
+	margin: 0 auto;
+	text-align: center;
+}
 
+.acct_created .btn {
+	font-family: 'Arial Narrow', Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 1.25em;
+	clear: both;
+	color: #00284c;
+	margin: 0 auto;
+	padding: 10px;
+	display: block;
+}
 
 	/*Text Styles*/
 

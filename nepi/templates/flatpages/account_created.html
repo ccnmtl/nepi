@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Welcome! Your account has been created</h2><br />
+<h1>Welcome! Your account has been created.</h1>
 
-<p>Please remember the username and password you chose. If you provided a valid email address when you registered you can request a password reset.</p>
+<p class="acct_created"><strong>Please remember the username and password you chose.</strong><br />
+ If you provided a valid email address when you registered you can request a password reset.
+<br /><br /><br /><br />
+<a href="/accounts/login/?next=/" class="btn">Log in to ICAP Nursing E-learning</a>
 
-<a href="/accounts/login/?next=/">Log in to ICAP Nursing E-learning</a>
+</p>
 
 {% endblock %}
