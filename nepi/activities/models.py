@@ -140,19 +140,19 @@ class ConversationScenario(models.Model):
         return good.count() > 0 and bad.count() > 0
 
     def last_response(self, user):
-        try:
-            response = ConversationResponse.objects.get(
-                conv_scen=self, user=user)
-            if (response.first_click is not None
-                    and response.second_click is not None):
+        responses = ConversationResponse.objects.filter(
+            conv_scen=self, user=user)
+
+        if len(responses) > 0:
+            response = responses[0]
+            if response.third_click is not None:
                 return response.third_click.conversation.scenario_type
-            elif (response.first_click is not None
-                    and response.second_click is None):
+            elif response.second_click is not None:
+                return response.second_click.conversation.scenario_type
+            elif response.first_click is not None:
                 return response.first_click.conversation.scenario_type
-            else:
-                return 0
-        except ConversationResponse.DoesNotExist:
-            return 0
+
+        return 0
 
     def report_metadata(self):
         return [ConversationReportColumn(self.pageblock(),

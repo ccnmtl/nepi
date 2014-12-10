@@ -54,7 +54,7 @@ class TestConversationStateNode(TestCase):
         node.render(context)
         self.assertEquals(context['the_response'], 0)
 
-    def test_get_dosage_response_with_state(self):
+    def test_get_response_with_state(self):
         ConversationResponse.objects.create(user=self.user,
                                             conv_scen=self.block)
         node = ConversationStateNode('block', 'the_response')

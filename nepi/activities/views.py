@@ -92,8 +92,15 @@ class SaveResponse(View, JSONResponseMixin):
                                          pk=request.POST['conversation'])
         conclick = ConvClick.objects.create(conversation=conversation)
         conclick.save()
-        rs, created = ConversationResponse.objects.get_or_create(
-            conv_scen=scenario, user=request.user)
+
+        responses = ConversationResponse.objects.filter(conv_scen=scenario,
+                                                        user=request.user)
+        if len(responses) > 0:
+            rs = responses[0]
+        else:
+            rs = ConversationResponse.objects.create(conv_scen=scenario,
+                                                     user=request.user)
+
         if rs.first_click is None:
             rs.first_click = conclick
             rs.save()
