@@ -28,24 +28,24 @@ jQuery(document).ready(function() {
         	var tpd = jQuery(inputs[1]).val();
         	var wks = jQuery(inputs[2]).val();
         	
-            
-            if (!nvp.match(re))  {
+        	var value = parseFloat(nvp);
+            if (!nvp.match(re) || isNaN(value))  {
                 alert("Please enter a valid digit or decimal for ml of NVP.");
                 return false;
             }
 
-            if ((!tpd.match(dig)) || (tpd.length > 3))  {
-                alert("Values times for day and number of digits should consist of one or two digits.");
+            value = parseInt(tpd);            
+            if ((!tpd.match(dig)) || (tpd.length > 3) || isNaN(value))  {
+                alert('Please enter a valid digit or decimal for "times each day."');
                 return false;
                 
             }
-            
-            if ((!wks.match(dig)) || (wks.length > 3))  {
-                alert("Values times for day and number of digits should consist of one or two digits.");
+
+            value = parseFloat(wks);
+            if ((!wks.match(dig)) || (wks.length > 3) || isNaN(value))  {
+                alert('Please enter a valid digit or decimal for "weeks".');
                 return false;
             }
-
-            
         }
     });
 });
