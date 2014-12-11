@@ -143,8 +143,8 @@ class ConversationScenario(models.Model):
         responses = ConversationResponse.objects.filter(
             conv_scen=self, user=user)
 
-        if len(responses) > 0:
-            response = responses[0]
+        if responses.count() > 0:
+            response = responses.first()
             if response.third_click is not None:
                 return response.third_click.conversation.scenario_type
             elif response.second_click is not None:

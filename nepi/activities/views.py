@@ -95,8 +95,8 @@ class SaveResponse(View, JSONResponseMixin):
 
         responses = ConversationResponse.objects.filter(conv_scen=scenario,
                                                         user=request.user)
-        if len(responses) > 0:
-            rs = responses[0]
+        if responses.count() > 0:
+            rs = responses.first()
         else:
             rs = ConversationResponse.objects.create(conv_scen=scenario,
                                                      user=request.user)
