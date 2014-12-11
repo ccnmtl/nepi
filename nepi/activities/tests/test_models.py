@@ -72,6 +72,10 @@ class TestLRConversationScenario(TestCase):
         click_two = ConvClickFactory(conversation=scenario.bad_conversation)
         click_three = ConvClickFactory(conversation=scenario.good_conversation)
 
+        # No Clicks
+        self.assertFalse(scenario.unlocked(user))
+        self.assertEquals(scenario.last_response(user), 0)
+
         '''Test first click'''
         cr = ConversationResponse.objects.create(conv_scen=scenario,
                                                  user=user,
@@ -80,6 +84,8 @@ class TestLRConversationScenario(TestCase):
                           cr.first_click.conversation.scenario_type)
         self.assertIsNone(cr.second_click)
         self.assertFalse(scenario.unlocked(user))
+        self.assertEquals(scenario.last_response(user),
+                          click_one.conversation.scenario_type)
 
         '''Test second click'''
         cr.second_click = click_two
@@ -88,6 +94,8 @@ class TestLRConversationScenario(TestCase):
                           cr.second_click.conversation.scenario_type)
         self.assertIsNone(cr.third_click)
         self.assertTrue(scenario.unlocked(user))
+        self.assertEquals(scenario.last_response(user),
+                          click_two.conversation.scenario_type)
 
         '''Test third click'''
         cr.third_click = click_three
@@ -96,6 +104,15 @@ class TestLRConversationScenario(TestCase):
                           cr.third_click.conversation.scenario_type)
         self.assertIsNotNone(cr.third_click)
         self.assertTrue(scenario.unlocked(user))
+        self.assertEquals(scenario.last_response(user),
+                          click_three.conversation.scenario_type)
+
+        # Multiple responses - use the first response
+        ConversationResponse.objects.create(conv_scen=scenario,
+                                            user=user,
+                                            first_click=click_one)
+        self.assertEquals(scenario.last_response(user),
+                          click_three.conversation.scenario_type)
 
     def test_both_responses_clicked(self):
         user = UserFactory()
