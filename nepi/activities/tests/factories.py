@@ -1,7 +1,8 @@
 import factory
 from nepi.activities.models import ConversationScenario, \
     Conversation, ConvClick, RetentionRateCard, RetentionClick, \
-    CalendarChart, Month, Day  # , CalendarResponse
+    CalendarChart, Month, Day, DosageActivity, \
+    ImageInteractive, ARTCard, AdherenceCard
 from pagetree.models import Hierarchy, Section
 
 
@@ -131,3 +132,19 @@ class CorrectDayFactory(factory.DjangoModelFactory):
     calendar = factory.SubFactory(MonthFactory)
     number = 4
     explanation = "This is the correct day"
+
+
+class ImageInteractiveFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = ImageInteractive
+
+
+class ARTCardFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = ARTCard
+
+
+class AdherenceCardFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = AdherenceCard
+
+
+class DosageActivityFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = DosageActivity
