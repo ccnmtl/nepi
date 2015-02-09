@@ -1,11 +1,14 @@
 from django.test import TestCase
 from factories import ConversationScenarioFactory, ConvClickFactory, \
-    GoodConversationFactory, ConversationPageblockHierarchyFactory
+    GoodConversationFactory, ConversationPageblockHierarchyFactory, \
+    ImageInteractiveFactory, ARTCardFactory, AdherenceCardFactory
 from nepi.activities.models import ConversationResponse, Day, Month, \
     RetentionClick, Conversation, ConvClick, CalendarResponse, \
-    DosageActivityResponse, DosageActivity
+    DosageActivityResponse, DosageActivity, ImageInteractive, AdherenceCard, \
+    ARTCard
 from nepi.activities.tests.factories import CalendarChartFactory, MonthFactory
 from nepi.main.tests.factories import UserFactory
+from quizblock.tests.test_models import FakeReq
 
 
 class TestConvClick(TestCase):
@@ -15,6 +18,17 @@ class TestConvClick(TestCase):
 
 
 class TestConversation(TestCase):
+    def test_rest_of_conversation(self):
+        g = GoodConversationFactory()
+        self.assertEqual(str(g.text_one),
+                         "We assume text one is the starting text")
+        self.assertEqual(
+            str(g.response_one),
+            "Text 1 is the response to whatever the other party says")
+        self.assertEqual(
+            str(g.response_two),
+            "Text 2 is the response to whatever the other party says")
+
     def test_unicode(self):
         g = GoodConversationFactory()
         self.assertEqual(str(g), "G")
@@ -33,6 +47,9 @@ class TestConversationScenario(TestCase):
     def test_unicode(self):
         c = ConversationPageblockHierarchyFactory()
         self.assertEqual(str(c), "conv_hierarchy")
+
+    def test_add_form(self):
+        self.assertTrue("description" in self.scenario.add_form().fields)
 
     def test_score_incomplete(self):
         self.assertEquals(self.scenario.score(self.user), None)
@@ -247,3 +264,81 @@ class TestCalendarChart(TestCase):
         resp.first_click = correct
         resp.save()
         self.assertEquals(chart.score(user), 1)
+
+
+class TestImageInteractive(TestCase):
+    def test_img_int_need_submit(self):
+        img_int = ImageInteractiveFactory()
+        self.assertFalse(img_int.needs_submit())
+
+    def test_img_int_unlocked(self):
+        img_int = ImageInteractiveFactory()
+        usr = UserFactory()
+        self.assertTrue(img_int.unlocked(usr))
+
+    def test_img_int_add_form(self):
+        add_form = ImageInteractiveFactory().add_form()
+        self.assertTrue("intro_text" in add_form.fields)
+
+    def test_img_int_edit_form(self):
+        edit_form = ImageInteractiveFactory().edit_form()
+        self.assertTrue("intro_text" in edit_form.fields)
+
+    def test_img_int_create(self):
+        r = FakeReq()
+        r.POST = {'intro_text': 'intro_text info here'}
+        img_int = ImageInteractive.create(r)
+        self.assertEquals(img_int.intro_text, 'intro_text info here')
+        self.assertEquals(img_int.display_name, "Image Interactive")
+
+
+class TestARTCard(TestCase):
+    def test_artcard_need_submit(self):
+        artcard = ARTCardFactory()
+        self.assertFalse(artcard.needs_submit())
+
+    def test_artcard_unlocked(self):
+        artcard = ARTCardFactory()
+        usr = UserFactory()
+        self.assertTrue(artcard.unlocked(usr))
+
+    def test_artcard_add_form(self):
+        add_form = ARTCardFactory().add_form()
+        self.assertTrue("intro_text" in add_form.fields)
+
+    def test_artcard_edit_form(self):
+        edit_form = ARTCardFactory().edit_form()
+        self.assertTrue("intro_text" in edit_form.fields)
+
+    def test_artcard_create(self):
+        r = FakeReq()
+        r.POST = {'intro_text': 'intro_text info here'}
+        artcard = ARTCard.create(r)
+        self.assertEquals(artcard.intro_text, 'intro_text info here')
+        self.assertEquals(artcard.display_name, "ART Card")
+
+
+class TestAdherenceCard(TestCase):
+    def test_adcard_need_submit(self):
+        adcard = AdherenceCardFactory()
+        self.assertFalse(adcard.needs_submit())
+
+    def test_adcard_unlocked(self):
+        adcard = AdherenceCardFactory()
+        usr = UserFactory()
+        self.assertTrue(adcard.unlocked(usr))
+
+    def test_adcard_add_form(self):
+        add_form = AdherenceCardFactory().add_form()
+        self.assertTrue("quiz_class" in add_form.fields)
+
+    def test_adcard_edit_form(self):
+        edit_form = AdherenceCardFactory().edit_form()
+        self.assertTrue("quiz_class" in edit_form.fields)
+
+    def test_adcard_create(self):
+        r = FakeReq()
+        r.POST = {'quiz_class': 'intro_text info here'}
+        adcard = AdherenceCard.create(r)
+        self.assertEquals(adcard.quiz_class, 'intro_text info here')
+        self.assertEquals(adcard.display_name, "Adherence Card")
