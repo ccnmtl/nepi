@@ -212,7 +212,7 @@ class PendingTeachers(models.Model):
 
 class AggregateQuizScore(models.Model):
     pageblocks = generic.GenericRelation(
-        PageBlock, related_name="aggregate_quiz_score")
+        PageBlock, related_query_name="aggregate_quiz_score")
     quiz_class = models.TextField()
     display_name = 'Aggregate Quiz Score'
     template_file = "main/aggregate_quiz_score.html"

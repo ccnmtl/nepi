@@ -719,7 +719,7 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
         report = DetailedReport(users)
 
         # setup zip file for the key & value file
-        response = HttpResponse(mimetype='application/zip')
+        response = HttpResponse(content_type='application/zip')
 
         disposition = 'attachment; filename=optionb.zip'
         response['Content-Disposition'] = disposition
