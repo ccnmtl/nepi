@@ -1,7 +1,5 @@
-from StringIO import StringIO
 import csv
 from datetime import datetime
-from zipfile import ZipFile
 
 from django.conf import settings
 from django.contrib import messages
@@ -9,8 +7,8 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
-from django.http import HttpResponseRedirect, HttpResponse
-from django.http.response import HttpResponseForbidden
+from django.http import HttpResponseRedirect
+from django.http.response import HttpResponseForbidden, StreamingHttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.template.context import Context
@@ -707,6 +705,15 @@ class AggregateReportView(LoggedInMixin, AdministrationOnlyMixin,
         return self.render_to_json_response(ctx)
 
 
+class Echo(object):
+    """An object that implements just the write method of the file-like
+    interface.
+    """
+    def write(self, value):
+        """Write the value by returning it, instead of storing in a buffer."""
+        return value
+
+
 class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
                              BaseReportMixin, View):
 
@@ -718,35 +725,22 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
 
         report = DetailedReport(users)
 
-        # setup zip file for the key & value file
-        response = HttpResponse(content_type='application/zip')
+        pseudo_buffer = Echo()
+        writer = csv.writer(pseudo_buffer)
 
-        disposition = 'attachment; filename=optionb.zip'
-        response['Content-Disposition'] = disposition
-
-        z = ZipFile(response, 'w')
-
-        output = StringIO()  # temp output file
-        writer = csv.writer(output)
-
-        # report on all hierarchies
+        # report on main hierarchy
         hierarchies = Hierarchy.objects.filter(name='main')
 
-        # Key file
-        for row in report.metadata(hierarchies):
-            writer.writerow(row)
+        report_type = request.POST.get('report-type', 'keys')
+        if report_type == 'keys':
+            fnm = "optionb_keys.csv"
+            rows = report.metadata(hierarchies)
+        else:
+            fnm = "optionb_values.csv"
+            rows = report.values(hierarchies)
 
-        z.writestr("optionb_key.csv", output.getvalue())
-
-        # Results file
-        output.truncate(0)
-        output.seek(0)
-
-        writer = csv.writer(output)
-
-        for row in report.values(hierarchies):
-            writer.writerow(row)
-
-        z.writestr("optionb_values.csv", output.getvalue())
+        response = StreamingHttpResponse(
+            (writer.writerow(row) for row in rows), content_type="text/csv")
+        response['Content-Disposition'] = 'attachment; filename="' + fnm + '"'
 
         return response
