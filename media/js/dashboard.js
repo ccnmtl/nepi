@@ -396,6 +396,19 @@
         return false;
     });
     
+    jQuery(".report-type").on("click", function(evt) {
+        var rtype = jQuery(this).data('report-type');
+        var frm = jQuery(this).parents('form')[0];
+        
+        var input = jQuery("<input>")
+            .attr("type", "hidden")
+            .attr("name", "report-type").val(rtype);
+        jQuery(frm).append(jQuery(input));
+        
+        jQuery(frm).submit()
+        return false;
+    });
+    
     // initialize country selectors based on roles
     if (profile_attributes.role == 'faculty' ||
         profile_attributes.role == 'institution' ||

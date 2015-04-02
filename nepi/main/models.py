@@ -1,13 +1,15 @@
 import base64
+import datetime
 import hashlib
 import hmac
-import datetime
+
 from django import forms
-from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
+from django.db import models
 from django.db.models.query_utils import Q
+from django.utils.encoding import smart_str
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from pagetree.reports import PagetreeReport, StandaloneReportColumn
 
@@ -253,6 +255,7 @@ class AggregateQuizScoreForm(forms.ModelForm):
 
 
 def random_user(username):
+    username = smart_str(username)
     digest = hmac.new(settings.PARTICIPANT_SECRET,
                       msg=username, digestmod=hashlib.sha256).digest()
     return base64.b64encode(digest).decode()
@@ -262,6 +265,7 @@ class DetailedReport(PagetreeReport):
 
     def __init__(self, users):
         self.all_users = users
+        super(DetailedReport, self).__init__()
 
     def users(self):
         return self.all_users

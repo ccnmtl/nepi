@@ -187,10 +187,26 @@
                 </div>
             </div>
             {% endcomment %}
+            
+            <div>
             <button class="btn btn-primary aggregate pull-right">View Aggregate Report</button>
-            <button class="btn btn-default download pull-right small" type="submit">Download Full Report (.csv)</button>   
+                <div class="btn-group pull-right">
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        Download Full Report (.csv)
+                        <span class="caret"></span>
+                    </a>
+                    <input type="hidden" name="report-type" value="" />
+                    <ul class="dropdown-menu">
+                        <li><a class="report-type" href="#" data-report-type="keys">Report Keys</a></li>
+                        <li><a class="report-type" href="#" data-report-type="values">Report Values</a></li>
+                    </ul>
+                </div>
+            </div>
             <div class="clearfix"></div>
             <div id="aggregate-report-container"></div>
+            <br /><br />
+            
+            
         </form>
     </div>
 {% endblock %}
