@@ -184,7 +184,7 @@ class TestScorableMethods(TestCase):
         self.assertEquals(ctx['sessions'][0], 75)
         self.assertEquals(ctx['sessions'][1], None)
         self.assertEquals(ctx['sessions'][2], None)
-        self.assertEquals(ctx['average_score'], 75.0)
+        self.assertAlmostEqual(ctx['average_score'], 75.0)
 
     def test_average_session_score_incomplete(self):
         users = [self.userIncomplete, self.userNoAnswers]
