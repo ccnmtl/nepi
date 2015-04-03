@@ -22,7 +22,8 @@ from pagetree.models import Hierarchy, UserPageVisit
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
     PendingTeachers, DetailedReport, PROFILE_CHOICES
-from nepi.main.templatetags.progressreport import get_progress_report
+from nepi.main.templatetags.progressreport import get_progress_report, \
+    average_quiz_score, satisfaction_rating
 from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
     LoggedInMixinStaff, JSONResponseMixin, AdministrationOnlyMixin, \
     IcapAdministrationOnlyMixin
@@ -685,6 +686,19 @@ class StudentGroupDetail(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
 class AggregateReportView(LoggedInMixin, AdministrationOnlyMixin,
                           JSONResponseMixin, BaseReportMixin, View):
 
+    def get_aggregate_report(self, users, hierarchy):
+        ctx = {'total_users': len(users)}
+
+        ctx['pretest'] = average_quiz_score(users, hierarchy, 'pretest')
+        ctx['posttest'] = average_quiz_score(users, hierarchy, 'posttest')
+
+        if (ctx['pretest'] is not None and ctx['pretest'] >= 0
+                and ctx['posttest'] is not None and ctx['posttest'] >= 0):
+            ctx['prepostchange'] = ctx['posttest'] - ctx['pretest']
+
+        ctx['satisfaction'] = satisfaction_rating(users, hierarchy)
+        return ctx
+
     def post(self, request, *args, **kwargs):
         hierarchy_name = request.POST.get('module', 'main')
         hierarchy = get_object_or_404(Hierarchy, name=hierarchy_name)
@@ -698,7 +712,7 @@ class AggregateReportView(LoggedInMixin, AdministrationOnlyMixin,
             ctx = self.classify_group_users(groups, sections)
 
         if ctx['completed'] > 0:
-            ctx['progress_report'] = get_progress_report(
+            ctx['progress_report'] = self.get_aggregate_report(
                 ctx['completed_users'], hierarchy)
             ctx.pop('completed_users')
 
@@ -722,6 +736,7 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
         hierarchy = get_object_or_404(Hierarchy, name=hierarchy_name)
 
         users, groups = self.get_users_and_groups(request, hierarchy)
+        users = users.filter(submission__isnull=False, is_staff=False)
 
         report = DetailedReport(users)
 
