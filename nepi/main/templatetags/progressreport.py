@@ -1,7 +1,9 @@
 from django import template
 from django.contrib.contenttypes.models import ContentType
+from django.db import models
 from pagetree.models import PageBlock
 from quizblock.models import Answer, Quiz
+
 
 register = template.Library()
 
@@ -13,21 +15,25 @@ def get_quizzes_by_css_class(hierarchy, cls):
                                     section__hierarchy=hierarchy)
 
 
-def get_scorable_blocks(session, css_extra_exclude=None):
+def get_scorable_content_types():
+    types = []
+    hierarchy = models.get_model('pagetree', 'hierarchy')
+    for block in hierarchy.available_pageblocks():
+        if (hasattr(block, 'score')):
+            types.append(ContentType.objects.get_for_model(block))
 
+    return types
+
+
+def get_scorable_blocks(session, types):
     scorable = []
     for page in session.get_descendants():
-        for pb in page.pageblock_set.all():
-            if (hasattr(pb.block(), 'score')):
-                scorable.append(pb.id)
+        for pb in page.pageblock_set.filter(content_type__in=types).exclude(
+                css_extra__contains='pretest').exclude(
+                css_extra__contains='posttest'):
+            scorable.append(pb)
 
-    blocks = PageBlock.objects.filter(id__in=scorable)
-
-    if css_extra_exclude:
-        for css in css_extra_exclude:
-            blocks = blocks.exclude(css_extra__contains=css)
-
-    return blocks
+    return scorable
 
 
 def aggregate_scorable_blocks(users, blocks):
@@ -35,7 +41,7 @@ def aggregate_scorable_blocks(users, blocks):
     total_completed = 0
     total_score = 0.0
 
-    if blocks.count() == 0:
+    if len(blocks) == 0:
         return (None, 0)  # nothing to see here
 
     for u in users:
@@ -64,13 +70,14 @@ def average_session_score(users, hierarchy):
     sessions = hierarchy.get_root().get_children()
 
     ctx = {'sessions': []}
-    exclude = ['pretest', 'posttest']
     session_count = len(sessions)
     total_completed = 0
     total_score = 0.0
 
+    types = get_scorable_content_types()
+
     for session in sessions:
-        blocks = get_scorable_blocks(session, css_extra_exclude=exclude)
+        blocks = get_scorable_blocks(session, types)
         (session_score, session_completed) = \
             aggregate_scorable_blocks(users, blocks)
 
@@ -149,12 +156,14 @@ def get_progress_report(users, hierarchy):
     ctx = {'total_users': len(users)}
 
     ctx.update(average_session_score(users, hierarchy))
+
     ctx['pretest'] = average_quiz_score(users, hierarchy, 'pretest')
     ctx['posttest'] = average_quiz_score(users, hierarchy, 'posttest')
 
     if (ctx['pretest'] is not None and ctx['pretest'] >= 0
             and ctx['posttest'] is not None and ctx['posttest'] >= 0):
         ctx['prepostchange'] = ctx['posttest'] - ctx['pretest']
+
     ctx['satisfaction'] = satisfaction_rating(users, hierarchy)
     return ctx
 

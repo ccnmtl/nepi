@@ -378,7 +378,7 @@
     });
     
     jQuery(".btn.aggregate").on("click", function() {
-        var frm = jQuery(this).parent('form')[0];
+        var frm = jQuery(this).parents('form')[0];
         jQuery.ajax({
             url: '/dashboard/reports/aggregate/',
             data: jQuery(frm).serialize(),

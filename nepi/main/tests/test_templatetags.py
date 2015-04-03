@@ -1,6 +1,11 @@
 from django.contrib.auth.models import User
 from django.test.client import RequestFactory
 from django.test.testcases import TestCase
+from pagetree.models import Section, Hierarchy
+from pagetree.tests.factories import ModuleFactory
+from quizblock.models import Quiz, Question, Submission, Response, Answer
+from quizblock.tests.test_templatetags import MockNodeList
+
 from nepi.activities.models import ConversationResponse, ConvClick, \
     DosageActivity, DosageActivityResponse, Day, CalendarResponse
 from nepi.activities.tests.factories import ConversationScenarioFactory, \
@@ -8,12 +13,8 @@ from nepi.activities.tests.factories import ConversationScenarioFactory, \
 from nepi.main.templatetags.accessible import SubmittedNode
 from nepi.main.templatetags.progressreport import get_scorable_blocks, \
     average_quiz_score, aggregate_scorable_blocks, average_session_score, \
-    satisfaction_rating, get_quizzes_by_css_class
+    satisfaction_rating, get_quizzes_by_css_class, get_scorable_content_types
 from nepi.main.tests.factories import UserFactory
-from pagetree.models import Section, Hierarchy
-from pagetree.tests.factories import ModuleFactory
-from quizblock.models import Quiz, Question, Submission, Response, Answer
-from quizblock.tests.test_templatetags import MockNodeList
 
 
 class TestScorableMethods(TestCase):
@@ -23,7 +24,7 @@ class TestScorableMethods(TestCase):
         self.hierarchy = Hierarchy.objects.get(name='one')
         self.section = self.hierarchy.get_root().get_first_leaf()
 
-        # Setup 4 scorable blocks
+        # Setup 5 scorable blocks
         # quiz
         self.quiz = Quiz.objects.create()
         self.question = Question.objects.create(
@@ -31,7 +32,16 @@ class TestScorableMethods(TestCase):
         Answer.objects.create(question=self.question, label="a", value="a",
                               correct=True)
         Answer.objects.create(question=self.question, label="b", value="b")
-        self.section.append_pageblock("Quiz One", "pretest", self.quiz)
+        self.section.append_pageblock("Quiz One", "", self.quiz)
+
+        # pretest
+        pretest = Quiz.objects.create()
+        pretestq = Question.objects.create(
+            quiz=pretest, text="single", question_type="single choice")
+        Answer.objects.create(question=pretestq, label="a", value="a",
+                              correct=True)
+        Answer.objects.create(question=pretestq, label="b", value="b")
+        self.section.append_pageblock("Pretest", "pretest", pretest)
 
         # conversation
         self.scenario = ConversationScenarioFactory()
@@ -54,12 +64,15 @@ class TestScorableMethods(TestCase):
 
         self.userNoAnswers = UserFactory()
         self.userIncomplete = UserFactory()
-        self.set_quiz_response(self.userIncomplete, 'b')
+        self.set_quiz_response(self.quiz, self.question,
+                               self.userIncomplete, 'b')
         self.set_conversation_response(self.userIncomplete,
                                        good_click, bad_click)
 
         self.userBadScore = UserFactory()
-        self.set_quiz_response(self.userBadScore, 'a')
+        self.set_quiz_response(pretest, pretestq, self.userBadScore, 'b')
+        self.set_quiz_response(self.quiz, self.question,
+                               self.userBadScore, 'a')
         self.set_conversation_response(self.userBadScore,
                                        bad_click, good_click)
         self.set_dosage_response(self.userBadScore, 0.4, 2, 2)
@@ -67,17 +80,19 @@ class TestScorableMethods(TestCase):
                                    chart_good_click, chart_good_click)
 
         self.userGoodScore = UserFactory()
-        self.set_quiz_response(self.userGoodScore, 'a')
+        self.set_quiz_response(pretest, pretestq, self.userGoodScore, 'a')
+        self.set_quiz_response(self.quiz, self.question,
+                               self.userGoodScore, 'a')
         self.set_conversation_response(self.userGoodScore,
                                        good_click, bad_click)
         self.set_dosage_response(self.userGoodScore, 0.4, 2, 1)
         self.set_calendar_response(self.userGoodScore,
                                    chart_good_click, chart_good_click)
 
-    def set_quiz_response(self, user, value):
+    def set_quiz_response(self, quiz, question, user, value):
         # complete + right quiz
-        submission = Submission.objects.create(quiz=self.quiz, user=user)
-        Response.objects.create(question=self.question,
+        submission = Submission.objects.create(quiz=quiz, user=user)
+        Response.objects.create(question=question,
                                 submission=submission, value=value)
 
     def set_conversation_response(self, user, first_click, second_click):
@@ -100,9 +115,11 @@ class TestScorableMethods(TestCase):
                                         correct_click=correct_click)
 
     def test_get_scorable_blocks(self):
+        types = get_scorable_content_types()
+
         root = self.hierarchy.get_root()
-        blocks = get_scorable_blocks(root)
-        self.assertEquals(blocks.count(), 4)
+        blocks = get_scorable_blocks(root, types)
+        self.assertEquals(len(blocks), 4)
         self.assertEquals(blocks[0].label, "Quiz One")
         self.assertEquals(blocks[1].label, "Conversation")
         self.assertEquals(blocks[2].label, "Dosage")
@@ -110,55 +127,49 @@ class TestScorableMethods(TestCase):
 
         blocks = get_quizzes_by_css_class(self.hierarchy, "pretest")
         self.assertEquals(blocks.count(), 1)
-        self.assertEquals(blocks[0].label, "Quiz One")
-
-        blocks = get_scorable_blocks(root, css_extra_exclude=["pretest"])
-        self.assertEquals(blocks.count(), 3)
-        self.assertEquals(blocks[0].label, "Conversation")
-        self.assertEquals(blocks[1].label, "Dosage")
-        self.assertEquals(blocks[2].label, "Calendar")
-
-        blocks = get_scorable_blocks(root, css_extra_exclude=["pretest",
-                                                              "bar"])
-        self.assertEquals(blocks.count(), 2)
-        self.assertEquals(blocks[0].label, "Dosage")
-        self.assertEquals(blocks[1].label, "Calendar")
+        self.assertEquals(blocks[0].label, "Pretest")
 
     def test_get_no_scorable_blocks(self):
-        blocks = get_scorable_blocks(Section.objects.get(slug='two'))
-        self.assertEquals(blocks.count(), 0)
+        types = get_scorable_content_types()
+        blocks = get_scorable_blocks(Section.objects.get(slug='two'), types)
+        self.assertEquals(len(blocks), 0)
 
     def test_aggregate_scorable_blocks_no_answers(self):
-        blocks = get_scorable_blocks(self.hierarchy.get_root())
+        types = get_scorable_content_types()
+        blocks = get_scorable_blocks(self.hierarchy.get_root(), types)
         users = [self.userNoAnswers]
         (score, completed) = aggregate_scorable_blocks(users, blocks)
         self.assertEquals(score, 0)
         self.assertEquals(completed, 0)
 
     def test_aggregate_scorable_blocks_incomplete(self):
-        blocks = get_scorable_blocks(self.hierarchy.get_root())
+        types = get_scorable_content_types()
+        blocks = get_scorable_blocks(self.hierarchy.get_root(), types)
         users = [self.userIncomplete]
         (score, completed) = aggregate_scorable_blocks(users, blocks)
         self.assertEquals(score, 0)
         self.assertEquals(completed, 0)
 
     def test_aggregate_scorable_blocks_badscore(self):
-        blocks = get_scorable_blocks(self.hierarchy.get_root())
+        types = get_scorable_content_types()
+        blocks = get_scorable_blocks(self.hierarchy.get_root(), types)
         users = [self.userBadScore]
         (score, completed) = aggregate_scorable_blocks(users, blocks)
         self.assertEquals(score, .50)
         self.assertEquals(completed, 4)
 
     def test_aggregate_scorable_blocks_goodscore(self):
-        blocks = get_scorable_blocks(self.hierarchy.get_root())
+        types = get_scorable_content_types()
+        blocks = get_scorable_blocks(self.hierarchy.get_root(), types)
         users = [self.userGoodScore]
         (score, completed) = aggregate_scorable_blocks(users, blocks)
         self.assertEquals(score, 1)
         self.assertEquals(completed, 4)
 
     def test_aggregate_scorable_blocks_all(self):
+        types = get_scorable_content_types()
         root = self.hierarchy.get_root()
-        blocks = get_scorable_blocks(root)
+        blocks = get_scorable_blocks(root, types)
         users = [self.userNoAnswers, self.userIncomplete,
                  self.userBadScore, self.userGoodScore]
         (score, completed) = aggregate_scorable_blocks(users, blocks)
@@ -170,10 +181,10 @@ class TestScorableMethods(TestCase):
                  self.userBadScore, self.userGoodScore]
 
         ctx = average_session_score(users, self.hierarchy)
-        self.assertEquals(ctx['sessions'][0], 67)
+        self.assertEquals(ctx['sessions'][0], 75)
         self.assertEquals(ctx['sessions'][1], None)
         self.assertEquals(ctx['sessions'][2], None)
-        self.assertEquals(ctx['average_score'], 67.0)
+        self.assertAlmostEqual(ctx['average_score'], 75.0)
 
     def test_average_session_score_incomplete(self):
         users = [self.userIncomplete, self.userNoAnswers]
