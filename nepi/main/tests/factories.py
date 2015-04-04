@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from django.contrib.auth.models import User
 from nepi.main.models import Country, School, Group, UserProfile, \
     PendingTeachers
@@ -42,8 +42,8 @@ class SchoolGroupFactory(factory.DjangoModelFactory):
     school = factory.SubFactory(SchoolFactory)
     creator = factory.SubFactory(UserFactory)
     name = factory.Sequence(lambda n: "group %d" % n)
-    start_date = datetime.now()
-    end_date = datetime.now()
+    start_date = datetime.date.today()
+    end_date = datetime.date.today()
 
 
 class UserProfileFactory(factory.DjangoModelFactory):

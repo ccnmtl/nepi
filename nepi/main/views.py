@@ -645,8 +645,7 @@ class BaseReportMixin():
 
 class GroupDetail(LoggedInMixin, AdministrationOnlyMixin,
                   BaseReportMixin, DetailView):
-    '''generic class based view for
-    see group details - student roster. add/remove students etc'''
+    '''Group Progress Report'''
     model = Group
     template_name = 'dashboard/group_details.html'
     success_url = '/'
@@ -666,9 +665,20 @@ class GroupDetail(LoggedInMixin, AdministrationOnlyMixin,
         return ctx
 
 
+class RosterDetail(LoggedInMixin, AdministrationOnlyMixin,
+                   BaseReportMixin, DetailView):
+    '''Student roster. add/remove students, individual progress links'''
+    model = Group
+    template_name = 'dashboard/roster_details.html'
+    success_url = '/'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(RosterDetail, self).get_context_data(**kwargs)
+        return ctx
+
+
 class StudentGroupDetail(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
-    '''generic class based view for
-    see group details - student roster. add/remove students etc'''
+    '''Student Progress Report'''
     model = User
     template_name = 'dashboard/student_details.html'
 

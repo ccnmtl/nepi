@@ -3,6 +3,7 @@ import json
 
 from django.contrib.auth.models import User
 from django.core import mail
+from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
 from pagetree.models import UserPageVisit, Section, Hierarchy
@@ -17,14 +18,14 @@ from nepi.main.tests.factories import SchoolFactory, CountryFactory, \
     CountryAdministratorProfileFactory, \
     InstitutionAdminProfileFactory, PendingTeacherFactory
 from nepi.main.views import ContactView, ViewPage, CreateSchoolView, \
-    UserProfileView, PeopleView, PeopleFilterView
+    UserProfileView, PeopleView, PeopleFilterView, RosterDetail, GroupDetail, \
+    StudentGroupDetail
 
 
 class TestBasicViews(TestCase):
 
     def setUp(self):
         self.client = Client()
-        self.factory = RequestFactory()
 
     def test_home(self):
         response = self.client.get("/", follow=True)
@@ -890,3 +891,106 @@ class TestPeopleViews(TestCase):
         self.assertEquals(response.status_code, 403)
         response = self.client.get('/dashboard/people/filter/')
         self.assertEquals(response.status_code, 403)
+
+
+class TestDetailViews(TestCase):
+    def setUp(self):
+        ModuleFactory("main", "/pages/main/")
+        hierarchy = Hierarchy.objects.get(name='main')
+
+        self.group = SchoolGroupFactory(module=hierarchy)
+        country = self.group.school.country
+
+        self.icap = ICAPProfileFactory(school=self.group.school,
+                                       country=country).user
+
+        self.student = StudentProfileFactory(country=country).user
+        self.student.profile.group.add(self.group)
+        self.student2 = StudentProfileFactory(country=country).user
+        self.student2.profile.group.add(self.group)
+
+    def test_student_access(self):
+        self.client.login(username=self.student.username, password="test")
+        args = [self.group.id]
+
+        resp = self.client.get(reverse('group-details', args=args))
+        self.assertEquals(resp.status_code, 403)
+
+        resp = self.client.get(reverse('roster-details', args=args))
+        self.assertEquals(resp.status_code, 403)
+
+        args.append(self.student.id)
+        resp = self.client.get(reverse('student-group-details', args=args))
+        self.assertEquals(resp.status_code, 403)
+
+    def test_icap_access(self):
+        self.client.login(username=self.icap.username, password="test")
+        args = [self.group.id]
+
+        resp = self.client.get(reverse('group-details', args=args))
+        self.assertEquals(resp.status_code, 200)
+        resp = self.client.get(reverse('roster-details', args=args))
+        self.assertEquals(resp.status_code, 200)
+
+        args.append(self.student.id)
+        resp = self.client.get(reverse('student-group-details', args=args))
+        self.assertEquals(resp.status_code, 200)
+
+    def test_group_detail(self):
+        url = reverse('group-details', args=[self.group.id])
+        request = RequestFactory().get(url)
+        request.user = self.icap
+
+        view = GroupDetail()
+        view.request = request
+        view.object = self.group
+        view.kwargs = {'pk': self.group.id}
+
+        self.assertEquals(view.get_object(), self.group)
+
+        ctx = view.get_context_data(**view.kwargs)
+        self.assertEquals(ctx['group'], self.group)
+        self.assertEquals(ctx['object'], self.group)
+        self.assertEquals(len(ctx['completed_users']), 0)
+        self.assertEquals(ctx['completed'], 0)
+        self.assertEquals(ctx['inprogress'], 0)
+        self.assertEquals(ctx['incomplete'], 0)
+        self.assertEquals(ctx['total'], 2)
+
+    def test_roster_detail(self):
+        url = reverse('roster-details', args=[self.group.id])
+        request = RequestFactory().get(url)
+        request.user = self.icap
+
+        view = RosterDetail()
+        view.request = request
+        view.object = self.group
+        view.kwargs = {'pk': self.group.id}
+
+        self.assertEquals(view.get_object(), self.group)
+
+        ctx = view.get_context_data(**view.kwargs)
+        self.assertEquals(ctx['group'], self.group)
+        self.assertEquals(ctx['object'], self.group)
+
+    def test_student_detail(self):
+        url = reverse('student-group-details',
+                      args=[self.group.id, self.student.id])
+        request = RequestFactory().get(url)
+        request.user = self.icap
+
+        view = StudentGroupDetail()
+        view.request = request
+        view.object = self.group
+        view.kwargs = {'group_id': self.group.id,
+                       'student_id': self.student.id}
+
+        ctx = view.get_context_data(**view.kwargs)
+        self.assertEquals(ctx['group'], self.group)
+        self.assertEquals(ctx['student'], self.student)
+        self.assertIsNone(ctx['progress_report']['satisfaction'])
+        self.assertIsNone(ctx['progress_report']['pretest'])
+        self.assertIsNone(ctx['progress_report']['posttest'])
+        self.assertEquals(ctx['progress_report']['total_users'], 1)
+        self.assertEquals(ctx['progress_report']['sessions'],
+                          [None, None, None])

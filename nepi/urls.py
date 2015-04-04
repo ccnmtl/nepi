@@ -14,7 +14,7 @@ from nepi.main.views import CreateGroupView, UpdateGroupView, \
     SchoolChoiceView, SchoolGroupChoiceView, \
     ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView, \
     RemoveStudent, ReportView, AggregateReportView, DownloadableReportView, \
-    StudentGroupDetail, PeopleView, PeopleFilterView
+    StudentGroupDetail, PeopleView, PeopleFilterView, RosterDetail
 import nepi.main.views
 
 
@@ -96,6 +96,8 @@ urlpatterns = patterns(
     url(r'^archive_group/$', ArchiveGroupView.as_view()),
     url(r'^group_details/(?P<pk>\d+)/$',
         GroupDetail.as_view(), name='group-details'),
+    url(r'^roster_details/(?P<pk>\d+)/$',
+        RosterDetail.as_view(), name='roster-details'),
     url(r'^student_details/(?P<group_id>\d+)/(?P<student_id>\d+)/$',
         StudentGroupDetail.as_view(), name='student-group-details'),
     (r'^remove_student/$', RemoveStudent.as_view()),
