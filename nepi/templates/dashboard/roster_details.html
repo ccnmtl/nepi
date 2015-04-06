@@ -34,7 +34,7 @@
 {% block content %}
     {% with group=object %}
     <ul class="breadcrumb">
-      <li><a href="/dashboard/#user-groups">Dashboard</a> <span class="divider">/</span></li>
+      <li><a href="{% url 'dashboard'%}#user-groups">Dashboard</a> <span class="divider">/</span></li>
       <li class="active">Roster Detail</li>
     </ul>
     
@@ -52,9 +52,12 @@
                     {{s|percent_complete:group.module}}%
                 </td>
                 <td>
-                    <a class="btn btn-default btn-small" href="/student_details/{{group.id}}/{{s.user.id}}/">View Progress</a>
+                    <a class="btn btn-default btn-small"
+                     href="{% url 'student-group-details' group.id s.user.id %}">
+                        View Progress
+                    </a>
 
-                    <form action='/remove_student/' method='post' style="display: inline">
+                    <form action="{% url 'remove-student' %}" method='post' style="display: inline">
                         <input type='hidden' name='group' value='{{group.id}}' />
                         <input type='hidden' name='student' value='{{s.id}}' />
                         <button class="btn btn-default btn-small remove-student">Remove Student</button>

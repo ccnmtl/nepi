@@ -6,7 +6,7 @@
 {% block content %}
     {% with group=object %}
         <ul class="breadcrumb">
-          <li><a href="/dashboard/#user-groups">Dashboard</a> <span class="divider">/</span></li>
+          <li><a href="{% url 'dashboard'%}#user-groups">Dashboard</a> <span class="divider">/</span></li>
           <li class="active">Group Progress</li>
         </ul>
         

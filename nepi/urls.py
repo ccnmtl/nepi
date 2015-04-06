@@ -100,7 +100,7 @@ urlpatterns = patterns(
         RosterDetail.as_view(), name='roster-details'),
     url(r'^student_details/(?P<group_id>\d+)/(?P<student_id>\d+)/$',
         StudentGroupDetail.as_view(), name='student-group-details'),
-    (r'^remove_student/$', RemoveStudent.as_view()),
+    url(r'^remove_student/$', RemoveStudent.as_view(), name="remove-student"),
 
     # ICAP related pages
     (r'^faculty/confirm/$', ConfirmFacultyView.as_view()),
