@@ -13,7 +13,7 @@ from nepi.main.views import CreateGroupView, UpdateGroupView, \
     RegistrationView, JoinGroup, HomeView, GroupDetail, LeaveGroup, \
     SchoolChoiceView, SchoolGroupChoiceView, \
     ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView, \
-    RemoveStudent, ReportView, AggregateReportView, DownloadableReportView, \
+    RemoveStudent, ReportView, DownloadableReportView, \
     StudentGroupDetail, PeopleView, PeopleFilterView, RosterDetail
 import nepi.main.views
 
@@ -79,7 +79,6 @@ urlpatterns = patterns(
     url(r'^groups/(?P<school_id>\d+)/$', SchoolGroupChoiceView.as_view()),
 
     # dashboard base views
-    (r'^dashboard/reports/aggregate/$', AggregateReportView.as_view()),
     (r'^dashboard/reports/$', ReportView.as_view()),
     (r'^dashboard/people/$', PeopleView.as_view()),
     (r'^dashboard/people/filter/', PeopleFilterView.as_view()),

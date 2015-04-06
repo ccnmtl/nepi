@@ -540,10 +540,54 @@ class ContactView(FormView):
         return super(ContactView, self).form_valid(form)
 
 
-class BaseReportMixin():
+class BaseReportMixin(object):
 
     all = 'all'
     unaffiliated = 'unaffiliated'
+
+    def get_country_criteria(self, request):
+        country_name = None
+        country_id = self.request.POST.get('country', None)
+        if country_id == 'all':
+            country_name = "All Countries"
+        else:
+            try:
+                country = Country.objects.get(name=country_id)
+                country_name = country.display_name
+            except (Country.DoesNotExist, ValueError):
+                pass
+
+        return country_name
+
+    def get_school_criteria(self, request):
+        school_name = None
+        school_id = request.POST.get('school', None)
+        if school_id == "all":
+            school_name = "All Institutions"
+        elif school_id == "unaffiliated":
+            school_name = "Unaffiliated Students"
+        else:
+            try:
+                school = School.objects.get(id=school_id)
+                school_name = school.name
+            except (School.DoesNotExist, ValueError):
+                pass
+
+        return school_name
+
+    def get_group_criteria(self, request):
+        group_name = None
+        group_id = request.POST.get('schoolgroup', None)
+        if group_id == 'all':
+            group_name = 'All Groups'
+        else:
+            try:
+                group = Group.objects.get(id=group_id)
+                group_name = group.name
+            except (Group.DoesNotExist, ValueError):
+                pass
+
+        return group_name
 
     def filter_by_country(self, groups, country_name):
         if country_name != self.all:
@@ -693,42 +737,6 @@ class StudentGroupDetail(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
         return context
 
 
-class AggregateReportView(LoggedInMixin, AdministrationOnlyMixin,
-                          JSONResponseMixin, BaseReportMixin, View):
-
-    def get_aggregate_report(self, users, hierarchy):
-        ctx = {'total_users': len(users)}
-
-        ctx['pretest'] = average_quiz_score(users, hierarchy, 'pretest')
-        ctx['posttest'] = average_quiz_score(users, hierarchy, 'posttest')
-
-        if (ctx['pretest'] is not None and ctx['pretest'] >= 0
-                and ctx['posttest'] is not None and ctx['posttest'] >= 0):
-            ctx['prepostchange'] = ctx['posttest'] - ctx['pretest']
-
-        ctx['satisfaction'] = satisfaction_rating(users, hierarchy)
-        return ctx
-
-    def post(self, request, *args, **kwargs):
-        hierarchy_name = request.POST.get('module', 'main')
-        hierarchy = get_object_or_404(Hierarchy, name=hierarchy_name)
-        sections = [s.id for s in hierarchy.get_root().get_descendants()]
-
-        users, groups = self.get_users_and_groups(request, hierarchy)
-
-        if groups is None:  # reporting on unaffiliated users
-            ctx = self.classify_unaffiliated_users(users, sections)
-        else:
-            ctx = self.classify_group_users(groups, sections)
-
-        if ctx['completed'] > 0:
-            ctx['progress_report'] = self.get_aggregate_report(
-                ctx['completed_users'], hierarchy)
-            ctx.pop('completed_users')
-
-        return self.render_to_json_response(ctx)
-
-
 class Echo(object):
     """An object that implements just the write method of the file-like
     interface.
@@ -741,31 +749,74 @@ class Echo(object):
 class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
                              BaseReportMixin, View):
 
+    def get_detailed_report(self, report_type, hierarchy_name, users, groups):
+        report = DetailedReport(users)
+        users = users.filter(submission__isnull=False, is_staff=False)
+        hierarchies = Hierarchy.objects.filter(name=hierarchy_name)
+
+        if report_type == 'keys':
+            rows = report.metadata(hierarchies)
+        else:
+            rows = report.values(hierarchies)
+
+        return rows
+
+    def get_aggregate_report(self, request, hierarchy, users, groups):
+        sections = [s.id for s in hierarchy.get_root().get_descendants()]
+
+        if groups is None:  # reporting on unaffiliated users
+            ctx = self.classify_unaffiliated_users(users, sections)
+        else:
+            ctx = self.classify_group_users(groups, sections)
+
+        yield ['CRITERIA']
+        yield ['Country', 'Institution', 'Group']
+        yield [self.get_country_criteria(request),
+               self.get_school_criteria(request),
+               self.get_group_criteria(request)]
+
+        yield ['MEMBERS']
+        yield ['Total Users', 'Completed', 'Incomplete', 'In Progress']
+        yield [len(users), ctx['completed'],
+               ctx['incomplete'], ctx['inprogress']]
+
+        if ctx['completed'] > 0:
+            users = ctx['completed_users']
+            yield ['COMPLETED USER AVERAGES']
+            yield ['Completed', ctx['completed']]
+
+            pretest = average_quiz_score(users, hierarchy, 'pretest')
+            yield ['Pre-test Score', pretest]
+
+            posttest = average_quiz_score(users, hierarchy, 'posttest')
+            yield ['Post-test Score', posttest]
+
+            change = None
+            if (pretest is not None and pretest >= 0 and
+                    posttest is not None and posttest >= 0):
+                change = posttest - pretest
+            yield ['Pre/Post Change', change]
+
+            yield ['Satisfaction Score', satisfaction_rating(users, hierarchy)]
+
     def post(self, request):
         hierarchy_name = request.POST.get('module', 'main')
         hierarchy = get_object_or_404(Hierarchy, name=hierarchy_name)
 
         users, groups = self.get_users_and_groups(request, hierarchy)
-        users = users.filter(submission__isnull=False, is_staff=False)
 
-        report = DetailedReport(users)
+        report_type = request.POST.get('report-type', 'keys')
+        if report_type == 'aggregate':
+            rows = self.get_aggregate_report(request, hierarchy, users, groups)
+        else:
+            rows = self.get_detailed_report(report_type, hierarchy_name,
+                                            users, groups)
 
         pseudo_buffer = Echo()
         writer = csv.writer(pseudo_buffer)
 
-        # report on main hierarchy
-        hierarchies = Hierarchy.objects.filter(name='main')
-
-        report_type = request.POST.get('report-type', 'keys')
-        if report_type == 'keys':
-            fnm = "optionb_keys.csv"
-            rows = report.metadata(hierarchies)
-        else:
-            fnm = "optionb_values.csv"
-            rows = report.values(hierarchies)
-
+        fnm = "optionb_%s.csv" % report_type
         response = StreamingHttpResponse(
             (writer.writerow(row) for row in rows), content_type="text/csv")
         response['Content-Disposition'] = 'attachment; filename="' + fnm + '"'
-
         return response

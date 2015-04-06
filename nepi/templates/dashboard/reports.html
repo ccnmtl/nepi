@@ -6,74 +6,6 @@
     <script src="/site_media/js/jquery-ui-1.10.3.min.js"></script>
     <script src="/site_media/js/underscore-min.js"></script>
     
-    <script type="text/template" id="aggregate-report-template">
-        <table class="table table-striped table-condensed well">
-            <tr><th>Members</th><th>Total</th><th>Completed</th><th>Incomplete</th><th>In Progress</th></tr>
-            <tr>
-                <td />
-                <td><%= total %></td>
-                <td><%= completed %></td>
-                <td><%= incomplete %></td>
-                <td><%= inprogress %></td>
-            </tr>
-        </table>
-        <% if (completed > 0) { %>
-            <br />
-            <br />
-            <h4>Completed User Averages</h4>
-            <table class="table table-striped table-condensed">
-            <tr>
-                <td>Completed</td>
-                <td><%= completed %></td>
-            </tr>
-            <tr>
-                <td>Pre-test score</td>
-                <td>
-                    <% if (progress_report.pretest === null) { %>
-                        n/a
-                    <% } else if (progress_report.pretest < 0) { %>
-                        Incomplete
-                    <% } else { %>
-                        <%= progress_report.pretest %>%
-                    <% } %>
-                </td>
-            </tr>
-            <tr>
-                <td>Post-test score</td>
-                <td>
-                    <% if (progress_report.posttest === null) { %>
-                        n/a
-                    <% } else if (progress_report.posttest < 0) { %>
-                        Incomplete
-                    <% } else { %>
-                        <%= progress_report.posttest %>%
-                    <% } %>
-                </td>
-            </tr>        
-            <tr>
-                <td>Pre/Post change</td>
-                <td>
-                    <% if (progress_report.prepostchange === undefined || progress_report.prepostchange === null) { %>
-                        n/a
-                    <% } else { %>
-                        <%= progress_report.prepostchange %>%
-                    <% } %>
-                </td>
-            </tr>
-            <tr>
-                <td>Satisfaction score</td>
-                <td>
-                    <% if (progress_report.satisfaction === null) { %>
-                        n/a
-                    <% } else { %>
-                        <%= progress_report.satisfaction %>%
-                    <% } %>
-                </td>
-            </tr>     
-            </table>
-        <% } %>
-    </script>
-    
     <script type="text/javascript">
         var profile_attributes = {
             'role': "{{user.profile.role}}",
@@ -128,7 +60,8 @@
         
         <form id="report-selector" class="action-container" action='/dashboard/reports/download/' method="post">{% csrf_token %}
             <h1 class="pageheader">Participant Activity Reports</h1>
-        
+            <p>Activity reports are available as downloads in .csv formats. The reports look at
+            data across individual student results, and can take a few minutes to process.</p> 
             <div class="fieldWrapper control-group module wide">
                 <div class="controls">
                     <label><b>Module</b></label>
@@ -136,7 +69,7 @@
                         <option value="main">Option B+</option>
                     </select>
                 </div>
-            </div>            
+            </div>
             <div class="fieldWrapper control-group country wide">
                 <div class="controls">
                     <label><b>Country</b></label>
@@ -189,24 +122,21 @@
             {% endcomment %}
             
             <div>
-            <button class="btn btn-primary aggregate pull-right">View Aggregate Report</button>
+                <input type="hidden" name="report-type" value="" />
+                <button class="btn aggregate pull-right">Download Aggregate Report</button>
                 <div class="btn-group pull-right">
                     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
                         Download Full Report (.csv)
                         <span class="caret"></span>
                     </a>
-                    <input type="hidden" name="report-type" value="" />
                     <ul class="dropdown-menu">
                         <li><a class="report-type" href="#" data-report-type="keys">Report Keys</a></li>
                         <li><a class="report-type" href="#" data-report-type="values">Report Values</a></li>
                     </ul>
                 </div>
+                <div class="clearfix"></div>
+                <br /><br />
             </div>
-            <div class="clearfix"></div>
-            <div id="aggregate-report-container"></div>
-            <br /><br />
-            
-            
         </form>
     </div>
 {% endblock %}
