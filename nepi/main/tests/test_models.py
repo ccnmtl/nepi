@@ -252,6 +252,29 @@ class TestUserProfile(TestCase):
         self.assertTrue(country_grp in groups)
         self.assertTrue(icap_grp in groups)
 
+    def test_time_spent_in_system(self):
+        now = datetime.datetime.now()
+        section_one = Section.objects.get(slug='one')
+        child_one = Section.objects.get(slug='introduction')
+
+        visit = UserPageVisit.objects.create(
+            user=self.student, section=section_one, status="complete")
+        delta = datetime.timedelta(minutes=-60)
+        visit.first_visit = now + delta
+        visit.save()
+
+        visit = UserPageVisit.objects.create(
+            user=self.student, section=child_one, status="complete")
+        delta = datetime.timedelta(minutes=-55)
+        visit.first_visit = now + delta
+        visit.save()
+
+        delta = self.student.profile.time_spent(self.hierarchy)
+        self.assertEquals(delta, 5)
+
+        delta = self.student.profile.time_spent_optionb()
+        self.assertEquals(delta, 5)
+
 
 class TestPendingTeachers(TestCase):
     def test_unicode(self):

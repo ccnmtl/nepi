@@ -143,17 +143,19 @@ class UserProfile(models.Model):
             visits = visits.order_by('-last_visit')
             return visits[0].section
 
-    def duration(self, hierarchy):
+    def time_spent(self, hierarchy):
         time_spent = 0
         prev = None
         visits = UserPageVisit.objects.filter(
-            user=self.user, status='complete').order_by('first_visit')
-        for page in visits:
+            user=self.user, status='complete', section__hierarchy=hierarchy)
+        for page in visits.order_by('first_visit'):
             if prev:
-                interval = page.first_visit - prev
+                interval = (page.first_visit - prev).seconds
+                if interval > 300:
+                    interval = 300  # max interval should be about 5 minutes
                 time_spent += interval
             prev = page.first_visit
-        return time_spent
+        return time_spent / 60  # translate to minutes
 
     def percent_complete(self, parent_section):
         section_ids = HierarchyCache.get_descendant_ids(parent_section)
@@ -169,6 +171,10 @@ class UserProfile(models.Model):
     def percent_complete_optionb(self):
         hierarchy = Hierarchy.objects.get(name='main')
         return self.percent_complete(hierarchy.get_root())
+
+    def time_spent_optionb(self):
+        hierarchy = Hierarchy.objects.get(name='main')
+        return self.time_spent(hierarchy)
 
     def sessions_completed(self, hierarchy):
         complete = 0
@@ -313,6 +319,10 @@ class DetailedReport(PagetreeReport):
                 "participant_id", 'profile', 'string',
                 'Randomized Participant Id',
                 lambda x: random_user(x.username)),
+            StandaloneReportColumn(
+                "optionb time spent", 'profile', 'minutes',
+                '# of minutes the user spent completing Option B+',
+                lambda x: x.profile.time_spent_optionb()),
             StandaloneReportColumn(
                 "optionb_percent_complete", 'profile', 'percent',
                 '% of hierarchy completed',
