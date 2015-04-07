@@ -2,92 +2,34 @@
 {% load progressreport %}
 
 {% block title %}Group Detail{% endblock %}
-{% block js %}
-    <script type="text/javascript">
-        jQuery(document).ready(function () {
-            jQuery("button.remove-student").on("click", function() {
-                if (confirm("Are you sure you want to remove this student?")) {
-                    var row = jQuery(this).parents('tr')[0];
-                    var table = jQuery(row).parents('table')[0];
-            
-                    var frm = jQuery(this).parent('form')[0];
-                    jQuery.ajax({
-                        url: frm.action,
-                        data: jQuery(frm).serialize(),
-                        type: "POST",
-                        success: function (data) {
-                            jQuery(row).fadeOut(function() {
-                                jQuery(row).remove();
-                            });
-                        },
-                        error: function(data)  {
-                            alert("An error occurred. Please try again");
-                        }
-                    });
-                }
-                return false;
-            });
-        });
-    </script>
-{% endblock %}
 
 {% block content %}
     {% with group=object %}
-    <ul class="breadcrumb">
-      <li><a href="/dashboard/#user-groups">Dashboard</a> <span class="divider">/</span></li>
-      <li class="active">Group Detail</li>
-    </ul>
+        <ul class="breadcrumb">
+          <li><a href="{% url 'dashboard'%}#user-groups">Dashboard</a> <span class="divider">/</span></li>
+          <li class="active">Group Progress</li>
+        </ul>
+        
+        <h3 class="dash">{{group.name}}</h3>
+        <dl class="dl-horizontal">
+            <dt>School</dt><dd>{{group.school.name}}</dd>
+            <dt>Country</dt><dd>{{group.school.country.display_name}}</dd>
+            <dt>Creator</dt><dd>{{group.creator.get_full_name}} ({{group.creator.username}})</dd>
+            <dt>Begin Date</dt><dd>{{group.formatted_start_date}}</dd>
+            <dt>End Date</dt><dd>{{group.formatted_end_date}}</dd>
+        </dl>
     
-    <h3 class="dash">{{group.name}}</h3>
-    <dl class="dl-horizontal">
-        <dt>School</dt><dd>{{group.school.name}}</dd>
-        <dt>Country</dt><dd>{{group.school.country.display_name}}</dd>
-        <dt>Creator</dt><dd>{{group.creator.get_full_name}} ({{group.creator.username}})</dd>
-        <dt>Begin Date</dt><dd>{{group.formatted_start_date}}</dd>
-        <dt>End Date</dt><dd>{{group.formatted_end_date}}</dd>
-    </dl>
-
-    <table class="table table-striped table-condensed well">
-        <tr><th>Members</th><th>Total</th><th>Completed</th><th>Incomplete</th><th>In Progress</th></tr>
-        <tr>
-            <td />
-            <td>{{total}}</td>
-            <td>{{completed}}</td>
-            <td>{{incomplete}}</td>
-            <td>{{inprogress}}</td>
-        </tr>
-    </table>
-    
-    {% include "dashboard/progress_report.html" %}
-
-    <h4>Student Roster</h4>
-    <table width="100%" class="table table-striped table-condensed">
-    <tr><th>Name</th><th>Percent Complete</th><th>Actions</th></tr>
-        {% for s in group.students %}
+        <table class="table table-striped table-condensed well">
+            <tr><th>Members</th><th>Total</th><th>Completed</th><th>Incomplete</th><th>In Progress</th></tr>
             <tr>
-                <td>
-                    {{s.user.get_full_name}}
-                </td>
-                <td>
-                    {{s|percent_complete:group.module}}%
-                </td>
-                <td>
-                    <a class="btn btn-default btn-small" href="/student_details/{{group.id}}/{{s.user.id}}/">View Progress</a>
-
-                    <form action='/remove_student/' method='post' style="display: inline">
-                        <input type='hidden' name='group' value='{{group.id}}' />
-                        <input type='hidden' name='student' value='{{s.id}}' />
-                        <button class="btn btn-default btn-small remove-student">Remove Student</button>
-                    </form>
-                </td>
+                <td />
+                <td>{{total}}</td>
+                <td>{{completed}}</td>
+                <td>{{incomplete}}</td>
+                <td>{{inprogress}}</td>
             </tr>
-        {% empty %}
-            <tr>
-                <td colspan="2">
-                    <p>There are no students enrolled in your course.</p>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+        </table>
+        
+        {% include "dashboard/progress_report.html" %}
     {% endwith %}
 {% endblock %}

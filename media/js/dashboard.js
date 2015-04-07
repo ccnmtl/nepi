@@ -130,7 +130,6 @@
 
     jQuery("#report-selector select[name='country']").change(function() {
         var elt = jQuery(this).parents('.action-container')[0];
-        jQuery("#aggregate-report-container").fadeOut();
         clearSchoolGroupChoices(elt);
         clearSchoolChoices(elt);
 
@@ -152,7 +151,6 @@
     
     jQuery("#report-selector select[name='school']").change(function() {
         var elt = jQuery(this).parents('.action-container')[0];
-        jQuery("#aggregate-report-container").fadeOut();
         clearSchoolGroupChoices(elt);
 
         if (jQuery(this).val() === 'all' || jQuery(this).val() === 'unaffiliated') {
@@ -162,10 +160,6 @@
             var params = {'managed': true};
             populateSchoolGroupChoices(elt, this, eltGroupChoice, params);
         }
-    });
-    
-    jQuery("#report-selector select[name='schoolgroup']").change(function() {
-        jQuery("#aggregate-report-container").fadeOut();
     });
     
     jQuery('#find-a-group').on('show', function () {
@@ -379,33 +373,16 @@
     
     jQuery(".btn.aggregate").on("click", function() {
         var frm = jQuery(this).parents('form')[0];
-        jQuery.ajax({
-            url: '/dashboard/reports/aggregate/',
-            data: jQuery(frm).serialize(),
-            type: "POST",
-            success: function (data) {
-                var html = jQuery("#aggregate-report-template").html();
-                var template = _.template(html);
-                jQuery("#aggregate-report-container").html(template(data));
-                jQuery("#aggregate-report-container").show();
-            },
-            error: function(data)  {
-                alert("An error occurred. Please try again");
-            }
-        });
+        jQuery(frm).find("input[name='report-type']").val('aggregate');
+        jQuery(frm).submit();
         return false;
     });
     
     jQuery(".report-type").on("click", function(evt) {
         var rtype = jQuery(this).data('report-type');
         var frm = jQuery(this).parents('form')[0];
-        
-        var input = jQuery("<input>")
-            .attr("type", "hidden")
-            .attr("name", "report-type").val(rtype);
-        jQuery(frm).append(jQuery(input));
-        
-        jQuery(frm).submit()
+        jQuery(frm).find("input[name='report-type']").val(rtype);
+        jQuery(frm).submit();
         return false;
     });
     
