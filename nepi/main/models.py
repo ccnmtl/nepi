@@ -7,6 +7,7 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
+from django.core.cache import cache
 from django.db import models
 from django.db.models.query_utils import Q
 from django.utils.encoding import smart_str
@@ -21,6 +22,28 @@ PROFILE_CHOICES = (
     ('CA', 'Country Administrator'),
     ('IC', 'ICAP')
 )
+
+
+class HierarchyCache(object):
+
+    @classmethod
+    def get_descendants(cls, section):
+        key = 'hierarchy_%s_section_%s' % (section.hierarchy.id, section.id)
+        descendants = cache.get(key)
+        if descendants is None:
+            descendants = section.get_descendants()
+            cache.set(key, descendants)
+        return descendants
+
+    @classmethod
+    def get_descendant_ids(cls, section):
+        key = 'hierarchy_%s_sectionids_%s' % (section.hierarchy.id, section.id)
+        ids = cache.get(key)
+        if ids is None:
+            descendants = HierarchyCache.get_descendants(section)
+            ids = [s.id for s in descendants]
+            cache.set(key, ids)
+        return ids
 
 
 class Country(models.Model):
@@ -119,19 +142,36 @@ class UserProfile(models.Model):
             visits = visits.order_by('-last_visit')
             return visits[0].section
 
+    def duration(self, hierarchy):
+        time_spent = 0
+        prev = None
+        visits = UserPageVisit.objects.filter(
+            user=self.user, status='complete').order_by('first_visit')
+        for page in visits:
+            if prev:
+                interval = page.first_visit - prev
+                time_spent += interval
+            prev = page.first_visit
+        return time_spent
+
     def percent_complete(self, parent_section):
-        sections = parent_section.get_descendants()
-        if len(sections) > 0:
-            ids = [s.id for s in sections]
+        section_ids = HierarchyCache.get_descendant_ids(parent_section)
+        count = len(section_ids)
+        if count > 0:
             visits = UserPageVisit.objects.filter(user=self.user,
-                                                  section__in=ids)
-            return len(visits) / float(len(sections)) * 100
+                                                  status='complete',
+                                                  section__in=section_ids)
+            return len(visits) / float(count) * 100
         else:
             return 100  # this section has no children.
 
     def percent_complete_optionb(self):
-        hierachy = Hierarchy.objects.get(name='main')
-        return self.percent_complete(hierachy.get_root())
+        hierarchy = Hierarchy.objects.get(name='main')
+        sections = HierarchyCache.get_descendants(hierarchy.get_root())
+
+        visits = UserPageVisit.objects.filter(user=self.user,
+                                              status='complete')
+        return len(visits) / float(len(sections)) * 100
 
     def sessions_completed(self, hierarchy):
         complete = 0

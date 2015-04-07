@@ -21,7 +21,7 @@ from pagetree.models import Hierarchy, UserPageVisit
 
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
-    PendingTeachers, DetailedReport, PROFILE_CHOICES
+    PendingTeachers, DetailedReport, PROFILE_CHOICES, HierarchyCache
 from nepi.main.templatetags.progressreport import get_progress_report, \
     average_quiz_score, satisfaction_rating
 from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
@@ -42,7 +42,7 @@ class ViewPage(LoggedInMixin, PageView):
         visit_ids = visits.values_list('section__id', flat=True)
 
         previous_unlocked = True
-        for section in self.root.get_descendants():
+        for section in HierarchyCache.get_descendants(self.root):
             unlocked = section.id in visit_ids
             item = {
                 'id': section.id,
@@ -655,7 +655,7 @@ class GroupDetail(LoggedInMixin, AdministrationOnlyMixin,
         ctx = super(GroupDetail, self).get_context_data(**kwargs)
 
         hierarchy = self.object.module
-        sections = [s.id for s in hierarchy.get_root().get_descendants()]
+        sections = HierarchyCache.get_descendant_ids(hierarchy.get_root())
         ctx.update(self.classify_group_users([self.object], sections))
 
         if ctx['completed'] > 0:
@@ -702,7 +702,7 @@ class AggregateReportView(LoggedInMixin, AdministrationOnlyMixin,
     def post(self, request, *args, **kwargs):
         hierarchy_name = request.POST.get('module', 'main')
         hierarchy = get_object_or_404(Hierarchy, name=hierarchy_name)
-        sections = [s.id for s in hierarchy.get_root().get_descendants()]
+        sections = HierarchyCache.get_descendant_ids(hierarchy.get_root())
 
         users, groups = self.get_users_and_groups(request, hierarchy)
 

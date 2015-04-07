@@ -3,6 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from pagetree.models import PageBlock
 from quizblock.models import Answer, Quiz
+from nepi.main.models import HierarchyCache
 
 
 register = template.Library()
@@ -27,12 +28,12 @@ def get_scorable_content_types():
 
 def get_scorable_blocks(session, types):
     scorable = []
-    for page in session.get_descendants():
-        for pb in page.pageblock_set.filter(content_type__in=types).exclude(
-                css_extra__contains='pretest').exclude(
+    for page in HierarchyCache.get_descendants(session):
+        for pb in page.pageblock_set.filter(
+            content_type__in=types).exclude(
+            css_extra__contains='pretest').exclude(
                 css_extra__contains='posttest'):
             scorable.append(pb)
-
     return scorable
 
 
