@@ -112,7 +112,8 @@ class Group(models.Model):
         return "%s %s" % (self.name, self.school)
 
     def students(self):
-        return self.userprofile_set.filter(profile_type='ST')
+        students = self.userprofile_set.filter(profile_type='ST')
+        return students.order_by('user__last_name', 'user__first_name')
 
 
 class UserProfile(models.Model):
@@ -167,11 +168,7 @@ class UserProfile(models.Model):
 
     def percent_complete_optionb(self):
         hierarchy = Hierarchy.objects.get(name='main')
-        sections = HierarchyCache.get_descendants(hierarchy.get_root())
-
-        visits = UserPageVisit.objects.filter(user=self.user,
-                                              status='complete')
-        return len(visits) / float(len(sections)) * 100
+        return self.percent_complete(hierarchy.get_root())
 
     def sessions_completed(self, hierarchy):
         complete = 0

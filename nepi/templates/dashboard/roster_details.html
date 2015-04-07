@@ -2,6 +2,7 @@
 {% load progressreport %}
 
 {% block title %}Group Detail{% endblock %}
+
 {% block js %}
     <script type="text/javascript">
         jQuery(document).ready(function () {
@@ -35,18 +36,40 @@
     {% with group=object %}
     <ul class="breadcrumb">
       <li><a href="{% url 'dashboard'%}#user-groups">Dashboard</a> <span class="divider">/</span></li>
-      <li class="active">Roster Detail</li>
+      <li>{{group.name}} <span class="divider">/</span></li>
+      <li class="active">Roster</li>
     </ul>
     
     <h3 class="dash">{{group.name}}</h3>
+    <div>
+        <div class="pull-left">
+            <dl class="dl-horizontal">
+                <dt>School</dt><dd>{{group.school.name}}</dd>
+                <dt>Country</dt><dd>{{group.school.country.display_name}}</dd>
+                <dt>Creator</dt><dd>{{group.creator.get_full_name}} ({{group.creator.username}})</dd>
+                <dt>Begin Date</dt><dd>{{group.formatted_start_date}}</dd>
+                <dt>End Date</dt><dd>{{group.formatted_end_date}}</dd>
+                <dt>Progress</dt><dd><a href="{% url 'group-details' group.id %}">View Student Progress</a></dd>
+            </dl>
+        </div>
+        <div class="pull-right">
+            <form action='/dashboard/reports/download/' method="post">{% csrf_token %}
+                <input type="hidden" name="report-type" value="aggregate" />
+                <input type="hidden" name="country" value="{{group.school.country.name}}" />
+                <input type="hidden" name="school" value="{{group.school.id}}" />
+                <input type="hidden" name="schoolgroup" value="{{group.id}}" />
+                <input type="submit" value="Download Aggregate Report" class="btn btn-default" />
+            </form>   
+        </div>
+    </div>
  
-    <h4>Student Roster</h4>
+    <br /><br />
     <table width="100%" class="table table-striped table-condensed">
     <tr><th>Name</th><th>Percent Complete</th><th>Actions</th></tr>
         {% for s in group.students %}
             <tr>
                 <td>
-                    {{s.user.get_full_name}}
+                    {{s.user.last_name|lower|capfirst}}, {{s.user.first_name|lower|capfirst}}
                 </td>
                 <td>
                     {{s|percent_complete:group.module}}%

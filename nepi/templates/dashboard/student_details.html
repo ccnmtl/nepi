@@ -7,6 +7,7 @@
 {% block content %}
     <ul class="breadcrumb">
       <li><a href="{% url 'dashboard'%}#user-groups">Dashboard</a> <span class="divider">/</span></li>
+      <li>{{group.name}} <span class="divider">/</span></li>
       <li><a href="{% url 'roster-details' group.id %}">Roster</a> <span class="divider">/</span></li>
       <li class="active">Student Detail</li>
     </ul>

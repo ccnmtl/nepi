@@ -191,9 +191,13 @@ class TestUserProfile(TestCase):
         group = SchoolGroupFactory()
 
         self.assertEquals(self.student.profile.joined_groups().count(), 0)
+        grp = self.student.profile.get_groups_by_hierarchy(self.hierarchy.name)
+        self.assertEquals(len(grp), 0)
 
         self.student.profile.group.add(group)
         self.assertEquals(self.student.profile.joined_groups().count(), 1)
+        grp = self.student.profile.get_groups_by_hierarchy(self.hierarchy.name)
+        self.assertEquals(len(grp), 0)
 
         group.archived = True
         group.save()

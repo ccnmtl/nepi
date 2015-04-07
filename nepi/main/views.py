@@ -701,11 +701,6 @@ class GroupDetail(LoggedInMixin, AdministrationOnlyMixin,
         sections = HierarchyCache.get_descendant_ids(hierarchy.get_root())
         ctx.update(self.classify_group_users([self.object], sections))
 
-        if ctx['completed'] > 0:
-            ctx['progress_report'] = get_progress_report(
-                ctx['completed_users'], hierarchy)
-            ctx.pop('completed_users')
-
         return ctx
 
 
@@ -751,6 +746,8 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
 
     def get_detailed_report(self, report_type, hierarchy_name, users, groups):
         report = DetailedReport(users)
+
+        # only report on users who have at least 1 submission
         users = users.filter(submission__isnull=False, is_staff=False)
         hierarchies = Hierarchy.objects.filter(name=hierarchy_name)
 
@@ -762,7 +759,8 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
         return rows
 
     def get_aggregate_report(self, request, hierarchy, users, groups):
-        sections = [s.id for s in hierarchy.get_root().get_descendants()]
+
+        sections = HierarchyCache.get_descendant_ids(hierarchy.get_root())
 
         if groups is None:  # reporting on unaffiliated users
             ctx = self.classify_unaffiliated_users(users, sections)
