@@ -13,8 +13,8 @@ from nepi.main.views import CreateGroupView, UpdateGroupView, \
     RegistrationView, JoinGroup, HomeView, GroupDetail, LeaveGroup, \
     SchoolChoiceView, SchoolGroupChoiceView, \
     ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView, \
-    RemoveStudent, ReportView, AggregateReportView, DownloadableReportView, \
-    StudentGroupDetail, PeopleView, PeopleFilterView
+    RemoveStudent, ReportView, DownloadableReportView, \
+    StudentGroupDetail, PeopleView, PeopleFilterView, RosterDetail
 import nepi.main.views
 
 
@@ -79,7 +79,6 @@ urlpatterns = patterns(
     url(r'^groups/(?P<school_id>\d+)/$', SchoolGroupChoiceView.as_view()),
 
     # dashboard base views
-    (r'^dashboard/reports/aggregate/$', AggregateReportView.as_view()),
     (r'^dashboard/reports/$', ReportView.as_view()),
     (r'^dashboard/people/$', PeopleView.as_view()),
     (r'^dashboard/people/filter/', PeopleFilterView.as_view()),
@@ -96,9 +95,11 @@ urlpatterns = patterns(
     url(r'^archive_group/$', ArchiveGroupView.as_view()),
     url(r'^group_details/(?P<pk>\d+)/$',
         GroupDetail.as_view(), name='group-details'),
+    url(r'^roster_details/(?P<pk>\d+)/$',
+        RosterDetail.as_view(), name='roster-details'),
     url(r'^student_details/(?P<group_id>\d+)/(?P<student_id>\d+)/$',
         StudentGroupDetail.as_view(), name='student-group-details'),
-    (r'^remove_student/$', RemoveStudent.as_view()),
+    url(r'^remove_student/$', RemoveStudent.as_view(), name="remove-student"),
 
     # ICAP related pages
     (r'^faculty/confirm/$', ConfirmFacultyView.as_view()),
