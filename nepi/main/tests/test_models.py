@@ -2,6 +2,7 @@ from datetime import date
 import datetime
 
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.test import TestCase
 from pagetree.models import Hierarchy, Section, UserPageVisit
 from pagetree.tests.factories import HierarchyFactory, ModuleFactory
@@ -74,6 +75,7 @@ class TestGroup(TestCase):
 
 class TestUserProfile(TestCase):
     def setUp(self):
+        cache.clear()
         self.student = StudentProfileFactory().user
         self.teacher = TeacherProfileFactory().user
         self.school_admin = InstitutionAdminProfileFactory().user

@@ -1,6 +1,6 @@
 from datetime import date
 import datetime
-
+from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.test.client import RequestFactory
 from django.test.testcases import TestCase
@@ -16,6 +16,7 @@ from nepi.main.views import BaseReportMixin, DownloadableReportView
 class TestReportBase(TestCase):
 
     def setUp(self):
+        cache.clear()
         self.factory = RequestFactory()
         self.report_view_url = reverse('report-view')
         self.report_download_url = reverse('report-download')
