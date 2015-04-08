@@ -139,7 +139,6 @@ class TestUserProfile(TestCase):
     def test_percent_complete(self):
         root = self.hierarchy.get_root()
         self.assertEquals(self.student.profile.percent_complete(root), 0)
-        self.assertEquals(self.student.profile.percent_complete_optionb(), 0)
 
         # visit section one & child one
         section_one = Section.objects.get(slug='one')
@@ -150,28 +149,26 @@ class TestUserProfile(TestCase):
             user=self.student, section=child_one, status="complete")
         self.assertEquals(self.student.profile.percent_complete(root), 50)
 
-        # optionb overall progress
-        self.assertEquals(self.student.profile.percent_complete_optionb(), 50)
-
     def test_percent_complete_session(self):
+        root = self.hierarchy.get_root()
         section_one = Section.objects.get(slug='one')
         child_one = Section.objects.get(slug='introduction')
 
         pct = self.student.profile.percent_complete(section_one)
         self.assertEquals(pct, 0)
-        self.assertEquals(self.student.profile.percent_complete_optionb(), 0)
+        self.assertEquals(self.student.profile.percent_complete(root), 0)
 
         UserPageVisit.objects.create(
             user=self.student, section=section_one, status="complete")
         pct = self.student.profile.percent_complete(section_one)
         self.assertEquals(pct, 0)
-        self.assertEquals(self.student.profile.percent_complete_optionb(), 25)
+        self.assertEquals(self.student.profile.percent_complete(root), 25)
 
         UserPageVisit.objects.create(
             user=self.student, section=child_one, status="complete")
         pct = self.student.profile.percent_complete(section_one)
         self.assertEquals(pct, 100)
-        self.assertEquals(self.student.profile.percent_complete_optionb(), 50)
+        self.assertEquals(self.student.profile.percent_complete(root), 50)
 
     def test_sessions_completed(self):
         section_one = Section.objects.get(slug='one')
@@ -253,27 +250,54 @@ class TestUserProfile(TestCase):
         self.assertTrue(icap_grp in groups)
 
     def test_time_spent_in_system(self):
+        delta = self.student.profile.time_spent(self.hierarchy)
+        self.assertEquals(delta, "00:00:00")
+        delta = self.student.profile.time_elapsed(self.hierarchy)
+        self.assertEquals(delta, "00:00:00")
+
         now = datetime.datetime.now()
         section_one = Section.objects.get(slug='one')
         child_one = Section.objects.get(slug='introduction')
+        child_two = Section.objects.get(slug='two')
+        child_four = Section.objects.get(slug='four')
 
         visit = UserPageVisit.objects.create(
             user=self.student, section=section_one, status="complete")
         delta = datetime.timedelta(minutes=-60)
         visit.first_visit = now + delta
         visit.save()
+        UserPageVisit.objects.filter(id=visit.id).update(
+            last_visit=visit.first_visit)  # force last_visit time
 
         visit = UserPageVisit.objects.create(
             user=self.student, section=child_one, status="complete")
         delta = datetime.timedelta(minutes=-55)
         visit.first_visit = now + delta
         visit.save()
+        UserPageVisit.objects.filter(id=visit.id).update(
+            last_visit=visit.first_visit)  # force last_visit time
+
+        visit = UserPageVisit.objects.create(
+            user=self.student, section=child_two, status="complete")
+        delta = datetime.timedelta(hours=2)
+        visit.first_visit = now + delta
+        visit.save()
+        UserPageVisit.objects.filter(id=visit.id).update(
+            last_visit=visit.first_visit)  # force last_visit time
+
+        visit = UserPageVisit.objects.create(
+            user=self.student, section=child_four, status="complete")
+        delta = datetime.timedelta(hours=2, minutes=5)
+        visit.first_visit = now + delta
+        visit.save()
+        UserPageVisit.objects.filter(id=visit.id).update(
+            last_visit=visit.first_visit)  # force last_visit time
 
         delta = self.student.profile.time_spent(self.hierarchy)
-        self.assertEquals(delta, 5)
+        self.assertEquals(delta, "00:15:00")
 
-        delta = self.student.profile.time_spent_optionb()
-        self.assertEquals(delta, 5)
+        self.assertEquals(self.student.profile.time_elapsed(self.hierarchy),
+                          '03:05:00')
 
 
 class TestPendingTeachers(TestCase):

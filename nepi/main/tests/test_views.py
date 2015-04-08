@@ -24,9 +24,6 @@ from nepi.main.views import ContactView, ViewPage, CreateSchoolView, \
 
 class TestBasicViews(TestCase):
 
-    def setUp(self):
-        self.client = Client()
-
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
@@ -65,7 +62,6 @@ class TestStudentLoggedInViews(TestCase):
         self.section = self.hierarchy.get_root().get_first_leaf()
 
         self.student = StudentProfileFactory().user
-        self.client = Client()
         self.client.login(username=self.student.username, password="test")
 
     def test_edit_page_form(self):
