@@ -231,30 +231,31 @@ class TestDownloadableReportView(TestReportBase):
         self.assertEquals(rows.next(), [1, 0, 1, 0])
 
     def test_detailed_report_values(self):
-        data = {'country': 'all'}
-        request = RequestFactory().post(self.report_download_url, data)
-        request.user = self.icap
+        with self.settings(PARTICIPANT_SECRET='foo'):
+            data = {'country': 'all'}
+            request = RequestFactory().post(self.report_download_url, data)
+            request.user = self.icap
 
-        view = DownloadableReportView()
-        view.request = request
+            view = DownloadableReportView()
+            view.request = request
 
-        users, groups = view.get_users_and_groups(request, self.hierarchy)
+            users, groups = view.get_users_and_groups(request, self.hierarchy)
 
-        rows = view.get_detailed_report_values(self.hierarchies, users)
-        row = ['participant_id', 'country', 'percent_complete',
-               'total_time_elapsed', 'actual_time_spent', 'group']
-        self.assertEquals(rows.next(), row)
+            rows = view.get_detailed_report_values(self.hierarchies, users)
+            row = ['participant_id', 'country', 'percent_complete',
+                   'total_time_elapsed', 'actual_time_spent', 'group']
+            self.assertEquals(rows.next(), row)
 
-        # expecting 3 user results to show up
-        row = rows.next()
-        row = rows.next()
-        row = rows.next()
+            # expecting 3 user results to show up
+            row = rows.next()
+            row = rows.next()
+            row = rows.next()
 
-        try:
-            rows.next()
-            self.assertFalse('unexpected row')
-        except StopIteration:
-            pass  # expected
+            try:
+                rows.next()
+                self.assertFalse('unexpected row')
+            except StopIteration:
+                pass  # expected
 
     def test_detailed_report_keys(self):
         data = {'country': 'all'}
