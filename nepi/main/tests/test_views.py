@@ -3,6 +3,7 @@ import json
 
 from django.contrib.auth.models import User
 from django.core import mail
+from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
@@ -394,6 +395,7 @@ class TestICAPLoggedInViews(TestCase):
 
 class TestPageView(TestCase):
     def setUp(self):
+        cache.clear()
         self.h = Hierarchy.objects.create(name='main', base_url='/')
         self.h.get_root().add_child_section_from_dict(
             {
