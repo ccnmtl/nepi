@@ -3,6 +3,7 @@ import json
 
 from django.contrib.auth.models import User
 from django.core import mail
+from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
@@ -23,9 +24,6 @@ from nepi.main.views import ContactView, ViewPage, CreateSchoolView, \
 
 
 class TestBasicViews(TestCase):
-
-    def setUp(self):
-        self.client = Client()
 
     def test_home(self):
         response = self.client.get("/", follow=True)
@@ -65,7 +63,6 @@ class TestStudentLoggedInViews(TestCase):
         self.section = self.hierarchy.get_root().get_first_leaf()
 
         self.student = StudentProfileFactory().user
-        self.client = Client()
         self.client.login(username=self.student.username, password="test")
 
     def test_edit_page_form(self):
@@ -398,6 +395,7 @@ class TestICAPLoggedInViews(TestCase):
 
 class TestPageView(TestCase):
     def setUp(self):
+        cache.clear()
         self.h = Hierarchy.objects.create(name='main', base_url='/')
         self.h.get_root().add_child_section_from_dict(
             {

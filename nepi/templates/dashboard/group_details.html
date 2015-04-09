@@ -7,17 +7,33 @@
     {% with group=object %}
         <ul class="breadcrumb">
           <li><a href="{% url 'dashboard'%}#user-groups">Dashboard</a> <span class="divider">/</span></li>
+          <li>{{group.name}} <span class="divider">/</span></li>
           <li class="active">Group Progress</li>
         </ul>
-        
+
         <h3 class="dash">{{group.name}}</h3>
-        <dl class="dl-horizontal">
-            <dt>School</dt><dd>{{group.school.name}}</dd>
-            <dt>Country</dt><dd>{{group.school.country.display_name}}</dd>
-            <dt>Creator</dt><dd>{{group.creator.get_full_name}} ({{group.creator.username}})</dd>
-            <dt>Begin Date</dt><dd>{{group.formatted_start_date}}</dd>
-            <dt>End Date</dt><dd>{{group.formatted_end_date}}</dd>
-        </dl>
+        <div>
+            <div class="pull-left">
+                <dl class="dl-horizontal">
+                    <dt>School</dt><dd>{{group.school.name}}</dd>
+                    <dt>Country</dt><dd>{{group.school.country.display_name}}</dd>
+                    <dt>Creator</dt><dd>{{group.creator.get_full_name}} ({{group.creator.username}})</dd>
+                    <dt>Begin Date</dt><dd>{{group.formatted_start_date}}</dd>
+                    <dt>End Date</dt><dd>{{group.formatted_end_date}}</dd>
+                    <dt>Roster</dt><dd><a href="{% url 'roster-details' group.id %}">View Student List</a></dd>
+                </dl>
+            </div>     
+            <div class="pull-right">
+                <form action='/dashboard/reports/download/' method="post">{% csrf_token %}
+                    <input type="hidden" name="report-type" value="aggregate" />
+                    <input type="hidden" name="country" value="{{group.school.country.name}}" />
+                    <input type="hidden" name="school" value="{{group.school.id}}" />
+                    <input type="hidden" name="schoolgroup" value="{{group.id}}" />
+                    <input type="submit" value="Download Aggregate Report" class="btn btn-default" />
+                </form>   
+            </div>
+        </div>
+
     
         <table class="table table-striped table-condensed well">
             <tr><th>Members</th><th>Total</th><th>Completed</th><th>Incomplete</th><th>In Progress</th></tr>

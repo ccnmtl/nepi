@@ -21,7 +21,7 @@ from pagetree.models import Hierarchy, UserPageVisit
 
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
-    PendingTeachers, DetailedReport, PROFILE_CHOICES
+    PendingTeachers, DetailedReport, PROFILE_CHOICES, HierarchyCache
 from nepi.main.templatetags.progressreport import get_progress_report, \
     average_quiz_score, satisfaction_rating
 from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
@@ -42,7 +42,7 @@ class ViewPage(LoggedInMixin, PageView):
         visit_ids = visits.values_list('section__id', flat=True)
 
         previous_unlocked = True
-        for section in self.root.get_descendants():
+        for section in HierarchyCache.get_descendants(self.root):
             unlocked = section.id in visit_ids
             item = {
                 'id': section.id,
@@ -547,7 +547,7 @@ class BaseReportMixin(object):
 
     def get_country_criteria(self, request):
         country_name = None
-        country_id = self.request.POST.get('country', None)
+        country_id = request.POST.get('country', None)
         if country_id == 'all':
             country_name = "All Countries"
         else:
@@ -698,13 +698,8 @@ class GroupDetail(LoggedInMixin, AdministrationOnlyMixin,
         ctx = super(GroupDetail, self).get_context_data(**kwargs)
 
         hierarchy = self.object.module
-        sections = [s.id for s in hierarchy.get_root().get_descendants()]
+        sections = HierarchyCache.get_descendant_ids(hierarchy.get_root())
         ctx.update(self.classify_group_users([self.object], sections))
-
-        if ctx['completed'] > 0:
-            ctx['progress_report'] = get_progress_report(
-                ctx['completed_users'], hierarchy)
-            ctx.pop('completed_users')
 
         return ctx
 
@@ -749,20 +744,20 @@ class Echo(object):
 class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
                              BaseReportMixin, View):
 
-    def get_detailed_report(self, report_type, hierarchy_name, users, groups):
-        report = DetailedReport(users)
-        users = users.filter(submission__isnull=False, is_staff=False)
-        hierarchies = Hierarchy.objects.filter(name=hierarchy_name)
+    def get_detailed_report_keys(self, hierarchies):
+        report = DetailedReport(hierarchies[0], None)
+        return report.metadata(hierarchies)
 
-        if report_type == 'keys':
-            rows = report.metadata(hierarchies)
-        else:
-            rows = report.values(hierarchies)
+    def get_detailed_report_values(self, hierarchies, users):
+        # only report on users who have at least 1 page visit
+        users = users.filter(userpagevisit__isnull=False)
 
-        return rows
+        report = DetailedReport(hierarchies[0], users)
+        return report.values(hierarchies)
 
     def get_aggregate_report(self, request, hierarchy, users, groups):
-        sections = [s.id for s in hierarchy.get_root().get_descendants()]
+
+        sections = HierarchyCache.get_descendant_ids(hierarchy.get_root())
 
         if groups is None:  # reporting on unaffiliated users
             ctx = self.classify_unaffiliated_users(users, sections)
@@ -801,16 +796,18 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
 
     def post(self, request):
         hierarchy_name = request.POST.get('module', 'main')
-        hierarchy = get_object_or_404(Hierarchy, name=hierarchy_name)
+        hierarchies = Hierarchy.objects.filter(name=hierarchy_name)
+        hierarchy = hierarchies[0]
 
         users, groups = self.get_users_and_groups(request, hierarchy)
 
         report_type = request.POST.get('report-type', 'keys')
         if report_type == 'aggregate':
             rows = self.get_aggregate_report(request, hierarchy, users, groups)
+        elif report_type == 'values':
+            rows = self.get_detailed_report_values(hierarchies, users)
         else:
-            rows = self.get_detailed_report(report_type, hierarchy_name,
-                                            users, groups)
+            rows = self.get_detailed_report_keys(hierarchies)
 
         pseudo_buffer = Echo()
         writer = csv.writer(pseudo_buffer)

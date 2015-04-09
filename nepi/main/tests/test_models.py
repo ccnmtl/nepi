@@ -2,6 +2,7 @@ from datetime import date
 import datetime
 
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.test import TestCase
 from pagetree.models import Hierarchy, Section, UserPageVisit
 from pagetree.tests.factories import HierarchyFactory, ModuleFactory
@@ -74,6 +75,7 @@ class TestGroup(TestCase):
 
 class TestUserProfile(TestCase):
     def setUp(self):
+        cache.clear()
         self.student = StudentProfileFactory().user
         self.teacher = TeacherProfileFactory().user
         self.school_admin = InstitutionAdminProfileFactory().user
@@ -143,24 +145,32 @@ class TestUserProfile(TestCase):
         # visit section one & child one
         section_one = Section.objects.get(slug='one')
         child_one = Section.objects.get(slug='introduction')
-        UserPageVisit.objects.create(user=self.student, section=section_one)
-        UserPageVisit.objects.create(user=self.student, section=child_one)
+        UserPageVisit.objects.create(
+            user=self.student, section=section_one, status="complete")
+        UserPageVisit.objects.create(
+            user=self.student, section=child_one, status="complete")
         self.assertEquals(self.student.profile.percent_complete(root), 50)
 
     def test_percent_complete_session(self):
+        root = self.hierarchy.get_root()
         section_one = Section.objects.get(slug='one')
         child_one = Section.objects.get(slug='introduction')
 
         pct = self.student.profile.percent_complete(section_one)
         self.assertEquals(pct, 0)
+        self.assertEquals(self.student.profile.percent_complete(root), 0)
 
-        UserPageVisit.objects.create(user=self.student, section=section_one)
+        UserPageVisit.objects.create(
+            user=self.student, section=section_one, status="complete")
         pct = self.student.profile.percent_complete(section_one)
         self.assertEquals(pct, 0)
+        self.assertEquals(self.student.profile.percent_complete(root), 25)
 
-        UserPageVisit.objects.create(user=self.student, section=child_one)
+        UserPageVisit.objects.create(
+            user=self.student, section=child_one, status="complete")
         pct = self.student.profile.percent_complete(section_one)
         self.assertEquals(pct, 100)
+        self.assertEquals(self.student.profile.percent_complete(root), 50)
 
     def test_sessions_completed(self):
         section_one = Section.objects.get(slug='one')
@@ -169,8 +179,10 @@ class TestUserProfile(TestCase):
         self.assertEquals(self.student.profile.sessions_completed(
             self.hierarchy), 2)
 
-        UserPageVisit.objects.create(user=self.student, section=section_one)
-        UserPageVisit.objects.create(user=self.student, section=child_one)
+        UserPageVisit.objects.create(
+            user=self.student, section=section_one, status="complete")
+        UserPageVisit.objects.create(
+            user=self.student, section=child_one, status="complete")
         self.assertEquals(
             self.student.profile.sessions_completed(self.hierarchy), 3)
 
@@ -178,9 +190,13 @@ class TestUserProfile(TestCase):
         group = SchoolGroupFactory()
 
         self.assertEquals(self.student.profile.joined_groups().count(), 0)
+        grp = self.student.profile.get_groups_by_hierarchy(self.hierarchy.name)
+        self.assertEquals(len(grp), 0)
 
         self.student.profile.group.add(group)
         self.assertEquals(self.student.profile.joined_groups().count(), 1)
+        grp = self.student.profile.get_groups_by_hierarchy(self.hierarchy.name)
+        self.assertEquals(len(grp), 0)
 
         group.archived = True
         group.save()
@@ -234,6 +250,56 @@ class TestUserProfile(TestCase):
         self.assertTrue(school_grp in groups)
         self.assertTrue(country_grp in groups)
         self.assertTrue(icap_grp in groups)
+
+    def test_time_spent_in_system(self):
+        delta = self.student.profile.time_spent(self.hierarchy)
+        self.assertEquals(delta, "00:00:00")
+        delta = self.student.profile.time_elapsed(self.hierarchy)
+        self.assertEquals(delta, "00:00:00")
+
+        now = datetime.datetime.now()
+        section_one = Section.objects.get(slug='one')
+        child_one = Section.objects.get(slug='introduction')
+        child_two = Section.objects.get(slug='two')
+        child_four = Section.objects.get(slug='four')
+
+        visit = UserPageVisit.objects.create(
+            user=self.student, section=section_one, status="complete")
+        delta = datetime.timedelta(minutes=-60)
+        visit.first_visit = now + delta
+        visit.save()
+        UserPageVisit.objects.filter(id=visit.id).update(
+            last_visit=visit.first_visit)  # force last_visit time
+
+        visit = UserPageVisit.objects.create(
+            user=self.student, section=child_one, status="complete")
+        delta = datetime.timedelta(minutes=-55)
+        visit.first_visit = now + delta
+        visit.save()
+        UserPageVisit.objects.filter(id=visit.id).update(
+            last_visit=visit.first_visit)  # force last_visit time
+
+        visit = UserPageVisit.objects.create(
+            user=self.student, section=child_two, status="complete")
+        delta = datetime.timedelta(hours=2)
+        visit.first_visit = now + delta
+        visit.save()
+        UserPageVisit.objects.filter(id=visit.id).update(
+            last_visit=visit.first_visit)  # force last_visit time
+
+        visit = UserPageVisit.objects.create(
+            user=self.student, section=child_four, status="complete")
+        delta = datetime.timedelta(hours=2, minutes=5)
+        visit.first_visit = now + delta
+        visit.save()
+        UserPageVisit.objects.filter(id=visit.id).update(
+            last_visit=visit.first_visit)  # force last_visit time
+
+        delta = self.student.profile.time_spent(self.hierarchy)
+        self.assertEquals(delta, "00:15:00")
+
+        self.assertEquals(self.student.profile.time_elapsed(self.hierarchy),
+                          '03:05:00')
 
 
 class TestPendingTeachers(TestCase):

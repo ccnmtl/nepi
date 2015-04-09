@@ -1,4 +1,5 @@
 import base64
+from datetime import timedelta
 import datetime
 import hashlib
 import hmac
@@ -7,7 +8,9 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
+from django.core.cache import cache
 from django.db import models
+from django.db.models.aggregates import Min, Max
 from django.db.models.query_utils import Q
 from django.utils.encoding import smart_str
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
@@ -21,6 +24,28 @@ PROFILE_CHOICES = (
     ('CA', 'Country Administrator'),
     ('IC', 'ICAP')
 )
+
+
+class HierarchyCache(object):
+
+    @classmethod
+    def get_descendants(cls, section):
+        key = 'hierarchy_%s_section_%s' % (section.hierarchy.id, section.id)
+        descendants = cache.get(key)
+        if descendants is None:
+            descendants = section.get_descendants()
+            cache.set(key, descendants)
+        return descendants
+
+    @classmethod
+    def get_descendant_ids(cls, section):
+        key = 'hierarchy_%s_sectionids_%s' % (section.hierarchy.id, section.id)
+        ids = cache.get(key)
+        if ids is None:
+            descendants = HierarchyCache.get_descendants(section)
+            ids = [s.id for s in descendants]
+            cache.set(key, ids)
+        return ids
 
 
 class Country(models.Model):
@@ -89,7 +114,8 @@ class Group(models.Model):
         return "%s %s" % (self.name, self.school)
 
     def students(self):
-        return self.userprofile_set.filter(profile_type='ST')
+        students = self.userprofile_set.filter(profile_type='ST')
+        return students.order_by('user__last_name', 'user__first_name')
 
 
 class UserProfile(models.Model):
@@ -119,19 +145,53 @@ class UserProfile(models.Model):
             visits = visits.order_by('-last_visit')
             return visits[0].section
 
+    @classmethod
+    def format_timedelta(cls, delta):
+        hours, remainder = divmod(delta.total_seconds(), 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return '%02d:%02d:%02d' % (hours, minutes, seconds)
+
+    def time_spent(self, hierarchy):
+        visits = UserPageVisit.objects.filter(
+            user=self.user, status='complete', section__hierarchy=hierarchy)
+
+        if visits.count() < 1:
+            return '00:00:00'
+
+        five_minutes = timedelta(minutes=5)
+        time_spent = timedelta(0)
+
+        prev = None
+        for page in visits.order_by('first_visit'):
+            if prev:
+                interval = (page.first_visit - prev)
+                # record 5 minutes for any interval longer than 5 minutes
+                time_spent += min(interval, five_minutes)
+            prev = page.first_visit
+
+        return self.format_timedelta(time_spent)
+
+    def time_elapsed(self, hierarchy):
+        visits = UserPageVisit.objects.filter(
+            user=self.user, status='complete', section__hierarchy=hierarchy)
+
+        if visits.count() < 1:
+            return '00:00:00'
+
+        results = visits.aggregate(Min('first_visit'), Max('last_visit'))
+        elapsed = results['last_visit__max'] - results['first_visit__min']
+        return self.format_timedelta(elapsed)
+
     def percent_complete(self, parent_section):
-        sections = parent_section.get_descendants()
-        if len(sections) > 0:
-            ids = [s.id for s in sections]
+        section_ids = HierarchyCache.get_descendant_ids(parent_section)
+        count = len(section_ids)
+        if count > 0:
             visits = UserPageVisit.objects.filter(user=self.user,
-                                                  section__in=ids)
-            return len(visits) / float(len(sections)) * 100
+                                                  status='complete',
+                                                  section__in=section_ids)
+            return len(visits) / float(count) * 100
         else:
             return 100  # this section has no children.
-
-    def percent_complete_optionb(self):
-        hierachy = Hierarchy.objects.get(name='main')
-        return self.percent_complete(hierachy.get_root())
 
     def sessions_completed(self, hierarchy):
         complete = 0
@@ -263,8 +323,10 @@ def random_user(username):
 
 class DetailedReport(PagetreeReport):
 
-    def __init__(self, users):
+    def __init__(self, hierarchy, users):
         self.all_users = users
+        self.hierarchy = hierarchy
+        self.root = hierarchy.get_root()
         super(DetailedReport, self).__init__()
 
     def users(self):
@@ -273,15 +335,28 @@ class DetailedReport(PagetreeReport):
     def standalone_columns(self):
         return [
             StandaloneReportColumn(
-                "participant_id", 'profile', 'string',
+                'participant_id', 'profile', 'string',
                 'Randomized Participant Id',
                 lambda x: random_user(x.username)),
             StandaloneReportColumn(
-                "optionb_percent_complete", 'profile', 'percent',
-                '% of hierarchy completed',
-                lambda x: x.profile.percent_complete_optionb()),
+                'country', 'profile', 'string',
+                'affiliated country',
+                lambda x: smart_str(x.profile.country.display_name)),
             StandaloneReportColumn(
-                "group", 'profile', 'list',
-                'Option B+ Groups',
-                lambda x: ",".join(x.profile.get_groups_by_hierarchy('main'))),
+                'percent_complete', 'profile', 'percent',
+                '% of hierarchy completed',
+                lambda x: x.profile.percent_complete(self.root)),
+            StandaloneReportColumn(
+                'total_time_elapsed', 'profile', 'hours:minutes:seconds',
+                'total time period over which the module was accessed',
+                lambda x: x.profile.time_elapsed(self.hierarchy)),
+            StandaloneReportColumn(
+                'actual_time_spent', 'profile', 'hours:minutes:seconds',
+                'actual time spent completing the module',
+                lambda x: x.profile.time_spent(self.hierarchy)),
+            StandaloneReportColumn(
+                'group', 'profile', 'list',
+                'Groups',
+                lambda x: ','.join(
+                    x.profile.get_groups_by_hierarchy(self.hierarchy))),
             ]

@@ -79,11 +79,13 @@ urlpatterns = patterns(
     url(r'^groups/(?P<school_id>\d+)/$', SchoolGroupChoiceView.as_view()),
 
     # dashboard base views
-    (r'^dashboard/reports/$', ReportView.as_view()),
+    url(r'^dashboard/reports/$', ReportView.as_view(),
+        name='report-view'),
+    url(r'^dashboard/reports/download/$', DownloadableReportView.as_view(),
+        name='report-download'),
     (r'^dashboard/people/$', PeopleView.as_view()),
     (r'^dashboard/people/filter/', PeopleFilterView.as_view()),
     url(r'^dashboard/$', UserProfileView.as_view(), name='dashboard'),
-    (r'^dashboard/reports/download/$', DownloadableReportView.as_view()),
 
     # groups
     url(r'^join_group/$', JoinGroup.as_view(), name='join-group'),
