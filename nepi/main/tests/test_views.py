@@ -756,11 +756,8 @@ class TestDeleteGroupView(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertTrue(loads(response.content)['success'])
 
-        try:
+        with self.assertRaises(Group.DoesNotExist):
             Group.objects.get(id=self.group.id)
-            self.fail('expected group to be deleted')
-        except Group.DoesNotExist:
-            pass  # expected
 
 
 class TestConfirmAndDenyFacultyViews(TestCase):
