@@ -1,4 +1,5 @@
 from datetime import datetime
+from json import loads
 import json
 
 from django.contrib.auth.models import User
@@ -10,14 +11,14 @@ from django.test.client import Client
 from pagetree.models import UserPageVisit, Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
 
-from factories import UserFactory, UserProfileFactory, TeacherProfileFactory, \
-    ICAPProfileFactory
+from factories import UserFactory, UserProfileFactory, ICAPProfileFactory
 from nepi.main.forms import ContactForm
 from nepi.main.models import Country, School, Group, PendingTeachers
 from nepi.main.tests.factories import SchoolFactory, CountryFactory, \
     SchoolGroupFactory, StudentProfileFactory, \
     CountryAdministratorProfileFactory, \
-    InstitutionAdminProfileFactory, PendingTeacherFactory
+    InstitutionAdminProfileFactory, PendingTeacherFactory, \
+    TeacherProfileFactory
 from nepi.main.views import ContactView, ViewPage, CreateSchoolView, \
     UserProfileView, PeopleView, PeopleFilterView, RosterDetail, GroupDetail, \
     StudentGroupDetail
@@ -628,6 +629,135 @@ class TestCreateSchoolView(TestCase):
              "country": self.country})
         request.user = u
         CreateSchoolView.as_view()(request)
+
+
+class TestUpdateGroupView(TestCase):
+    def setUp(self):
+        self.student = StudentProfileFactory().user
+        self.creator = TeacherProfileFactory().user
+        self.teacher = TeacherProfileFactory().user
+
+        self.group = SchoolGroupFactory(creator=self.creator)
+
+    def test_access(self):
+        # not logged in
+        response = self.client.post('/edit_group/', {})
+        self.assertEquals(response.status_code, 302)
+
+        # not authorized
+        self.client.login(username=self.student.username, password="test")
+        response = self.client.post('/edit_group/', {'pk': self.group.id})
+        self.assertEquals(response.status_code, 403)
+
+        # not authorized
+        self.client.login(username=self.teacher.username, password="test")
+        response = self.client.post('/edit_group/', {'pk': self.group.id})
+        self.assertEquals(response.status_code, 403)
+
+        # invalid method
+        self.client.login(username=self.creator.username, password="test")
+        response = self.client.get('/edit_group/')
+        self.assertEquals(response.status_code, 405)
+
+        # required data not available
+        self.client.login(username=self.creator.username, password="test")
+        response = self.client.post('/edit_group/', {})
+        self.assertEquals(response.status_code, 404)
+
+    def test_post(self):
+        self.client.login(username=self.creator.username, password="test")
+        response = self.client.post('/edit_group/',
+                                    {'pk': self.group.id,
+                                     'name': 'New Group',
+                                     'start_date': '01/01/2015',
+                                     'end_date': '01/05/2015'})
+        self.assertEquals(response.status_code, 302)
+
+        # refresh from database
+        group = Group.objects.get(id=self.group.id)
+        self.assertEquals(group.name, 'New Group')
+        self.assertEquals(str(group.start_date), '2015-01-01')
+        self.assertEquals(str(group.end_date), '2015-01-05')
+
+
+class TestJoinGroupView(TestCase):
+    def setUp(self):
+        self.student = StudentProfileFactory().user
+        self.group = SchoolGroupFactory()
+
+    def test_access(self):
+        # not logged in
+        response = self.client.post('/join_group/', {})
+        self.assertEquals(response.status_code, 302)
+
+        # method not authorized
+        self.client.login(username=self.student.username, password="test")
+        response = self.client.get('/join_group/')
+        self.assertEquals(response.status_code, 405)
+
+        # invalid data
+        response = self.client.post('/join_group/', {})
+        self.assertEquals(response.status_code, 404)
+
+    def test_join_group(self):
+        self.assertEquals(self.student.profile.group.count(), 0)
+
+        self.client.login(username=self.student.username, password="test")
+        response = self.client.post('/join_group/', {'group': self.group.id})
+        self.assertEquals(response.status_code, 302)
+
+        self.assertEquals(self.student.profile.group.count(), 1)
+
+
+class TestDeleteGroupView(TestCase):
+    def setUp(self):
+        self.student = StudentProfileFactory().user
+        self.creator = TeacherProfileFactory().user
+        self.teacher = TeacherProfileFactory().user
+
+        self.group = SchoolGroupFactory(creator=self.creator)
+
+    def test_access(self):
+        # not logged in
+        response = self.client.post('/delete_group/', {})
+        self.assertEquals(response.status_code, 302)
+
+        # not authorized
+        self.client.login(username=self.student.username, password="test")
+        response = self.client.post('/delete_group/', {'group': self.group.id})
+        self.assertEquals(response.status_code, 403)
+
+        # not authorized
+        self.client.login(username=self.teacher.username, password="test")
+        response = self.client.post('/delete_group/', {'group': self.group.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 403)
+
+        # invalid method
+        self.client.login(username=self.creator.username, password="test")
+        response = self.client.get('/delete_group/')
+        self.assertEquals(response.status_code, 405)
+
+        # not ajax
+        self.client.login(username=self.creator.username, password="test")
+        response = self.client.post('/delete_group/', {})
+        self.assertEquals(response.status_code, 405)
+
+        # required data not available
+        self.client.login(username=self.creator.username, password="test")
+        response = self.client.post('/delete_group/', {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 404)
+
+    def test_post(self):
+        self.client.login(username=self.creator.username, password="test")
+        response = self.client.post('/delete_group/', {'group': self.group.id},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue(loads(response.content)['success'])
+
+        with self.assertRaises(Group.DoesNotExist):
+            Group.objects.get(id=self.group.id)
 
 
 class TestConfirmAndDenyFacultyViews(TestCase):

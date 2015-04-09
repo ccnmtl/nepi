@@ -201,6 +201,19 @@ class UserProfile(models.Model):
                 complete += 1
         return complete
 
+    def completion_date(self, hierarchy):
+        sections = HierarchyCache.get_descendants(hierarchy.get_root())
+        last_section = sections[len(sections) - 1]
+
+        visits = UserPageVisit.objects.filter(user=self.user,
+                                              status='complete',
+                                              section=last_section)
+
+        if visits.count() < 1:
+            return None
+        else:
+            return visits[0].first_visit
+
     def display_name(self):
         return self.user.username
 
@@ -343,6 +356,11 @@ class DetailedReport(PagetreeReport):
                 'affiliated country',
                 lambda x: smart_str(x.profile.country.display_name)),
             StandaloneReportColumn(
+                'group', 'profile', 'list',
+                'Groups',
+                lambda x: ','.join(
+                    x.profile.get_groups_by_hierarchy(self.hierarchy))),
+            StandaloneReportColumn(
                 'percent_complete', 'profile', 'percent',
                 '% of hierarchy completed',
                 lambda x: x.profile.percent_complete(self.root)),
@@ -355,8 +373,7 @@ class DetailedReport(PagetreeReport):
                 'actual time spent completing the module',
                 lambda x: x.profile.time_spent(self.hierarchy)),
             StandaloneReportColumn(
-                'group', 'profile', 'list',
-                'Groups',
-                lambda x: ','.join(
-                    x.profile.get_groups_by_hierarchy(self.hierarchy))),
+                'completion_date', 'profile', 'date/time',
+                'the date the user completed the module',
+                lambda x: x.profile.completion_date(self.hierarchy)),
             ]

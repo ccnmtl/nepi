@@ -376,9 +376,8 @@ class UpdateGroupView(LoggedInMixin, AdministrationOnlyMixin, View):
         pk = self.request.POST.get('pk')
         group = get_object_or_404(Group, pk=pk)
 
-        if (self.request.user.profile.is_student() or
-            (self.request.user.profile.is_teacher() and
-             not group.creator == self.request.user)):
+        if (self.request.user.profile.is_teacher() and
+                not group.creator == self.request.user):
             return HttpResponseForbidden(
                 'You are not authorized to update this group')
         start_date = self.request.POST.get('start_date')
@@ -394,7 +393,6 @@ class UpdateGroupView(LoggedInMixin, AdministrationOnlyMixin, View):
 
 
 class JoinGroup(LoggedInMixin, View):
-    template_name = 'dashboard/dashboard.html'
 
     def post(self, request):
         group = get_object_or_404(Group, pk=request.POST.get('group'))
@@ -408,9 +406,8 @@ class DeleteGroupView(LoggedInMixin, AdministrationOnlyMixin,
 
     def post(self, *args, **kwargs):
         group = get_object_or_404(Group, pk=self.request.POST.get('group'))
-        if (self.request.user.profile.is_student() or
-            (self.request.user.profile.is_teacher() and
-             not group.creator == self.request.user)):
+        if (self.request.user.profile.is_teacher() and
+                not group.creator == self.request.user):
             return HttpResponseForbidden(
                 'You are not authorized to delete this group')
         group.delete()
@@ -751,7 +748,6 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
     def get_detailed_report_values(self, hierarchies, users):
         # only report on users who have at least 1 page visit
         users = users.filter(userpagevisit__isnull=False)
-
         report = DetailedReport(hierarchies[0], users)
         return report.values(hierarchies)
 
