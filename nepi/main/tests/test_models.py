@@ -186,6 +186,21 @@ class TestUserProfile(TestCase):
         self.assertEquals(
             self.student.profile.sessions_completed(self.hierarchy), 3)
 
+    def test_completion_date(self):
+        # no visits
+        dt = self.student.profile.completion_date(self.hierarchy)
+        self.assertIsNone(dt)
+
+        sections = self.hierarchy.get_root().get_descendants()
+        last_visit = None
+        for section in sections:
+            last_visit = UserPageVisit.objects.create(user=self.student,
+                                                      section=section,
+                                                      status="complete")
+
+        dt = self.student.profile.completion_date(self.hierarchy)
+        self.assertEquals(dt, last_visit.first_visit)
+
     def test_joined_groups(self):
         group = SchoolGroupFactory()
 

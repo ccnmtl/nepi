@@ -243,8 +243,9 @@ class TestDownloadableReportView(TestReportBase):
             users, groups = view.get_users_and_groups(request, self.hierarchy)
 
             rows = view.get_detailed_report_values(self.hierarchies, users)
-            row = ['participant_id', 'country', 'percent_complete',
-                   'total_time_elapsed', 'actual_time_spent', 'group']
+            row = ['participant_id', 'country', 'group', 'percent_complete',
+                   'total_time_elapsed', 'actual_time_spent',
+                   'completion_date']
             self.assertEquals(rows.next(), row)
 
             # expecting 3 user results to show up
@@ -281,6 +282,9 @@ class TestDownloadableReportView(TestReportBase):
         row = ['', 'country', 'profile', 'string', 'affiliated country']
         self.assertEquals(rows.next(), row)
 
+        row = ['', 'group', 'profile', 'list', 'Groups']
+        self.assertEquals(rows.next(), row)
+
         row = ['', 'percent_complete', 'profile', 'percent',
                '% of hierarchy completed']
         self.assertEquals(rows.next(), row)
@@ -293,7 +297,8 @@ class TestDownloadableReportView(TestReportBase):
                'actual time spent completing the module']
         self.assertEquals(rows.next(), row)
 
-        row = ['', 'group', 'profile', 'list', 'Groups']
+        row = ['', 'completion_date', 'profile', 'date/time',
+               'the date the user completed the module']
         self.assertEquals(rows.next(), row)
 
         try:
