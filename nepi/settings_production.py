@@ -1,15 +1,7 @@
 # flake8: noqa
+import os
 from settings_shared import *
 
-TEMPLATE_DIRS = (
-    "/var/www/nepi/nepi/nepi/templates",
-)
-
-MEDIA_ROOT = '/var/www/nepi/uploads/'
-# put any static media here to override app served static media
-STATICMEDIA_MOUNTS = (
-    ('/sitemedia', '/var/www/nepi/nepi/sitemedia'),
-)
 
 DATABASES = {
     'default': {
@@ -22,7 +14,6 @@ DATABASES = {
     }
 }
 
-COMPRESS_ROOT = "/var/www/nepi/nepi/media/"
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
@@ -30,8 +21,6 @@ SENTRY_SERVERS = ['http://sentry.ccnmtl.columbia.edu/sentry/store/']
 
 if 'migrate' not in sys.argv:
     INSTALLED_APPS.append('raven.contrib.django.raven_compat')
-
-LOCALE_PATHS = ('/var/www/nepi/nepi/locale',)
 
 try:
     from local_settings import *
