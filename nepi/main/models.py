@@ -129,6 +129,9 @@ class UserProfile(models.Model):
     school = models.ForeignKey(School, null=True, default=None, blank=True)
     group = models.ManyToManyField(
         Group, null=True, default=None, blank=True)
+    language = models.CharField(max_length=2,
+                                choices=settings.LANGUAGES,
+                                default=settings.DEFAULT_LANGUAGE)
 
     def __unicode__(self):
         return self.user.username

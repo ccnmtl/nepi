@@ -1,7 +1,7 @@
 # Django settings for nepi project.
 import os.path
 import sys
-
+from django.utils.translation import ugettext_lazy as _
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -228,3 +228,15 @@ ICAP_MAILING_LIST = 'ccnmtl-icap@ccnmtl.columbia.edu'
 NEPI_MAILING_LIST = 'ccnmtl-nepi@ccnmtl.columbia.edu'
 
 CAPTCHA_FONT_SIZE = 34
+
+LOCALE_PATHS = (
+    'locale',
+)
+
+LANGUAGES = (
+    ('en', _('English')),
+    ('fr', _('French')),
+    ('pt', _('Portuguese')),
+)
+
+DEFAULT_LANGUAGE = 'en'

@@ -85,6 +85,25 @@
             </div>
         </div>
         
+        <div class="fieldWrapper control-group {% if profile_form.language.errors %}error{% endif %} wide">
+            <label for="id_language"><b>Which is your preferred language?</b> </label>
+            <div class="controls">
+                <select name="language">
+                    {% for choice in profile_form.fields.language.choices %}
+                        <option value="{{choice.0}}" 
+                        {% ifequal profile_form.data.language choice.0 %}
+                            selected="selected"
+                        {% else %}{% ifequal user.profile.language choice.0 %}
+                            selected="selected"
+                        {% endifequal %}{% endifequal %}>{{choice.1}}</option>
+                    {% endfor %}
+                </select>
+                {% if profile_form.language.errors %}
+                    <div class="help-inline select">{{profile_form.language.errors}}</div>
+                {% endif %}
+            </div>
+        </div>
+        
         {% if user_profile.is_student and not user_profile.is_pending_teacher %}
         <div class="fieldWrapper control-group {% if profile_form.country.errors %}error{% endif %} wide">
             <label for="id_country"><b>Which country are you in?</b></label>

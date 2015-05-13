@@ -31,6 +31,8 @@ SENTRY_SERVERS = ['http://sentry.ccnmtl.columbia.edu/sentry/store/']
 if 'migrate' not in sys.argv:
     INSTALLED_APPS.append('raven.contrib.django.raven_compat')
 
+LOCALE_PATHS = ('/var/www/nepi/meaningfulconsent/locale',)
+
 try:
     from local_settings import *
 except ImportError:
