@@ -323,9 +323,9 @@ class TestCountryAdminLoggedInViews(TestCase):
         self.assertEquals(ctx['countries'], Country.choices())
         self.assertEquals(ctx['joined_groups'].count(), 0)
         self.assertEquals(len(ctx['managed_groups']), 3)
-        self.assertEquals(ctx['managed_groups'][0], admin_group)
-        self.assertEquals(ctx['managed_groups'][1], teacher_group)
-        self.assertEquals(ctx['managed_groups'][2], iadmin_group)
+        self.assertTrue(admin_group in ctx['managed_groups'])
+        self.assertTrue(teacher_group in ctx['managed_groups'])
+        self.assertTrue(iadmin_group in ctx['managed_groups'])
 
         # pending teachers
         PendingTeacherFactory()  # random country/school
@@ -385,8 +385,8 @@ class TestICAPLoggedInViews(TestCase):
         self.assertEquals(ctx['countries'], Country.choices())
         self.assertEquals(ctx['joined_groups'].count(), 0)
         self.assertEquals(len(ctx['managed_groups']), 2)
-        self.assertEquals(ctx['managed_groups'][0], a)
-        self.assertEquals(ctx['managed_groups'][1], b)
+        self.assertTrue(a in ctx['managed_groups'])
+        self.assertTrue(b in ctx['managed_groups'])
 
         # pending teachers
         pt = PendingTeacherFactory()  # random country/school
