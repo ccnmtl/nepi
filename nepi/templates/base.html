@@ -1,31 +1,25 @@
 {% load compress %}
+{% load i18n %}
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <title>ICAP Nursing E-Learning: {% block title %}{% endblock %}</title>
+    <meta charset="utf-8" />
+    <title>ICAP Nursing E-Learning: {% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="nepi">
     <meta name="author" content="CCNMTL">
-  <link rel="shortcut icon" href="/site_media/img/favicon.ico" type="image/x-icon" />
-        
+    <link rel="shortcut icon" href="/site_media/img/favicon.ico" type="image/x-icon" />
+
     {% compress css %}
         <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
         <link href="/site_media/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
         <link href="/site_media/css/main.css" rel="stylesheet">
     {% endcompress %}
-        
+
     {% block css %}
     {% endblock %}
 
     <script src="/site_media/js/jquery-1.10.1.min.js"></script>
-
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-        <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-  {% block feeds %}{% endblock %}
 </head>
 <body>
     <div class="container" id="outer-container">
@@ -35,33 +29,30 @@
                 <a href="/" title="ICAP Nursing E-Learning"><img src="/site_media/img/icap-nursing-elearning.png" title="ICAP Nursing E-Learning"></a>
                 </div>
                 <div class="title-right">
-        		{% block usernav %}
-                <ul class="title-user">   
-        			    {% if not request.user.is_anonymous %}
-              		        <li>{{request.user.first_name}} {{request.user.last_name}}</li>
-                            
-                            <li>{% block usernav_extra %}
-                            {% endblock %}
-                            </li>
-                            {% if request.user.is_superuser %}
-              		           <li> <a href="{% url "impersonate-list" %}">[impersonate]</a>
-              		            </li>
-        			        {% endif %}
-              		        <li><a href="/accounts/logout/?next=/" class="btn btn-inverse">logout</a></li>
-              		    {% endif %}
-              		    </ul>
-        		{% endblock %}
-        	  <ul class="title-logos">
-                <li><a href="http://www.pepfar.gov/" target="_blank" title="PEPFAR"><img src="/site_media/img/pepfar.png" class="header-logo"></a></li>
-                <li><a href="http://icap.columbia.edu" target="_blank" title="ICAP"><img src="/site_media/img/icap-full.png" alt="ICAP" class="header-logo"></a></li>
-            </ul>
-                                </div>
+            		{% block usernav %}
+                        <ul class="title-user">
+                            {% if not request.user.is_anonymous %}
+                  		        <li>{% trans 'Hello' %}, {{request.user.first_name}} {{request.user.last_name}}</li>
+                                
+                                <li>{% block usernav_extra %}{% endblock %}</li>
 
+                                {% if request.user.is_superuser %}
+                  		            <li><a href="{% url "impersonate-list" %}">[impersonate]</a></li>
+            			        {% endif %}
+
+                  		        <li><a href="/accounts/logout/?next=/" class="btn btn-inverse">{% trans "Log Out" %}</a></li>
+                  		    {% endif %}
+                        </ul>
+            		{% endblock %}
+                    <ul class="title-logos">
+                        <li><a href="http://www.pepfar.gov/" target="_blank" title="PEPFAR"><img src="/site_media/img/pepfar.png" class="header-logo"></a></li>
+                        <li><a href="http://icap.columbia.edu" target="_blank" title="ICAP"><img src="/site_media/img/icap-full.png" alt="ICAP" class="header-logo icap-logo"></a></li>
+                    </ul>
+                </div>
             </div>
     
         	{% block primarynav %}
             {% endblock %}
-        
         {% endblock %}
     
         {% block toc %}{% endblock %}
@@ -81,9 +72,9 @@
       <footer class="icapnel-footer">
         <div class="container">
             <ul class="left-footer-menu">
-                <li><a href="/about/">About</a></li>
-                <li><a href="/help/">Help</a></li>
-                <li><a href="mailto:ccnmtl-nepi@columbia.edu">Contact</a></li>
+                <li><a href="/about/">{% trans "About" %}</a></li>
+                <li><a href="/help/">{% trans "Help" %}</a></li>
+                <li><a href="/contact/">{% trans "Contact" %}</a></li>
             </ul>
             <ul class="right-footer-menu">
                 <li><a href="http://ccnmtl.columbia.edu" target="_blank" title="CCNMTL"><img src="/site_media/img/logo_ccnmtl_white.png" class="footer-logo"></a></li>
@@ -93,7 +84,7 @@
     {% endblock %}
 
     {% compress js %}
-    <script src="/site_media/bootstrap/js/bootstrap.js"></script>
+        <script src="/site_media/bootstrap/js/bootstrap.js"></script>
     {% endcompress %}
 
     {% block js %}

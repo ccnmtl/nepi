@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Internal Server Error{% endblock %}
+{% load i18n %}
+
+{% block title %}500: {% trans 'Server Error' %}{% endblock %}
 
 {% block pagetitle %}
-<h1 class="pageheader">500: Internal Server Error</h1>
+<h1 class="pageheader">500: {% trans 'Server Error' %}</h1>
 {% endblock %}
 
 {% block content %}
 <p>
-We're sorry.  There's a server error and we're working on it.
+{% trans "There's been an error. It's been reported to the site administrators via email and should be fixed shortly. Thanks for your patience." %}
 </p>
-
-<img src="/site_media/img/sadowl.jpg" />
 
 {% endblock %}

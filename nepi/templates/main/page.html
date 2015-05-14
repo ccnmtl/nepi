@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load render %}
 {% load accessible %}
+{% load i18n %}
+
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="/site_media/js/json2.js"></script>
@@ -97,25 +99,22 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-  <ul>
-       {% for breadcrumb in path %}
-                <li><a href ="{{breadcrumb.get_absolute_url}}">{{breadcrumb}}</a><span class="divider">/</span></li>
-       {% endfor %}        
-            
-  </ul>
+    <ul>
+        {% for breadcrumb in path %}
+            <li><a href ="{{breadcrumb.get_absolute_url}}">{{breadcrumb}}</a><span class="divider">/</span></li>
+        {% endfor %}
+    </ul>
 {% endblock breadcrumbs %}
 
 {% block content %}
-
-    <div class="module-{{module.slug}}">
+<div class="module-{{module.slug}}">
 
     {% if needs_submit %}
-    {% if is_submitted %}
-    {% else %}
-    <form action="." method="post">
+        {% if is_submitted %}
+        {% else %}
+        <form action="." method="post">
+        {% endif %}
     {% endif %}
-    {% endif %}
-
 
     {% for block in section.pageblock_set.all %}
         <div class="pageblock{% if block.css_extra %} {{block.css_extra}}{% endif %}">
@@ -124,33 +123,33 @@
         </div>
     {% endfor %}
 
-<div id="submit-btn">
-    {% if needs_submit %}
-        {% if request.user.is_anonymous %}
-        {% else %}    
-            {% if is_submitted %}
-                {% if allow_redo %}
-                    <form action="." method="post">
-                    <input type="hidden" name="action" value="reset" />
-                    <input type="submit" value="clear your answers and try again" class="btn btn-default" />
-                    </form>
-                {% else %}{% if user.is_superuser %}
-                    <form action="." method="post">
-                        <div>
+    <div id="submit-btn">
+        {% if needs_submit %}
+            {% if request.user.is_anonymous %}
+            {% else %}    
+                {% if is_submitted %}
+                    {% if allow_redo %}
+                        <form action="." method="post">
                             <input type="hidden" name="action" value="reset" />
-                            <input type="submit" id="generic-reset" value="Clear Responses (superuser only)" class="btn btn-default" />
-                            <div style="clear: both"></div>
-                        </div>
-                    </form>
-                {% endif %}{% endif %}
-            {% else %}
-                <input id="page-submit" type="submit" value="Submit" class="btn btn-primary" />
-                <div style="clear: both"></div>
-            </form>
+                            <input type="submit" value="{% trans 'Try again' %}" class="btn btn-default" />
+                        </form>
+                    {% else %}{% if user.is_superuser %}
+                        <form action="." method="post">
+                            <div>
+                                <input type="hidden" name="action" value="reset" />
+                                <input type="submit" id="generic-reset" value="Clear Responses (superuser only)" class="btn btn-default" />
+                                <div style="clear: both"></div>
+                            </div>
+                        </form>
+                    {% endif %}{% endif %}
+                {% else %}
+                    <input id="page-submit" type="submit" value="{% trans 'Submit' %}" class="btn btn-primary" />
+                    <div style="clear: both"></div>
+                </form>
+                {% endif %}
             {% endif %}
         {% endif %}
-    {% endif %}
-</div>
+    </div>
 </div>
 
 {% endblock %}
@@ -160,7 +159,7 @@
     <ul class="pager">
         {% if not section.is_root and previous%}
           <li class="previous">
-                <a href="{{ previous.get_absolute_url }}">&larr; Previous</a>
+                <a href="{{ previous.get_absolute_url }}">&larr; {% trans 'Previous' %}</a>
           </li>
         {% endif %}
         
@@ -168,7 +167,7 @@
             <li class="next">
                 <a href="{{ next_section.get_absolute_url }}"
                  class="{% ifsubmitted section %}{% else %}disabled{%endifsubmitted%}">
-                    Next &rarr;
+                    {% trans 'Next' %} &rarr;
                 </a>
             </li>
         {% endif %}
