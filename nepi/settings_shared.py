@@ -67,6 +67,7 @@ TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = True
+COMPRESS_URL = "/site_media/"
 COMPRESS_ROOT = os.path.join(PROJECT_DIR, "media")
 MEDIA_ROOT = os.path.join(WEB_DIR, "uploads")
 MEDIA_URL = '/uploads/'
@@ -183,9 +184,6 @@ STATICFILES_FINDERS = (
     # other finders..
     'compressor.finders.CompressorFinder',
 )
-
-COMPRESS_URL = "/site_media/"
-COMPRESS_ROOT = "media/"
 
 # WIND settings
 
