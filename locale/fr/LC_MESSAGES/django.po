@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-12 15:58-0400\n"
+"POT-Creation-Date: 2015-05-14 11:21-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,138 +18,75 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: nepi/settings_shared.py:237
+#: nepi/settings_shared.py:242
 msgid "English"
-msgstr ""
+msgstr "Anglais"
 
-#: nepi/settings_shared.py:238
+#: nepi/settings_shared.py:243
 msgid "French"
-msgstr ""
+msgstr "Français"
 
-#: nepi/settings_shared.py:239
+#: nepi/settings_shared.py:244
 msgid "Portuguese"
-msgstr ""
+msgstr "Portugais"
 
-#: nepi/templates/404.html:5
+#: nepi/templates/404.html:5 nepi/templates/404.html.py:14
 msgid "Page Not Found"
-msgstr ""
+msgstr "Cette page n'a pas été trouvée"
 
 #: nepi/templates/404.html:9
 msgid "Login"
-msgstr ""
-
-#: nepi/templates/404.html:14
-msgid "404: Page Not Found"
-msgstr ""
-
-#: nepi/templates/404.html:19
-msgid ""
-"We're sorry.  The page you're looking for doesn't exist at this address."
-msgstr ""
-
-#: nepi/templates/500.html:5
-msgid "Internal Server Error"
-msgstr ""
-
-#: nepi/templates/admin/login.html:27
-msgid "Username:"
-msgstr ""
-
-#: nepi/templates/admin/login.html:30
-msgid "Password:"
-msgstr ""
-
-#: nepi/templates/admin/login.html:35
-msgid "Log in"
 msgstr "Connexion"
 
-#: nepi/templates/base.html:42
+#: nepi/templates/404.html:19
+msgid "We're sorry, but the requested page could not be found."
+msgstr "Nous sommes désolés, mais la page demandée est introuvable."
+
+#: nepi/templates/500.html:5 nepi/templates/500.html.py:8
+msgid "Server Error"
+msgstr "Erreur du serveur"
+
+#: nepi/templates/500.html:13
+msgid ""
+"There's been an error. It's been reported to the site administrators via "
+"email and should be fixed shortly. Thanks for your patience."
+msgstr ""
+"Une erreur est survenue. Elle a été transmise par courriel aux "
+"administrateurs du site et sera corrigée dans les meilleurs délais. Merci "
+"pour votre patience."
+
+#: nepi/templates/base.html:35
 msgid "Hello"
 msgstr "Bonjour"
 
-#: nepi/templates/base.html:51
+#: nepi/templates/base.html:43
 msgid "Log Out"
 msgstr "Déconnexion"
 
-#: nepi/templates/base.html:111
+#: nepi/templates/base.html:75
 msgid "About"
 msgstr ""
 
-#: nepi/templates/base.html:112
+#: nepi/templates/base.html:76
 msgid "Help"
-msgstr ""
+msgstr "Une question"
 
-#: nepi/templates/base.html:113
+#: nepi/templates/base.html:77
 msgid "Contact"
-msgstr ""
+msgstr "Nous contacter"
 
-#: nepi/templates/flatpages/account_created.html:4
-msgid "Welcome! Your account has been created."
-msgstr ""
-
-#: nepi/templates/flatpages/account_created.html:7
-msgid "Please remember the username and password you chose."
-msgstr ""
-
-#: nepi/templates/flatpages/account_created.html:8
-msgid ""
-"If you provided a valid email address when you registered you can request a "
-"password reset."
-msgstr ""
-
-#: nepi/templates/main/page.html:135
+#: nepi/templates/main/page.html:134
 msgid "Try again"
 msgstr ""
 
-#: nepi/templates/main/page.html:147
-#: nepi/templates/registration/password_reset_form.html:26
+#: nepi/templates/main/page.html:146
 msgid "Submit"
 msgstr ""
 
-#: nepi/templates/main/page.html:163
+#: nepi/templates/main/page.html:162
 msgid "Previous"
 msgstr ""
 
-#: nepi/templates/main/page.html:171
+#: nepi/templates/main/page.html:170
 msgid "Next"
-msgstr ""
-
-#: nepi/templates/registration/login.html:9
-msgid "Welcome!"
-msgstr "Bienvenue!"
-
-#: nepi/templates/registration/password_reset_confirm.html:4
-msgid "Password reset"
-msgstr ""
-
-#: nepi/templates/registration/password_reset_confirm.html:10
-msgid "Enter new password"
-msgstr ""
-
-#: nepi/templates/registration/password_reset_confirm.html:12
-msgid ""
-"Please enter your new password twice so we can verify you typed it in "
-"correctly."
-msgstr ""
-
-#: nepi/templates/registration/password_reset_confirm.html:16
-msgid "New password:"
-msgstr ""
-
-#: nepi/templates/registration/password_reset_confirm.html:18
-msgid "Confirm password:"
-msgstr ""
-
-#: nepi/templates/registration/password_reset_confirm.html:19
-msgid "Change my password"
-msgstr ""
-
-#: nepi/templates/registration/password_reset_confirm.html:24
-msgid "Password reset unsuccessful"
-msgstr ""
-
-#: nepi/templates/registration/password_reset_confirm.html:26
-msgid ""
-"The password reset link was invalid, possibly because it has already been "
-"used.  Please request a new password reset."
 msgstr ""
