@@ -1,7 +1,17 @@
 # Django settings for nepi project.
-import os.path
+import os
 import sys
+from django.utils.translation import ugettext_lazy as _
 
+# in prod, something like /var/www/myapp/myapp/myapp
+CURRENT_DIR = os.path.dirname(__file__)
+
+# where the project codebase lives. eg, /var/www/myapp/myapp
+PROJECT_DIR = os.path.normpath(os.path.join(CURRENT_DIR, "../"))
+
+# where the code, uploads, etc directories live
+# eg, /var/www/myapp
+WEB_DIR = os.path.normpath(os.path.join(PROJECT_DIR, "../"))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -62,7 +72,8 @@ TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = True
-MEDIA_ROOT = "/var/www/nepi/uploads/"
+COMPRESS_ROOT = os.path.join(PROJECT_DIR, "media")
+MEDIA_ROOT = os.path.join(WEB_DIR, "uploads")
 MEDIA_URL = '/uploads/'
 STATIC_URL = '/media/'
 SECRET_KEY = ')ng#)ef_u@_^zvvu@dxm7ql-yb^_!a6%v3v^j3b(mp+)l+5%@h'
@@ -102,8 +113,7 @@ MIDDLEWARE_CLASSES = [
 ROOT_URLCONF = 'nepi.urls'
 
 TEMPLATE_DIRS = (
-    "/var/www/nepi/templates/",
-    os.path.join(os.path.dirname(__file__), "templates"),
+    os.path.join(CURRENT_DIR, "templates"),
 )
 
 INSTALLED_APPS = [
@@ -169,8 +179,9 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL
 
 # put any static media here to override app served static media
 STATICMEDIA_MOUNTS = (
-    ('/sitemedia', 'sitemedia'),
+    ('/sitemedia', os.path.join(PROJECT_DIR, 'sitemedia')),
 )
+
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -228,3 +239,15 @@ ICAP_MAILING_LIST = 'ccnmtl-icap@ccnmtl.columbia.edu'
 NEPI_MAILING_LIST = 'ccnmtl-nepi@ccnmtl.columbia.edu'
 
 CAPTCHA_FONT_SIZE = 34
+
+LOCALE_PATHS = (
+    os.path.join(PROJECT_DIR, "locale"),
+)
+
+LANGUAGES = (
+    ('en', _('English')),
+    ('fr', _('French')),
+    ('pt', _('Portuguese')),
+)
+
+DEFAULT_LANGUAGE = 'en'

@@ -2,12 +2,14 @@ from datetime import datetime
 from json import loads
 import json
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core import mail
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
+from django.utils.translation import get_language, LANGUAGE_SESSION_KEY
 from pagetree.models import UserPageVisit, Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
 
@@ -93,11 +95,11 @@ class TestStudentLoggedInViews(TestCase):
                           ('http://testserver/register/', 302))
 
     def test_dashboard(self):
-        response = self.client.get('/dashboard/')
+        response = self.client.get(reverse('dashboard'))
         self.assertEquals(response.status_code, 200)
 
     def test_dashboard_context(self):
-        request = RequestFactory().get('/dashboard/')
+        request = RequestFactory().get(reverse('dashboard'))
         request.user = self.student
 
         view = UserProfileView()
@@ -114,6 +116,30 @@ class TestStudentLoggedInViews(TestCase):
         self.assertEquals(ctx['joined_groups'].count(), 0)
         self.assertTrue('managed_groups' not in ctx)
         self.assertTrue('pending_teachers' not in ctx)
+
+    def test_dashboard_post_change_language(self):
+        self.assertEquals(self.student.profile.language,
+                          settings.DEFAULT_LANGUAGE)
+        self.assertEquals(get_language(), 'en')
+        self.assertEquals(self.client.session[LANGUAGE_SESSION_KEY], 'en')
+
+        data = {u'username': [self.student.username],
+                u'password1': [u''],
+                u'first_name': [self.student.first_name],
+                u'last_name': [self.student.last_name],
+                u'language': [u'fr'],
+                u'country': [self.student.profile.country.name],
+                u'password2': [u''],
+                u'nepi_affiliated': [u'off'],
+                u'email': [self.student.email]}
+
+        response = self.client.post(reverse('dashboard'), data)
+        self.assertEquals(response.status_code, 302)
+
+        student = User.objects.get(id=self.student.id)
+        self.assertEquals(student.profile.language, 'fr')
+        self.assertEquals(get_language(), 'fr')
+        self.assertEquals(self.client.session[LANGUAGE_SESSION_KEY], 'fr')
 
 
 class TestTeacherLoggedInViews(TestCase):

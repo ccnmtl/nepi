@@ -1,16 +1,6 @@
 # flake8: noqa
 from settings_shared import *
 
-TEMPLATE_DIRS = (
-    "/var/www/nepi/nepi/nepi/templates",
-)
-
-MEDIA_ROOT = '/var/www/nepi/uploads/'
-# put any static media here to override app served static media
-STATICMEDIA_MOUNTS = (
-    ('/sitemedia', '/var/www/nepi/nepi/sitemedia'),
-)
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -22,7 +12,7 @@ DATABASES = {
     }
 }
 
-COMPRESS_ROOT = "/var/www/nepi/nepi/media/"
+
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 STAGING_ENV = True

@@ -85,6 +85,20 @@
             </div>
         </div>
         
+        <div class="fieldWrapper control-group {% if form.language.errors %}error{% endif %} wide">
+            <label for="id_language"><b>Which is your preferred language?</b> </label>
+            <div class="controls">
+                <select name="language">
+                    {% for choice in form.fields.language.choices %}
+                        <option value="{{choice.0}}" {% ifequal form.data.language choice.0 %}selected="selected"{% endifequal %}>{{choice.1}}</option>
+                    {% endfor %}
+                </select>
+                {% if form.language.errors %}
+                    <div class="help-inline select">{{form.language.errors}}</div>
+                {% endif %}
+            </div>
+        </div>
+        
         <div class="fieldWrapper control-group {% if form.country.errors %}error{% endif %} wide">
             <label for="id_country"><b>Which country are you in?</b> <small>required</small></label>
             <div class="controls">

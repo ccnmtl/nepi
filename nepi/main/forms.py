@@ -40,6 +40,7 @@ class UserProfileForm(forms.Form):
         max_length=25, required=True)
     email = forms.EmailField(required=False)
     country = forms.ChoiceField(required=True)
+    language = forms.ChoiceField(required=False, choices=settings.LANGUAGES)
 
     # School is not validated as it is variably required
     # Yes for teachers, No for students
@@ -163,6 +164,9 @@ class CreateAccountForm(UserProfileForm):
         country = Country.objects.get(name=form_data['country'])
         new_profile.country = country
 
+        new_profile.language = form_data.get('language',
+                                             settings.DEFAULT_LANGUAGE)
+
         new_profile.save()
 
         # send the user a success email
@@ -208,6 +212,8 @@ class UpdateProfileForm(UserProfileForm):
         user.save()
 
         profile.icap_affil = form_data.get('nepi_affiliated')
+        profile.language = form_data.get('language',
+                                         settings.DEFAULT_LANGUAGE)
 
         if user.profile.is_student() and not user.profile.is_pending_teacher():
             profile.country = Country.objects.get(

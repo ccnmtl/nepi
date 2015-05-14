@@ -14,7 +14,8 @@ from nepi.main.views import CreateGroupView, UpdateGroupView, \
     SchoolChoiceView, SchoolGroupChoiceView, \
     ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView, \
     RemoveStudent, ReportView, DownloadableReportView, \
-    StudentGroupDetail, PeopleView, PeopleFilterView, RosterDetail
+    StudentGroupDetail, PeopleView, PeopleFilterView, RosterDetail, EditPage, \
+    ViewPage
 import nepi.main.views
 
 
@@ -55,6 +56,8 @@ urlpatterns = patterns(
     auth_urls,
     url(r'^$', HomeView.as_view(), name="home"),
     (r'^admin/', include(admin.site.urls)),
+
+    url(r'^i18n/', include('django.conf.urls.i18n')),
 
     (r'^contact/$', ContactView.as_view()),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
@@ -123,16 +126,16 @@ urlpatterns = patterns(
     (r'^quizblock/', include('quizblock.urls')),
     (r'^pagetree/', include('pagetree.urls')),
 
-    (r'^pages/main/edit/(?P<path>.*)$',
-     nepi.main.views.EditPage.as_view(),
-     {}, 'edit-page'),
-
     (r'^pages/activities/edit/(?P<path>.*)$',
      nepi.main.views.EditPage.as_view(),
      {}, 'edit-page'),
 
-    (r'^pages/main/(?P<path>.*)$', nepi.main.views.ViewPage.as_view()),
+    (r'^pages/(?P<hierarchy_name>\w[^/]*)/edit/(?P<path>.*)$',
+     EditPage.as_view(),
+     {}, 'edit-page'),
+    (r'^pages/(?P<hierarchy_name>\w[^/]*)/(?P<path>.*)$', ViewPage.as_view()),
 )
+
 
 if settings.DEBUG:
     urlpatterns += patterns('',

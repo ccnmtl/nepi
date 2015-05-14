@@ -4,6 +4,7 @@ from datetime import datetime
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth.signals import user_logged_in
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
@@ -12,11 +13,13 @@ from django.http.response import HttpResponseForbidden, StreamingHttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.template.context import Context
+from django.utils import translation
+from django.utils.translation import LANGUAGE_SESSION_KEY
 from django.views.generic import View
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView, UpdateView
-from pagetree.generic.views import PageView, EditView, InstructorView
+from pagetree.generic.views import PageView, EditView
 from pagetree.models import Hierarchy, UserPageVisit
 
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
@@ -25,14 +28,23 @@ from nepi.main.models import Group, UserProfile, Country, School, \
 from nepi.main.templatetags.progressreport import get_progress_report, \
     average_quiz_score, satisfaction_rating
 from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
-    LoggedInMixinStaff, JSONResponseMixin, AdministrationOnlyMixin, \
-    IcapAdministrationOnlyMixin
+    JSONResponseMixin, AdministrationOnlyMixin, \
+    IcapAdministrationOnlyMixin, InitializeHierarchyMixin
 
 
-class ViewPage(LoggedInMixin, PageView):
+# Set the user's language on login
+def set_session_language(sender, user, request, **kwargs):
+    try:
+        translation.activate(user.profile.language)
+        request.session[LANGUAGE_SESSION_KEY] = user.profile.language
+    except UserProfile.DoesNotExist:
+        pass  # uni user logged in with no profile
+
+user_logged_in.connect(set_session_language)
+
+
+class ViewPage(LoggedInMixin, InitializeHierarchyMixin, PageView):
     template_name = "main/page.html"
-    hierarchy_name = "main"
-    hierarchy_base = "/pages/main/"
     gated = True
 
     def get_extra_context(self):
@@ -57,16 +69,8 @@ class ViewPage(LoggedInMixin, PageView):
         return {'menu': menu}
 
 
-class EditPage(LoggedInMixinSuperuser, EditView):
+class EditPage(LoggedInMixinSuperuser, InitializeHierarchyMixin, EditView):
     template_name = "main/edit_page.html"
-    hierarchy_name = "main"
-    hierarchy_base = "/pages/main/"
-
-
-# this is from default pagetree
-class InstructorPage(LoggedInMixinStaff, InstructorView):
-    hierarchy_name = "main"
-    hierarchy_base = "/pages/main/"
 
 
 class HomeView(LoggedInMixin, View):
@@ -182,6 +186,16 @@ class UserProfileView(LoggedInMixin, DetailView):
 
         return context
 
+    def maybe_activate_language(self, form):
+        language = form.cleaned_data.get('language', settings.DEFAULT_LANGUAGE)
+
+        if self.request.user.profile.language != language:
+            # the user profile object on request needs a refresh from db
+            # @todo - Django 1.8 has a "refresh_from_db" method that can be
+            # substituted here.
+            user = User.objects.get(id=self.request.user.id)
+            set_session_language(None, user, self.request)
+
     def post(self, *args, **kwargs):
         self.object = self.get_object()
 
@@ -192,11 +206,13 @@ class UserProfileView(LoggedInMixin, DetailView):
             messages.add_message(self.request, messages.INFO,
                                  'Your changes have been saved.')
 
-            return HttpResponseRedirect('/dashboard/#user-profile')
+            self.maybe_activate_language(profile_form)
 
-        context = self.get_context_data(object=self.object)
-        context['profile_form'] = profile_form
-        return self.render_to_response(context)
+            return HttpResponseRedirect('/dashboard/#user-profile')
+        else:
+            context = self.get_context_data(object=self.object)
+            context['profile_form'] = profile_form
+            return self.render_to_response(context)
 
 
 class ReportView(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
