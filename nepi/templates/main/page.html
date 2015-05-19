@@ -5,8 +5,8 @@
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript" src="/site_media/js/json2.js"></script>
-    <script type="text/javascript" src="/site_media/js/util.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/json2.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/util.js"></script>
     {% for block in section.pageblock_set.all %}
         {% renderjs block %}
     {% endfor %}

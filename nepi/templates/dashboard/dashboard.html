@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load waffle_tags %}
 {% block js %}
-    <script src="/site_media/js/jquery-ui-1.10.3.min.js"></script>
+    <script src="{{STATIC_URL}}js/jquery-ui-1.10.3.min.js"></script>
     <script type="text/javascript">
         var profile_attributes = {
             'role': "{{user.profile.role}}",
@@ -11,8 +11,8 @@
             'country': "{{user.profile.country.name}}"
         }
     </script>
-    <script type="text/javascript" src="/site_media/js/dashboard.js"></script>
-    <script type="text/javascript" src="/site_media/js/profile.js"></script>    
+    <script type="text/javascript" src="{{STATIC_URL}}js/dashboard.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/profile.js"></script>    
 {% endblock %}
 
 {% block title %}Dashboard{% endblock %}
