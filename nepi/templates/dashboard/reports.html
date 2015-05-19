@@ -3,8 +3,8 @@
 {% block title %}Reports{% endblock %}
 
 {% block js %}
-    <script src="/site_media/js/jquery-ui-1.10.3.min.js"></script>
-    <script src="/site_media/js/underscore-min.js"></script>
+    <script src="{{STATIC_URL}}js/jquery-ui-1.10.3.min.js"></script>
+    <script src="{{STATIC_URL}}js/underscore-min.js"></script>
     
     <script type="text/javascript">
         var profile_attributes = {
@@ -17,7 +17,7 @@
             {% endif %}
         }
     </script>
-    <script type="text/javascript" src="/site_media/js/dashboard.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/dashboard.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -113,7 +113,7 @@
                 <label><b>Users completing by...</b></label>
                 <div class="controls">
                     <input name="completed_date" type="text" size="16" class="datepicker" placeholder="Any Time"/> 
-                    <img class="calendar"  style="vertical-align:middle;" src="/site_media/img/calendar.gif" alt="calendar icon"/>
+                    <img class="calendar"  style="vertical-align:middle;" src="{{STATIC_URL}}img/calendar.gif" alt="calendar icon"/>
                     <div class="help-inline error completed_date">
                         Please specify a valid date or no date.
                     </div>
