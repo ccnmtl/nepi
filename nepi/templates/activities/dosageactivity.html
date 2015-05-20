@@ -1,10 +1,12 @@
 {% load dosage_state %}
 {% getdosageresponse block as dosager %}
+{% load i18n %}
 
 <div class="dosage-activity">
     <div class="dosage-clipboard-popover fade left in" style="display: none">
         <div class="dosage-clipboard-content">
             <button type="button" class="close">&times;</button>
+            {% blocktrans %}
             <h4>NVP Dosage Chart</h4>
             
             <h5>Daily dosing for NVP for infants from birth-6 weeks</h5>
@@ -29,6 +31,7 @@
             <tr><td>Over 6 months to 9 months </td><td> 30mg (3ml) once a day</td></tr>
             <tr><td>Over 9 months until breastfeeding ends </td><td> 40mg (4ml) once a day</td></tr>
             </table>
+            {% endblocktrans %}
         </div>
     </div>
 
@@ -36,55 +39,57 @@
         {{block.question|safe}}
     </div>
     <div class="control-group">
-        <label class="control-label">How many ml of NVP?</label>
+        <label class="control-label">{% trans 'How many ml of NVP?' %}</label>
         <div class="controls">
             {% if dosager %}
                 <div>
-                    <input type="text" name="pageblock-{{block.pageblock.id}}-mlnvp" value="{{dosager.ml_nvp}}" readonly="readonly" /> <b>ml</b>
+                    <input type="text" name="pageblock-{{block.pageblock.id}}-mlnvp" value="{{dosager.ml_nvp}}" readonly="readonly" /> <b>{% trans 'ml' %}</b>
                     
                     {% ifequal dosager.ml_nvp block.ml_nvp %} 
-                        <span class='alert alert-success'><b>Correct</b></span>
+                        <span class='alert alert-success'><b>{% trans 'Correct' %}</b></span>
                     {% else %}
-                        <span class='alert alert-error'><b>Incorrect</b></span>
+                        <span class='alert alert-error'><b>{% trans 'Incorrect' %}</b></span>
                     {% endifequal %}
+
+                    <div class="help-inline">Please enter a valid digit or decimal for ml of NVP."</div>
                 </div>
             {% else %}
-                <input type="text" name="pageblock-{{block.pageblock.id}}-mlnvp" value="" /> <b>ml</b>
+                <input type="text" name="pageblock-{{block.pageblock.id}}-mlnvp" value="" /> <b>{% trans 'ml' %}</b>
             {% endif %}
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">How many times each day?</label>
+        <label class="control-label">{% trans 'How many times each day?' %}</label>
         <div class="controls">
             {% if dosager %}
                 <div>
-                    <input type="text" id="times_day_input" name="pageblock-{{block.pageblock.id}}-times_day" value="{{dosager.times_day}}" readonly="readonly"> <b>x per day</b>
+                    <input type="text" id="times_day_input" name="pageblock-{{block.pageblock.id}}-times_day" value="{{dosager.times_day}}" readonly="readonly"> <b>{% trans 'x per day' %}</b>
                    
                     {% ifequal dosager.times_day block.times_day %} 
-                        <span class='alert alert-success'><b>Correct</b></span>
+                        <span class='alert alert-success'><b>{% trans 'Correct' %}</b></span>
                     {% else %}
-                        <span class='alert alert-error'><b>Incorrect</b></span>
+                        <span class='alert alert-error'><b>{% trans 'Incorrect' %}</b></span>
                     {% endifequal %}
                 </div>
             {% else %}
-                <input type="text" id="times_day_input" name="pageblock-{{block.pageblock.id}}-times_day" value=""> <b>x per day</b> 
+                <input type="text" id="times_day_input" name="pageblock-{{block.pageblock.id}}-times_day" value=""> <b>{% trans 'x per day' %}</b> 
             {% endif %}
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">For how many weeks?</label>
+        <label class="control-label">{% trans 'For how many weeks?' %}</label>
         <div class="controls">
             {% if dosager %}
                 <div>
-                    <input type="text" id="week_input" name="pageblock-{{block.pageblock.id}}-weeks" value="{{dosager.weeks}}" readonly="readonly"> <b>weeks</b>
+                    <input type="text" id="week_input" name="pageblock-{{block.pageblock.id}}-weeks" value="{{dosager.weeks}}" readonly="readonly"> <b>{% trans 'weeks' %}</b>
                     {% ifequal dosager.weeks block.weeks %} 
-                        <span class='alert alert-success'><b>Correct</b></span>
+                        <span class='alert alert-success'><b>{% trans 'Correct' %}</b></span>
                     {% else %}
-                        <span class='alert alert-error'><b>Incorrect</b></span>
+                        <span class='alert alert-error'><b>{% trans 'Incorrect' %}</b></span>
                     {% endifequal %}
                 </div>            
             {% else %}
-                <input type="text" id="week_input" name="pageblock-{{block.pageblock.id}}-weeks" value=""> <b>weeks</b>
+                <input type="text" id="week_input" name="pageblock-{{block.pageblock.id}}-weeks" value=""> <b>{% trans 'weeks' %}</b>
             {% endif %}            
         </div>
     </div>
