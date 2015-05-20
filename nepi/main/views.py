@@ -637,7 +637,7 @@ class BaseReportMixin(object):
         group_id = request.POST.get('schoolgroup', self.all)
         (country_name, school_id) = self.get_country_and_school(request)
         groups = None
-        users = None
+        users = User.objects.none()
 
         if group_id != self.all:  # requesting a single group
             groups = Group.objects.filter(id=group_id)
