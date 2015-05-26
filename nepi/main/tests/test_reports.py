@@ -307,6 +307,25 @@ class TestDownloadableReportView(TestReportBase):
         except StopIteration:
             pass  # expected
 
+    def test_detailed_report_values_no_users(self):
+        group = SchoolGroupFactory()
+        country = group.school.country
+        school = group.school
+        data = {'country': country.name,
+                'school': school.pk,
+                'schoolgroup': 'all',
+                'report-type': 'values'}
+
+        self.client.login(username=self.icap.username, password="test")
+        response = self.client.post(self.report_download_url, data)
+        self.assertEquals(response.status_code, 200)
+
+        row = ('participant_id,country,group,percent_complete,'
+               'total_time_elapsed,actual_time_spent,completion_date\r\n')
+        self.assertEquals(row, response.streaming_content.next())  # header row
+        with self.assertRaises(StopIteration):
+            response.streaming_content.next()
+
 
 class TestBaseReportMixin(TestReportBase):
 
