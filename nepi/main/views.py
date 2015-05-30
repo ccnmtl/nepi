@@ -45,7 +45,7 @@ user_logged_in.connect(set_session_language)
 
 class ViewPage(LoggedInMixin, InitializeHierarchyMixin, PageView):
     template_name = "main/page.html"
-    gated = False
+    gated = True
 
     def get_extra_context(self):
         menu = []

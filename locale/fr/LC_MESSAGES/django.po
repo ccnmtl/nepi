@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-30 12:28-0400\n"
+"POT-Creation-Date: 2015-05-30 13:58-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,6 +54,72 @@ msgstr ""
 "Une erreur est survenue. Elle a été transmise par courriel aux "
 "administrateurs du site et sera corrigée dans les meilleurs délais. Merci "
 "pour votre patience."
+
+#: nepi/templates/activities/dosageactivity.html:9
+msgid ""
+"<h4>NVP Dosage Chart</h4> <h5>Daily dosing for NVP for infants from birth-6 "
+"weeks</h5> <table> <tr><td>Birth weight 2000-2499 g </td><td> 1ml (10mg) "
+"once a day </td></tr> <tr><td>Birth weight ≥ 2500 g </td><td> 1.5 ml (15mg) "
+"once a day </td></tr> <tr><td>Infants < 200 g </td><td> 0.2 ml (2mg)/kg once "
+"a day </td></tr> </table> <br /> <h5>Daily dosing for NVP for infants > 6 "
+"weeks of age</h5> <div> Depending on country guidelines, there may be rare "
+"cases in which children over 6 weeks are given NVP as prophylaxis. In this "
+"case the dosages are: </div> <table> <tr><td>6 weeks to 6 months </td><td> "
+"20mg (2ml) once a day</td></tr> <tr><td>Over 6 months to 9 months </td><td> "
+"30mg (3ml) once a day</td></tr> <tr> <td>Over 9 months until breastfeeding "
+"ends</td> <td> 40mg (4ml) once a day</td> </tr> </table>"
+msgstr "<h4>NVP Dosage Chart</h4>"
+
+#: nepi/templates/activities/dosageactivity.html:41
+msgid "How many ml of NVP?"
+msgstr "Combien de ml of NVP?"
+
+#: nepi/templates/activities/dosageactivity.html:48
+#: nepi/templates/activities/dosageactivity.html:63
+msgid "ml"
+msgstr "ml"
+
+#: nepi/templates/activities/dosageactivity.html:52
+#: nepi/templates/activities/dosageactivity.html:82
+#: nepi/templates/activities/dosageactivity.html:111
+msgid "Correct"
+msgstr "Correcte"
+
+#: nepi/templates/activities/dosageactivity.html:56
+#: nepi/templates/activities/dosageactivity.html:86
+#: nepi/templates/activities/dosageactivity.html:115
+msgid "Incorrect"
+msgstr "Incorrecte"
+
+#: nepi/templates/activities/dosageactivity.html:65
+msgid "Please enter a valid digit or decimal for ml of NVP."
+msgstr "S'il vous plaît entrer un chiffre valide ou décimal pour ml de NVP"
+
+#: nepi/templates/activities/dosageactivity.html:71
+msgid "How many times each day?"
+msgstr "Combien de fois par jour?"
+
+#: nepi/templates/activities/dosageactivity.html:78
+#: nepi/templates/activities/dosageactivity.html:93
+msgid "x per day"
+msgstr "x par jour"
+
+#: nepi/templates/activities/dosageactivity.html:95
+msgid "Please enter a valid digit or decimal for \"times each day.\""
+msgstr "S'il vous plaît entrer un chiffre valide ou décimal pour ml de NVP"
+
+#: nepi/templates/activities/dosageactivity.html:101
+msgid "For how many weeks?"
+msgstr "Pour combien de semaines"
+
+#: nepi/templates/activities/dosageactivity.html:108
+#: nepi/templates/activities/dosageactivity.html:122
+msgid "weeks"
+msgstr "semains"
+
+#: nepi/templates/activities/dosageactivity.html:124
+msgid "Please enter a valid digit or decimal for \"weeks\""
+msgstr "S'il vous plaît entrer un chiffre valide ou décimal pour \" semaines \""
 
 #: nepi/templates/activities/imagemapchart.html:4
 msgid "mouth"

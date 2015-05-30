@@ -102,7 +102,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.transaction.TransactionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'impersonate.middleware.ImpersonateMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'waffle.middleware.WaffleMiddleware',
 ]
 
@@ -127,7 +127,7 @@ INSTALLED_APPS = [
     'compressor',
     'django_statsd',
     'bootstrapform',
-    # 'debug_toolbar',
+    'debug_toolbar',
     'waffle',
     'django_jenkins',
     'smoketest',
