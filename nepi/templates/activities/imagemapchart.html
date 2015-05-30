@@ -1,13 +1,46 @@
 {% block content %}
-<div class="parts mouth" data-part="mouth">mouth</div>
-<div class="parts eyes" data-part="eyes">eyes</div>
-<div class="parts chair" data-part="chair">chair</div>
-<div class="parts chart" data-part="chart">chart</div>
+{% load i18n %}
+
+<div class="parts mouth" data-part="mouth">{% trans 'mouth' %}</div>
+<div class="parts eyes" data-part="eyes">{% trans 'eyes' %}</div>
+<div class="parts chair" data-part="chair">{% trans 'chair' %}</div>
+<div class="parts chart" data-part="chart">{% trans 'chart' %}</div>
 <div id="explanation_box"></div>
 
-<div style="display:none" id="mouth" class="body">￼<div class="title">Mouth</div><div class="content">Smile! Use good body language, nod your head, lean forward.</div></div>
-<div style="display:none" id="eyes" class="body"><div class="title">Eyes</div><div class="content">Make eye contact.</div></div>
-<div style="display:none" id="chair" class="body"><div class="title">Chair</div><div class="content">Sit squarely facing the person. Do not sit behind a desk!</div></div>
-<div style="display:none" id="chart" class="body"><div class="title">Chart</div><div class="content">Try not to write during a HIV testing and counseling session, unless you are recording key information for the woman to take home or for your records. Turn your mobile phone off and never take calls during a counseling session. </div></div>
+<div style="display:none" id="mouth" class="body">￼
+    <div class="title">
+        {% trans 'Mouth' %}
+    </div>
+    <div class="content">
+        {% trans 'Smile! Use good body language, nod your head, lean forward.' %}
+    </div>
+</div>
+
+<div style="display:none" id="eyes" class="body">
+    <div class="title">
+        {% trans 'Eyes' %}
+    </div>
+    <div class="content">
+        {% trans 'Make eye contact.' %}
+    </div>
+</div>
+
+<div style="display:none" id="chair" class="body">
+    <div class="title">
+        {% trans 'Chair' %}
+    </div>
+    <div class="content">
+        {% trans 'Sit squarely facing the person. Do not sit behind a desk!' %}
+    </div>
+</div>
+
+<div style="display:none" id="chart" class="body">
+    <div class="title">
+        {% trans 'Chart' %}
+    </div>
+    <div class="content">
+        {% trans 'Try not to write during a HIV testing and counseling session, unless you are recording key information for the woman to take home or for your records. Turn your mobile phone off and never take calls during a counseling session.' %}
+    </div>
+</div>
 
 {% endblock %}

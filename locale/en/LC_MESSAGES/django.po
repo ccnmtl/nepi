@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-14 11:21-0400\n"
+"POT-Creation-Date: 2015-05-30 12:28-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: nepi/settings_shared.py:242
+#: nepi/settings_shared.py:240
 msgid "English"
 msgstr ""
 
-#: nepi/settings_shared.py:243
+#: nepi/settings_shared.py:241
 msgid "French"
 msgstr ""
 
-#: nepi/settings_shared.py:244
+#: nepi/settings_shared.py:242
 msgid "Portuguese"
 msgstr ""
 
@@ -49,6 +49,57 @@ msgstr ""
 msgid ""
 "There's been an error. It's been reported to the site administrators via "
 "email and should be fixed shortly. Thanks for your patience."
+msgstr ""
+
+#: nepi/templates/activities/imagemapchart.html:4
+msgid "mouth"
+msgstr ""
+
+#: nepi/templates/activities/imagemapchart.html:5
+msgid "eyes"
+msgstr ""
+
+#: nepi/templates/activities/imagemapchart.html:6
+msgid "chair"
+msgstr ""
+
+#: nepi/templates/activities/imagemapchart.html:7
+msgid "chart"
+msgstr ""
+
+#: nepi/templates/activities/imagemapchart.html:12
+msgid "Mouth"
+msgstr ""
+
+#: nepi/templates/activities/imagemapchart.html:15
+msgid "Smile! Use good body language, nod your head, lean forward."
+msgstr ""
+
+#: nepi/templates/activities/imagemapchart.html:21
+msgid "Eyes"
+msgstr ""
+
+#: nepi/templates/activities/imagemapchart.html:24
+msgid "Make eye contact."
+msgstr ""
+
+#: nepi/templates/activities/imagemapchart.html:30
+msgid "Chair"
+msgstr ""
+
+#: nepi/templates/activities/imagemapchart.html:33
+msgid "Sit squarely facing the person. Do not sit behind a desk!"
+msgstr ""
+
+#: nepi/templates/activities/imagemapchart.html:39
+msgid "Chart"
+msgstr ""
+
+#: nepi/templates/activities/imagemapchart.html:42
+msgid ""
+"Try not to write during a HIV testing and counseling session, unless you are "
+"recording key information for the woman to take home or for your records. "
+"Turn your mobile phone off and never take calls during a counseling session."
 msgstr ""
 
 #: nepi/templates/base.html:35
