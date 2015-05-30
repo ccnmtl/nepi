@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-30 13:58-0400\n"
+"POT-Creation-Date: 2015-05-30 14:22-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,58 +68,58 @@ msgid ""
 "20mg (2ml) once a day</td></tr> <tr><td>Over 6 months to 9 months </td><td> "
 "30mg (3ml) once a day</td></tr> <tr> <td>Over 9 months until breastfeeding "
 "ends</td> <td> 40mg (4ml) once a day</td> </tr> </table>"
-msgstr "<h4>NVP Dosage Chart</h4>"
+msgstr ""
 
 #: nepi/templates/activities/dosageactivity.html:41
 msgid "How many ml of NVP?"
-msgstr "Combien de ml of NVP?"
+msgstr ""
 
 #: nepi/templates/activities/dosageactivity.html:48
 #: nepi/templates/activities/dosageactivity.html:63
 msgid "ml"
-msgstr "ml"
+msgstr ""
 
 #: nepi/templates/activities/dosageactivity.html:52
 #: nepi/templates/activities/dosageactivity.html:82
 #: nepi/templates/activities/dosageactivity.html:111
 msgid "Correct"
-msgstr "Correcte"
+msgstr ""
 
 #: nepi/templates/activities/dosageactivity.html:56
 #: nepi/templates/activities/dosageactivity.html:86
 #: nepi/templates/activities/dosageactivity.html:115
 msgid "Incorrect"
-msgstr "Incorrecte"
+msgstr ""
 
 #: nepi/templates/activities/dosageactivity.html:65
 msgid "Please enter a valid digit or decimal for ml of NVP."
-msgstr "S'il vous plaît entrer un chiffre valide ou décimal pour ml de NVP"
+msgstr ""
 
 #: nepi/templates/activities/dosageactivity.html:71
 msgid "How many times each day?"
-msgstr "Combien de fois par jour?"
+msgstr ""
 
 #: nepi/templates/activities/dosageactivity.html:78
 #: nepi/templates/activities/dosageactivity.html:93
 msgid "x per day"
-msgstr "x par jour"
+msgstr ""
 
 #: nepi/templates/activities/dosageactivity.html:95
 msgid "Please enter a valid digit or decimal for \"times each day.\""
-msgstr "S'il vous plaît entrer un chiffre valide ou décimal pour ml de NVP"
+msgstr ""
 
 #: nepi/templates/activities/dosageactivity.html:101
 msgid "For how many weeks?"
-msgstr "Pour combien de semaines"
+msgstr ""
 
 #: nepi/templates/activities/dosageactivity.html:108
 #: nepi/templates/activities/dosageactivity.html:122
 msgid "weeks"
-msgstr "semains"
+msgstr ""
 
 #: nepi/templates/activities/dosageactivity.html:124
 msgid "Please enter a valid digit or decimal for \"weeks\""
-msgstr "S'il vous plaît entrer un chiffre valide ou décimal pour \" semaines \""
+msgstr ""
 
 #: nepi/templates/activities/imagemapchart.html:4
 msgid "mouth"
