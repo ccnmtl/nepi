@@ -47,6 +47,15 @@ rebase:
 	make migrate
 	make flake8
 
+makemessages: ./ve/bin/python
+	$(MANAGE) makemessages -l en --ignore="ve" --ignore="login.html" --ignore="password*.html" --ignore="registration*.html"
+	$(MANAGE) makemessages -l fr --ignore="ve" --ignore="login.html" --ignore="password*.html" --ignore="registration*.html"
+	$(MANAGE) makemessages -l pt --ignore="ve" --ignore="login.html" --ignore="password*.html" --ignore="registration*.html"
+
+compilemessages: ./ve/bin/python
+	$(MANAGE) compilemessages
+
+
 # run this one the very first time you check
 # this out on a new machine to set up dev
 # database, etc. You probably *DON'T* want
