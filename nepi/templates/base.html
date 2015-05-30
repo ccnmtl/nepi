@@ -8,25 +8,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="nepi">
     <meta name="author" content="CCNMTL">
-    <link rel="shortcut icon" href="/site_media/img/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" />
 
     {% compress css %}
-        <link href="/site_media/bootstrap/css/bootstrap.css" rel="stylesheet">
-        <link href="/site_media/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-        <link href="/site_media/css/main.css" rel="stylesheet">
+        <link href="{{STATIC_URL}}bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="{{STATIC_URL}}bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
     {% endcompress %}
 
     {% block css %}
     {% endblock %}
 
-    <script src="/site_media/js/jquery-1.10.1.min.js"></script>
+    <script src="{{STATIC_URL}}js/jquery-1.10.1.min.js"></script>
 </head>
 <body>
     <div class="container" id="outer-container">
         {% block masthead %}        
             <div id="titlebar">
                 <div class="title-left">
-                <a href="/" title="ICAP Nursing E-Learning"><img src="/site_media/img/icap-nursing-elearning.png" title="ICAP Nursing E-Learning"></a>
+                <a href="/" title="ICAP Nursing E-Learning"><img src="{{STATIC_URL}}img/icap-nursing-elearning.png" title="ICAP Nursing E-Learning"></a>
                 </div>
                 <div class="title-right">
             		{% block usernav %}
@@ -45,8 +45,8 @@
                         </ul>
             		{% endblock %}
                     <ul class="title-logos">
-                        <li><a href="http://www.pepfar.gov/" target="_blank" title="PEPFAR"><img src="/site_media/img/pepfar.png" class="header-logo"></a></li>
-                        <li><a href="http://icap.columbia.edu" target="_blank" title="ICAP"><img src="/site_media/img/icap-full.png" alt="ICAP" class="header-logo icap-logo"></a></li>
+                        <li><a href="http://www.pepfar.gov/" target="_blank" title="PEPFAR"><img src="{{STATIC_URL}}img/pepfar.png" class="header-logo"></a></li>
+                        <li><a href="http://icap.columbia.edu" target="_blank" title="ICAP"><img src="{{STATIC_URL}}img/icap-full.png" alt="ICAP" class="header-logo icap-logo"></a></li>
                     </ul>
                 </div>
             </div>
@@ -77,14 +77,14 @@
                 <li><a href="/contact/">{% trans "Contact" %}</a></li>
             </ul>
             <ul class="right-footer-menu">
-                <li><a href="http://ccnmtl.columbia.edu" target="_blank" title="CCNMTL"><img src="/site_media/img/logo_ccnmtl_white.png" class="footer-logo"></a></li>
+                <li><a href="http://ccnmtl.columbia.edu" target="_blank" title="CCNMTL"><img src="{{STATIC_URL}}img/logo_ccnmtl_white.png" class="footer-logo"></a></li>
             </ul>
         </div>
     </footer>
     {% endblock %}
 
     {% compress js %}
-        <script src="/site_media/bootstrap/js/bootstrap.js"></script>
+        <script src="{{STATIC_URL}}bootstrap/js/bootstrap.js"></script>
     {% endcompress %}
 
     {% block js %}
