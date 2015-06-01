@@ -17,36 +17,38 @@ jQuery(document).ready(function() {
     jQuery("input[type='text']")//?
 
     jQuery('form').submit(function(evt) {
+        evt.stopImmediatePropagation();
         var inputs = jQuery(evt.currentTarget).find("input[type='text']");
         
-        for (var i=0; i < inputs.length; i++) {
-        	
-        	var re = new RegExp(/^\d*\.?\d*$/);
-        	var dig = new RegExp(/^\d+$/);
-        	
-        	var nvp = jQuery(inputs[0]).val();
-        	var tpd = jQuery(inputs[1]).val();
-        	var wks = jQuery(inputs[2]).val();
-        	
-        	var value = parseFloat(nvp);
-            if (!nvp.match(re) || isNaN(value))  {
-                alert("Please enter a valid digit or decimal for ml of NVP.");
-                return false;
-            }
-
-            value = parseInt(tpd);            
-            if ((!tpd.match(dig)) || (tpd.length > 3) || isNaN(value))  {
-                alert('Please enter a valid digit or decimal for "times each day."');
-                return false;
-                
-            }
-
-            value = parseFloat(wks);
-            if ((!wks.match(dig)) || (wks.length > 3) || isNaN(value))  {
-                alert('Please enter a valid digit or decimal for "weeks".');
-                return false;
-            }
+        jQuery('.control-group').removeClass('error');
+        
+        var success = true;
+        var re = new RegExp(/^\d*\.?\d*$/);
+        var dig = new RegExp(/^\d+$/);
+        
+    	var nvp = jQuery(inputs[0]).val();
+    	var tpd = jQuery(inputs[1]).val();
+    	var wks = jQuery(inputs[2]).val();
+    	
+    	var value = parseFloat(nvp);
+        if (!nvp.match(re) || isNaN(value))  {
+           jQuery(inputs[0]).parent().parent().addClass('error');
+           success = false;
         }
+
+        value = parseInt(tpd);            
+        if ((!tpd.match(dig)) || (tpd.length > 3) || isNaN(value))  {
+            jQuery(inputs[1]).parent().parent().addClass('error');
+            success = false;
+        }
+
+        value = parseFloat(wks);
+        if ((!wks.match(dig)) || (wks.length > 3) || isNaN(value))  {
+            jQuery(inputs[2]).parent().parent().addClass('error');
+            success = false;
+        }
+
+        return success;
     });
 });
 </script>
