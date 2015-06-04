@@ -59,7 +59,7 @@ urlpatterns = patterns(
 
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
-    (r'^contact/$', ContactView.as_view()),
+    url(r'^contact/$', ContactView.as_view(), name='contactus'),
     url(r'^register/$', RegistrationView.as_view(), name='register'),
 
     # password change & reset. overriding to gate them.

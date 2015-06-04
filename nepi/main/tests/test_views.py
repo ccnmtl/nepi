@@ -3,7 +3,7 @@ from json import loads
 import json
 
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.core import mail
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
@@ -35,7 +35,7 @@ class TestBasicViews(TestCase):
                           ('http://testserver/accounts/login/?next=/', 302))
 
     def test_contact(self):
-        response = self.client.post('/contact/',
+        response = self.client.post(reverse('contactus'),
                                     {"subject": "new_student",
                                      "message": "new_student",
                                      "sender": "new_student"})
@@ -50,7 +50,11 @@ class TestBasicViews(TestCase):
             'subject': 'Lorem Ipsum',
             'message': 'Proin tristique volutpat purus sed accumsan.'
         }
-        ContactView().form_valid(form)
+        view = ContactView()
+        view.request = RequestFactory().get(reverse('contactus'))
+        view.request.user = AnonymousUser()
+
+        view.form_valid(form)
         self.assertEqual(len(mail.outbox), 1)
 
     def test_smoketest(self):
