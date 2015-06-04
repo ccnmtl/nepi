@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from pagetree.models import Hierarchy
 from django.contrib.auth.models import User
+from pagetree.models import Hierarchy, UserPageVisit
 
 from nepi.main.models import UserProfile, \
     Group, School, Country, PendingTeachers
@@ -32,11 +32,16 @@ class PendingTeacherAdmin(admin.ModelAdmin):
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Hierarchy)
 
-# end of taken form tobacco
-
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Group, SchoolGroupAdmin)
 admin.site.register(School)
 admin.site.register(Country)
 admin.site.register(PendingTeachers, PendingTeacherAdmin)
+
+
+class UserPageVisitAdmin(admin.ModelAdmin):
+    search_fields = ['user__username']
+    list_display = ['user', 'section', 'status']
+
+admin.site.register(UserPageVisit, UserPageVisitAdmin)
