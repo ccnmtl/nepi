@@ -118,14 +118,15 @@
      <li><a href="#edit-page-tab" data-toggle="tab">Edit Section</a></li>
      <li><a href="#move-section-tab" data-toggle="tab">Move Section</a></li>
      <li><a href="#history-tab" data-toggle="tab">History</a></li>
+     <li><a href="#clone-hierarchy-tab" data-toggle="tab">Clone Hierarchy</a></li>
  </ul>
  
  
- <div class="tab-content">
+ <div class="tab-content pagetree-edit">
      <div id="content-tree" class="tab-pane {% if section.is_root %}active{% endif%}">
          {% with section.hierarchy as hierarchy %}
          <div style="margin-top: 5px; margin-left: 5px;">
-            <h3>{{hierarchy.name}}</h3>
+            <h1>{{hierarchy.name}}</h1>
             <a href="{{root.get_edit_url}}"><b>{{hierarchy.get_root.name}}</b></a>
                 {% for s in hierarchy.get_root.get_descendants %}
                     <div class="edit-menu-{{s.depth}}">             
@@ -224,8 +225,8 @@
 
 
  <div id="children-tab" class="tab-pane">
-  <h2>Reorder Children</h2>
-  <div class="well">
+  <h1>Reorder Children</h1>
+  <div>
   <p>Drag and drop arrows to reorder children</p>
   <ul id="children-order-list">
      {% for child in section.get_children %}
@@ -244,9 +245,9 @@
   </ul>
  </div>
  
- <h2>Add Child</h2>
+ <h1>Add Child</h1>
   <form action="{% url 'add-child-section' section.id %}" method="post"
-             class="well form-inline" >
+             class="form-inline" >
   
 {{ section.add_child_section_form|bootstrap }}
   
@@ -307,9 +308,9 @@
   <div id="edit-page-tab" class="tab-pane">
  
   <form action="{% url 'edit-section' section.id %}" method="post"
-              class="form-horizontal well">
+              class="form-horizontal">
  {% csrf_token %}
-  <fieldset><legend>Edit Page</legend>
+  <fieldset><h1>Edit Page</h1>
   
   {{ section.edit_form|bootstrap }}
  
@@ -318,7 +319,7 @@
   </form>
   
   
-  <form action="{% url 'delete-section' section.id %}" method="post" class="well">
+  <form action="{% url 'delete-section' section.id %}" method="post">
   <input type="submit" value="delete this page" class="btn btn-danger"/>
   </form>
   
@@ -362,7 +363,14 @@
  </table>
  {% endif %}
  </div>
+ 
+ <div id="clone-hierarchy-tab" class="tab-pane">
+ Foo bar baz
  </div>
+ 
+ </div>
+ 
+ 
 {% endblock %}
  
 {% block contentnav %}
