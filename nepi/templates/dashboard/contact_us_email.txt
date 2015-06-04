@@ -1,0 +1,7 @@
+Username: {{user.username}}
+
+From: {{first_name}} {{last_name}}
+
+Email: {{sender}}
+
+{{message}}
