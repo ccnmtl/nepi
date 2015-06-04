@@ -37,7 +37,7 @@
                                 <li>{% block usernav_extra %}{% endblock %}</li>
 
                                 {% if request.user.is_superuser %}
-                  		            <li><a href="{% url "impersonate-list" %}">[impersonate]</a></li>
+                  		            <li><a href="{% url "impersonate-search" %}">[impersonate]</a></li>
             			        {% endif %}
 
                   		        <li><a href="/accounts/logout/?next=/" class="btn btn-inverse">{% trans "Log Out" %}</a></li>
