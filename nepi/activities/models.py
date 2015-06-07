@@ -27,6 +27,27 @@ class Conversation(models.Model):
     def __unicode__(self):
         return unicode(self.scenario_type)
 
+    def as_dict(self):
+        return dict(
+            scenario_type=self.scenario_type,
+            text_one=self.text_one,
+            response_one=self.response_one,
+            response_two=self.response_two,
+            response_three=self.response_three,
+            complete_dialog=self.complete_dialog
+        )
+
+    @classmethod
+    def create_from_dict(cls, d):
+        return cls.objects.create(
+            scenario_type=d.get('scenario_type', 'G'),
+            text_one=d.get('text_one', ''),
+            response_one=d.get('response_one', ''),
+            response_two=d.get('response_two', ''),
+            response_three=d.get('response_three', ''),
+            complete_dialog=d.get('complete_dialog', '')
+        )
+
 
 class ConversationScenario(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
@@ -176,6 +197,23 @@ class ConversationScenario(models.Model):
         else:
             return 0
 
+    @classmethod
+    def create_from_dict(cls, d):
+        good = d.get('good_conversation', {})
+        bad = d.get('bad_conversation', {})
+
+        return cls.objects.create(
+            description=d.get('description', ''),
+            good_conversation=Conversation.create_from_dict(good),
+            bad_conversation=Conversation.create_from_dict(bad)
+        )
+
+    def as_dict(self):
+        d = dict(description=self.description)
+        d['good_conversation'] = self.good_conversation.as_dict()
+        d['bad_conversation'] = self.bad_conversation.as_dict()
+        return d
+
 
 class ConversationReportColumn(ReportColumnInterface):
 
@@ -278,6 +316,13 @@ class ImageInteractive(models.Model):
     def unlocked(self, user):
         return True
 
+    @classmethod
+    def create_from_dict(cls, d):
+        return cls.objects.create(intro_text=d.get('intro_text', ''))
+
+    def as_dict(self):
+        return dict(intro_text=self.intro_text)
+
 
 class ImageInteractiveForm(forms.ModelForm):
     class Meta:
@@ -321,6 +366,13 @@ class ARTCard(models.Model):
     def unlocked(self, user):
         return True
 
+    @classmethod
+    def create_from_dict(cls, d):
+        return cls.objects.create(intro_text=d.get('intro_text', ''))
+
+    def as_dict(self):
+        return dict(intro_text=self.intro_text)
+
 
 class ARTCardForm(forms.ModelForm):
     class Meta:
@@ -361,6 +413,13 @@ class AdherenceCard(models.Model):
 
     def unlocked(self, user):
         return True
+
+    @classmethod
+    def create_from_dict(cls, d):
+        return cls.objects.create(quiz_class=d.get('quiz_class', ''))
+
+    def as_dict(self):
+        return dict(quiz_class=self.quiz_class)
 
 
 class AdherenceCardForm(forms.ModelForm):
@@ -426,6 +485,13 @@ class RetentionRateCard(models.Model):
         else:
             return False
 
+    @classmethod
+    def create_from_dict(cls, d):
+        return cls.objects.create(intro_text=d.get('intro_text', ''))
+
+    def as_dict(self):
+        return dict(intro_text=self.intro_text)
+
 
 class RetentionRateCardForm(forms.ModelForm):
     class Meta:
@@ -474,6 +540,48 @@ class Month(models.Model):
 
     def __unicode__(self):
         return"%s" % self.display_name
+
+    @classmethod
+    def create_from_dict(cls, d):
+        month = cls.objects.create(display_name=d.get('display_name', ''))
+
+        for day in d['days']:
+            day['month'] = month
+            month.day_set.add(Day.create_from_dict(day))
+        return month
+
+    def as_dict(self):
+        d = dict(display_name=self.display_name)
+        d['days'] = []
+        for day in self.day_set.all():
+            d['days'].append(day.as_dict())
+        return d
+
+
+class Day(models.Model):
+    calendar = models.ForeignKey(Month)
+    number = models.IntegerField(default=1)
+    explanation = models.TextField(default="")
+
+    class Meta:
+        ordering = ['number']
+
+    def __unicode__(self):
+        return"%s %s" % (self.number, self.explanation)
+
+    @classmethod
+    def create_from_dict(cls, d):
+        return cls.objects.create(
+            number=d.get('number', 1),
+            explanation=d.get('explanation', ''),
+            calendar=d.get('month', None)
+        )
+
+    def as_dict(self):
+        return dict(
+            explanation=self.explanation,
+            number=self.number
+        )
 
 
 class CalendarChart(models.Model):
@@ -565,6 +673,22 @@ class CalendarChart(models.Model):
         CalendarResponse.objects.filter(calendar_activity=self,
                                         user=user).delete()
 
+    @classmethod
+    def create_from_dict(cls, d):
+        return cls.objects.create(
+            description=d.get('description', ''),
+            correct_date=d.get('correct_date', ''),
+            month=Month.create_from_dict(d.get('month', {}))
+        )
+
+    def as_dict(self):
+        d = dict(
+            description=self.description,
+            correct_date=self.correct_date,
+            month=self.month.as_dict()
+        )
+        return d
+
 
 class CalendarReportColumn(ReportColumnInterface):
 
@@ -596,18 +720,6 @@ class CalendarReportColumn(ReportColumnInterface):
 class CalendarChartForm(forms.ModelForm):
     class Meta:
         model = CalendarChart
-
-
-class Day(models.Model):
-    calendar = models.ForeignKey(Month)
-    number = models.IntegerField(default=1)
-    explanation = models.TextField(default="")
-
-    class Meta:
-        ordering = ['number']
-
-    def __unicode__(self):
-        return"%s %s" % (self.number, self.explanation)
 
 
 class CalendarResponse(models.Model):
@@ -718,6 +830,24 @@ class DosageActivity(models.Model):
             return 1
         else:
             return 0
+
+    def as_dict(self):
+        return dict(
+            explanation=self.explanation,
+            question=self.question,
+            ml_nvp=self.ml_nvp,
+            times_day=self.times_day,
+            weeks=self.weeks)
+
+    @classmethod
+    def create_from_dict(cls, d):
+        return cls.objects.create(
+            explanation=d.get('explanation', None),
+            question=d.get('question', None),
+            ml_nvp=d.get('ml_nvp', 0.0),
+            times_day=d.get('times_day', 0),
+            weeks=d.get('weeks', 0)
+        )
 
 
 class DosageReportColumn(ReportColumnInterface):

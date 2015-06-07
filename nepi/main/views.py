@@ -829,9 +829,3 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
             (writer.writerow(row) for row in rows), content_type="text/csv")
         response['Content-Disposition'] = 'attachment; filename="' + fnm + '"'
         return response
-
-
-class CloneHierarchyView(LoggedInMixin, AdministrationOnlyMixin, View):
-
-    def post(self, request, *args, **kwargs):
-        pass

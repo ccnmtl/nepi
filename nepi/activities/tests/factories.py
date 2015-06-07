@@ -66,6 +66,7 @@ class ConversationPageblockHierarchyFactory(factory.DjangoModelFactory):
 
 class RetentionRateCardFactory(factory.DjangoModelFactory):
     FACTORY_FOR = RetentionRateCard
+    intro_text = 'intro text'
 
 
 class RetentionRateHierarchyFactory(factory.DjangoModelFactory):
@@ -111,6 +112,7 @@ class CalendarChartFactory(factory.DjangoModelFactory):
     FACTORY_FOR = CalendarChart
     month = factory.SubFactory(MonthFactory)
     correct_date = 4
+    description = 'the description'
 
 
 class IncorrectDayOneFactory(factory.DjangoModelFactory):
@@ -136,15 +138,23 @@ class CorrectDayFactory(factory.DjangoModelFactory):
 
 class ImageInteractiveFactory(factory.DjangoModelFactory):
     FACTORY_FOR = ImageInteractive
+    intro_text = "intro text"
 
 
 class ARTCardFactory(factory.DjangoModelFactory):
     FACTORY_FOR = ARTCard
+    intro_text = "intro text"
 
 
 class AdherenceCardFactory(factory.DjangoModelFactory):
     FACTORY_FOR = AdherenceCard
+    quiz_class = "quiz class"
 
 
 class DosageActivityFactory(factory.DjangoModelFactory):
     FACTORY_FOR = DosageActivity
+    explanation = 'the explanation'
+    question = 'the question'
+    ml_nvp = 1.5
+    times_day = 3
+    weeks = 5
