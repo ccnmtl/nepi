@@ -541,13 +541,14 @@ class ContactView(FormView):
     success_url = '/email_sent/'
 
     def form_valid(self, form):
-        form_data = form.cleaned_data
+        form.cleaned_data['user'] = self.request.user
+        ctx = Context(form.cleaned_data)
+
+        template = loader.get_template('dashboard/contact_us_email.txt')
+        message = template.render(ctx)
 
         sender = settings.NEPI_MAILING_LIST
-        subject = "ICAP Nursing E-learning message: %s" % form_data['subject']
-        message = "From: %s %s\n\nMessage: %s\n\nReply to: %s" % (
-            form_data['first_name'], form_data['last_name'],
-            form_data['message'], form_data['sender'])
+        subject = "ICAP Nursing E-learning message: %s" % ctx['subject']
         recipients = [settings.ICAP_MAILING_LIST]
         send_mail(subject, message, sender, recipients)
         return super(ContactView, self).form_valid(form)
