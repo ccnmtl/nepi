@@ -267,7 +267,7 @@ class TestDayAndMonthObjects(TestCase):
         self.d = Day(calendar=self.m, number=1, explanation="Your wrong!")
 
     def test_unicode(self):
-        self.assertEqual(str(self.m), "June")
+        self.assertEqual(str(self.m), "June in None")
         self.assertEqual(str(self.d), "1 Your wrong!")
 
 

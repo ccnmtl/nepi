@@ -89,7 +89,7 @@ class TestAdherenceStateNode(TestCase):
         request.user = UserFactory()
 
         node = GetUserResponse('adherence', 'the_response')
-        context = dict(request=request)
+        context = dict(request=request, section=self.section)
         node.render(context)
         self.assertFalse('the_response' in context)
 
@@ -101,7 +101,7 @@ class TestAdherenceStateNode(TestCase):
         request.user = user
 
         node = GetUserResponse('adherence', 'the_response')
-        context = dict(request=request)
+        context = dict(request=request, section=self.section)
         node.render(context)
         self.assertEquals(context['the_response'], 'a')
 
@@ -114,6 +114,6 @@ class TestAdherenceStateNode(TestCase):
         request.user = user
 
         node = GetUserResponse('adherence', 'the_response')
-        context = dict(request=request)
+        context = dict(request=request, section=self.section)
         node.render(context)
         self.assertEquals(context['the_response'], 'a')

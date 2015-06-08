@@ -539,7 +539,11 @@ class Month(models.Model):
         return self.display_name.split(' ')[0]
 
     def __unicode__(self):
-        return"%s" % self.display_name
+        hierarchy_name = None
+        chart = self.calendarchart_set.first()
+        if chart:
+            hierarchy_name = chart.pageblock().section.hierarchy.name
+        return "%s in %s" % (self.display_name, hierarchy_name)
 
     @classmethod
     def create_from_dict(cls, d):
