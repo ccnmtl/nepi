@@ -122,6 +122,23 @@
     <div class="navbar" id="primarynav">
         <div class="navbar-inner">
             <div class="container">
+                <ul class="nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Hierarchy
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            {% for h in hierarchies %}
+                                <li>
+                                    <a href="{{h.get_root.get_edit_url}}">
+                                        {{h.name}}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>                
+                </ul>
                 <ul class="nav pull-right">
                     <li><a href="{{section.get_absolute_url}}">View Page</a></li>
                 </ul>
@@ -132,7 +149,8 @@
  
 {% block content %}
   
-  <h1>{{ section.label }}</h1>
+  <h1><small>{{section.hierarchy.name}}</small>&nbsp;&nbsp; {{ section.label }}</h1>
+  <br />
  
  <ul class="edit-page-nav nav nav-tabs">
      <li {% if section.is_root %}class="active"{% endif%}>
