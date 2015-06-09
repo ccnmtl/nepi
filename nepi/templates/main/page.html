@@ -117,7 +117,7 @@
     {% endif %}
 
     {% for block in section.pageblock_set.all %}
-        <div class="pageblock{% if block.css_extra %} {{block.css_extra}}{% endif %}">
+        <div class="hierarchy-{{section.hierarchy.name|slugify}} pageblock{% if block.css_extra %} {{block.css_extra}}{% endif %}">
             {% if block.label %}<h4>{{block.label}}</h4>{% endif %}
             {% render block %}
         </div>

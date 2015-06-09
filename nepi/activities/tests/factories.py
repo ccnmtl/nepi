@@ -3,7 +3,6 @@ from nepi.activities.models import ConversationScenario, \
     Conversation, ConvClick, RetentionRateCard, RetentionClick, \
     CalendarChart, Month, Day, DosageActivity, \
     ImageInteractive, ARTCard, AdherenceCard
-from pagetree.models import Hierarchy, Section
 
 
 class GoodConversationFactory(factory.DjangoModelFactory):
@@ -42,60 +41,9 @@ class ConvClickFactory(factory.DjangoModelFactory):
     conversation = factory.SubFactory(GoodConversationFactory)
 
 
-class ConversationPageblockHierarchyFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Hierarchy
-    name = "conv_hierarchy"
-    base_url = "/"
-
-    @factory.post_generation
-    def populate(self, create, extracted, **kwargs):
-        self.get_root().add_child_section_from_dict(
-            {
-                'label': 'Testing ConversationScenario',
-                'slug': 'testing-conversationscenario',
-                'pageblocks': [
-                    {'label': 'Testing ConversationScenario',
-                     'css_extra': '',
-                     'block_type': 'activities.ConversationScenario',
-                     'body': 'You should now use the edit link to add content',
-                     },
-                ],
-                'children': [],
-            })
-
-
 class RetentionRateCardFactory(factory.DjangoModelFactory):
     FACTORY_FOR = RetentionRateCard
-    intro_text = 'intro text'
-
-
-class RetentionRateHierarchyFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Hierarchy
-    name = "ret_hierarchy"
-    base_url = "/"
-
-    @factory.post_generation
-    def populate(self, create, extracted, **kwargs):
-        self.get_root().add_child_section_from_dict(
-            {
-                'label': 'Testing RetentionRate',
-                'slug': 'testing-retentionrate',
-                'pageblocks': [
-                    {'label': 'Testing RetentionRate',
-                     'css_extra': '',
-                     'block_type': 'activities.RetentionRate',
-                     'body': 'You should now use the edit link to add content',
-                     },
-                ],
-                'children': [],
-            })
-
-
-class RetentionSectionTest(factory.DjangoModelFactory):
-    FACTORY_FOR = Section
-    hierarchy = factory.SubFactory(RetentionRateHierarchyFactory)
-    depth = 1
-    label = 'Testing RetentionRate'
+    intro_text = "intro text"
 
 
 class RetentionClickFactory(factory.DjangoModelFactory):
@@ -105,14 +53,14 @@ class RetentionClickFactory(factory.DjangoModelFactory):
 
 class MonthFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Month
-    display_name = "January"
+    display_name = "January 2015"
 
 
 class CalendarChartFactory(factory.DjangoModelFactory):
     FACTORY_FOR = CalendarChart
     month = factory.SubFactory(MonthFactory)
     correct_date = 4
-    description = 'the description'
+    description = 'description'
 
 
 class IncorrectDayOneFactory(factory.DjangoModelFactory):

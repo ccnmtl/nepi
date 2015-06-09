@@ -87,7 +87,7 @@ class ConversationScenario(models.Model):
             class EditForm(forms.Form):
                 alt_text = ("<a href=\"" +
                             reverse("create_conversation", args=[self.id])
-                            + "\">add a conversation</a>")
+                            + "\">add conversation</a>")
                 description = forms.CharField(initial=self.description)
             form = EditForm()
             return form
@@ -96,7 +96,7 @@ class ConversationScenario(models.Model):
                 class EditForm(forms.Form):
                     alt_text = ("<a href=\"" +
                                 reverse("create_conversation", args=[self.id])
-                                + "\">add a bad conversation</a><br>" +
+                                + "\">add bad conversation</a><br>" +
                                 "<a href=\"" +
                                 reverse("update_conversation",
                                         args=[self.good_conversation.id])
@@ -109,7 +109,7 @@ class ConversationScenario(models.Model):
                 class EditForm(forms.Form):
                     alt_text = ("<a href=\"" +
                                 reverse("create_conversation", args=[self.id])
-                                + "\">add a good conversation</a><br>" +
+                                + "\">add good conversation</a><br>" +
                                 "<a href=\"" +
                                 reverse("update_conversation",
                                         args=[self.bad_conversation.id])
@@ -123,7 +123,7 @@ class ConversationScenario(models.Model):
                     alt_text = ("<a href=\"" +
                                 reverse("update_conversation",
                                         args=[self.good_conversation.id])
-                                + "\">update a good conversation</a><br>" +
+                                + "\">update good conversation</a><br>" +
                                 "<a href=\"" +
                                 reverse("update_conversation",
                                         args=[self.bad_conversation.id])
@@ -634,21 +634,6 @@ class CalendarChart(models.Model):
             correct_click__number=self.correct_date)
 
         return responses.count() > 0
-
-    def submit(self, user, data):
-        for k in data.keys():
-            if k == "day":
-                day = int(data[k])
-            try:
-                cr = CalendarResponse.objects.get(calendar_activity=self,
-                                                  user=user)
-                if cr.first_click is None:
-                    cr.first_click = day
-                if cr.day == self.correct_date:
-                    cr.correct_click = cr.day
-                cr.save()
-            except CalendarResponse.DoesNotExist:
-                return None
 
     def redirect_to_self_on_submit(self):
         return True
