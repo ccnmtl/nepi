@@ -72,6 +72,9 @@ class ViewPage(LoggedInMixin, InitializeHierarchyMixin, PageView):
 class EditPage(LoggedInMixinSuperuser, InitializeHierarchyMixin, EditView):
     template_name = "pagetree/edit_page.html"
 
+    def get_extra_context(self):
+        return dict(hierarchies=Hierarchy.objects.all())
+
 
 class HomeView(LoggedInMixin, View):
     '''redoing so that it simply redirects people where they need to be'''
