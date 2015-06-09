@@ -1,19 +1,22 @@
+{% load i18n %}
+
 {% block content %}
 <div id="artcardsections">
-<div class="artcard section" id="followupblock" data-part="followup"></div>
-<div class="artcard section" id="adherenceblock" data-part="adherence"></div>
-<div class="artcard section" id="whyblock" data-part="why"></div>
-<div class="artcard section" id="regimenblock" data-part="regimen"></div>
-<div id="explanation_box" class="artcard"></div>
+    <div class="artcard section" id="followupblock" data-part="followup"></div>
+    <div class="artcard section" id="adherenceblock" data-part="adherence"></div>
+    <div class="artcard section" id="whyblock" data-part="why"></div>
+    <div class="artcard section" id="regimenblock" data-part="regimen"></div>
+    <div id="explanation_box" class="artcard"></div>
 </div>
 
-<div style="display:none" id="followup" class="explanation">
-		<div class="ex_titlefollow">Follow-Up Date</div>
-		<div class="ex_content">Document the follow-up date the woman is returning to the clinic.</div>
-</div>
-<div style="display:none" id="adherence" class="explanation">
-		<div class="ex_titlead">Adherence</div>
-		<div class="ex_content">Document adherence to ARV drugs as G, F, or P according to the following codes: 
+    <div style="display:none" id="followup" class="explanation">
+		<div class="ex_titlefollow">{% trans 'Follow-Up Date' %}</div>
+		<div class="ex_content">{% trans 'Document the follow-up date the woman is returning to the clinic.' %}</div>
+    </div>
+    <div style="display:none" id="adherence" class="explanation">
+		<div class="ex_titlead">{% trans 'Adherence' %}</div>
+		<div class="ex_content">{% trans 'Document adherence to ARV drugs as G, F, or P according to the following codes' %}:
+        {% blocktrans trimmed %} 
 		<table>
 		  <tr>
 		      <td><strong>Adherence</strong></td>
@@ -45,49 +48,50 @@
 		      <td><u>></u> 9 doses</td>
 		  </tr>
 		</table>    
-		    
+		{% endblocktrans %}
 		</div>
-</div>
-<div style="display:none" id="why" class="explanation">
-		<div class="ex_titlewhy">Why</div>
+    </div>
+    <div style="display:none" id="why" class="explanation">
+		<div class="ex_titlewhy">{% trans 'Why' %}</div>
 		<div class="ex_content">
-		    Document why adherence was poor or fair by number according to the following codes (select all that apply): 
-		      <table>
-          <tr>
-              <td><strong>1.</strong> Toxicity/side effects</td>
-              <td><strong>8.</strong> Patient lost/ran out of pills</td>        
-          </tr>
-          <tr>
-              <td><strong>2.</strong> Shared with others</td>
-              <td><strong>9.</strong> Delivery/travel problems</td>
-         </tr>
-          <tr>
-              <td><strong>3.</strong> Forgot</td>
-              <td><strong>10.</strong> Inability to pay</td>
-          </tr>
-          <tr>
-              <td><strong>4.</strong> Felt better</td>
-              <td><strong>11.</strong> Alcohol</td>
-          </tr>
-          <tr>
-              <td><strong>5.</strong> Too ill</td>
-              <td><strong>12.</strong> Depression</td>
-          </tr>
-          <tr>
-              <td><strong>6.</strong> Stigma, disclosure or privacy issues</td>
-              <td><strong>13.</strong> Pill burden</td>
-          </tr>
-          <tr>
-              <td><strong>7.</strong> Drug stock out</td>
-              <td><strong>14.</strong> Other (specify)</td>
-          </tr>
-     
-        </table>    
-		    
+		   {% trans 'Document why adherence was poor or fair by number according to the following codes (select all that apply)' %}:
+       
+           {% blocktrans trimmed %} 
+    	   <table>
+              <tr>
+                  <td><strong>1.</strong> Toxicity/side effects</td>
+                  <td><strong>8.</strong> Patient lost/ran out of pills</td>        
+              </tr>
+              <tr>
+                  <td><strong>2.</strong> Shared with others</td>
+                  <td><strong>9.</strong> Delivery/travel problems</td>
+             </tr>
+              <tr>
+                  <td><strong>3.</strong> Forgot</td>
+                  <td><strong>10.</strong> Inability to pay</td>
+              </tr>
+              <tr>
+                  <td><strong>4.</strong> Felt better</td>
+                  <td><strong>11.</strong> Alcohol</td>
+              </tr>
+              <tr>
+                  <td><strong>5.</strong> Too ill</td>
+                  <td><strong>12.</strong> Depression</td>
+              </tr>
+              <tr>
+                  <td><strong>6.</strong> Stigma, disclosure or privacy issues</td>
+                  <td><strong>13.</strong> Pill burden</td>
+              </tr>
+              <tr>
+                  <td><strong>7.</strong> Drug stock out</td>
+                  <td><strong>14.</strong> Other (specify)</td>
+              </tr>
+            </table>    
+    		{% endblocktrans %}
 		</div>
-</div>
-<div style="display:none" id="regimen" class="explanation">
-		<div class="ex_titleregimen">Regimen</div>
-		<div class="ex_content">Document the ARV dose the number of pills dispensed.</div>
-</div>
+    </div>
+    <div style="display:none" id="regimen" class="explanation">
+		<div class="ex_titleregimen">{% trans 'Regimen' %}</div>
+		<div class="ex_content">{% trans 'Document the ARV dose the number of pills dispensed.' %}</div>
+    </div>
 {% endblock %}
