@@ -14,6 +14,7 @@ class GetUserResponse(template.Node):
     def render(self, context):
         ctype = ContentType.objects.get_for_model(Quiz)
         blocks = PageBlock.objects.filter(
+            section__hierarchy=context['section'].hierarchy,
             content_type__pk=ctype.pk,
             css_extra__contains=self.quiz_identifier)
         ids = blocks.values_list('object_id', flat=True)

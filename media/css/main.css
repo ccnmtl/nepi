@@ -511,7 +511,6 @@ h3 {
 	line-height: 20px;
 }
 
-
 h3.pageheader {
 	font-size: 16px;
 	margin: 20px 0 10px 0;
@@ -1976,3 +1975,24 @@ footer.icapnel-footer .container a:hover {
 img.footer-logo {
 	width: 125px;
 }
+
+.pagetree-edit h1,
+.pagetree-edit h2,
+.pagetree-edit h3 {
+   margin: 0 0 10px 0;
+   text-align: left; 
+}
+
+.pagetree-edit legend {
+    font-size: 22px;
+    text-align: left;
+    line-height: 34px;
+    font-family: 'Arial Narrow', 'Arial', 'helvetica', sans-serif;
+    margin-bottom: 0;
+    font-weight: bold;
+}
+
+.pagetree-edit fieldset {
+    border: 0;
+}
+

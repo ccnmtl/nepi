@@ -4,16 +4,15 @@ from django.test import TestCase
 from pagetree.tests.factories import HierarchyFactory
 from quizblock.tests.test_models import FakeReq
 
-from factories import ConversationScenarioFactory, ConvClickFactory, \
-    GoodConversationFactory, ImageInteractiveFactory, ARTCardFactory, \
+from nepi.activities.models import ConvClick, ConversationResponse, \
+    ConversationScenario, DosageActivity, DosageActivityResponse, Month, Day, \
+    RetentionResponse, RetentionClick, RetentionRateCard, Conversation, \
+    CalendarResponse, CalendarChart, ImageInteractive, ARTCard, AdherenceCard
+from nepi.activities.tests.factories import ConvClickFactory, \
+    GoodConversationFactory, ConversationScenarioFactory, DosageActivityFactory, \
+    RetentionRateCardFactory, RetentionClickFactory, CalendarChartFactory, \
+    MonthFactory, CorrectDayFactory, ImageInteractiveFactory, ARTCardFactory, \
     AdherenceCardFactory
-from nepi.activities.models import ConversationResponse, Day, Month, \
-    RetentionClick, Conversation, ConvClick, CalendarResponse, \
-    DosageActivityResponse, DosageActivity, ImageInteractive, AdherenceCard, \
-    ARTCard, ConversationScenario, RetentionResponse, RetentionRateCard, \
-    CalendarChart
-from nepi.activities.tests.factories import CalendarChartFactory, MonthFactory, \
-    RetentionRateCardFactory, RetentionClickFactory, DosageActivityFactory
 from nepi.main.tests.factories import UserFactory
 
 
@@ -76,6 +75,71 @@ class TestConversationScenario(TestCase):
         r.POST = {'description': 'create'}
         artcard = ConversationScenario.create(r)
         self.assertEquals(artcard.description, 'create')
+
+    def test_as_dict(self):
+        d = self.scenario.as_dict()
+        self.assertEquals(self.scenario.description, d['description'])
+
+        good = d['good_conversation']
+        self.assertEquals(self.scenario.good_conversation.scenario_type,
+                          good['scenario_type'])
+        self.assertEquals(self.scenario.good_conversation.text_one,
+                          good['text_one'])
+        self.assertEquals(self.scenario.good_conversation.response_one,
+                          good['response_one'])
+        self.assertEquals(self.scenario.good_conversation.response_two,
+                          good['response_two'])
+        self.assertEquals(self.scenario.good_conversation.response_three,
+                          good['response_three'])
+        self.assertEquals(self.scenario.good_conversation.complete_dialog,
+                          good['complete_dialog'])
+
+        bad = d['bad_conversation']
+        self.assertEquals(self.scenario.bad_conversation.scenario_type,
+                          bad['scenario_type'])
+        self.assertEquals(self.scenario.bad_conversation.text_one,
+                          bad['text_one'])
+        self.assertEquals(self.scenario.bad_conversation.response_one,
+                          bad['response_one'])
+        self.assertEquals(self.scenario.bad_conversation.response_two,
+                          bad['response_two'])
+        self.assertEquals(self.scenario.bad_conversation.response_three,
+                          bad['response_three'])
+        self.assertEquals(self.scenario.bad_conversation.complete_dialog,
+                          bad['complete_dialog'])
+
+    def test_create_from_dict(self):
+        d = self.scenario.as_dict()
+        block = ConversationScenario.create_from_dict(d)
+        self.assertEquals(block.description, self.scenario.description)
+
+        good = block.good_conversation
+        self.assertEquals(self.scenario.good_conversation.scenario_type,
+                          good.scenario_type)
+        self.assertEquals(self.scenario.good_conversation.text_one,
+                          good.text_one)
+        self.assertEquals(self.scenario.good_conversation.response_one,
+                          good.response_one)
+        self.assertEquals(self.scenario.good_conversation.response_two,
+                          good.response_two)
+        self.assertEquals(self.scenario.good_conversation.response_three,
+                          good.response_three)
+        self.assertEquals(self.scenario.good_conversation.complete_dialog,
+                          good.complete_dialog)
+
+        bad = block.bad_conversation
+        self.assertEquals(self.scenario.good_conversation.scenario_type,
+                          bad.scenario_type)
+        self.assertEquals(self.scenario.good_conversation.text_one,
+                          bad.text_one)
+        self.assertEquals(self.scenario.good_conversation.response_one,
+                          bad.response_one)
+        self.assertEquals(self.scenario.good_conversation.response_two,
+                          bad.response_two)
+        self.assertEquals(self.scenario.good_conversation.response_three,
+                          bad.response_three)
+        self.assertEquals(self.scenario.good_conversation.complete_dialog,
+                          bad.complete_dialog)
 
     def test_add_form(self):
         self.assertTrue("description" in self.scenario.add_form().fields)
@@ -307,6 +371,25 @@ class TestDosageActivity(TestCase):
         self.assertEquals(resp.ml_nvp, Decimal('2.1'))
         self.assertEquals(resp.weeks, 6)
 
+    def test_as_dict(self):
+        block = DosageActivityFactory()
+        d = block.as_dict()
+        self.assertEquals(block.explanation, d['explanation'])
+        self.assertEquals(block.question, d['question'])
+        self.assertEquals(block.ml_nvp, d['ml_nvp'])
+        self.assertEquals(block.times_day, d['times_day'])
+        self.assertEquals(block.weeks, d['weeks'])
+
+    def test_create_from_dict(self):
+        original = DosageActivityFactory()
+        duplicate = DosageActivity.create_from_dict(original.as_dict())
+
+        self.assertEquals(original.explanation, duplicate.explanation)
+        self.assertEquals(original.question, duplicate.question)
+        self.assertEquals(original.ml_nvp, duplicate.ml_nvp)
+        self.assertEquals(original.times_day, duplicate.times_day)
+        self.assertEquals(original.weeks, duplicate.weeks)
+
 
 class TestDayAndMonthObjects(TestCase):
     def setUp(self):
@@ -314,7 +397,7 @@ class TestDayAndMonthObjects(TestCase):
         self.d = Day(calendar=self.m, number=1, explanation="Your wrong!")
 
     def test_unicode(self):
-        self.assertEqual(str(self.m), "June")
+        self.assertEqual(str(self.m), "June in None")
         self.assertEqual(str(self.d), "1 Your wrong!")
 
 
@@ -389,6 +472,16 @@ class TestRetentionRate(TestCase):
         block = RetentionRateCardFactory()
         block.edit({'intro_text': 'updated text'}, None)
         self.assertEquals(block.intro_text, 'updated text')
+
+    def test_as_dict(self):
+        block = RetentionRateCardFactory()
+        d = block.as_dict()
+        self.assertEquals(block.intro_text, d['intro_text'])
+
+    def test_create_from_dict(self):
+        d = RetentionRateCardFactory().as_dict()
+        block = RetentionRateCard.create_from_dict(d)
+        self.assertEquals(d['intro_text'], block.intro_text)
 
 
 class TestConversationNoFactory(TestCase):
@@ -515,6 +608,35 @@ class TestCalendarChart(TestCase):
         self.assertEquals(block.description, 'updated description')
         self.assertEquals(block.month, month)
 
+    def test_as_dict(self):
+        day = CorrectDayFactory()
+        chart = CalendarChartFactory(month=day.calendar)
+
+        d = chart.as_dict()
+        self.assertEquals(chart.description, d['description'])
+        self.assertEquals(chart.correct_date, d['correct_date'])
+        self.assertEquals(chart.month.display_name, d['month']['display_name'])
+        self.assertEquals(1, len(d['month']['days']))
+        self.assertEquals(day.number, d['month']['days'][0]['number'])
+        self.assertEquals(day.explanation,
+                          d['month']['days'][0]['explanation'])
+
+    def test_create_from_dict(self):
+        day = CorrectDayFactory()
+        original = CalendarChartFactory(month=day.calendar)
+        d = original.as_dict()
+
+        duplicate = CalendarChart.create_from_dict(d)
+        self.assertEquals(original.description, duplicate.description)
+        self.assertEquals(original.correct_date, duplicate.correct_date)
+        self.assertEquals(original.month.display_name,
+                          duplicate.month.display_name)
+        self.assertEquals(duplicate.month.day_set.count(), 1)
+
+        day2 = duplicate.month.day_set.first()
+        self.assertEquals(day.number, day2.number)
+        self.assertEquals(day.explanation, day2.explanation)
+
 
 class TestImageInteractive(TestCase):
     def test_basics(self):
@@ -552,6 +674,16 @@ class TestImageInteractive(TestCase):
         img_int = ImageInteractiveFactory()
         img_int.edit({'intro_text': 'updated text'}, None)
         self.assertEquals(img_int.intro_text, 'updated text')
+
+    def test_as_dict(self):
+        block = ImageInteractiveFactory()
+        d = block.as_dict()
+        self.assertEquals(block.intro_text, d['intro_text'])
+
+    def test_create_from_dict(self):
+        d = ImageInteractiveFactory().as_dict()
+        block = ImageInteractive.create_from_dict(d)
+        self.assertEquals(d['intro_text'], block.intro_text)
 
 
 class TestARTCard(TestCase):
@@ -591,6 +723,16 @@ class TestARTCard(TestCase):
         self.assertEquals(artcard.intro_text, 'intro_text info here')
         self.assertEquals(artcard.display_name, "ART Card")
 
+    def test_as_dict(self):
+        block = ARTCardFactory()
+        d = block.as_dict()
+        self.assertEquals(block.intro_text, d['intro_text'])
+
+    def test_create_from_dict(self):
+        d = ARTCardFactory().as_dict()
+        block = ARTCard.create_from_dict(d)
+        self.assertEquals(d['intro_text'], block.intro_text)
+
 
 class TestAdherenceCard(TestCase):
     def test_basics(self):
@@ -628,3 +770,13 @@ class TestAdherenceCard(TestCase):
         adcard = AdherenceCardFactory()
         adcard.edit({'quiz_class': 'updated class'}, None)
         self.assertEquals(adcard.quiz_class, 'updated class')
+
+    def test_as_dict(self):
+        block = AdherenceCardFactory()
+        d = block.as_dict()
+        self.assertEquals(block.quiz_class, d['quiz_class'])
+
+    def test_create_from_dict(self):
+        d = AdherenceCardFactory().as_dict()
+        block = AdherenceCard.create_from_dict(d)
+        self.assertEquals(d['quiz_class'], block.quiz_class)

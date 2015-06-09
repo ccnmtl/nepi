@@ -4,35 +4,64 @@
 {% block title %}{{section.label}} (edit){% endblock %}
    
 {% block css %} 
-   <style type="text/css"> 
-       .draghandle {float: left; cursor: pointer;} 
-       #children-order-list {list-style-type: none; margin: 0; padding: 0;} 
-       #children li { margin: 0 3px 3px 3px; padding: 0.4em; 
-       padding-left: 1.5em; 
-             background-color: #ddd; 
-       } 
-       #children li span { position: absolute; margin-left: -1.3em; } 
-       .dragging {background-color: #fee;}
-       
-       .edit-menu-3 {
-           margin-left: 20px;
-       } 
-       .edit-menu-4 {
-           margin-left: 40px;
-       } 
-       .edit-menu-5 {
-           margin-left: 60px;
-       } 
-       .edit-menu-6 {
-           margin-left: 80px;
-       } 
- </style>
+<style type="text/css"> 
+    .draghandle {float: left; cursor: pointer;} 
+    #children-order-list {list-style-type: none; margin: 0; padding: 0;} 
+    #children li { margin: 0 3px 3px 3px; padding: 0.4em; 
+        padding-left: 1.5em; 
+        background-color: #ddd; 
+    } 
+    #children li span { position: absolute; margin-left: -1.3em; } 
+    .dragging {background-color: #fee;}
+    .edit-menu-3 {
+        margin-left: 20px;
+    } 
+    .edit-menu-4 {
+        margin-left: 40px;
+    } 
+    .edit-menu-5 {
+        margin-left: 60px;
+    } 
+    .edit-menu-6 {
+        margin-left: 80px;
+    }
+    .navbar {
+        margin-bottom: 0px
+    }
+   
+    h1 {
+        text-align: left;
+        margin: 0;
+    }
+    legend {
+        text-align: left;
+        margin: 0;
+        border: 0;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 22px;
+        line-height: 34px;
+        font-weight: bold;
+    }
+    fieldset {
+        border: 0;
+    }
+</style>
  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.3/themes/base/jquery-ui.css" type="text/css" media="all" />
 {% endblock %} 
 
 {% block js %}
     <script src="{{STATIC_URL}}js/jquery-ui-1.10.3.min.js"></script>
     <script type="text/javascript">
+        // handle hash tag navigation
+        var hash = window.location.hash;
+        hash && jQuery('.edit-page-nav a[href="' + hash + '"]').tab('show');
+        
+        // when the nav item is selected update the page hash
+        jQuery('.edit-page-nav a').on('shown', function (e) {
+            window.location.hash = e.target.hash;
+            scrollTo(0,0);
+        });
+
         var saveOrderOfChildren = function() {
             var url = "{% url 'reorder-section-children' section.id %}?";
             var worktodo = 0;
@@ -62,7 +91,6 @@
                 req.open("POST",url,true);
                 req.send(null);
             }
-        
         }
     
         jQuery(document).ready(function () {    
@@ -106,14 +134,14 @@
   
   <h1>{{ section.label }}</h1>
  
- <ul class="nav nav-tabs">
+ <ul class="edit-page-nav nav nav-tabs">
      <li {% if section.is_root %}class="active"{% endif%}>
          <a href="#content-tree" data-toggle="tab">Hierarchy</a>
      </li>
       <li {% if not section.is_root %}class="active"{% endif%}>
           <a href="#edit-blocks-tab" data-toggle="tab">Edit Blocks</a>
      </li>
-      <li><a href="#children-tab" data-toggle="tab">Children</a></li>
+     <li><a href="#children-tab" data-toggle="tab">Children</a></li>
      <li><a href="#add-pageblock-tab" data-toggle="tab">Add Pageblock</a></li>
      <li><a href="#edit-page-tab" data-toggle="tab">Edit Section</a></li>
      <li><a href="#move-section-tab" data-toggle="tab">Move Section</a></li>
@@ -124,12 +152,35 @@
  <div class="tab-content">
      <div id="content-tree" class="tab-pane {% if section.is_root %}active{% endif%}">
          {% with section.hierarchy as hierarchy %}
-         <div style="margin-top: 5px; margin-left: 5px;">
-            <h3>{{hierarchy.name}}</h3>
+         <div>
+            <div class="btn-group pull-right">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    Action
+                <span class="caret"></span>
+                </a>
+                  <ul class="dropdown-menu">
+                    <li>
+                        <a href="{% url 'clone-hierarchy' section.hierarchy.id %}">
+                            Clone Hierarchy
+                        </a>
+                    </li>
+                  </ul>
+              </div>
+            <h1>{{hierarchy.name}}</h1>
             <a href="{{root.get_edit_url}}"><b>{{hierarchy.get_root.name}}</b></a>
                 {% for s in hierarchy.get_root.get_descendants %}
-                    <div class="edit-menu-{{s.depth}}">             
-                        <a href="{{s.get_edit_url}}">{{s.label}}{% ifequal s section %} <i class="icon-hand-left"></i>{% endifequal %}</a>
+                    <div class="edit-menu-{{s.depth}}">
+                        <span title="The number of pageblocks in this section"
+                              class="pagetree-pageblock-section-count label">
+                            {{s.pageblock_set.count}}
+                        </span>
+                        &nbsp;&nbsp;
+                        <a href="{{s.get_edit_url}}">
+                            {{s.label}}
+                            {% ifequal s section %} 
+                                <i class="icon-hand-left"></i>
+                            {% endifequal %}
+                        </a>
                     </div>
                 {% endfor %}
          </div>
@@ -223,9 +274,9 @@
 
 
 
- <div id="children-tab" class="tab-pane">
-  <h2>Reorder Children</h2>
-  <div class="well">
+<div id="children-tab" class="tab-pane">
+  <h1>Reorder Children</h1>
+  <div>
   <p>Drag and drop arrows to reorder children</p>
   <ul id="children-order-list">
      {% for child in section.get_children %}
@@ -243,17 +294,17 @@
      {% endfor %}
   </ul>
  </div>
- 
- <h2>Add Child</h2>
+ <hr />
+ <h1>Add Child</h1>
   <form action="{% url 'add-child-section' section.id %}" method="post"
-             class="well form-inline" >
+             class="form-inline" >
   
 {{ section.add_child_section_form|bootstrap }}
   
   <input type="submit" value="add child section" class="btn btn-primary"
                />
   </form>
-  </div>
+</div>
   
  
   <div id="add-pageblock-tab" class="tab-pane">
@@ -307,7 +358,7 @@
   <div id="edit-page-tab" class="tab-pane">
  
   <form action="{% url 'edit-section' section.id %}" method="post"
-              class="form-horizontal well">
+              class="form-horizontal">
  {% csrf_token %}
   <fieldset><legend>Edit Page</legend>
   
@@ -318,7 +369,7 @@
   </form>
   
   
-  <form action="{% url 'delete-section' section.id %}" method="post" class="well">
+  <form action="{% url 'delete-section' section.id %}" method="post">
   <input type="submit" value="delete this page" class="btn btn-danger"/>
   </form>
   
@@ -335,33 +386,32 @@
          </fieldset>
      </form>
  </div>
- 
- 
- <div id="history-tab" class="tab-pane">
-  {% if section.version_set.count %}
- <table class="table table-bordered table-striped table-condensed">
-     <thead>
-         <tr>
-            <th>Saved At</th>
-            <th>User</th>
-            <th>Activity</th>
-            <th>Actions</th>
-         </tr>
-     </thead>
-    <tbody>
- {% for version in section.version_set.all %}
-     <tr>
-             <td>{{version.saved_at}}</td>
-             <td>{{version.user}}</td>
-             <td>{{version.activity}}</td>
-             <td><a href="{% url 'revert-to-version' version.id %}" class="btn
-             btn-mini btn-warning"><i class="icon-repeat"></i> revert</a></td>
-         </tr>
- {% endfor %}
- </tbody>
- </table>
- {% endif %}
- </div>
+
+    <div id="history-tab" class="tab-pane">
+        {% if section.version_set.count %}
+            <table class="table table-bordered table-striped table-condensed">
+            <thead>
+                <tr>
+                <th>Saved At</th>
+                <th>User</th>
+                <th>Activity</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+             {% for version in section.version_set.all %}
+                 <tr>
+                     <td>{{version.saved_at}}</td>
+                     <td>{{version.user}}</td>
+                     <td>{{version.activity}}</td>
+                     <td><a href="{% url 'revert-to-version' version.id %}" class="btn
+                     btn-mini btn-warning"><i class="icon-repeat"></i> revert</a></td>
+                 </tr>
+             {% endfor %}
+            </tbody>
+            </table>
+        {% endif %}
+     </div>
  </div>
 {% endblock %}
  

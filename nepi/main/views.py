@@ -70,7 +70,7 @@ class ViewPage(LoggedInMixin, InitializeHierarchyMixin, PageView):
 
 
 class EditPage(LoggedInMixinSuperuser, InitializeHierarchyMixin, EditView):
-    template_name = "main/edit_page.html"
+    template_name = "pagetree/edit_page.html"
 
 
 class HomeView(LoggedInMixin, View):
