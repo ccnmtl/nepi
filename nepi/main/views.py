@@ -21,6 +21,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView, UpdateView
 from pagetree.generic.views import PageView, EditView
 from pagetree.models import Hierarchy, UserPageVisit
+from waffle import flag_is_active
 
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
@@ -32,11 +33,15 @@ from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
     IcapAdministrationOnlyMixin, InitializeHierarchyMixin
 
 
-# Set the user's language on login
+# Set the user's language on login & profile update
 def set_session_language(sender, user, request, **kwargs):
     try:
-        translation.activate(user.profile.language)
-        request.session[LANGUAGE_SESSION_KEY] = user.profile.language
+        if flag_is_active(request, 'set-session-language'):
+            translation.activate(user.profile.language)
+            request.session[LANGUAGE_SESSION_KEY] = user.profile.language
+        else:
+            translation.activate('en')
+            request.session[LANGUAGE_SESSION_KEY] = 'en'
     except UserProfile.DoesNotExist:
         pass  # uni user logged in with no profile
 
