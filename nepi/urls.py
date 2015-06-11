@@ -15,7 +15,7 @@ from nepi.main.views import CreateGroupView, UpdateGroupView, \
     ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView, \
     RemoveStudent, ReportView, DownloadableReportView, \
     StudentGroupDetail, PeopleView, PeopleFilterView, RosterDetail, EditPage, \
-    ViewPage
+    ViewPage, ConfirmLanguageView
 import nepi.main.views
 
 
@@ -75,6 +75,10 @@ urlpatterns = patterns(
         name='password_reset_confirm'),
     url(r'^password/reset/complete/$',
         password_reset_complete, name='password_reset_complete'),
+
+    # confirm language choice
+    url(r'^confirm-language/$',
+        ConfirmLanguageView.as_view(), name='confirm-language-choice'),
 
     # json object delivery
     url(r'^schools/(?P<country_id>\w[^/]*)/$',

@@ -1,52 +1,131 @@
 {% load progressreport %}
+{% load i18n %}
+{% load waffle_tags %}
 
 <div class="tab-pane active" id="user-modules">
     {% if user_profile|percent_complete:optionb == '0.00' %}
     <div class="alert alert-info">
-        <strong>Welcome!</strong><p>From this page you can enter the online learning module from the Begin the Course button, join a group (class) under the groups tab, and edit your account information under the Profile tab.</p>
+        <strong>{% trans 'Welcome!' %}</strong>
+        <p>{% blocktrans trimmed %}From this page you can enter the online learning module from the 
+        Begin the Course button, join a group (class) under the groups tab, 
+        and edit your account information under the Profile tab.{% endblocktrans %}</p>
     </div>
     {% endif %}
-    
+
     <div class="row-fluid">
         <div class="span9">
-            <p>Option B+
-            is a new approach to prevent mother to child transmission of HIV and
+            <p>
+            {% blocktrans trimmed %}
+            Option B+ is a new approach to prevent mother to child transmission of HIV and
             maintain the health of the mother. It entails initiation of lifelong
             antiretroviral therapy for pregnant and breastfeeding women infected
             with HIV. This approach is recommended in the WHO (2013) Consolidated
             Guidelines on the Use of Antiretroviral Drugs for Treating and
             Preventing HIV Infection. If realized and performed effectively, this
             approach will advance the goal of an AIDS-Free Generation. Nurses and
-            midwives are of critical importance to the scale-up of Option B+.</p>
-            <p>This online training for Option B+ is designed for self-directed
+            midwives are of critical importance to the scale-up of Option B+.
+            {% endblocktrans %}
+            </p>
+            
+            <p>
+            {% blocktrans trimmed %}
+            This online training for Option B+ is designed for self-directed
             learning by nursing students or practicing professionals but is open
             to anyone. You can go through each module at your own pace. You can
             stop at any time and your progress will be saved. When you return, you
             will come back to this table of contents page where you can review
-            what you have already learned, and proceed to complete the course.</p>
+            what you have already learned, and proceed to complete the course.
+            {% endblocktrans %}
+            </p>
+            
         </div>
         <div class="span3 session-progress">
-            <h4>Session Progress</h4>
+            <h4>{% trans 'Session Progress' %}</h4>
             {% if user_profile|percent_complete:optionb == '0.00' %}
-                <a href="{{user_profile|last_location_url:optionb}}" class="btn btn-large btn-primary">
-                    Begin the Course <i class="icon-arrow-right icon-white"></i></a>
+                {% flag "set-session-language" %}
+                    <a href="{% url 'confirm-language-choice' %}" class="btn btn-large btn-primary">
+                        {% trans 'Begin the Course' %} <i class="icon-arrow-right icon-white"></i></a>
+                {% else %}
+                    <a href="{{user_profile|last_location_url:optionb}}" class="btn btn-large btn-primary">
+                        {% trans 'Begin the Course' %} <i class="icon-arrow-right icon-white"></i></a>
+                {% endflag %}
             {% else %}
                 <div class="progress progress-striped">
                     <div class="bar" style="width: {{user_profile|percent_complete:optionb}}%;"></div>
                 </div>
-                <div>{{user_profile|sessions_completed:optionb}} of {{optionb.get_root.get_children|length}} sessions completed</div>
+                <div>{{user_profile|sessions_completed:optionb}} {% trans 'of' %} {{optionb.get_root.get_children|length}} {% trans 'sessions completed' %}</div>
                 <br />
-                <a href="{{user_profile|last_location_url:optionb}}"" class="btn btn-large pull-right">
-                    Continue <i class="icon-arrow-right"></i>
+                <a href="{{user_profile|last_location_url:optionb}}" class="btn btn-large pull-right">
+                    {% trans 'Continue' %} <i class="icon-arrow-right"></i>
                 </a>
             {% endif %}
         </div>
     </div>
-    
+
     {% if optionb_progress_report %}
         {% ifnotequal user_profile|percent_complete:optionb '0.00' %}
             {% with progress_report=optionb_progress_report %}
-                {% include "dashboard/progress_report.html" %}
+                {% if progress_report %}
+                    <h4>{% trans 'Progress Report' %}</h4>
+                    <div class="row-fluid">
+                        <div class="span4">{% trans 'Pre-test score' %}</div>
+                        <div class="span4">
+                            {% if progress_report.pretest == None %}
+                                {% trans 'n/a' %}
+                            {% else %}{% if progress_report.pretest < 0 %}
+                                {% trans 'Incomplete' %}
+                            {% else %}
+                                {{progress_report.pretest}}%
+                            {% endif %}{% endif %}
+                        </div>
+                    </div>
+                    {% for score in progress_report.sessions %}
+                        <div class="row-fluid">
+                            <div class="span4">{% trans 'Session' %} {{forloop.counter}} {% trans 'score' %}</div>
+                            <div class="span4">
+                                {% if score == None %}
+                                    {% trans 'n/a' %}
+                                {% else %}{% if score < 0 %}
+                                    {% trans 'Incomplete' %}
+                                {% else %}
+                                    {{score}}%
+                                {% endif %}{% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="row-fluid">
+                        <div class="span4">{% trans 'Post-test score' %}</div>
+                        <div class="span4">
+                            {% if progress_report.posttest == None %}
+                                {% trans 'n/a' %}
+                            {% else %}{% if progress_report.posttest < 0 %}
+                                {% trans 'Incomplete' %}
+                            {% else %}
+                                {{progress_report.posttest}}%
+                            {% endif %}{% endif %}
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4">{% trans 'Average session score' %}</div>
+                        <div class="span4">
+                            {% if progress_report.average_score %}
+                                {{progress_report.average_score}}%
+                            {% else %}
+                                ---
+                            {% endif %}
+                            </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4">{% trans 'Pre/Post Change' %}</div>
+                        <div class="span4">
+                            {% if progress_report.prepostchange == None %}
+                                ---
+                            {% else %}
+                                {{progress_report.prepostchange}}%
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
             {% endwith %}
         {% endifnotequal %}
     {% endif %}
