@@ -51,6 +51,70 @@ msgstr ""
 "administrateurs du site et sera corrigée dans les meilleurs délais. Merci "
 "pour votre patience."
 
+#: nepi/templates/activities/artcard.html:13
+msgid "Follow-Up Date"
+msgstr ""
+
+#: nepi/templates/activities/artcard.html:14
+msgid "Document the follow-up date the woman is returning to the clinic."
+msgstr ""
+
+#: nepi/templates/activities/artcard.html:17
+msgid "Adherence"
+msgstr ""
+
+#: nepi/templates/activities/artcard.html:18
+msgid ""
+"Document adherence to ARV drugs as G, F, or P according to the following "
+"codes"
+msgstr ""
+
+#: nepi/templates/activities/artcard.html:19
+#, python-format
+msgid ""
+"<table> <tr> <td><strong>Adherence</strong></td> <td><strong>%%</strong></"
+"td> <td colspan=2><strong>Missed doses per month</strong></td> </tr> <tr> "
+"<td></td> <td></td> <td>1 x daily dosing</td> <td>2 x daily dosing</td> </"
+"tr> <tr> <td><strong>G (Good)</strong></td> <td> <u>></u>95%%</td> <td>< 2 "
+"doses</td> <td><u><</u> 3 doses</td> </tr> <tr> <td><strong>F (Fair)</"
+"strong></td> <td>85-94%%</td> <td>2-4 doses</td> <td>4-8 doses</td> </tr> "
+"<tr> <td><strong>P (Poor)</strong></td> <td>< 85%%</td> <td><u>></u> 5 "
+"doses</td> <td><u>></u> 9 doses</td> </tr> </table>"
+msgstr ""
+
+#: nepi/templates/activities/artcard.html:55
+msgid "Why"
+msgstr ""
+
+#: nepi/templates/activities/artcard.html:57
+msgid ""
+"Document why adherence was poor or fair by number according to the following "
+"codes (select all that apply)"
+msgstr ""
+
+#: nepi/templates/activities/artcard.html:59
+msgid ""
+"<table> <tr> <td><strong>1.</strong> Toxicity/side effects</td> "
+"<td><strong>8.</strong> Patient lost/ran out of pills</td> </tr> <tr> "
+"<td><strong>2.</strong> Shared with others</td> <td><strong>9.</strong> "
+"Delivery/travel problems</td> </tr> <tr> <td><strong>3.</strong> Forgot</td> "
+"<td><strong>10.</strong> Inability to pay</td> </tr> <tr> <td><strong>4.</"
+"strong> Felt better</td> <td><strong>11.</strong> Alcohol</td> </tr> <tr> "
+"<td><strong>5.</strong> Too ill</td> <td><strong>12.</strong> Depression</"
+"td> </tr> <tr> <td><strong>6.</strong> Stigma, disclosure or privacy issues</"
+"td> <td><strong>13.</strong> Pill burden</td> </tr> <tr> <td><strong>7.</"
+"strong> Drug stock out</td> <td><strong>14.</strong> Other (specify)</td> </"
+"tr> </table>"
+msgstr ""
+
+#: nepi/templates/activities/artcard.html:94
+msgid "Regimen"
+msgstr ""
+
+#: nepi/templates/activities/artcard.html:95
+msgid "Document the ARV dose the number of pills dispensed."
+msgstr ""
+
 #: nepi/templates/activities/dosageactivity.html:9
 msgid ""
 "<h4>NVP Dosage Chart</h4> <h5>Daily dosing for NVP for infants from birth-6 "
