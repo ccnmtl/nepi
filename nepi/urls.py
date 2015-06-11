@@ -134,10 +134,11 @@ urlpatterns = patterns(
      nepi.main.views.EditPage.as_view(),
      {}, 'edit-page'),
 
-    (r'^pages/(?P<hierarchy_name>\w[^/]*)/edit/(?P<path>.*)$',
+    (r'^pages/(?P<module>\w[^/]*)/(?P<language>\w[^/]*)/edit/(?P<path>.*)$',
      EditPage.as_view(),
      {}, 'edit-page'),
-    (r'^pages/(?P<hierarchy_name>\w[^/]*)/(?P<path>.*)$', ViewPage.as_view()),
+    (r'^pages/(?P<module>\w[^/]*)/(?P<language>\w[^/]*)/(?P<path>.*)$',
+     ViewPage.as_view()),
 )
 
 

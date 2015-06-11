@@ -21,8 +21,8 @@ class TestLastResponseSaveViews(TestCase):
         4. admin then edits the conversations
     '''
     def setUp(self):
-        ModuleFactory("main", "/pages/main/")
-        self.hierarchy = Hierarchy.objects.get(name='main')
+        ModuleFactory("optionb-en", "/pages/optionb/en/")
+        self.hierarchy = Hierarchy.objects.get(name='optionb-en')
         self.section = self.hierarchy.get_root().get_first_leaf()
         self.factory = RequestFactory()
 
@@ -178,8 +178,8 @@ class TestRetentionResponseView(TestCase):
 class TestCalendarResponseView(TestCase):
 
     def setUp(self):
-        ModuleFactory("main", "/pages/main/")
-        self.hierarchy = Hierarchy.objects.get(name='main')
+        ModuleFactory("optionb-en", "/pages/optionb/en/")
+        self.hierarchy = Hierarchy.objects.get(name='optionb-en')
         self.section = self.hierarchy.get_root().get_first_leaf()
 
     def test_calendar_response(self):

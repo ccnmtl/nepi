@@ -121,7 +121,7 @@ class UserProfileView(LoggedInMixin, DetailView):
 
     def get_student_context(self):
         context = {}
-        hierarchy = Hierarchy.objects.get(name='optionb-english')
+        hierarchy = Hierarchy.objects.get(name='optionb-en')
         context['optionb_progress_report'] = get_progress_report(
             [self.request.user], hierarchy)
         return context
@@ -174,7 +174,7 @@ class UserProfileView(LoggedInMixin, DetailView):
         context = super(UserProfileView, self).get_context_data(**kwargs)
 
         # todo - this will require some addition when new modules are added
-        hierarchy = Hierarchy.objects.get(name='optionb-english')
+        hierarchy = Hierarchy.objects.get(name='optionb-en')
         context['optionb'] = hierarchy
 
         context['profile_form'] = UpdateProfileForm(instance=self.request.user)
@@ -825,7 +825,7 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
             yield ['Satisfaction Score', satisfaction_rating(users, hierarchy)]
 
     def post(self, request):
-        hierarchy_name = request.POST.get('module', 'optionb-english')
+        hierarchy_name = request.POST.get('module', 'optionb-en')
         hierarchies = Hierarchy.objects.filter(name=hierarchy_name)
         hierarchy = hierarchies[0]
 

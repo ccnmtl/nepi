@@ -21,8 +21,8 @@ class TestReportBase(TestCase):
         self.report_view_url = reverse('report-view')
         self.report_download_url = reverse('report-download')
 
-        ModuleFactory("main", "/pages/main/")
-        self.hierarchies = Hierarchy.objects.filter(name='main')
+        ModuleFactory("optionb-en", "/pages/optionb/en/")
+        self.hierarchies = Hierarchy.objects.filter(name='optionb-en')
         self.hierarchy = self.hierarchies[0]
         root = self.hierarchy.get_root()
         descendants = root.get_descendants()

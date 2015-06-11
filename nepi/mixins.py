@@ -75,9 +75,11 @@ class LoggedInMixinSuperuser(object):
 
 class InitializeHierarchyMixin(object):
     def dispatch(self, *args, **kwargs):
-        self.hierarchy_name = kwargs.pop('hierarchy_name', 'main')
+        module = kwargs.pop('module', 'optionb')
+        language = kwargs.pop('language')
 
-        hierarchy = get_object_or_404(Hierarchy, name=self.hierarchy_name)
-        self.hierarchy_base = hierarchy.base_url
+        self.hierarchy_name = "%s-%s" % (module, language)
+        self.hierarchy = get_object_or_404(Hierarchy, name=self.hierarchy_name)
+        self.hierarchy_base = self.hierarchy.base_url
 
         return super(InitializeHierarchyMixin, self).dispatch(*args, **kwargs)
