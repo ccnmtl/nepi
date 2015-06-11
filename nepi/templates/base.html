@@ -35,6 +35,24 @@
                   		        <li>{% trans 'Hello' %}, {{request.user.first_name}} {{request.user.last_name}}</li>
                                 
                                 <li>{% block usernav_extra %}{% endblock %}</li>
+                                
+                                {% if request.user.is_staff %}
+                                <div class="btn-group">
+                                  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                    Content
+                                    <span class="caret"></span>
+                                  </a>
+                                  <ul class="dropdown-menu">
+                                    {% for h in hierarchies %}
+                                        <li>
+                                            <a href="{{h.get_root.get_edit_url}}">
+                                                {{h.name}}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                  </ul>
+                                </div>
+                                {% endif %}
 
                                 {% if request.user.is_superuser %}
                   		            <li><a href="{% url "impersonate-search" %}">[impersonate]</a></li>

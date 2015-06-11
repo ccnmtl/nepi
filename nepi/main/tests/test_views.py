@@ -61,6 +61,19 @@ class TestBasicViews(TestCase):
         response = self.client.get("/smoketest/")
         self.assertEquals(response.status_code, 200)
 
+    def test_edit_page_form(self):
+        staff = ICAPProfileFactory().user
+        staff.is_staff = True
+        staff.save()
+
+        ModuleFactory("main", "/pages/main/")
+        hierarchy = Hierarchy.objects.get(name='main')
+        section = hierarchy.get_root().get_first_leaf()
+
+        self.client.login(username=staff.username, password="test")
+        response = self.client.get(section.get_edit_url())
+        self.assertEqual(response.status_code, 200)
+
 
 class TestStudentLoggedInViews(TestCase):
     '''go through some of the views student sees'''

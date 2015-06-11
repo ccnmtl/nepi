@@ -88,7 +88,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'djangowind.context.context_processor',
     'stagingcontext.staging_processor',
-    'gacontext.ga_processor'
+    'gacontext.ga_processor',
+    'nepi.main.views.context_processor'
 )
 
 MIDDLEWARE_CLASSES = [
