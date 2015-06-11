@@ -28,9 +28,9 @@ from nepi.main.models import Group, UserProfile, Country, School, \
     PendingTeachers, DetailedReport, PROFILE_CHOICES, HierarchyCache
 from nepi.main.templatetags.progressreport import get_progress_report, \
     average_quiz_score, satisfaction_rating
-from nepi.mixins import LoggedInMixin, LoggedInMixinSuperuser, \
-    JSONResponseMixin, AdministrationOnlyMixin, \
-    IcapAdministrationOnlyMixin, InitializeHierarchyMixin
+from nepi.mixins import (
+    LoggedInMixin, JSONResponseMixin, AdministrationOnlyMixin,
+    IcapAdministrationOnlyMixin, InitializeHierarchyMixin, LoggedInMixinStaff)
 
 
 # Set the user's language on login & profile update
@@ -46,6 +46,10 @@ def set_session_language(sender, user, request, **kwargs):
         pass  # uni user logged in with no profile
 
 user_logged_in.connect(set_session_language)
+
+
+def context_processor(request):
+    return dict(hierarchies=Hierarchy.objects.all())
 
 
 class ViewPage(LoggedInMixin, InitializeHierarchyMixin, PageView):
@@ -74,11 +78,8 @@ class ViewPage(LoggedInMixin, InitializeHierarchyMixin, PageView):
         return {'menu': menu}
 
 
-class EditPage(LoggedInMixinSuperuser, InitializeHierarchyMixin, EditView):
+class EditPage(LoggedInMixinStaff, InitializeHierarchyMixin, EditView):
     template_name = "pagetree/edit_page.html"
-
-    def get_extra_context(self):
-        return dict(hierarchies=Hierarchy.objects.all())
 
 
 class HomeView(LoggedInMixin, View):
