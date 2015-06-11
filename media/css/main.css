@@ -1450,6 +1450,7 @@ div.user-profile-form div.control-group.wide input {
 
 div.user-profile-form div.control-group.wide select {
     width: 456px;
+    margin-bottom: 10px;
 }
 
 div.contact-icap ul.errorlist,
