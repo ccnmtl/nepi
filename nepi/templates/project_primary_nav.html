@@ -6,8 +6,10 @@
         <div class="pull-left primary-toc">
             <ul>
             {% for s in menu %}
+                <li>
                 <a href="{{s.url}}" data-id="{{s.id}}"
-                   class="primary-menu-{{s.depth}}{% ifequal s.id section.id %} current{% endifequal %}{% if s.disabled %} disabled{% endif %}"><li>{{s.label}}</li></a>
+                   class="primary-menu-{{s.depth}}{% ifequal s.id section.id %} current{% endifequal %}{% if s.disabled %} disabled{% endif %}">{{s.label}}</a>
+                </li>
             {% endfor %}
             </ul>
         </div>
