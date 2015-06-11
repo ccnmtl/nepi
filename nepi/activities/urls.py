@@ -8,7 +8,6 @@ from nepi.activities.views import (UpdateConversationView,
                                    CreateConverstionView,
                                    SaveResponse,
                                    LastResponse,
-                                   CreateCalendar,
                                    SaveRetentionResponse,
                                    SaveCalendarResponse)
 
@@ -34,9 +33,6 @@ urlpatterns = patterns(
         name='save-response'),
     url(r'^get_last/$',
         LastResponse.as_view()),
-    url(r'^create_calendar/$',
-        CreateCalendar.as_view(),
-        name='create_calendar'),
     url(r'^retention_click/$',
         SaveRetentionResponse.as_view(),
         name='retention_click'),
