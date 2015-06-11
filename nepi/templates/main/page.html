@@ -50,8 +50,10 @@
                 if (jQuery(this).hasClass('disabled')) {
                     return false;
                 } else {
+                    // close the menu, then navigate
                     jQuery('.slide-out-menu').toggleClass('open');
-                    window.location = jQuery(this).attr(href);
+                    document.body.style.cursor = 'progress';
+                    window.location = jQuery(this).attr('href');
                 }
             });
         });
