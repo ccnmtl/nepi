@@ -4,19 +4,19 @@ import debug_toolbar
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from django.contrib.auth.views import password_change, password_change_done, \
-    password_reset_done, password_reset_confirm, password_reset_complete
+from django.contrib.auth.views import (
+    password_change, password_change_done, password_reset_done,
+    password_reset_confirm, password_reset_complete)
 from django.views.generic import TemplateView
 
-from nepi.main.views import CreateGroupView, UpdateGroupView, \
-    DeleteGroupView, CreateSchoolView, UpdateSchoolView, ContactView, \
-    RegistrationView, JoinGroup, HomeView, GroupDetail, LeaveGroup, \
-    SchoolChoiceView, SchoolGroupChoiceView, \
-    ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView, \
-    RemoveStudent, ReportView, DownloadableReportView, \
-    StudentGroupDetail, PeopleView, PeopleFilterView, RosterDetail, EditPage, \
-    ViewPage, ConfirmLanguageView
-import nepi.main.views
+from nepi.main.views import (
+    CreateGroupView, UpdateGroupView, DeleteGroupView, CreateSchoolView,
+    UpdateSchoolView, ContactView, RegistrationView, JoinGroup, HomeView,
+    GroupDetail, LeaveGroup, SchoolChoiceView, SchoolGroupChoiceView,
+    ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView,
+    RemoveStudent, ReportView, DownloadableReportView, StudentGroupDetail,
+    PeopleView, PeopleFilterView, RosterDetail, ConfirmLanguageView,
+    NepiPageView, NepiEditView)
 
 
 admin.autodiscover()
@@ -130,15 +130,11 @@ urlpatterns = patterns(
     (r'^quizblock/', include('quizblock.urls')),
     (r'^pagetree/', include('pagetree.urls')),
 
-    (r'^pages/activities/edit/(?P<path>.*)$',
-     nepi.main.views.EditPage.as_view(),
-     {}, 'edit-page'),
-
     (r'^pages/(?P<module>\w[^/]*)/(?P<language>\w[^/]*)/edit/(?P<path>.*)$',
-     EditPage.as_view(),
+     NepiEditView.as_view(),
      {}, 'edit-page'),
     (r'^pages/(?P<module>\w[^/]*)/(?P<language>\w[^/]*)/(?P<path>.*)$',
-     ViewPage.as_view()),
+     NepiPageView.as_view()),
 )
 
 

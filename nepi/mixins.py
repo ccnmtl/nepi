@@ -7,6 +7,8 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from pagetree.models import Hierarchy
 
+from nepi.main.models import LearningModule
+
 
 def ajax_required(func):
     """
@@ -78,8 +80,9 @@ class InitializeHierarchyMixin(object):
         module = kwargs.pop('module', 'optionb')
         language = kwargs.pop('language')
 
-        self.hierarchy_name = "%s-%s" % (module, language)
-        self.hierarchy = get_object_or_404(Hierarchy, name=self.hierarchy_name)
-        self.hierarchy_base = self.hierarchy.base_url
+        hierarchy = LearningModule.get_hierarchy_for_language(module, language)
+
+        self.hierarchy_name = hierarchy.name
+        self.hierarchy_base = hierarchy.base_url
 
         return super(InitializeHierarchyMixin, self).dispatch(*args, **kwargs)

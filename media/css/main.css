@@ -1450,6 +1450,7 @@ div.user-profile-form div.control-group.wide input {
 
 div.user-profile-form div.control-group.wide select {
     width: 456px;
+    margin-bottom: 10px;
 }
 
 div.contact-icap ul.errorlist,
@@ -1996,3 +1997,15 @@ img.footer-logo {
     border: 0;
 }
 
+.change-language-block form {
+    width: 310px;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.change-language-block .btn-default,
+.change-language-block a {
+  width: 350px;
+  padding: 4px 0;
+  margin-top: 20px;
+}
