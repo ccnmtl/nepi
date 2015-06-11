@@ -12,6 +12,7 @@ from django.test.client import Client
 from django.utils.translation import get_language, LANGUAGE_SESSION_KEY
 from pagetree.models import UserPageVisit, Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
+from waffle.models import Flag
 
 from factories import UserFactory, UserProfileFactory, ICAPProfileFactory
 from nepi.main.forms import ContactForm
@@ -85,6 +86,9 @@ class TestStudentLoggedInViews(TestCase):
         self.student = StudentProfileFactory().user
         self.client.login(username=self.student.username, password="test")
 
+    def teardown(self):
+        Flag.objects.all().delete()
+
     def test_edit_page_form(self):
         response = self.client.get(self.section.get_edit_url())
         self.assertEqual(response.status_code, 302)
@@ -134,17 +138,12 @@ class TestStudentLoggedInViews(TestCase):
         self.assertTrue('managed_groups' not in ctx)
         self.assertTrue('pending_teachers' not in ctx)
 
-    def test_dashboard_post_change_language(self):
-        self.assertEquals(self.student.profile.language,
-                          settings.DEFAULT_LANGUAGE)
-        self.assertEquals(get_language(), 'en')
-        self.assertEquals(self.client.session[LANGUAGE_SESSION_KEY], 'en')
-
+    def update_user_language(self, language):
         data = {u'username': [self.student.username],
                 u'password1': [u''],
                 u'first_name': [self.student.first_name],
                 u'last_name': [self.student.last_name],
-                u'language': [u'fr'],
+                u'language': [language],
                 u'country': [self.student.profile.country.name],
                 u'password2': [u''],
                 u'nepi_affiliated': [u'off'],
@@ -153,10 +152,26 @@ class TestStudentLoggedInViews(TestCase):
         response = self.client.post(reverse('dashboard'), data)
         self.assertEquals(response.status_code, 302)
 
+    def test_dashboard_post_change_language(self):
+        self.assertEquals(self.student.profile.language,
+                          settings.DEFAULT_LANGUAGE)
+        self.assertEquals(get_language(), 'en')
+        self.assertEquals(self.client.session[LANGUAGE_SESSION_KEY], 'en')
+
+        # inactive waffle flag
+        self.update_user_language(u'fr')
         student = User.objects.get(id=self.student.id)
         self.assertEquals(student.profile.language, 'fr')
-        self.assertEquals(get_language(), 'fr')
-        self.assertEquals(self.client.session[LANGUAGE_SESSION_KEY], 'fr')
+        self.assertEquals(get_language(), 'en')
+        self.assertEquals(self.client.session[LANGUAGE_SESSION_KEY], 'en')
+
+        # active waffle flag
+        Flag.objects.create(name='set-session-language', everyone=True)
+        self.update_user_language(u'pt')
+        student = User.objects.get(id=self.student.id)
+        self.assertEquals(student.profile.language, 'pt')
+        self.assertEquals(get_language(), 'pt')
+        self.assertEquals(self.client.session[LANGUAGE_SESSION_KEY], 'pt')
 
 
 class TestTeacherLoggedInViews(TestCase):
