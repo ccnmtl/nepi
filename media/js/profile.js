@@ -54,9 +54,27 @@ jQuery(document).ready(function () {
         }
     });
     
+    jQuery('.user-profile-form form').submit(function() {
+        if (currentLanguage !== 
+                jQuery("div.user-profile-form select[name='language']").val()) {
+            jQuery('#confirm-language-modal').modal({
+                backdrop: 'static',
+                keyboard: false,
+            });
+            jQuery('#confirm-language-modal').modal('show');
+            return false;
+        }
+    });
+    
+    jQuery('#confirm-language-yes').click(function() {
+        currentLanguage = jQuery("div.user-profile-form select[name='language']").val();
+        jQuery('.user-profile-form form').submit();
+    });
+    
     var currentSchoolId = jQuery("div.user-profile-form div.control-group.school").data('school-id');
     var currentCountryName = jQuery("div.user-profile-form select[name='country']").val();
     if (currentCountryName !== undefined && currentCountryName !== '-----') {
         profileSchoolChoices(currentCountryName);
     }
+    var currentLanguage = jQuery("div.user-profile-form select[name='language']").val();
 });
