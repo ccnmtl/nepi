@@ -3,9 +3,7 @@ import json
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http.response import HttpResponseNotAllowed, HttpResponse, \
     HttpResponseForbidden
-from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
-from pagetree.models import Hierarchy
 
 from nepi.main.models import LearningModule
 

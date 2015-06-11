@@ -22,9 +22,9 @@ from nepi.main.tests.factories import SchoolFactory, CountryFactory, \
     CountryAdministratorProfileFactory, \
     InstitutionAdminProfileFactory, PendingTeacherFactory, \
     TeacherProfileFactory
-from nepi.main.views import ContactView, ViewPage, CreateSchoolView, \
+from nepi.main.views import ContactView, CreateSchoolView, \
     UserProfileView, PeopleView, PeopleFilterView, RosterDetail, GroupDetail, \
-    StudentGroupDetail
+    StudentGroupDetail, NepiPageView
 
 
 class TestBasicViews(TestCase):
@@ -67,8 +67,8 @@ class TestBasicViews(TestCase):
         staff.is_staff = True
         staff.save()
 
-        ModuleFactory("main", "/pages/main/")
-        hierarchy = Hierarchy.objects.get(name='main')
+        ModuleFactory("optionb-en", "/pages/optionb/en/")
+        hierarchy = Hierarchy.objects.get(name='optionb-en')
         section = hierarchy.get_root().get_first_leaf()
 
         self.client.login(username=staff.username, password="test")
@@ -510,7 +510,7 @@ class TestPageView(TestCase):
         request = RequestFactory().get('/%s/' % self.h.name)
         request.user = self.u
 
-        view = ViewPage()
+        view = NepiPageView()
         view.request = request
         view.root = self.h.get_root()
 
