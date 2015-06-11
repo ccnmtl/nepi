@@ -50,8 +50,10 @@
                 if (jQuery(this).hasClass('disabled')) {
                     return false;
                 } else {
+                    // close the menu, then navigate
                     jQuery('.slide-out-menu').toggleClass('open');
-                    window.location = jQuery(this).attr(href);
+                    document.body.style.cursor = 'progress';
+                    window.location = jQuery(this).attr('href');
                 }
             });
         });
@@ -93,7 +95,7 @@
 {% endblock %}
 
 {% block usernav_extra %}
-    {% if user.is_superuser %}
+    {% if user.is_staff %}
         <a href="{{section.get_edit_url}}">Edit Page</a>        
     {% endif %}
 {% endblock %}
@@ -133,11 +135,11 @@
                             <input type="hidden" name="action" value="reset" />
                             <input type="submit" value="{% trans 'Try again' %}" class="btn btn-default" />
                         </form>
-                    {% else %}{% if user.is_superuser %}
+                    {% else %}{% if user.is_staff %}
                         <form action="." method="post">
                             <div>
                                 <input type="hidden" name="action" value="reset" />
-                                <input type="submit" id="generic-reset" value="Clear Responses (superuser only)" class="btn btn-default" />
+                                <input type="submit" id="generic-reset" value="Clear Responses (staff only)" class="btn btn-default" />
                                 <div style="clear: both"></div>
                             </div>
                         </form>

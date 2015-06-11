@@ -1163,7 +1163,7 @@ div.pageblock.show-correct li.incorrect:after {
 	margin: 0 0 0 10px;
 }
 
-.slide-out-menu a li {
+.slide-out-menu a {
     display: block;
 	padding: 9px 10px 7px 10px;
 	margin: -4px 10px 4px 0;
@@ -1171,14 +1171,14 @@ div.pageblock.show-correct li.incorrect:after {
 	line-height: 1.25em;
 }
 
-.slide-out-menu a.current li {
+.slide-out-menu a.current {
     font-weight: bold;
     border-radius: 5px;
     border-left: solid 5px #ddd;
 	border-radius: 0px;
 }
 
-.slide-out-menu a.current li:after {
+.slide-out-menu a.current:after {
 	margin: 0 0 0 10px;
 	content: "»";
 	position: relative;
@@ -1187,9 +1187,6 @@ div.pageblock.show-correct li.incorrect:after {
 
 .slide-out-menu a:hover {
 	text-decoration: none;
-}
-
-.slide-out-menu a:hover li {
     background: #fff;
    	border-radius: 0px;
     text-decoration: none;
@@ -1205,26 +1202,26 @@ div.pageblock.show-correct li.incorrect:after {
     text-decoration: none;
 }
 
-.slide-out-menu a.primary-menu-2 li {
+.slide-out-menu a.primary-menu-2 {
 	font-size: 1.15em;
 	font-weight: bold;
 }
 
-.slide-out-menu a.primary-menu-3 li {
+.slide-out-menu a.primary-menu-3 {
     padding-left: 10px;
     font-size: .9em;
 }
 
-.slide-out-menu a.primary-menu-4 li  {
+.slide-out-menu a.primary-menu-4 {
     padding-left: 25px;
     font-size: .9em;
 }
 
-.slide-out-menu a.primary-menu-5 li  {
+.slide-out-menu a.primary-menu-5 {
     padding-left: 35px;
 }
 
-.slide-out-menu a.primary-menu-6 li  {
+.slide-out-menu a.primary-menu-6 {
     padding-left: 45px;
 }
 
