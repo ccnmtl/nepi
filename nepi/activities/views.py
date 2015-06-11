@@ -135,8 +135,8 @@ class LastResponse(View, JSONResponseMixin):
                     {'success': True,
                      'last_conv':
                      cresp.third_click.conversation.scenario_type})
-            elif (cresp.first_click is not None
-                  and cresp.second_click is None):
+            elif (cresp.first_click is not None and
+                  cresp.second_click is None):
                     return render_to_json_response(
                         {'success': True,
                          'last_conv':
@@ -144,12 +144,6 @@ class LastResponse(View, JSONResponseMixin):
 
         except ConversationResponse.DoesNotExist:
             return render_to_json_response({'success': False})
-
-
-class CreateCalendar(CreateView):
-    model = Conversation
-    template_name = 'activities/add_conversation.html'
-    success_url = '/pages/main/edit/'
 
 
 class SaveRetentionResponse(View, JSONResponseMixin):

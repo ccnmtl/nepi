@@ -14,9 +14,8 @@ from nepi.main.views import CreateGroupView, UpdateGroupView, \
     SchoolChoiceView, SchoolGroupChoiceView, \
     ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView, \
     RemoveStudent, ReportView, DownloadableReportView, \
-    StudentGroupDetail, PeopleView, PeopleFilterView, RosterDetail, EditPage, \
-    ViewPage
-import nepi.main.views
+    StudentGroupDetail, PeopleView, PeopleFilterView, RosterDetail, \
+    NepiEditView, NepiPageView
 
 
 admin.autodiscover()
@@ -126,14 +125,11 @@ urlpatterns = patterns(
     (r'^quizblock/', include('quizblock.urls')),
     (r'^pagetree/', include('pagetree.urls')),
 
-    (r'^pages/activities/edit/(?P<path>.*)$',
-     nepi.main.views.EditPage.as_view(),
-     {}, 'edit-page'),
-
     (r'^pages/(?P<hierarchy_name>\w[^/]*)/edit/(?P<path>.*)$',
-     EditPage.as_view(),
+     NepiEditView.as_view(),
      {}, 'edit-page'),
-    (r'^pages/(?P<hierarchy_name>\w[^/]*)/(?P<path>.*)$', ViewPage.as_view()),
+    (r'^pages/(?P<hierarchy_name>\w[^/]*)/(?P<path>.*)$',
+     NepiPageView.as_view()),
 )
 
 

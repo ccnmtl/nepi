@@ -52,7 +52,7 @@ def context_processor(request):
     return dict(hierarchies=Hierarchy.objects.all())
 
 
-class ViewPage(LoggedInMixin, InitializeHierarchyMixin, PageView):
+class NepiPageView(LoggedInMixin, InitializeHierarchyMixin, PageView):
     template_name = "main/page.html"
     gated = True
 
@@ -78,7 +78,7 @@ class ViewPage(LoggedInMixin, InitializeHierarchyMixin, PageView):
         return {'menu': menu}
 
 
-class EditPage(LoggedInMixinStaff, InitializeHierarchyMixin, EditView):
+class NepiEditView(LoggedInMixinStaff, InitializeHierarchyMixin, EditView):
     template_name = "pagetree/edit_page.html"
 
 
