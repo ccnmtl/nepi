@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-10 11:17-0400\n"
+"POT-Creation-Date: 2015-06-12 13:53-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: nepi/settings_shared.py:240
+#: nepi/settings_shared.py:241
 msgid "English"
 msgstr ""
 
-#: nepi/settings_shared.py:241
+#: nepi/settings_shared.py:242
 msgid "French"
 msgstr ""
 
-#: nepi/settings_shared.py:242
+#: nepi/settings_shared.py:243
 msgid "Portuguese"
 msgstr ""
 
@@ -232,19 +232,19 @@ msgstr ""
 msgid "Hello"
 msgstr ""
 
-#: nepi/templates/base.html:43
+#: nepi/templates/base.html:60
 msgid "Log Out"
 msgstr ""
 
-#: nepi/templates/base.html:75
+#: nepi/templates/base.html:93
 msgid "About"
 msgstr ""
 
-#: nepi/templates/base.html:76
+#: nepi/templates/base.html:94
 msgid "Help"
 msgstr ""
 
-#: nepi/templates/base.html:77
+#: nepi/templates/base.html:95
 msgid "Contact"
 msgstr ""
 
@@ -299,7 +299,6 @@ msgid "sessions completed"
 msgstr ""
 
 #: nepi/templates/dashboard/tab_optionb.html:59
-#: nepi/templates/main/confirm_language.html:28
 msgid "Continue"
 msgstr ""
 
@@ -343,36 +342,40 @@ msgstr ""
 msgid "Pre/Post Change"
 msgstr ""
 
-#: nepi/templates/main/confirm_language.html:23
+#: nepi/templates/main/confirm_language.html:25
+msgid "Confirm language choice"
+msgstr ""
+
+#: nepi/templates/main/confirm_language.html:27
 msgid "You are beginning Option B+ in"
 msgstr ""
 
-#: nepi/templates/main/confirm_language.html:23
-msgid "{{user.profile.language_description}}"
-msgstr ""
-
-#: nepi/templates/main/confirm_language.html:24
+#: nepi/templates/main/confirm_language.html:28
 msgid ""
 "If you change languages part way through, you will have to start from the "
 "beginning in the new language."
 msgstr ""
 
-#: nepi/templates/main/confirm_language.html:27
+#: nepi/templates/main/confirm_language.html:32
 msgid "Change Language"
 msgstr ""
 
-#: nepi/templates/main/page.html:134
+#: nepi/templates/main/confirm_language.html:49
+msgid "Continue in"
+msgstr ""
+
+#: nepi/templates/main/page.html:136
 msgid "Try again"
 msgstr ""
 
-#: nepi/templates/main/page.html:146
+#: nepi/templates/main/page.html:148
 msgid "Submit"
 msgstr ""
 
-#: nepi/templates/main/page.html:162
+#: nepi/templates/main/page.html:164
 msgid "Previous"
 msgstr ""
 
-#: nepi/templates/main/page.html:170
+#: nepi/templates/main/page.html:172
 msgid "Next"
 msgstr ""

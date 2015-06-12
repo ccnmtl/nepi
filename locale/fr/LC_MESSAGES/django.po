@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-10 11:17-0400\n"
+"POT-Creation-Date: 2015-06-12 13:53-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: nepi/settings_shared.py:240
+#: nepi/settings_shared.py:241
 msgid "English"
 msgstr "Anglais"
 
-#: nepi/settings_shared.py:241
+#: nepi/settings_shared.py:242
 msgid "French"
 msgstr "Français"
 
-#: nepi/settings_shared.py:242
+#: nepi/settings_shared.py:243
 msgid "Portuguese"
 msgstr "Portugais"
 
@@ -236,19 +236,19 @@ msgstr ""
 msgid "Hello"
 msgstr "Bonjour"
 
-#: nepi/templates/base.html:43
+#: nepi/templates/base.html:60
 msgid "Log Out"
 msgstr "Déconnexion"
 
-#: nepi/templates/base.html:75
+#: nepi/templates/base.html:93
 msgid "About"
 msgstr ""
 
-#: nepi/templates/base.html:76
+#: nepi/templates/base.html:94
 msgid "Help"
 msgstr "Une question"
 
-#: nepi/templates/base.html:77
+#: nepi/templates/base.html:95
 msgid "Contact"
 msgstr "Nous contacter"
 
@@ -261,7 +261,8 @@ msgid ""
 "From this page you can enter the online learning module from the Begin the "
 "Course button, join a group (class) under the groups tab, and edit your "
 "account information under the Profile tab."
-msgstr "Depuis cette page vous pouvez entrer dans le module d'apprentissage en ligne"
+msgstr ""
+"Depuis cette page vous pouvez entrer dans le module d'apprentissage en ligne"
 
 #: nepi/templates/dashboard/tab_optionb.html:18
 msgid ""
@@ -273,11 +274,13 @@ msgid ""
 "Infection. If realized and performed effectively, this approach will advance "
 "the goal of an AIDS-Free Generation. Nurses and midwives are of critical "
 "importance to the scale-up of Option B+."
-msgstr "Option B + est une nouvelle approche pour prévenir la transmission mère -enfant du VIH"
+msgstr ""
+"Option B + est une nouvelle approche pour prévenir la transmission mère -"
+"enfant du VIH"
 
 #: nepi/templates/dashboard/tab_optionb.html:31
 msgid ""
-"Cette formation en ligne pour l'option B + est conçu pour l'apprentissage auto-dirigé by "
+"This online training for Option B+ is designed for self-directed learning by "
 "nursing students or practicing professionals but is open to anyone. You can "
 "go through each module at your own pace. You can stop at any time and your "
 "progress will be saved. When you return, you will come back to this table of "
@@ -303,7 +306,6 @@ msgid "sessions completed"
 msgstr ""
 
 #: nepi/templates/dashboard/tab_optionb.html:59
-#: nepi/templates/main/confirm_language.html:28
 msgid "Continue"
 msgstr "continuer"
 
@@ -347,38 +349,45 @@ msgstr ""
 msgid "Pre/Post Change"
 msgstr ""
 
-#: nepi/templates/main/confirm_language.html:23
+#: nepi/templates/main/confirm_language.html:25
+msgid "Confirm language choice"
+msgstr ""
+
+#: nepi/templates/main/confirm_language.html:27
 msgid "You are beginning Option B+ in"
 msgstr "Vous commencez Option B + en"
 
-#: nepi/templates/main/confirm_language.html:23
-msgid "{{user.profile.language_description}}"
-msgstr ""
-
-#: nepi/templates/main/confirm_language.html:24
+#: nepi/templates/main/confirm_language.html:28
 msgid ""
 "If you change languages part way through, you will have to start from the "
 "beginning in the new language."
-msgstr "Si vous changez de langue à mi-chemin à travers, vous devrez commencer à partir de la "
-" à partir de la nouvelle langue."
+msgstr ""
+"Si vous changez de langue à mi-chemin à travers, vous devrez commencer à "
+"partir de la  à partir de la nouvelle langue."
 
-#: nepi/templates/main/confirm_language.html:27
+#: nepi/templates/main/confirm_language.html:32
 msgid "Change Language"
 msgstr "Changer De Langue"
 
-#: nepi/templates/main/page.html:134
+#: nepi/templates/main/confirm_language.html:49
+#, fuzzy
+#| msgid "Continue"
+msgid "Continue in"
+msgstr "continuer"
+
+#: nepi/templates/main/page.html:136
 msgid "Try again"
 msgstr ""
 
-#: nepi/templates/main/page.html:146
+#: nepi/templates/main/page.html:148
 msgid "Submit"
 msgstr ""
 
-#: nepi/templates/main/page.html:162
+#: nepi/templates/main/page.html:164
 msgid "Previous"
 msgstr ""
 
-#: nepi/templates/main/page.html:170
+#: nepi/templates/main/page.html:172
 msgid "Next"
 msgstr ""
 
