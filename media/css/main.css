@@ -567,6 +567,11 @@ ul.title-user li {
     margin-left: 10px;
 }
 
+ul.title-user .dropdown-menu li {
+    padding: 0;
+    margin: 0;
+}
+
 ul.title-user .btn {
 	font-size: 12px;
 	padding: 1px 7px;
