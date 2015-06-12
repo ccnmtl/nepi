@@ -33,38 +33,38 @@
                         <ul class="title-user">
                             {% if not request.user.is_anonymous %}
                   		        <li>{% trans 'Hello' %}, {{request.user.first_name}} {{request.user.last_name}}</li>
-                                
                                 <li>{% block usernav_extra %}{% endblock %}</li>
-                                
                                 {% if request.user.is_staff %}
-                                <div class="btn-group">
-                                  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                                    Content
-                                    <span class="caret"></span>
-                                  </a>
-                                  <ul class="dropdown-menu">
-                                    {% for h in hierarchies %}
-                                        <li>
-                                            <a href="{{h.get_root.get_edit_url}}">
-                                                {{h.name}}
-                                            </a>
-                                        </li>
-                                    {% endfor %}
-                                  </ul>
-                                </div>
+                                <li>
+                                    <div class="btn-group">
+                                      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                                        Actions
+                                        <span class="caret"></span>
+                                      </a>
+                                      <ul class="dropdown-menu">
+                                        {% for h in hierarchies %}
+                                            <li>
+                                                <a href="{{h.get_root.get_edit_url}}">
+                                                   Edit {{h.name}}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                        {% if request.user.is_superuser %}
+                                            <li><a href="{% url "impersonate-search" %}">Impersonate</a></li>
+                                        {% endif %}
+                                      </ul>
+                                    </div>
+                                </li>
                                 {% endif %}
-
-                                {% if request.user.is_superuser %}
-                  		            <li><a href="{% url "impersonate-search" %}">[impersonate]</a></li>
-            			        {% endif %}
 
                   		        <li><a href="/accounts/logout/?next=/" class="btn btn-inverse">{% trans "Log Out" %}</a></li>
                   		    {% endif %}
                         </ul>
             		{% endblock %}
+                    <div class="clearfix"></div>
                     <ul class="title-logos">
-                        <li><a href="http://www.pepfar.gov/" target="_blank" title="PEPFAR"><img src="{{STATIC_URL}}img/pepfar.png" class="header-logo"></a></li>
                         <li><a href="http://icap.columbia.edu" target="_blank" title="ICAP"><img src="{{STATIC_URL}}img/icap-full.png" alt="ICAP" class="header-logo icap-logo"></a></li>
+                        <li><a href="http://www.pepfar.gov/" target="_blank" title="PEPFAR"><img src="{{STATIC_URL}}img/pepfar.png" class="header-logo"></a></li>
                     </ul>
                 </div>
             </div>
