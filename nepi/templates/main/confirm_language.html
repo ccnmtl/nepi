@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load progressreport %}
+{% load i18n %}
+
+{% block title %}
+    Confirm Language Choice
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            jQuery('a.change-language').click(function() {
+                jQuery(this).parent().fadeOut(function() {
+                    jQuery("#change-language").fadeIn();
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+{% get_language_info for user.profile.language as lang %}
+
+<div class="pageblock change-language-block">
+    <h1>{% trans 'Confirm language choice' %}</h1>
+    <p>
+        {% trans 'You are beginning Option B+ in' %} <b>{{lang.name_local}}</b>.<br />
+        {% trans 'If you change languages part way through, you will have to start from the beginning in the new language.' %}
+    </p>
+    <div style="width: 100%; text-align: center;">
+        <button data-toggle="collapse" href="#change-language-form" class="btn btn-default">
+            {% trans 'Change Language' %}
+        </button>
+        <div id="change-language-form" class="collapse">
+            <form action="." method="post" class="well">{% csrf_token %}
+                <select name="language">
+                    {% get_language_info_list for LANGUAGES as languages %}
+                    {% for language in languages %}
+                    <option value="{{language.code}}"
+                        {% if user.profile.language == language.code %} selected="selected"{% endif %}>
+                        {{language.name_local}}
+                    </option>
+                    {% endfor %}
+                </select>
+                <input type="submit" class="btn btn-primary" value="Save" />
+            </form>
+        </div>
+        <a href="{{next}}" class="btn btn-default">
+            {% trans 'Continue in' %} {{lang.name}}
+        </a>
+    </div>
+</div>        
+{% endblock %}

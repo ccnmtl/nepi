@@ -81,8 +81,8 @@ class TestUserProfile(TestCase):
         self.school_admin = InstitutionAdminProfileFactory().user
         self.country_admin = CountryAdministratorProfileFactory().user
         self.icap = ICAPProfileFactory().user
-        ModuleFactory("main", "/")
-        self.hierarchy = Hierarchy.objects.get(name='main')
+        ModuleFactory("optionb-en", "/")
+        self.hierarchy = Hierarchy.objects.get(name='optionb-en')
 
     def test_user_profile_unis(self):
         self.assertEquals(unicode(self.student), self.student.username)

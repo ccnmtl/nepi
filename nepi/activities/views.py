@@ -19,7 +19,7 @@ class CreateConverstionView(CreateView):
     form_class = ConversationForm
     fields = ['text_one', 'response_one',
               'response_two', 'response_three', 'complete_dialog']
-    success_url = '/pages/main/edit/'
+    success_url = '/pages/optionb/en/edit/'
 
     def form_valid(self, form):
         nc = Conversation.objects.create()
@@ -40,7 +40,7 @@ class CreateConverstionView(CreateView):
         nc.response_three = form.cleaned_data['response_three']
         nc.complete_dialog = form.cleaned_data['complete_dialog']
         nc.save()
-        return HttpResponseRedirect('/pages/main/edit/')
+        return HttpResponseRedirect('/pages/optionb/en/edit/')
 
 
 def render_to_json_response(context, **response_kwargs):
@@ -67,7 +67,7 @@ class ScenarioDeleteView(DeleteView):
 class CreateConversationView(CreateView):
     model = Conversation
     template_name = 'activities/add_conversation.html'
-    success_url = '/pages/main/edit/'
+    success_url = '/pages/optionb/en/edit/'
 
 
 class UpdateConversationView(UpdateView):
@@ -76,7 +76,7 @@ class UpdateConversationView(UpdateView):
     fields = ['text_one', 'response_one',
               'response_two', 'response_three',
               'complete_dialog']
-    success_url = '/pages/main/edit/'
+    success_url = '/pages/optionb/en/edit/'
 
 
 class DeleteConversationView(DeleteView):

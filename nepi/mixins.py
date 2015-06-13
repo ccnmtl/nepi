@@ -3,9 +3,9 @@ import json
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http.response import HttpResponseNotAllowed, HttpResponse, \
     HttpResponseForbidden
-from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
-from pagetree.models import Hierarchy
+
+from nepi.main.models import LearningModule
 
 
 def ajax_required(func):
@@ -75,9 +75,12 @@ class LoggedInMixinSuperuser(object):
 
 class InitializeHierarchyMixin(object):
     def dispatch(self, *args, **kwargs):
-        self.hierarchy_name = kwargs.pop('hierarchy_name', 'main')
+        module = kwargs.pop('module', 'optionb')
+        language = kwargs.pop('language')
 
-        hierarchy = get_object_or_404(Hierarchy, name=self.hierarchy_name)
+        hierarchy = LearningModule.get_hierarchy_for_language(module, language)
+
+        self.hierarchy_name = hierarchy.name
         self.hierarchy_base = hierarchy.base_url
 
         return super(InitializeHierarchyMixin, self).dispatch(*args, **kwargs)

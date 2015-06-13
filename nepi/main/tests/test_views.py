@@ -67,8 +67,8 @@ class TestBasicViews(TestCase):
         staff.is_staff = True
         staff.save()
 
-        ModuleFactory("main", "/pages/main/")
-        hierarchy = Hierarchy.objects.get(name='main')
+        ModuleFactory("optionb-en", "/pages/optionb/en/")
+        hierarchy = Hierarchy.objects.get(name='optionb-en')
         section = hierarchy.get_root().get_first_leaf()
 
         self.client.login(username=staff.username, password="test")
@@ -79,8 +79,8 @@ class TestBasicViews(TestCase):
 class TestStudentLoggedInViews(TestCase):
     '''go through some of the views student sees'''
     def setUp(self):
-        ModuleFactory("main", "/pages/main/")
-        self.hierarchy = Hierarchy.objects.get(name='main')
+        ModuleFactory("optionb-en", "/pages/optionb/en/")
+        self.hierarchy = Hierarchy.objects.get(name='optionb-en')
         self.section = self.hierarchy.get_root().get_first_leaf()
 
         self.student = StudentProfileFactory().user
@@ -98,7 +98,7 @@ class TestStudentLoggedInViews(TestCase):
                                    follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/pages/main/one/', 302)])
+                          [('http://testserver/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
@@ -177,8 +177,8 @@ class TestStudentLoggedInViews(TestCase):
 class TestTeacherLoggedInViews(TestCase):
 
     def setUp(self):
-        ModuleFactory("main", "/pages/main/")
-        self.hierarchy = Hierarchy.objects.get(name='main')
+        ModuleFactory("optionb-en", "/pages/optionb/en/")
+        self.hierarchy = Hierarchy.objects.get(name='optionb-en')
         self.section = self.hierarchy.get_root().get_first_leaf()
 
         self.teacher = TeacherProfileFactory().user
@@ -190,7 +190,7 @@ class TestTeacherLoggedInViews(TestCase):
                                    follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/pages/main/one/', 302)])
+                          [('http://testserver/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
@@ -236,8 +236,8 @@ class TestTeacherLoggedInViews(TestCase):
 class TestInstitutionAdminLoggedInViews(TestCase):
 
     def setUp(self):
-        ModuleFactory("main", "/pages/main/")
-        self.hierarchy = Hierarchy.objects.get(name='main')
+        ModuleFactory("optionb-en", "/pages/optionb/en/")
+        self.hierarchy = Hierarchy.objects.get(name='optionb-en')
         self.section = self.hierarchy.get_root().get_first_leaf()
 
         self.admin = InstitutionAdminProfileFactory().user
@@ -253,7 +253,7 @@ class TestInstitutionAdminLoggedInViews(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/pages/main/one/', 302)])
+                          [('http://testserver/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
@@ -313,8 +313,8 @@ class TestInstitutionAdminLoggedInViews(TestCase):
 class TestCountryAdminLoggedInViews(TestCase):
 
     def setUp(self):
-        ModuleFactory("main", "/pages/main/")
-        self.hierarchy = Hierarchy.objects.get(name='main')
+        ModuleFactory("optionb-en", "/pages/optionb/en/")
+        self.hierarchy = Hierarchy.objects.get(name='optionb-en')
         self.section = self.hierarchy.get_root().get_first_leaf()
 
         self.school = SchoolFactory()
@@ -335,7 +335,7 @@ class TestCountryAdminLoggedInViews(TestCase):
                                    follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/pages/main/one/', 302)])
+                          [('http://testserver/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
@@ -397,8 +397,8 @@ class TestCountryAdminLoggedInViews(TestCase):
 class TestICAPLoggedInViews(TestCase):
 
     def setUp(self):
-        ModuleFactory("main", "/pages/main/")
-        self.hierarchy = Hierarchy.objects.get(name='main')
+        ModuleFactory("optionb-en", "/pages/optionb/en/")
+        self.hierarchy = Hierarchy.objects.get(name='optionb-en')
         self.section = self.hierarchy.get_root().get_first_leaf()
 
         self.icap = ICAPProfileFactory().user
@@ -410,7 +410,7 @@ class TestICAPLoggedInViews(TestCase):
                                    follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/pages/main/one/', 302)])
+                          [('http://testserver/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
@@ -455,7 +455,7 @@ class TestICAPLoggedInViews(TestCase):
 class TestPageView(TestCase):
     def setUp(self):
         cache.clear()
-        self.h = Hierarchy.objects.create(name='main', base_url='/')
+        self.h = Hierarchy.objects.create(name='optionb-en', base_url='/')
         self.h.get_root().add_child_section_from_dict(
             {
                 'label': 'Welcome',
@@ -885,8 +885,8 @@ class TestCreateGroupView(TestCase):
         self.school = SchoolFactory()
         self.client = Client()
 
-        ModuleFactory("main", "/pages/main/")
-        self.hierarchy = Hierarchy.objects.get(name='main')
+        ModuleFactory("optionb-en", "/pages/optionb/en/")
+        self.hierarchy = Hierarchy.objects.get(name='optionb-en')
 
     def test_student_forbidden(self):
         student = StudentProfileFactory().user
@@ -901,7 +901,7 @@ class TestCreateGroupView(TestCase):
             'start_date': '09/20/2018',
             'end_date': '09/29/2018',
             'name': 'The Group',
-            'module': 'main'
+            'module': 'optionb-en'
         }
 
         response = self.client.post("/create_group/", data, follow=True)
@@ -1081,8 +1081,8 @@ class TestPeopleViews(TestCase):
 
 class TestDetailViews(TestCase):
     def setUp(self):
-        ModuleFactory("main", "/pages/main/")
-        hierarchy = Hierarchy.objects.get(name='main')
+        ModuleFactory("optionb-en", "/pages/optionb/en/")
+        hierarchy = Hierarchy.objects.get(name='optionb-en')
 
         self.group = SchoolGroupFactory(module=hierarchy)
         country = self.group.school.country

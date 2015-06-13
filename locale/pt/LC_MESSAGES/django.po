@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-09 14:36-0400\n"
+"POT-Creation-Date: 2015-06-12 13:53-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: nepi/settings_shared.py:240
+#: nepi/settings_shared.py:241
 msgid "English"
 msgstr "Inglês"
 
-#: nepi/settings_shared.py:241
+#: nepi/settings_shared.py:242
 msgid "French"
 msgstr "Francês"
 
-#: nepi/settings_shared.py:242
+#: nepi/settings_shared.py:243
 msgid "Portuguese"
 msgstr "Português"
 
@@ -235,35 +235,151 @@ msgstr ""
 msgid "Hello"
 msgstr "Olá"
 
-#: nepi/templates/base.html:43
+#: nepi/templates/base.html:60
 msgid "Log Out"
 msgstr "Sair"
 
-#: nepi/templates/base.html:75
+#: nepi/templates/base.html:93
 msgid "About"
 msgstr ""
 
-#: nepi/templates/base.html:76
+#: nepi/templates/base.html:94
 msgid "Help"
 msgstr ""
 
-#: nepi/templates/base.html:77
+#: nepi/templates/base.html:95
 msgid "Contact"
 msgstr "Contactos"
 
-#: nepi/templates/main/page.html:134
+#: nepi/templates/dashboard/tab_optionb.html:8
+msgid "Welcome!"
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:9
+msgid ""
+"From this page you can enter the online learning module from the Begin the "
+"Course button, join a group (class) under the groups tab, and edit your "
+"account information under the Profile tab."
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:18
+msgid ""
+"Option B+ is a new approach to prevent mother to child transmission of HIV "
+"and maintain the health of the mother. It entails initiation of lifelong "
+"antiretroviral therapy for pregnant and breastfeeding women infected with "
+"HIV. This approach is recommended in the WHO (2013) Consolidated Guidelines "
+"on the Use of Antiretroviral Drugs for Treating and Preventing HIV "
+"Infection. If realized and performed effectively, this approach will advance "
+"the goal of an AIDS-Free Generation. Nurses and midwives are of critical "
+"importance to the scale-up of Option B+."
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:31
+msgid ""
+"This online training for Option B+ is designed for self-directed learning by "
+"nursing students or practicing professionals but is open to anyone. You can "
+"go through each module at your own pace. You can stop at any time and your "
+"progress will be saved. When you return, you will come back to this table of "
+"contents page where you can review what you have already learned, and "
+"proceed to complete the course."
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:43
+msgid "Session Progress"
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:47
+#: nepi/templates/dashboard/tab_optionb.html:50
+msgid "Begin the Course"
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:56
+msgid "of"
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:56
+msgid "sessions completed"
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:59
+msgid "Continue"
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:69
+msgid "Progress Report"
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:71
+msgid "Pre-test score"
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:74
+#: nepi/templates/dashboard/tab_optionb.html:87
+#: nepi/templates/dashboard/tab_optionb.html:100
+msgid "n/a"
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:76
+#: nepi/templates/dashboard/tab_optionb.html:89
+#: nepi/templates/dashboard/tab_optionb.html:102
+msgid "Incomplete"
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:84
+msgid "Session"
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:84
+msgid "score"
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:97
+msgid "Post-test score"
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:109
+msgid "Average session score"
+msgstr ""
+
+#: nepi/templates/dashboard/tab_optionb.html:119
+msgid "Pre/Post Change"
+msgstr ""
+
+#: nepi/templates/main/confirm_language.html:25
+msgid "Confirm language choice"
+msgstr ""
+
+#: nepi/templates/main/confirm_language.html:27
+msgid "You are beginning Option B+ in"
+msgstr ""
+
+#: nepi/templates/main/confirm_language.html:28
+msgid ""
+"If you change languages part way through, you will have to start from the "
+"beginning in the new language."
+msgstr ""
+
+#: nepi/templates/main/confirm_language.html:32
+msgid "Change Language"
+msgstr ""
+
+#: nepi/templates/main/confirm_language.html:49
+msgid "Continue in"
+msgstr ""
+
+#: nepi/templates/main/page.html:136
 msgid "Try again"
 msgstr ""
 
-#: nepi/templates/main/page.html:146
+#: nepi/templates/main/page.html:148
 msgid "Submit"
 msgstr ""
 
-#: nepi/templates/main/page.html:162
+#: nepi/templates/main/page.html:164
 msgid "Previous"
 msgstr ""
 
-#: nepi/templates/main/page.html:170
+#: nepi/templates/main/page.html:172
 msgid "Next"
 msgstr ""
 

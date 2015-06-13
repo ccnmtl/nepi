@@ -25,7 +25,8 @@ from waffle import flag_is_active
 
 from nepi.main.forms import CreateAccountForm, ContactForm, UpdateProfileForm
 from nepi.main.models import Group, UserProfile, Country, School, \
-    PendingTeachers, DetailedReport, PROFILE_CHOICES, HierarchyCache
+    PendingTeachers, DetailedReport, PROFILE_CHOICES, HierarchyCache, \
+    LearningModule
 from nepi.main.templatetags.progressreport import get_progress_report, \
     average_quiz_score, satisfaction_rating
 from nepi.mixins import (
@@ -110,7 +111,7 @@ class RegistrationView(FormView):
 
 
 class UserProfileView(LoggedInMixin, DetailView):
-    '''For the first tab of the dashboard we are showing
+    '''For the groups tab of the dashboard we are showing
     groups that the user belongs to, and if they do not belong to any
     we are giving the the option to affiliate with one'''
     model = UserProfile
@@ -120,9 +121,8 @@ class UserProfileView(LoggedInMixin, DetailView):
     def get_object(self, queryset=None):
         return self.request.user.profile
 
-    def get_student_context(self):
+    def get_student_context(self, hierarchy):
         context = {}
-        hierarchy = Hierarchy.objects.get(name='main')
         context['optionb_progress_report'] = get_progress_report(
             [self.request.user], hierarchy)
         return context
@@ -172,25 +172,30 @@ class UserProfileView(LoggedInMixin, DetailView):
         return context
 
     def get_context_data(self, **kwargs):
+        profile = self.request.user.profile
         context = super(UserProfileView, self).get_context_data(**kwargs)
 
         # todo - this will require some addition when new modules are added
-        hierarchy = Hierarchy.objects.get(name='main')
+        if flag_is_active(self.request, 'set-session-language'):
+            hierarchy_name = 'optionb-%s' % profile.language
+        else:
+            hierarchy_name = 'optionb-en'
+        hierarchy = Hierarchy.objects.get(name=hierarchy_name)
         context['optionb'] = hierarchy
 
         context['profile_form'] = UpdateProfileForm(instance=self.request.user)
         context['countries'] = Country.choices()
         context['joined_groups'] = self.request.user.profile.joined_groups()
 
-        if self.request.user.profile.is_student():
-            context.update(self.get_student_context())
-        elif self.request.user.profile.is_teacher():
+        if profile.is_student():
+            context.update(self.get_student_context(hierarchy))
+        elif profile.is_teacher():
             context.update(self.get_faculty_context())
-        elif self.request.user.profile.is_institution_administrator():
+        elif profile.is_institution_administrator():
             context.update(self.get_institution_context())
-        elif self.request.user.profile.is_country_administrator():
+        elif profile.is_country_administrator():
             context.update(self.get_country_context())
-        elif self.request.user.profile.is_icap():
+        elif profile.is_icap():
             context.update(self.get_icap_context())
 
         return context
@@ -222,6 +227,30 @@ class UserProfileView(LoggedInMixin, DetailView):
             context = self.get_context_data(object=self.object)
             context['profile_form'] = profile_form
             return self.render_to_response(context)
+
+
+class ConfirmLanguageView(LoggedInMixin, TemplateView):
+    template_name = "main/confirm_language.html"
+
+    def get_context_data(self, **kwargs):
+        optionb = LearningModule.get_hierarchy_for_language(
+            'optionb', self.request.user.profile.language)
+        return {
+            'user': self.request.user,
+            'next': optionb.get_root().get_absolute_url()
+        }
+
+    def post(self, *args, **kwargs):
+        language = self.request.POST.get('language', settings.DEFAULT_LANGUAGE)
+
+        if self.request.user.profile.language != language:
+            self.request.user.profile.language = language
+            self.request.user.profile.save()
+            set_session_language(None, self.request.user, self.request)
+
+        hierarchy = LearningModule.get_hierarchy_for_language('optionb',
+                                                              language)
+        return HttpResponseRedirect(hierarchy.get_root().get_absolute_url())
 
 
 class ReportView(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
@@ -817,7 +846,7 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
             yield ['Satisfaction Score', satisfaction_rating(users, hierarchy)]
 
     def post(self, request):
-        hierarchy_name = request.POST.get('module', 'main')
+        hierarchy_name = request.POST.get('module', 'optionb-en')
         hierarchies = Hierarchy.objects.filter(name=hierarchy_name)
         hierarchy = hierarchies[0]
 

@@ -26,6 +26,17 @@ PROFILE_CHOICES = (
 )
 
 
+class LearningModule(object):
+    ''' Placeholder for an object that holds the language-based hierarchies
+        for a single learning experience, e.g. optionb-en, optionb-fr...
+    '''
+
+    @classmethod
+    def get_hierarchy_for_language(cls, module, language):
+        hierarchy_name = '%s-%s' % (module, language)
+        return Hierarchy.objects.get(name=hierarchy_name)
+
+
 class HierarchyCache(object):
 
     @classmethod

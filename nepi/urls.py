@@ -4,18 +4,19 @@ import debug_toolbar
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from django.contrib.auth.views import password_change, password_change_done, \
-    password_reset_done, password_reset_confirm, password_reset_complete
+from django.contrib.auth.views import (
+    password_change, password_change_done, password_reset_done,
+    password_reset_confirm, password_reset_complete)
 from django.views.generic import TemplateView
 
-from nepi.main.views import CreateGroupView, UpdateGroupView, \
-    DeleteGroupView, CreateSchoolView, UpdateSchoolView, ContactView, \
-    RegistrationView, JoinGroup, HomeView, GroupDetail, LeaveGroup, \
-    SchoolChoiceView, SchoolGroupChoiceView, \
-    ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView, \
-    RemoveStudent, ReportView, DownloadableReportView, \
-    StudentGroupDetail, PeopleView, PeopleFilterView, RosterDetail, \
-    NepiEditView, NepiPageView
+from nepi.main.views import (
+    CreateGroupView, UpdateGroupView, DeleteGroupView, CreateSchoolView,
+    UpdateSchoolView, ContactView, RegistrationView, JoinGroup, HomeView,
+    GroupDetail, LeaveGroup, SchoolChoiceView, SchoolGroupChoiceView,
+    ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView,
+    RemoveStudent, ReportView, DownloadableReportView, StudentGroupDetail,
+    PeopleView, PeopleFilterView, RosterDetail, ConfirmLanguageView,
+    NepiPageView, NepiEditView)
 
 
 admin.autodiscover()
@@ -75,6 +76,10 @@ urlpatterns = patterns(
     url(r'^password/reset/complete/$',
         password_reset_complete, name='password_reset_complete'),
 
+    # confirm language choice
+    url(r'^confirm-language/$',
+        ConfirmLanguageView.as_view(), name='confirm-language-choice'),
+
     # json object delivery
     url(r'^schools/(?P<country_id>\w[^/]*)/$',
         SchoolChoiceView.as_view(), name='school-choice'),
@@ -125,10 +130,10 @@ urlpatterns = patterns(
     (r'^quizblock/', include('quizblock.urls')),
     (r'^pagetree/', include('pagetree.urls')),
 
-    (r'^pages/(?P<hierarchy_name>\w[^/]*)/edit/(?P<path>.*)$',
+    (r'^pages/(?P<module>\w[^/]*)/(?P<language>\w[^/]*)/edit/(?P<path>.*)$',
      NepiEditView.as_view(),
      {}, 'edit-page'),
-    (r'^pages/(?P<hierarchy_name>\w[^/]*)/(?P<path>.*)$',
+    (r'^pages/(?P<module>\w[^/]*)/(?P<language>\w[^/]*)/(?P<path>.*)$',
      NepiPageView.as_view()),
 )
 
