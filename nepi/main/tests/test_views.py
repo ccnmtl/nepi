@@ -100,6 +100,13 @@ class TestStudentLoggedInViews(TestCase):
         self.assertEquals(response.redirect_chain,
                           [('http://testserver/pages/optionb/en/one/', 302)])
 
+    def test_deprecated_page(self):
+        response = self.client.get('http://testserver/pages/main/one/',
+                                   follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/pages/optionb/en/one/', 301)])
+
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
