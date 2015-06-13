@@ -16,7 +16,7 @@ from nepi.main.views import (
     ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView,
     RemoveStudent, ReportView, DownloadableReportView, StudentGroupDetail,
     PeopleView, PeopleFilterView, RosterDetail, ConfirmLanguageView,
-    NepiPageView, NepiEditView)
+    NepiPageView, NepiEditView, NepiDeprecatedPageView)
 
 
 admin.autodiscover()
@@ -129,6 +129,8 @@ urlpatterns = patterns(
 
     (r'^quizblock/', include('quizblock.urls')),
     (r'^pagetree/', include('pagetree.urls')),
+
+    (r'^pages/main/(?P<path>.*)$', NepiDeprecatedPageView.as_view()),
 
     (r'^pages/(?P<module>\w[^/]*)/(?P<language>\w[^/]*)/edit/(?P<path>.*)$',
      NepiEditView.as_view(),

@@ -16,10 +16,11 @@ from django.template.context import Context
 from django.utils import translation
 from django.utils.translation import LANGUAGE_SESSION_KEY
 from django.views.generic import View
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, CreateView, UpdateView
 from pagetree.generic.views import PageView, EditView
+from pagetree.helpers import get_section_from_path
 from pagetree.models import Hierarchy, UserPageVisit
 from waffle import flag_is_active
 
@@ -51,6 +52,20 @@ user_logged_in.connect(set_session_language)
 
 def context_processor(request):
     return dict(hierarchies=Hierarchy.objects.all())
+
+
+class NepiDeprecatedPageView(LoggedInMixin, RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        path = kwargs.get('path')
+        hierarchy = Hierarchy.objects.get(name='optionb-en')
+
+        section = get_section_from_path(
+            path,
+            hierarchy_name=hierarchy.name,
+            hierarchy_base=hierarchy.base_url)
+
+        return section.get_absolute_url()
 
 
 class NepiPageView(LoggedInMixin, InitializeHierarchyMixin, PageView):
