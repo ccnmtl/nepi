@@ -1,5 +1,7 @@
+from json import loads
 import json
 
+from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
 from pagetree.models import Hierarchy, UserPageVisit
@@ -125,30 +127,38 @@ class TestLastResponseSaveViews(TestCase):
 
 class TestRetentionResponseView(TestCase):
 
+    def setUp(self):
+        ModuleFactory("optionb-en", "/pages/optionb/en/")
+        hierarchy = Hierarchy.objects.get(name='optionb-en')
+        self.section = hierarchy.get_root().get_first_leaf()
+
+        self.rf = RetentionRateCardFactory()
+        self.section.append_pageblock(label="Retention Card", css_extra='',
+                                      content_object=self.rf)
+
+        self.user = UserProfileFactory().user
+        self.url = reverse('retention_click')
+
     def test_retention_response(self):
-        rf = RetentionRateCardFactory()
-        up = UserProfileFactory()
-        client = Client()
-        self.assertTrue(client.login(username=up.user.username,
-                                     password="test"))
+        self.client.login(username=self.user.username, password="test")
+
         '''Make sure RetentionResponse returns correctly'''
-        response = client.post(
-            "/activities/retention_click/",
+        response = self.client.post(
+            self.url,
             data={'click_string': "cohort_click",
-                  'retention_id': rf.pk}
+                  'retention_id': self.rf.pk}
             )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(1, RetentionResponse.objects.count())
-        self.assertTrue(RetentionResponse.objects.filter(retentionrate=rf,
-                                                         user=up.user))
+        self.assertEquals(1, RetentionResponse.objects.filter(
+            retentionrate=self.rf, user=self.user).count())
         the_json = json.loads(response.content)
         self.assertEqual(the_json, {'done': False, 'success': True})
 
         '''See what happens with unacceptable click'''
-        response = client.post(
+        response = self.client.post(
             "/activities/retention_click/",
             data={'click_string': "weirdness_here",
-                  'retention_id': rf.pk}
+                  'retention_id': self.rf.pk}
             )
         self.assertEqual(response.status_code, 200)
         the_json = json.loads(response.content)
@@ -156,23 +166,64 @@ class TestRetentionResponseView(TestCase):
 
         '''This is to check that ajax returns true if
         user clicks on the same thing twice'''
-        response = client.post(
+        response = self.client.post(
             "/activities/retention_click/",
             data={'click_string': "cohort_click",
-                  'retention_id': rf.pk}
+                  'retention_id': self.rf.pk}
             )
         self.assertEqual(response.status_code, 200)
         the_json = json.loads(response.content)
         self.assertEqual(the_json, {'done': False, 'success': True})
 
-        '''Test that it is storing the submitted
-        click string values'''
-        self.value = RetentionResponse.objects.filter(retentionrate=rf,
-                                                      user=up.user)
-        # self.assertIsNotNone(self.value[0].cohort_click)
-        # self.assertIsNotNone(self.value[0].jan_click)
         '''We should also check that the page still needs to be submitted'''
-        self.assertTrue(rf.needs_submit())
+        self.assertTrue(self.rf.needs_submit())
+
+    def test_retention_response_save_clicks(self):
+        self.client.login(username=self.user.username, password="test")
+
+        self.assertFalse(self.rf.unlocked(self.user))
+
+        data = {'retention_id': self.rf.pk, 'click_string': 'cohort_click'}
+        response = self.client.post(self.url, data)
+        the_json = loads(response.content)
+        self.assertFalse(the_json['done'])
+        self.assertTrue(the_json['success'])
+        self.assertEquals(0, UserPageVisit.objects.filter(
+            user=self.user, section=self.section).count())
+
+        data['click_string'] = 'start_date_click'
+        self.client.post(self.url, data)
+
+        data['click_string'] = 'eligible_click'
+        self.client.post(self.url, data)
+
+        data['click_string'] = 'delivery_date_click'
+        self.client.post(self.url, data)
+
+        data['click_string'] = 'follow_up_click'
+        response = self.client.post(self.url, data)
+        the_json = loads(response.content)
+        self.assertTrue(the_json['done'])
+
+        self.assertTrue(self.rf.unlocked(self.user))
+
+        upv = UserPageVisit.objects.get(user=self.user, section=self.section)
+        self.assertEquals(upv.status, 'complete')
+
+    def test_retention_response_duplicate(self):
+        self.client.login(username=self.user.username, password="test")
+
+        # create multiple retention responses
+        RetentionResponse.objects.create(user=self.user, retentionrate=self.rf)
+        RetentionResponse.objects.create(user=self.user, retentionrate=self.rf)
+
+        '''Make sure RetentionResponse returns correctly'''
+        response = self.client.post(
+            self.url,
+            data={'click_string': "cohort_click",
+                  'retention_id': self.rf.pk}
+            )
+        self.assertEqual(response.status_code, 200)
 
 
 class TestCalendarResponseView(TestCase):
