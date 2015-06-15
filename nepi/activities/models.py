@@ -245,7 +245,6 @@ class ConversationReportColumn(ReportColumnInterface):
             return response[0].first_click.conversation.id
 
 
-# dont think I need this
 class ConversationForm(forms.ModelForm):
     class Meta:
         model = Conversation
@@ -503,7 +502,7 @@ class RetentionClick(models.Model):
     click_string = models.CharField(max_length=50)
 
     def __unicode__(self):
-        return("Click String: " + str(self.click_string))
+        return self.click_string
 
 
 class RetentionResponse(models.Model):

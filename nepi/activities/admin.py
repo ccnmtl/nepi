@@ -1,24 +1,13 @@
-from nepi.activities.models import (ConversationScenario,
-                                    Conversation,
+from nepi.activities.models import (Conversation,
                                     ConversationResponse,
-                                    ImageInteractive,
-                                    CalendarChart,
-                                    Month,
-                                    Day,
-                                    RetentionRateCard,
+                                    Month, Day,
                                     RetentionResponse,
                                     RetentionClick)
 from django.contrib import admin
 
 
-admin.site.register(ConversationScenario)
 admin.site.register(Conversation)
 admin.site.register(ConversationResponse)
-admin.site.register(ImageInteractive)
-admin.site.register(CalendarChart)
-admin.site.register(RetentionRateCard)
-admin.site.register(RetentionResponse)
-admin.site.register(RetentionClick)
 
 
 class DayInline(admin.TabularInline):
@@ -43,3 +32,11 @@ class MonthAdmin(admin.ModelAdmin):
     ]
 
 admin.site.register(Month, MonthAdmin)
+
+
+class RetentionResponseAdmin(admin.ModelAdmin):
+    search_fields = ['user__username']
+    list_display = ['user', ]
+
+admin.site.register(RetentionClick)
+admin.site.register(RetentionResponse, RetentionResponseAdmin)

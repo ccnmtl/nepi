@@ -153,45 +153,36 @@ class SaveRetentionResponse(View, JSONResponseMixin):
                          "eligible_click", "delivery_date_click",
                          "follow_up_click"]
 
-    def compare_strings(self, click_string, retentionclick, rr):
-        if click_string == "cohort_click":
-            rr.cohort_click = retentionclick
-        elif click_string == "start_date_click":
-            rr.start_date_click = retentionclick
-        elif click_string == "eligible_click":
-            rr.eligible_click = retentionclick
-        elif click_string == "delivery_date_click":
-            rr.delivery_date_click = retentionclick
-        elif click_string == "follow_up_click":
-            rr.follow_up_click = retentionclick
-
-        rr.save()
+    def get_user_response(self, block, user):
+        response = RetentionResponse.objects.filter(
+            retentionrate=block, user=user).first()
+        if response is None:
+            response = RetentionResponse.objects.create(
+                retentionrate=block, user=user)
+        return response
 
     def post(self, request):
-        retention = get_object_or_404(RetentionRateCard,
-                                      pk=request.POST['retention_id'])
-        click_string = request.POST['click_string']
-        if click_string in self.acceptable_clicks:
-            retentionclick = RetentionClick.objects.create(
-                click_string=click_string)
-            rr, created = RetentionResponse.objects.get_or_create(
-                retentionrate=retention, user=request.user)
-            click_saved = getattr(rr, click_string)
-            if click_saved is None:
-                '''For some reason trying to use retresponse.click_string
-                or retresponse.click_saved to assign the value no long works'''
-                self.compare_strings(click_string, retentionclick, rr)
+        block_id = request.POST.get('retention_id', None)
+        block = get_object_or_404(RetentionRateCard, pk=block_id)
 
-            is_done = retention.unlocked(user=request.user)
+        click_string = request.POST.get('click_string', '')
+        if click_string in self.acceptable_clicks:
+            rr = self.get_user_response(block, request.user)
+
+            if getattr(rr, click_string) is None:
+                clk = RetentionClick.objects.create(click_string=click_string)
+                setattr(rr, click_string, clk)
+                rr.save()
+
+            is_done = block.unlocked(user=request.user)
             if is_done:
-                upv = UserPageVisit.objects.get(
+                upv, created = UserPageVisit.objects.get_or_create(
                     user=request.user,
-                    section=retention.pageblock().section)
+                    section=block.pageblock().section)
                 upv.status = 'complete'
                 upv.save()
 
-            return render_to_json_response({'success': True,
-                                            'done': is_done})
+            return render_to_json_response({'success': True, 'done': is_done})
         else:
             '''If submitted string is not in the acceptable strings list
             something is very funny.'''

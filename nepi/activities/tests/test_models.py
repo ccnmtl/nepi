@@ -419,7 +419,7 @@ class TestRetentionRate(TestCase):
     def test_retention_click(self):
         retention_click = RetentionClick(click_string="eligible_click")
         self.assertEqual(retention_click.__unicode__(),
-                         "Click String: eligible_click")
+                         "eligible_click")
 
     def test_unlocked(self):
         user = UserFactory()
