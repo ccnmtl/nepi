@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-12 13:53-0400\n"
+"POT-Creation-Date: 2015-06-13 09:31-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -389,6 +389,23 @@ msgstr ""
 
 #: nepi/templates/main/page.html:172
 msgid "Next"
+msgstr ""
+
+#: nepi/templates/quizblock/question.html:20
+#: nepi/templates/quizblock/question.html:22
+msgid "You chose"
+msgstr ""
+
+#: nepi/templates/quizblock/question.html:20
+msgid "That is correct"
+msgstr ""
+
+#: nepi/templates/quizblock/question.html:22
+msgid "That is incorrect"
+msgstr ""
+
+#: nepi/templates/quizblock/question.html:23
+msgid "The correct answer is"
 msgstr ""
 
 #~ msgid "Login"
