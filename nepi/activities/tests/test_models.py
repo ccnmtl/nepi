@@ -14,6 +14,7 @@ from nepi.activities.tests.factories import ConvClickFactory, \
     MonthFactory, CorrectDayFactory, ImageInteractiveFactory, ARTCardFactory, \
     AdherenceCardFactory
 from nepi.main.tests.factories import UserFactory
+import json
 
 
 class TestConvClick(TestCase):
@@ -376,9 +377,16 @@ class TestDosageActivity(TestCase):
         d = block.as_dict()
         self.assertEquals(block.explanation, d['explanation'])
         self.assertEquals(block.question, d['question'])
-        self.assertEquals(block.ml_nvp, d['ml_nvp'])
+        self.assertEquals(block.ml_nvp, Decimal(d['ml_nvp']))
         self.assertEquals(block.times_day, d['times_day'])
         self.assertEquals(block.weeks, d['weeks'])
+
+    def test_json_serialize_round_trip(self):
+        block = DosageActivityFactory()
+        d1 = block.as_dict()
+        serialized = json.dumps(d1)
+        d2 = json.loads(serialized)
+        self.assertEquals(d1['ml_nvp'], d2['ml_nvp'])
 
     def test_create_from_dict(self):
         original = DosageActivityFactory()

@@ -1,3 +1,4 @@
+from decimal import Decimal
 from datetime import datetime
 from django import forms
 from django.contrib.auth.models import User
@@ -823,7 +824,7 @@ class DosageActivity(models.Model):
         return dict(
             explanation=self.explanation,
             question=self.question,
-            ml_nvp=self.ml_nvp,
+            ml_nvp=str(self.ml_nvp),
             times_day=self.times_day,
             weeks=self.weeks)
 
@@ -832,7 +833,7 @@ class DosageActivity(models.Model):
         return cls.objects.create(
             explanation=d.get('explanation', None),
             question=d.get('question', None),
-            ml_nvp=d.get('ml_nvp', 0.0),
+            ml_nvp=Decimal(d.get('ml_nvp', 0.0)),
             times_day=d.get('times_day', 0),
             weeks=d.get('weeks', 0)
         )
