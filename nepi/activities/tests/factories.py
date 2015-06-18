@@ -1,3 +1,4 @@
+from decimal import Decimal
 import factory
 from nepi.activities.models import ConversationScenario, \
     Conversation, ConvClick, RetentionRateCard, RetentionClick, \
@@ -103,6 +104,6 @@ class DosageActivityFactory(factory.DjangoModelFactory):
     FACTORY_FOR = DosageActivity
     explanation = 'the explanation'
     question = 'the question'
-    ml_nvp = 1.5
+    ml_nvp = Decimal(1.5)
     times_day = 3
     weeks = 5
