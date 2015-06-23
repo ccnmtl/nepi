@@ -148,21 +148,21 @@
 {% endblock %}
  
 {% block content %}
-  
-  <h1><small>{{section.hierarchy.name}}</small>&nbsp;&nbsp; {{ section.label }}</h1>
-  <br />
- 
- <ul class="edit-page-nav nav nav-tabs">
+    <h1><small>{{section.hierarchy.name}}</small>&nbsp;&nbsp; {{ section.label }} {% if not editable %}<i class="icon-lock"></i>{% endif %}</h1>
+    <br />
+  <ul class="edit-page-nav nav nav-tabs">
      <li {% if section.is_root %}class="active"{% endif%}>
          <a href="#content-tree" data-toggle="tab">Hierarchy</a>
      </li>
-      <li {% if not section.is_root %}class="active"{% endif%}>
-          <a href="#edit-blocks-tab" data-toggle="tab">Edit Blocks</a>
-     </li>
-     <li><a href="#children-tab" data-toggle="tab">Children</a></li>
-     <li><a href="#add-pageblock-tab" data-toggle="tab">Add Pageblock</a></li>
-     <li><a href="#edit-page-tab" data-toggle="tab">Edit Section</a></li>
-     <li><a href="#move-section-tab" data-toggle="tab">Move Section</a></li>
+     {% if editable %}
+         <li {% if not section.is_root %}class="active"{% endif%}>
+              <a href="#edit-blocks-tab" data-toggle="tab">Edit Blocks</a>
+         </li>
+         <li><a href="#children-tab" data-toggle="tab">Children</a></li>
+         <li><a href="#add-pageblock-tab" data-toggle="tab">Add Pageblock</a></li>
+         <li><a href="#edit-page-tab" data-toggle="tab">Edit Section</a></li>
+         <li><a href="#move-section-tab" data-toggle="tab">Move Section</a></li>
+     {% endif %}
      <li><a href="#history-tab" data-toggle="tab">History</a></li>
  </ul>
  
