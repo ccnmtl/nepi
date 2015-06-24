@@ -1,6 +1,4 @@
-import json
-
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import View
 from django.views.generic.detail import DetailView
@@ -41,12 +39,6 @@ class CreateConverstionView(CreateView):
         nc.complete_dialog = form.cleaned_data['complete_dialog']
         nc.save()
         return HttpResponseRedirect('/pages/optionb/en/edit/')
-
-
-def render_to_json_response(context, **response_kwargs):
-    data = json.dumps(context)
-    response_kwargs['content_type'] = 'application/json'
-    return HttpResponse(data, **response_kwargs)
 
 
 class ScenarioListView(ListView):
@@ -119,7 +111,7 @@ class SaveResponse(View, JSONResponseMixin):
             upv.status = 'complete'
             upv.save()
 
-        return render_to_json_response({'success': True})
+        return self.render_to_json_response({'success': True})
 
 
 class LastResponse(View, JSONResponseMixin):
@@ -131,19 +123,19 @@ class LastResponse(View, JSONResponseMixin):
             cresp = ConversationResponse.objects.get(
                 user=request.user, conv_scen=scenario)
             if cresp.third_click is not None:
-                return render_to_json_response(
+                return self.render_to_json_response(
                     {'success': True,
                      'last_conv':
                      cresp.third_click.conversation.scenario_type})
             elif (cresp.first_click is not None and
                   cresp.second_click is None):
-                    return render_to_json_response(
+                    return self.render_to_json_response(
                         {'success': True,
                          'last_conv':
                          cresp.first_click.conversation.scenario_type})
 
         except ConversationResponse.DoesNotExist:
-            return render_to_json_response({'success': False})
+            return self.render_to_json_response({'success': False})
 
 
 class SaveRetentionResponse(View, JSONResponseMixin):
@@ -182,11 +174,12 @@ class SaveRetentionResponse(View, JSONResponseMixin):
                 upv.status = 'complete'
                 upv.save()
 
-            return render_to_json_response({'success': True, 'done': is_done})
+            return self.render_to_json_response({'success': True,
+                                                 'done': is_done})
         else:
             '''If submitted string is not in the acceptable strings list
             something is very funny.'''
-            return render_to_json_response({'success': False})
+            return self.render_to_json_response({'success': False})
 
 
 class SaveCalendarResponse(View, JSONResponseMixin):
@@ -211,4 +204,4 @@ class SaveCalendarResponse(View, JSONResponseMixin):
             upv.status = 'complete'
             upv.save()
 
-        return render_to_json_response({'success': True})
+        return self.render_to_json_response({'success': True})
