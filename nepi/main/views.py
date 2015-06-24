@@ -97,6 +97,13 @@ class NepiPageView(LoggedInMixin, InitializeHierarchyMixin, PageView):
 class NepiEditView(LoggedInMixinStaff, InitializeHierarchyMixin, EditView):
     template_name = "pagetree/edit_page.html"
 
+    def get_context_data(self, path):
+        ctx = super(NepiEditView, self).get_context_data(path)
+
+        edit_flag = '%s-edit' % self.hierarchy_name
+        ctx['editable'] = flag_is_active(self.request, edit_flag)
+        return ctx
+
 
 class HomeView(LoggedInMixin, View):
     '''redoing so that it simply redirects people where they need to be'''
