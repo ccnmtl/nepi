@@ -52,16 +52,6 @@
 {% block js %}
     <script src="{{STATIC_URL}}js/jquery-ui-1.10.3.min.js"></script>
     <script type="text/javascript">
-        // handle hash tag navigation
-        var hash = window.location.hash;
-        hash && jQuery('.edit-page-nav a[href="' + hash + '"]').tab('show');
-        
-        // when the nav item is selected update the page hash
-        jQuery('.edit-page-nav a').on('shown', function (e) {
-            window.location.hash = e.target.hash;
-            scrollTo(0,0);
-        });
-
         var saveOrderOfChildren = function() {
             var url = "{% url 'reorder-section-children' section.id %}?";
             var worktodo = 0;
@@ -148,10 +138,11 @@
 {% endblock %}
  
 {% block content %}
-    <h1><small>{{section.hierarchy.name}}</small>&nbsp;&nbsp; {{ section.label }} {% if not editable %}<i class="icon-lock"></i>{% endif %}</h1>
+    <h1><small>{{section.hierarchy.name}}</small>&nbsp;&nbsp; {{ section.label }} 
+        {% if not editable %}<i class="icon-lock"></i>{% endif %}</h1>
     <br />
   <ul class="edit-page-nav nav nav-tabs">
-     <li {% if section.is_root %}class="active"{% endif%}>
+     <li {% if section.is_root or not editable %}class="active"{% endif%}>
          <a href="#content-tree" data-toggle="tab">Hierarchy</a>
      </li>
      {% if editable %}
@@ -162,13 +153,13 @@
          <li><a href="#add-pageblock-tab" data-toggle="tab">Add Pageblock</a></li>
          <li><a href="#edit-page-tab" data-toggle="tab">Edit Section</a></li>
          <li><a href="#move-section-tab" data-toggle="tab">Move Section</a></li>
+        <li><a href="#history-tab" data-toggle="tab">History</a></li>
      {% endif %}
-     <li><a href="#history-tab" data-toggle="tab">History</a></li>
  </ul>
  
  
  <div class="tab-content">
-     <div id="content-tree" class="tab-pane {% if section.is_root %}active{% endif%}">
+     <div id="content-tree" class="tab-pane {% if section.is_root or not editable %}active{% endif%}">
          {% with section.hierarchy as hierarchy %}
          <div>
             <div class="btn-group pull-right">
@@ -203,9 +194,10 @@
                 {% endfor %}
          </div>
          {% endwith %}
-    </div>        
-
- <div id="edit-blocks-tab" class="tab-pane {% if not section.is_root %}active{% endif%}"/>
+    </div>       
+     
+{% if editable %}
+ <div id="edit-blocks-tab" class="tab-pane {% if not section.is_root and editable %}active{% endif%}"/>
   {% if section.pageblock_set.count %}
   <p>Drag the <i class="icon-resize-vertical"></i> arrows to reorder pageblocks:</p>
   {% for block in section.pageblock_set.all %}
@@ -430,6 +422,7 @@
             </table>
         {% endif %}
      </div>
+     {% endif %}
  </div>
 {% endblock %}
  
