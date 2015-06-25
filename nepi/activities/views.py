@@ -1,8 +1,9 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import View
 from django.views.generic.edit import CreateView, UpdateView
 from pagetree.models import UserPageVisit
+import json
 
 from nepi.activities.models import (
     Conversation, ConversationScenario, ConvClick, ConversationResponse,
@@ -12,6 +13,7 @@ from nepi.mixins import JSONResponseMixin
 
 
 class CreateConversationView(CreateView):
+
     template_name = 'activities/conversation_add_or_edit.html'
     form_class = ConversationForm
 
