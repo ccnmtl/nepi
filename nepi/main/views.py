@@ -823,9 +823,14 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
         return report.metadata(hierarchies)
 
     def get_detailed_report_values(self, hierarchies, users):
-        # only report on users who have at least 1 page visit
-        users = users.filter(userpagevisit__isnull=False)
-        report = DetailedReport(hierarchies[0], users)
+        the_hierarchy = hierarchies.first()
+
+        # include users who have at least 1 page visit in the hierarchy
+        upv = UserPageVisit.objects.filter(section__hierarchy=the_hierarchy)
+        user_ids = upv.values_list('user_id', flat=True).distinct()
+        users = users.filter(id__in=user_ids)
+
+        report = DetailedReport(the_hierarchy, users)
         return report.values(hierarchies)
 
     def get_aggregate_report(self, request, hierarchy, users, groups):
