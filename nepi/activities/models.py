@@ -49,6 +49,12 @@ class Conversation(models.Model):
             complete_dialog=d.get('complete_dialog', '')
         )
 
+    def get_scenario(self):
+        if self.scenario_type == 'G':
+            return self.good_conversation.first()
+        else:
+            return self.bad_conversation.first()
+
 
 class ConversationScenario(models.Model):
     pageblocks = generic.GenericRelation(PageBlock)
@@ -83,55 +89,33 @@ class ConversationScenario(models.Model):
     def add_form(self):
         return ConversationScenarioForm()
 
+    def edit_form_alt_text(self):
+        alt_text = ''
+        if self.good_conversation:
+            url = reverse("update_conversation",
+                          args=[self.good_conversation.id])
+            alt_text += "<a href=\"" + url + \
+                "\">update good conversation</a><br />"
+        else:
+            url = reverse("create_conversation", args=[self.id, 'G'])
+            alt_text += "<a href=\"" + url + \
+                "\">add good conversation</a><br />"
+
+        if self.bad_conversation:
+            url = reverse("update_conversation",
+                          args=[self.bad_conversation.id])
+
+            alt_text += "<a href=\"" + url + "\">update bad conversation</a>"
+        else:
+            url = reverse("create_conversation", args=[self.id, 'B'])
+            alt_text += "<a href=\"" + url + "\">add bad conversation</a>"
+        return alt_text
+
     def edit_form(self):
-        if self.good_conversation is None and self.bad_conversation is None:
-            class EditForm(forms.Form):
-                alt_text = ("<a href=\"" +
-                            reverse("create_conversation", args=[self.id])
-                            + "\">add conversation</a>")
-                description = forms.CharField(initial=self.description)
-            form = EditForm()
-            return form
-        elif (self.good_conversation is not None
-              and self.bad_conversation is None):
-                class EditForm(forms.Form):
-                    alt_text = ("<a href=\"" +
-                                reverse("create_conversation", args=[self.id])
-                                + "\">add bad conversation</a><br>" +
-                                "<a href=\"" +
-                                reverse("update_conversation",
-                                        args=[self.good_conversation.id])
-                                + "\">update good conversation</a>")
-                    description = forms.CharField(initial=self.description)
-                form = EditForm()
-                return form
-        elif (self.good_conversation is None
-              and self.bad_conversation is not None):
-                class EditForm(forms.Form):
-                    alt_text = ("<a href=\"" +
-                                reverse("create_conversation", args=[self.id])
-                                + "\">add good conversation</a><br>" +
-                                "<a href=\"" +
-                                reverse("update_conversation",
-                                        args=[self.bad_conversation.id])
-                                + "\">update bad conversation</a>")
-                    description = forms.CharField(initial=self.description)
-                form = EditForm()
-                return form
-        elif (self.good_conversation is not None
-              and self.bad_conversation is not None):
-                class EditForm(forms.Form):
-                    alt_text = ("<a href=\"" +
-                                reverse("update_conversation",
-                                        args=[self.good_conversation.id])
-                                + "\">update good conversation</a><br>" +
-                                "<a href=\"" +
-                                reverse("update_conversation",
-                                        args=[self.bad_conversation.id])
-                                + "\">update bad conversation</a>")
-                    description = forms.CharField(initial=self.description)
-                form = EditForm()
-                return form
+        class EditForm(forms.Form):
+            description = forms.CharField(initial=self.description)
+            alt_text = self.edit_form_alt_text()
+        return EditForm()
 
     @classmethod
     def create(self, request):
@@ -475,12 +459,12 @@ class RetentionRateCard(models.Model):
            parts of the table before they are allowed to proceed.'''
         response = RetentionResponse.objects.filter(
             retentionrate=self, user=user)
-        if (len(response) == 1
-                and response[0].cohort_click is not None
-                and response[0].start_date_click is not None
-                and response[0].eligible_click is not None
-                and response[0].delivery_date_click is not None
-                and response[0].follow_up_click is not None):
+        if (len(response) == 1 and
+            response[0].cohort_click is not None and
+            response[0].start_date_click is not None and
+            response[0].eligible_click is not None and
+            response[0].delivery_date_click is not None and
+                response[0].follow_up_click is not None):
             return True
         else:
             return False
@@ -775,10 +759,10 @@ class DosageActivity(models.Model):
         the appropriate fields before proceeding.'''
         response = DosageActivityResponse.objects.filter(
             dosage_activity=self, user=user)
-        if (len(response) == 1
-                and response[0].ml_nvp is not None
-                and response[0].times_day is not None
-                and response[0].weeks is not None):
+        if (len(response) == 1 and
+            response[0].ml_nvp is not None and
+            response[0].times_day is not None and
+                response[0].weeks is not None):
             return True
         else:
             return False

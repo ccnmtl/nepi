@@ -1,58 +1,65 @@
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic import View
 from django.views.generic.edit import CreateView, UpdateView
 from pagetree.models import UserPageVisit
-import json
 
-from nepi.activities.models import Conversation, ConversationScenario, \
-    ConvClick, ConversationResponse, ConversationForm, RetentionRateCard, \
-    RetentionClick, RetentionResponse, CalendarResponse, CalendarChart, Day
+from nepi.activities.models import (
+    Conversation, ConversationScenario, ConvClick, ConversationResponse,
+    ConversationForm, RetentionRateCard, RetentionClick, RetentionResponse,
+    CalendarResponse, CalendarChart, Day)
 from nepi.mixins import JSONResponseMixin
 
 
 class CreateConversationView(CreateView):
-    template_name = 'activities/add_conversation.html'
+
+    template_name = 'activities/conversation_add_or_edit.html'
     form_class = ConversationForm
-    fields = ['text_one', 'response_one',
-              'response_two', 'response_three', 'complete_dialog']
-    success_url = '/pages/optionb/en/edit/'
+
+    def get_context_data(self, **kwargs):
+        pk = self.kwargs['pk']
+        scenario = get_object_or_404(ConversationScenario, pk=pk)
+
+        ctx = super(CreateConversationView, self).get_context_data(**kwargs)
+        ctx['form'].initial['scenario_type'] = self.kwargs['type']
+        ctx['scenario'] = scenario
+        return ctx
 
     def form_valid(self, form):
         nc = Conversation.objects.create()
         nc.scenario_type = form.cleaned_data['scenario_type']
-        path_split = self.request.path.split('/')
-        key = path_split[3]
-        scenario = ConversationScenario.objects.get(pk=key)
-        if nc.scenario_type == 'G':
-            scenario.good_conversation = nc
-            scenario.save()
-        elif nc.scenario_type == 'B':
-            scenario.bad_conversation = nc
-            scenario.save()
-
         nc.text_one = form.cleaned_data['text_one']
         nc.response_one = form.cleaned_data['response_one']
         nc.response_two = form.cleaned_data['response_two']
         nc.response_three = form.cleaned_data['response_three']
         nc.complete_dialog = form.cleaned_data['complete_dialog']
         nc.save()
-        return HttpResponseRedirect('/pages/optionb/en/edit/')
 
+        pk = self.kwargs['pk']
+        scenario = get_object_or_404(ConversationScenario, pk=pk)
 
-def render_to_json_response(context, **response_kwargs):
-    data = json.dumps(context)
-    response_kwargs['content_type'] = 'application/json'
-    return HttpResponse(data, **response_kwargs)
+        if nc.scenario_type == 'G':
+            scenario.good_conversation = nc
+        elif nc.scenario_type == 'B':
+            scenario.bad_conversation = nc
+        scenario.save()
+
+        redirect_to = scenario.pageblock().section.get_edit_url()
+        return HttpResponseRedirect(redirect_to)
 
 
 class UpdateConversationView(UpdateView):
     model = Conversation
-    template_name = 'activities/add_conversation.html'
-    fields = ['text_one', 'response_one',
-              'response_two', 'response_three',
-              'complete_dialog']
-    success_url = '/pages/optionb/en/edit/'
+    template_name = 'activities/conversation_add_or_edit.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(UpdateConversationView, self).get_context_data(**kwargs)
+        ctx['scenario'] = ctx['object'].get_scenario()
+        return ctx
+
+    def get_success_url(self):
+        scenario = self.object.get_scenario()
+        return scenario.pageblock().section.get_edit_url()
 
 
 class SaveResponse(View, JSONResponseMixin):

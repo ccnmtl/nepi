@@ -1,13 +1,12 @@
 from django.conf.urls import url, patterns
-'''Want to switch to class based views but not sure how'''
 from nepi.activities.views import (
-    UpdateConversationView, CreateConversationView, SaveResponse,
-    LastResponse, SaveRetentionResponse, SaveCalendarResponse)
+    CreateConversationView, UpdateConversationView,
+    SaveResponse, LastResponse, SaveRetentionResponse, SaveCalendarResponse)
 
 
 urlpatterns = patterns(
     '',
-    url(r'^class_create_conversation/(?P<pk>\d+)/$',
+    url(r'^create_conversation/(?P<pk>\d+)/(?P<type>\w)/$',
         CreateConversationView.as_view(),
         name='create_conversation'),
     url(r'^update_conversation/(?P<pk>\d+)/$',
