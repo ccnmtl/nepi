@@ -23,7 +23,7 @@ class Conversation(models.Model):
     response_one = models.CharField(max_length=255, null=True, blank=True)
     response_two = models.CharField(max_length=255, null=True, blank=True)
     response_three = models.CharField(max_length=255, null=True, blank=True)
-    complete_dialog = models.TextField(max_length=255, null=True, blank=True)
+    complete_dialog = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
         return unicode(self.scenario_type)
