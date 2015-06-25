@@ -715,6 +715,11 @@ class BaseReportMixin(object):
 
         if groups:
             users = User.objects.filter(profile__group__in=groups)
+        else:
+            # just include users who have visited the selected hierarchy
+            upv = UserPageVisit.objects.filter(section__hierarchy=hierarchy)
+            user_ids = upv.values_list('user_id', flat=True).distinct()
+            users = users.filter(id__in=user_ids)
 
         if users:
             users = users.filter(profile__profile_type='ST').distinct()
@@ -824,11 +829,6 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
 
     def get_detailed_report_values(self, hierarchies, users):
         the_hierarchy = hierarchies.first()
-
-        # include users who have at least 1 page visit in the hierarchy
-        upv = UserPageVisit.objects.filter(section__hierarchy=the_hierarchy)
-        user_ids = upv.values_list('user_id', flat=True).distinct()
-        users = users.filter(id__in=user_ids)
 
         report = DetailedReport(the_hierarchy, users)
         return report.values(hierarchies)
