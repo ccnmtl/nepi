@@ -23,7 +23,7 @@ jQuery(document).ready(function() {
         jQuery('.control-group').removeClass('error');
         
         var success = true;
-        var re = new RegExp(/^\d*\.?\d*$/);
+        var re = new RegExp(/^\d{0,4}(\.\d{0,2})?$/);
         var dig = new RegExp(/^\d+$/);
         
     	var nvp = jQuery(inputs[0]).val();

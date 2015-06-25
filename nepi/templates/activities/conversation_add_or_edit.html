@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block js %}
+    <script type="text/javascript">
+       // Prevent select box from changing. Disabling it directly prevents the
+       // value from being posted.
+       jQuery(document).ready(function() {
+           jQuery('#id_scenario_type').on('mousedown', function(e) {
+               e.preventDefault();
+               this.blur();
+               window.focus();
+           });
+       });
+    </script>
+{% endblock %}
+
+{% block content %}
+    {% with section=scenario.pageblock.section %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="{{section.get_edit_url}}">{{section.label}}</a>
+        </li>
+        <li>/ Add or Edit Conversation</li>
+    </ul>
+
+    <form action="." method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit" />
+    </form>
+    {% endwith %}
+{% endblock %}

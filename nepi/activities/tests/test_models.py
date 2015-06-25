@@ -4,15 +4,16 @@ from django.test import TestCase
 from pagetree.tests.factories import HierarchyFactory
 from quizblock.tests.test_models import FakeReq
 
-from nepi.activities.models import ConvClick, ConversationResponse, \
-    ConversationScenario, DosageActivity, DosageActivityResponse, Month, Day, \
-    RetentionResponse, RetentionClick, RetentionRateCard, Conversation, \
-    CalendarResponse, CalendarChart, ImageInteractive, ARTCard, AdherenceCard
-from nepi.activities.tests.factories import ConvClickFactory, \
-    GoodConversationFactory, ConversationScenarioFactory, DosageActivityFactory, \
-    RetentionRateCardFactory, RetentionClickFactory, CalendarChartFactory, \
-    MonthFactory, CorrectDayFactory, ImageInteractiveFactory, ARTCardFactory, \
-    AdherenceCardFactory
+from nepi.activities.models import (
+    ConvClick, ConversationResponse, ConversationScenario, DosageActivity,
+    DosageActivityResponse, Month, Day, RetentionResponse, RetentionClick,
+    RetentionRateCard, Conversation, CalendarResponse, CalendarChart,
+    ImageInteractive, ARTCard, AdherenceCard)
+from nepi.activities.tests.factories import (
+    ConvClickFactory,  GoodConversationFactory, ConversationScenarioFactory,
+    DosageActivityFactory, RetentionRateCardFactory, RetentionClickFactory,
+    CalendarChartFactory, MonthFactory, CorrectDayFactory,
+    ImageInteractiveFactory, ARTCardFactory, AdherenceCardFactory)
 from nepi.main.tests.factories import UserFactory
 import json
 
@@ -167,7 +168,8 @@ class TestConversationScenario(TestCase):
                                                bad_conversation=None)
         edit_form = scenario.edit_form()
         self.assertTrue("description" in edit_form.fields)
-        self.assertTrue("add conversation" in edit_form.alt_text)
+        self.assertTrue("add good conversation" in edit_form.alt_text)
+        self.assertTrue("add bad conversation" in edit_form.alt_text)
 
     def test_score_incomplete(self):
         self.assertEquals(self.scenario.score(self.user), None)
