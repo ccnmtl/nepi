@@ -1,10 +1,9 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import View
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView
 from pagetree.models import UserPageVisit
+import json
 
 from nepi.activities.models import Conversation, ConversationScenario, \
     ConvClick, ConversationResponse, ConversationForm, RetentionRateCard, \
@@ -12,7 +11,7 @@ from nepi.activities.models import Conversation, ConversationScenario, \
 from nepi.mixins import JSONResponseMixin
 
 
-class CreateConverstionView(CreateView):
+class CreateConversationView(CreateView):
     template_name = 'activities/add_conversation.html'
     form_class = ConversationForm
     fields = ['text_one', 'response_one',
@@ -41,25 +40,10 @@ class CreateConverstionView(CreateView):
         return HttpResponseRedirect('/pages/optionb/en/edit/')
 
 
-class ScenarioListView(ListView):
-    template_name = "activities/class_scenario_list_view.html"
-    model = ConversationScenario
-
-
-class ScenarioDetailView(DetailView):
-    template_name = "activities/class_scenario_list_view.html"
-    model = ConversationScenario
-
-
-class ScenarioDeleteView(DeleteView):
-    model = ConversationScenario
-    success_url = '../../../activities/classview_scenariolist/'
-
-
-class CreateConversationView(CreateView):
-    model = Conversation
-    template_name = 'activities/add_conversation.html'
-    success_url = '/pages/optionb/en/edit/'
+def render_to_json_response(context, **response_kwargs):
+    data = json.dumps(context)
+    response_kwargs['content_type'] = 'application/json'
+    return HttpResponse(data, **response_kwargs)
 
 
 class UpdateConversationView(UpdateView):
@@ -69,11 +53,6 @@ class UpdateConversationView(UpdateView):
               'response_two', 'response_three',
               'complete_dialog']
     success_url = '/pages/optionb/en/edit/'
-
-
-class DeleteConversationView(DeleteView):
-    model = Conversation
-    success_url = '../../../activities/classview_scenariolist/'
 
 
 class SaveResponse(View, JSONResponseMixin):
