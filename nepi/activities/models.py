@@ -195,8 +195,10 @@ class ConversationScenario(models.Model):
 
     def as_dict(self):
         d = dict(description=self.description)
-        d['good_conversation'] = self.good_conversation.as_dict()
-        d['bad_conversation'] = self.bad_conversation.as_dict()
+        if self.good_conversation:
+            d['good_conversation'] = self.good_conversation.as_dict()
+        if self.bad_conversation:
+            d['bad_conversation'] = self.bad_conversation.as_dict()
         return d
 
 
