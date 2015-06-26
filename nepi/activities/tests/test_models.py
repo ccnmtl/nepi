@@ -110,6 +110,15 @@ class TestConversationScenario(TestCase):
         self.assertEquals(self.scenario.bad_conversation.complete_dialog,
                           bad['complete_dialog'])
 
+    def test_as_dict_incomplete(self):
+        scenario = ConversationScenarioFactory(good_conversation=None,
+                                               bad_conversation=None)
+
+        d = scenario.as_dict()
+        self.assertEquals(self.scenario.description, d['description'])
+        self.assertFalse('good_conversation' in d)
+        self.assertFalse('bad_conversation' in d)
+
     def test_create_from_dict(self):
         d = self.scenario.as_dict()
         block = ConversationScenario.create_from_dict(d)
