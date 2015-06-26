@@ -40,8 +40,12 @@ admin.site.register(Country)
 admin.site.register(PendingTeachers, PendingTeacherAdmin)
 
 
+def section_hierarchy(obj):
+    return obj.section.hierarchy.name
+
+
 class UserPageVisitAdmin(admin.ModelAdmin):
     search_fields = ['user__username']
-    list_display = ['user', 'section', 'status']
+    list_display = ['user', 'section', section_hierarchy, 'status']
 
 admin.site.register(UserPageVisit, UserPageVisitAdmin)
