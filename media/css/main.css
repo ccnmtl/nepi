@@ -1498,6 +1498,14 @@ button.js-captcha-refresh:hover {
     color: #0088cc;
 }
 
+table.group-detail-report tr td form {
+    margin: 0;
+}
+
+table.group-detail-report tr td {
+    vertical-align: bottom;
+}
+
 /* contact form */
 
 div.contact-icap div.control-group.wide input {

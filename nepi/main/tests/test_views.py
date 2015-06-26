@@ -1147,11 +1147,13 @@ class TestDetailViews(TestCase):
         ctx = view.get_context_data(**view.kwargs)
         self.assertEquals(ctx['group'], self.group)
         self.assertEquals(ctx['object'], self.group)
-        self.assertEquals(len(ctx['completed_users']), 0)
-        self.assertEquals(ctx['completed'], 0)
-        self.assertEquals(ctx['inprogress'], 0)
-        self.assertEquals(ctx['incomplete'], 0)
-        self.assertEquals(ctx['total'], 2)
+        self.assertEquals(len(ctx['stats']), 1)
+
+        self.assertEquals(ctx['stats'][0]['completed'], 0)
+        self.assertEquals(ctx['stats'][0]['inprogress'], 0)
+        self.assertEquals(ctx['stats'][0]['incomplete'], 0)
+        self.assertEquals(ctx['stats'][0]['total'], 2)
+        self.assertEquals(ctx['stats'][0]['language'], 'English')
 
     def test_roster_detail(self):
         url = reverse('roster-details', args=[self.group.id])

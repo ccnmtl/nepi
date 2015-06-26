@@ -3,7 +3,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from pagetree.models import PageBlock
 from quizblock.models import Answer, Quiz
-from nepi.main.models import HierarchyCache
+
+from nepi.main.models import HierarchyCache, LearningModule
 
 
 register = template.Library()
@@ -176,6 +177,13 @@ def percent_complete(user_profile, hierarchy):
 
 
 @register.filter
+def module_percent_complete(user_profile, module_name):
+    hierarchy = LearningModule.get_hierarchy_for_language(
+        module_name, user_profile.language)
+    return percent_complete(user_profile, hierarchy)
+
+
+@register.filter
 def sessions_completed(user_profile, hierarchy):
     return user_profile.sessions_completed(hierarchy)
 
@@ -183,6 +191,13 @@ def sessions_completed(user_profile, hierarchy):
 @register.filter
 def last_location_url(user_profile, hierarchy):
     return user_profile.last_location(hierarchy).get_absolute_url()
+
+
+@register.filter
+def module_last_location_url(user_profile, module_name):
+    hierarchy = LearningModule.get_hierarchy_for_language(
+        module_name, user_profile.language)
+    return last_location_url(user_profile, hierarchy)
 
 
 class MapAnswerNode(template.Node):

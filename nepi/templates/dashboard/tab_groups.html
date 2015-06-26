@@ -76,6 +76,7 @@
                     <tr><th>Name</th><th>Instructor</th><th>Begin Date</th><th>End Date</th><th>Progress</th><th>Actions</th></tr>
                 
                     {% for group in joined_groups.all %}
+                        {% with module_name=group.module_name %}
                         <tr id="student-group-{{group.id}}" class="content-row">
                             <td>{{group.name}}</td>
                             <td>{{group.creator.get_full_name}}</td>
@@ -83,11 +84,11 @@
                             <td>{{group.formatted_end_date}}</td>
                             <td>
                                 <div class="progress progress-striped">
-                                    <div class="bar" style="width: {{user_profile|percent_complete:group.module.get_root}}%"></div>
+                                    <div class="bar" style="width: {{user_profile|module_percent_complete:module_name}}%"></div>
                                 </div>
                             </td>
                             <td>
-                                <a href="{{user_profile|last_location_url:group.module}}" class="btn btn-default btn-small">
+                                <a href="{{user_profile|module_last_location_url:module_name}}" class="btn btn-default btn-small">
                                     Continue
                                 </a>&nbsp;&nbsp;
                                 <form action='/leave_group/' method='post'>
@@ -96,6 +97,7 @@
                                 </form>
                             </td>
                         </tr>
+                        {% endwith %}
                     {% endfor %}
                 </table>
             </div>

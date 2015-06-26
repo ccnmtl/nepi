@@ -20,29 +20,36 @@
                     <dt>Creator</dt><dd>{{group.creator.get_full_name}} ({{group.creator.username}})</dd>
                     <dt>Begin Date</dt><dd>{{group.formatted_start_date}}</dd>
                     <dt>End Date</dt><dd>{{group.formatted_end_date}}</dd>
+                    <dt>Members</dt><dd>{{group.students.count}}</dd>
                     <dt>Roster</dt><dd><a href="{% url 'roster-details' group.id %}">View Student List</a></dd>
                 </dl>
-            </div>
-            <div class="pull-right">
-                <form action='/dashboard/reports/download/' method="post">{% csrf_token %}
-                    <input type="hidden" name="report-type" value="aggregate" />
-                    <input type="hidden" name="country" value="{{group.school.country.name}}" />
-                    <input type="hidden" name="school" value="{{group.school.id}}" />
-                    <input type="hidden" name="schoolgroup" value="{{group.id}}" />
-                    <input type="submit" value="Download Aggregate Report" class="btn btn-default" />
-                </form>   
-            </div>
+            </div>     
         </div>
-        <table class="table table-striped table-condensed well">
-            <tr><th>Members</th><th>Total</th><th>Completed</th><th>Incomplete</th><th>In Progress</th></tr>
-            <tr>
-                <td />
-                <td>{{total}}</td>
-                <td>{{completed}}</td>
-                <td>{{incomplete}}</td>
-                <td>{{inprogress}}</td>
-            </tr>
-        </table>
+    
+        {% for stat in stats %}
+            {% if stat.completed > 0 or stat.incomplete > 0 or stat.inprogress > 0 %}
+                <table class="table table-striped table-condensed well group-detail-report">
+                    <tr><th /><th>Incomplete</th><th>In Progress</th><th>Completed</th><th>Scores</th></tr>
+                    <tr>
+                        <td width="25%">{{stat.language}}</td>
+                        <td>{{stat.incomplete}}</td>
+                        <td>{{stat.inprogress}}</td>
+                        <td>{{stat.completed}}</td>
+                        <td width="15%">
+                            <form action='/dashboard/reports/download/' method="post">{% csrf_token %}
+                                <input type="hidden" name="module" value="{{stat.hierarchy.name}}" />
+                                <input type="hidden" name="report-type" value="aggregate" />
+                                <input type="hidden" name="country" value="{{group.school.country.name}}" />
+                                <input type="hidden" name="school" value="{{group.school.id}}" />
+                                <input type="hidden" name="schoolgroup" value="{{group.id}}" />
+                                <input type="submit" name="download-detailed-report" value="Download Detailed Report" class="btn btn-default" />
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            {% endif %}
+        {% endfor %}
+
         {% include "dashboard/progress_report.html" %}
     {% endwith %}
 </div>    
