@@ -52,8 +52,11 @@ class TestReportBase(TestCase):
 
         self.icap = ICAPProfileFactory(
             country=self.new_group.school.country).user
+        UserPageVisit.objects.create(user=self.icap, section=descendants[0])
+
         self.student = StudentProfileFactory(
             country=self.old_group.school.country).user  # unaffiliated user
+        UserPageVisit.objects.create(user=self.student, section=descendants[0])
 
 
 class TestReportView(TestReportBase):
@@ -118,7 +121,7 @@ class TestDownloadableReportView(TestReportBase):
             rows.next(),
             ['Total Users', 'Completed', 'Incomplete', 'In Progress'])
         # counts are in row 2. total, completed, incomplete inprogress
-        self.assertEquals(rows.next(), [4, 1, 0, 2])
+        self.assertEquals(rows.next(), [4, 1, 0, 3])
 
         # aggregates are in row 4-8
         rows.next()  # header
@@ -150,8 +153,9 @@ class TestDownloadableReportView(TestReportBase):
             [country.display_name, 'Unaffiliated Students', None])
         rows.next()  # header
         rows.next()  # header
+
         # counts are in row 2. total, completed, incomplete inprogress
-        self.assertEquals(rows.next(), [1, 0, 0, 0])
+        self.assertEquals(rows.next(), [1, 0, 0, 1])
 
     def test_aggregate_report_all_schools(self):
         country = self.new_group.school.country
@@ -248,7 +252,8 @@ class TestDownloadableReportView(TestReportBase):
                    'completion_date']
             self.assertEquals(rows.next(), row)
 
-            # expecting 3 user results to show up
+            # expecting 4 user results to show up
+            row = rows.next()
             row = rows.next()
             row = rows.next()
             row = rows.next()
