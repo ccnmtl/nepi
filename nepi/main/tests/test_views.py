@@ -563,7 +563,7 @@ class TestSchoolChoiceView(TestCase):
         self.assertEquals(response.status_code, 405)
 
     def test_get_country_not_found(self):
-        response = self.client.get('/schools/XY/', {},
+        response = self.client.get('/schools/11/', {},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 404)
 

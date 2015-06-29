@@ -16,10 +16,10 @@ class UserFactory(factory.DjangoModelFactory):
 
 
 def country_choice(n):
-    cc = ''.join(random.choice(string.ascii_uppercase + string.digits)
+    cc = ''.join(random.choice(string.ascii_uppercase)
                  for _ in range(2))
     while Country.objects.filter(name=cc):
-        cc = ''.join(random.choice(string.ascii_uppercase + string.digits)
+        cc = ''.join(random.choice(string.ascii_uppercase)
                      for _ in range(2))
     return cc
 
