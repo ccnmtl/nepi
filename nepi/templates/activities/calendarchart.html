@@ -1,4 +1,5 @@
 {% load markup %}
+{% load i18n %}
 
 {% if block.label %}<div id="month_title"><h3>{{block.label}}</h3></div>{% endif %}
 
@@ -9,7 +10,7 @@
         </div>
         <div class="modal-body">
             <p></p>
-            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Try Again</button>
+            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{% trans 'Try Again' %}</button>
         </div>
     </div>
 
@@ -24,17 +25,18 @@
 <div id="calendar_id" value="{{ block.pk }}" data-calendar="{{ block.pk }}" style="visibility: hidden">  </div>
     <h3>{{block.month.display_name}}</h3>
       <div class="daysofweek">
-          <div>Sunday</div>
-          <div>Monday</div>
-          <div>Tuesday</div>
-          <div>Wednesday</div>
-          <div>Thursday</div>
-          <div>Friday</div>
-          <div>Saturday</div>
+          <div>{% trans 'Sunday' %}</div>
+          <div>{% trans 'Monday' %}</div>
+          <div>{% trans 'Tuesday' %}</div>
+          <div>{% trans 'Wednesday' %}</div>
+          <div>{% trans 'Thursday' %}</div>
+          <div>{% trans 'Friday' %}</div>
+          <div>{% trans 'Saturday' %}</div>
       </div>
     <div id="month" class="{{block.month.month_name}}">
     {% for day in block.month.day_set.all %}
-        <div data-day="{{ day.pk }}" data-date="{{ day.number }}" data-explanation="{{ day.explanation }}" data-toggle="modal" data-target="#myModal" class="day">
+        <div data-day="{{ day.pk }}" data-date="{{ day.number }}" data-explanation="{{ day.explanation }}"
+            data-toggle="modal" data-target="#myModal" class="day">
         {{ day.number }}
         </div>
 {% endfor %}

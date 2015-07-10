@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-13 09:30-0400\n"
+"POT-Creation-Date: 2015-07-09 13:06-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,6 +111,38 @@ msgstr ""
 msgid "Document the ARV dose the number of pills dispensed."
 msgstr ""
 
+#: nepi/templates/activities/calendarchart.html:13
+msgid "Try Again"
+msgstr ""
+
+#: nepi/templates/activities/calendarchart.html:28
+msgid "Sunday"
+msgstr ""
+
+#: nepi/templates/activities/calendarchart.html:29
+msgid "Monday"
+msgstr ""
+
+#: nepi/templates/activities/calendarchart.html:30
+msgid "Tuesday"
+msgstr ""
+
+#: nepi/templates/activities/calendarchart.html:31
+msgid "Wednesday"
+msgstr ""
+
+#: nepi/templates/activities/calendarchart.html:32
+msgid "Thursday"
+msgstr ""
+
+#: nepi/templates/activities/calendarchart.html:33
+msgid "Friday"
+msgstr ""
+
+#: nepi/templates/activities/calendarchart.html:34
+msgid "Saturday"
+msgstr ""
+
 #: nepi/templates/activities/dosageactivity.html:9
 msgid ""
 "<h4>NVP Dosage Chart</h4> <h5>Daily dosing for NVP for infants from birth-6 "
@@ -148,7 +180,7 @@ msgid "Incorrect"
 msgstr ""
 
 #: nepi/templates/activities/dosageactivity.html:65
-msgid "Please enter a valid digit or decimal for ml of NVP."
+msgid "Please enter a valid amount, example: 1.23."
 msgstr ""
 
 #: nepi/templates/activities/dosageactivity.html:71
@@ -376,7 +408,11 @@ msgstr ""
 msgid "Previous"
 msgstr ""
 
-#: nepi/templates/main/page.html:172
+#: nepi/templates/main/page.html:171
+msgid "Home"
+msgstr ""
+
+#: nepi/templates/main/page.html:175
 msgid "Next"
 msgstr ""
 
