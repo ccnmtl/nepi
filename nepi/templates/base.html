@@ -33,6 +33,11 @@
                         <ul class="title-user">
                             {% if not request.user.is_anonymous %}
                   		        <li>{% trans 'Hello' %}, {{request.user.first_name}} {{request.user.last_name}}</li>
+                                {% if user.has_usable_password %}
+                                    <li><a href="/accounts/password_change/">Change Password</a></li>
+                                {% endif %}
+                                
+                                
                                 <li>{% block usernav_extra %}{% endblock %}</li>
                                 {% if request.user.is_staff %}
                                 <li>
