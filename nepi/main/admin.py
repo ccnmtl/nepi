@@ -10,6 +10,7 @@ from nepi.main.models import UserProfile, \
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
     max_num = 1
+    filter_horizontal = ('group',)
 
 
 class UserAdmin(UserAdmin):
