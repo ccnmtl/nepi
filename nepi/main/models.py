@@ -339,6 +339,7 @@ class AggregateQuizScore(models.Model):
 class AggregateQuizScoreForm(forms.ModelForm):
     class Meta:
         model = AggregateQuizScore
+        exclude = []
 
 
 def random_user(username):
