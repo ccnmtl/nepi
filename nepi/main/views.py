@@ -734,20 +734,24 @@ class BaseReportMixin(object):
     def classify_group_users(self, groups, sections):
         ctx = {'total': 0, 'completed': 0, 'completed_users': [],
                'incomplete': 0, 'inprogress': 0}
+        users = []
 
         for group in groups:
             active = group.is_active()
             for profile in group.students():
-                ctx['total'] += 1
-                pct = self.percent_complete(profile.user, sections)
-                if pct == 100:
-                    ctx['completed'] += 1
-                    ctx['completed_users'].append(profile.user)
-                elif pct > 0:
-                    if active:
-                        ctx['inprogress'] += 1
-                    else:
-                        ctx['incomplete'] += 1
+                if profile.user.username not in users:
+                    ctx['total'] += 1
+                    pct = self.percent_complete(profile.user, sections)
+
+                    if pct == 100:
+                        ctx['completed'] += 1
+                        ctx['completed_users'].append(profile.user)
+                    elif pct > 0:
+                        if active:
+                            ctx['inprogress'] += 1
+                        else:
+                            ctx['incomplete'] += 1
+                    users.append(profile.user.username)
         return ctx
 
     def classify_unaffiliated_users(self, users, sections):
