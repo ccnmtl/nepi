@@ -404,6 +404,7 @@ class CreateSchoolView(LoggedInMixin, AdministrationOnlyMixin, CreateView):
     model = School
     template_name = 'icap/add_school.html'
     success_url = '/'
+    fields = ['country', 'name']
 
 
 class UpdateSchoolView(LoggedInMixin, AdministrationOnlyMixin, UpdateView):
@@ -411,6 +412,7 @@ class UpdateSchoolView(LoggedInMixin, AdministrationOnlyMixin, UpdateView):
     model = School
     template_name = 'icap/add_school.html'
     success_url = '/'
+    fields = ['country', 'name']
 
 
 class CreateGroupView(LoggedInMixin, AdministrationOnlyMixin, View):

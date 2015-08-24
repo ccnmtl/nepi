@@ -235,6 +235,7 @@ class ConversationReportColumn(ReportColumnInterface):
 class ConversationForm(forms.ModelForm):
     class Meta:
         model = Conversation
+        exclude = []
 
 
 class ConversationScenarioForm(forms.ModelForm):
@@ -313,6 +314,7 @@ class ImageInteractive(models.Model):
 class ImageInteractiveForm(forms.ModelForm):
     class Meta:
         model = ImageInteractive
+        exclude = []
 
 
 class ARTCard(models.Model):
@@ -363,6 +365,7 @@ class ARTCard(models.Model):
 class ARTCardForm(forms.ModelForm):
     class Meta:
         model = ARTCard
+        exclude = []
 
 
 class AdherenceCard(models.Model):
@@ -411,6 +414,7 @@ class AdherenceCard(models.Model):
 class AdherenceCardForm(forms.ModelForm):
     class Meta:
         model = AdherenceCard
+        exclude = []
 
 
 class RetentionRateCard(models.Model):
@@ -482,6 +486,7 @@ class RetentionRateCard(models.Model):
 class RetentionRateCardForm(forms.ModelForm):
     class Meta:
         model = RetentionRateCard
+        exclude = []
 
 
 class RetentionClick(models.Model):
@@ -695,6 +700,7 @@ class CalendarReportColumn(ReportColumnInterface):
 class CalendarChartForm(forms.ModelForm):
     class Meta:
         model = CalendarChart
+        exclude = []
 
 
 class CalendarResponse(models.Model):
@@ -855,6 +861,7 @@ class DosageReportColumn(ReportColumnInterface):
 class DosageActivityForm(forms.ModelForm):
     class Meta:
         model = DosageActivity
+        exclude = []
 
 
 class DosageActivityResponse(models.Model):
