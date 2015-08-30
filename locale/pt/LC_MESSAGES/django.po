@@ -36,37 +36,38 @@ msgstr "Página não encontrada"
 
 #: nepi/templates/404.html:13
 msgid "We're sorry, but the requested page could not be found."
-msgstr "Pedimos desculpa, mas a página solicitada não foi encontrada."
+msgstr "Lamentamos, mas a página solicitada não pode ser encontrada."
 
 #: nepi/templates/500.html:5 nepi/templates/500.html.py:8
 msgid "Server Error"
-msgstr "Erro do servidor"
+msgstr "Erro de Servidor"
 
 #: nepi/templates/500.html:13
 msgid ""
 "There's been an error. It's been reported to the site administrators via "
 "email and should be fixed shortly. Thanks for your patience."
 msgstr ""
-"Ocorreu um erro. Foi enviada uma notificação para os administradores do "
-"site, devendo o mesmo ser corrigido em breve. Obrigado pela atenção."
+"Houve um erro. Foi relatado para os administradores do "
+"site por e-mail e deve ser corrigido em breve. Obrigado pela sua paciência."
 
 #: nepi/templates/activities/artcard.html:13
 msgid "Follow-Up Date"
-msgstr ""
+msgstr "Data de Acompanhamento"
 
 #: nepi/templates/activities/artcard.html:14
 msgid "Document the follow-up date the woman is returning to the clinic."
-msgstr ""
+msgstr "Documentar a data de acompanhamento que a mulher retornou para a clínica."
 
 #: nepi/templates/activities/artcard.html:17
 msgid "Adherence"
-msgstr ""
+msgstr "Aderência"
 
 #: nepi/templates/activities/artcard.html:18
 msgid ""
 "Document adherence to ARV drugs as G, F, or P according to the following "
 "codes"
-msgstr ""
+msgstr "Documentar a aderência aos medicamentos ARV como G, F ou P de acordo com os"
+"seguintes códigos"
 
 #: nepi/templates/activities/artcard.html:19
 #, python-format
@@ -80,16 +81,26 @@ msgid ""
 "<tr> <td><strong>P (Poor)</strong></td> <td>< 85%%</td> <td><u>></u> 5 "
 "doses</td> <td><u>></u> 9 doses</td> </tr> </table>"
 msgstr ""
+"<table> <tr> <td><strong>Aderência</strong></td> <td><strong>%%</strong></"
+"td> <td colspan=2><strong>Doses perdidas por mês</strong></td> </tr> <tr> "
+"<td></td> <td></td> <td>1 x dosagem diária</td> <td>2 x dosagem diária</td> </"
+"tr> <tr> <td><strong>G (Bom)</strong></td> <td> <u>></u>95%%</td> <td>< 2 "
+"doses</td> <td><u><</u> 3 doses</td> </tr> <tr> <td><strong>F (Justo)</"
+"strong></td> <td>85-94%%</td> <td>2-4 doses</td> <td>4-8 doses</td> </tr> "
+"<tr> <td><strong>P (Pobre)</strong></td> <td>< 85%%</td> <td><u>></u> 5 "
+"doses</td> <td><u>></u> 9 doses</td> </tr> </table>"
 
 #: nepi/templates/activities/artcard.html:55
 msgid "Why"
-msgstr ""
+msgstr "Por que"
 
 #: nepi/templates/activities/artcard.html:57
 msgid ""
 "Document why adherence was poor or fair by number according to the following "
 "codes (select all that apply)"
 msgstr ""
+"Documento porque a adesão era pobre ou justo por número de acordo com os seguintes "
+"códigos (selecione tudo que se aplica)"
 
 #: nepi/templates/activities/artcard.html:59
 msgid ""
@@ -105,46 +116,57 @@ msgid ""
 "strong> Drug stock out</td> <td><strong>14.</strong> Other (specify)</td> </"
 "tr> </table>"
 msgstr ""
+"<table> <tr> <td><strong>1.</strong> Toxicidade / efeitos colaterais</td> "
+"<td><strong>8.</strong> Paciente perdeu/esgotou os comprimidos</td> </tr> <tr> "
+"<td><strong>2.</strong> Compartilhou os comprimidos</td> <td><strong>9.</strong> "
+"Problemas de entrega / viagem</td> </tr> <tr> <td><strong>3.</strong> Esqueceu</td> "
+"<td><strong>10.</strong> Incapacidade de pagamento</td> </tr> <tr> <td><strong>4.</"
+"strong> Sentiu melhor</td> <td><strong>11.</strong> Alcool</td> </tr> <tr> "
+"<td><strong>5.</strong> Muito doente</td> <td><strong>12.</strong> Depressão</"
+"td> </tr> <tr> <td><strong>6.</strong> Estigma, divulgação ou questões de privacidade</"
+"td> <td><strong>13.</strong> Carga de comprimidos</td> </tr> <tr> <td><strong>7.</"
+"strong> Droga está fora de estoque</td> <td><strong>14.</strong> Outro (especificar)</td> </"
+"tr> </table>"
 
 #: nepi/templates/activities/artcard.html:94
 msgid "Regimen"
-msgstr ""
+msgstr "Regime"
 
 #: nepi/templates/activities/artcard.html:95
 msgid "Document the ARV dose the number of pills dispensed."
-msgstr ""
+msgstr "Documentar a dose de ARV, o número de comprimidos dispensados"
 
 #: nepi/templates/activities/calendarchart.html:13
 msgid "Try Again"
-msgstr ""
+msgstr "Tente de novo"
 
 #: nepi/templates/activities/calendarchart.html:28
 msgid "Sunday"
-msgstr ""
+msgstr "Domingo"
 
 #: nepi/templates/activities/calendarchart.html:29
 msgid "Monday"
-msgstr ""
+msgstr "Segunda-feira"
 
 #: nepi/templates/activities/calendarchart.html:30
 msgid "Tuesday"
-msgstr ""
+msgstr "Terça-feira"
 
 #: nepi/templates/activities/calendarchart.html:31
 msgid "Wednesday"
-msgstr ""
+msgstr "Quarta-feira"
 
 #: nepi/templates/activities/calendarchart.html:32
 msgid "Thursday"
-msgstr ""
+msgstr "Quinta-feira"
 
 #: nepi/templates/activities/calendarchart.html:33
 msgid "Friday"
-msgstr ""
+msgstr "Sexta-feira"
 
 #: nepi/templates/activities/calendarchart.html:34
 msgid "Saturday"
-msgstr ""
+msgstr "Sábado"
 
 #: nepi/templates/activities/dosageactivity.html:9
 msgid ""
@@ -160,101 +182,112 @@ msgid ""
 "30mg (3ml) once a day</td></tr> <tr> <td>Over 9 months until breastfeeding "
 "ends</td> <td> 40mg (4ml) once a day</td> </tr> </table>"
 msgstr ""
+"<h4>NVP Dosage Chart</h4> <h5>Dose diária para NVP para bebês a partir de 6 semanas "
+"do nascimento </h5> <table> <tr><td>Peso no nascimento 2000-2499 g </td><td> 1ml (10mg) "
+"uma vez ao dia </td></tr> <tr><td>Birth weight ≥ 2500 g </td><td> 1.5 ml (15mg) "
+"uma vez ao dia </td></tr> <tr><td>Infants < 200 g </td><td> 0.2 ml (2mg)/kg uma vez "
+"ao dia </td></tr> </table> <br /> <h5>Dose diária para NVP para bebês > 6  "
+"semanas de idade</h5> <div> Dependendo das diretrizes do país, pode haver casos raros "
+"em que as crianças com mais de 6 semanas são administradas com NVP como profilaxia. "
+"Neste caso, as doses são: </div> <table> <tr><td>6 semanas a 6 meses </td><td> "
+"20mg (2ml) uma vez ao dia</td></tr> <tr><td>Mais de 6 meses a 9 meses </td><td> "
+"30mg (3ml) uma vez ao dia</td></tr> <tr> <td>Mais de 9 meses até o final  "
+"da amamentação</td> <td> 40mg (4ml) uma vez ao dia</td> </tr> </table>"
 
 #: nepi/templates/activities/dosageactivity.html:41
 msgid "How many ml of NVP?"
-msgstr ""
+msgstr "Quantos mL de NVP?"
 
 #: nepi/templates/activities/dosageactivity.html:48
 #: nepi/templates/activities/dosageactivity.html:63
 msgid "ml"
-msgstr ""
+msgstr "mL"
 
 #: nepi/templates/activities/dosageactivity.html:52
 #: nepi/templates/activities/dosageactivity.html:82
 #: nepi/templates/activities/dosageactivity.html:111
 msgid "Correct"
-msgstr ""
+msgstr "Correto"
 
 #: nepi/templates/activities/dosageactivity.html:56
 #: nepi/templates/activities/dosageactivity.html:86
 #: nepi/templates/activities/dosageactivity.html:115
 msgid "Incorrect"
-msgstr ""
+msgstr "Incorreto"
 
 #: nepi/templates/activities/dosageactivity.html:65
 msgid "Please enter a valid amount, example: 1.23."
-msgstr ""
+msgstr "Favor inserir um dígito válido, exemplo:1.23."
 
 #: nepi/templates/activities/dosageactivity.html:71
 msgid "How many times each day?"
-msgstr ""
+msgstr "Quantas vezes por dia?"
 
 #: nepi/templates/activities/dosageactivity.html:78
 #: nepi/templates/activities/dosageactivity.html:93
 msgid "x per day"
-msgstr ""
+msgstr "x por dia"
 
 #: nepi/templates/activities/dosageactivity.html:95
 msgid "Please enter a valid digit or decimal for \"times each day.\""
-msgstr ""
+msgstr "Favor inserir um dígito válido ou decimal para \"vezes por dia.\""
 
 #: nepi/templates/activities/dosageactivity.html:101
 msgid "For how many weeks?"
-msgstr ""
+msgstr "Por quantas semanas?"
 
 #: nepi/templates/activities/dosageactivity.html:108
 #: nepi/templates/activities/dosageactivity.html:122
 msgid "weeks"
-msgstr ""
+msgstr "semanas"
 
 #: nepi/templates/activities/dosageactivity.html:124
 msgid "Please enter a valid digit or decimal for \"weeks\""
-msgstr ""
+msgstr "Favor inserir um dígito válido ou decimal para \"semanas.\""
 
 #: nepi/templates/activities/imagemapchart.html:4
 msgid "mouth"
-msgstr ""
+msgstr "boca"
 
 #: nepi/templates/activities/imagemapchart.html:5
 msgid "eyes"
-msgstr ""
+msgstr "olhos"
 
 #: nepi/templates/activities/imagemapchart.html:6
 msgid "chair"
-msgstr ""
+msgstr "cadeira"
 
 #: nepi/templates/activities/imagemapchart.html:7
 msgid "chart"
-msgstr ""
+msgstr "gráfico"
 
 #: nepi/templates/activities/imagemapchart.html:12
 msgid "Mouth"
-msgstr ""
+msgstr "Boca"
 
 #: nepi/templates/activities/imagemapchart.html:15
 msgid "Smile! Use good body language, nod your head, lean forward."
-msgstr ""
+msgstr "Sorria! Utilize boa linguagem corporal, acene com a cabeça, incline-se para frente."
 
 #: nepi/templates/activities/imagemapchart.html:21
 msgid "Eyes"
-msgstr ""
+msgstr "Olhos"
 
 #: nepi/templates/activities/imagemapchart.html:24
 msgid "Make eye contact."
-msgstr ""
+msgstr "Faça contato visual."
 
 #: nepi/templates/activities/imagemapchart.html:30
 msgid "Chair"
-msgstr ""
+msgstr "Cadeira"
 
 #: nepi/templates/activities/imagemapchart.html:33
 msgid "Sit squarely facing the person. Do not sit behind a desk!"
-msgstr ""
+msgstr "Sente-se diretamente de frente para a pessoa. Não sente atrás de uma mesa!"
 
 #: nepi/templates/activities/imagemapchart.html:39
 msgid "Chart"
-msgstr ""
+msgstr "Gráfico"
 
 #: nepi/templates/activities/imagemapchart.html:42
 msgid ""
@@ -262,6 +295,10 @@ msgid ""
 "recording key information for the woman to take home or for your records. "
 "Turn your mobile phone off and never take calls during a counseling session."
 msgstr ""
+"Tente não escrever durante uma sessão de aconselhamento de teste de HIV, " 
+"a menos que você esteja gravando as principais informações para a mulher " 
+"levar para casa ou para os seus registros."
+"Desligue o seu celular e nunca receba chamadas durante uma sessão de aconselhamento. "
 
 #: nepi/templates/base.html:35
 msgid "Hello"
@@ -273,19 +310,19 @@ msgstr "Sair"
 
 #: nepi/templates/base.html:93
 msgid "About"
-msgstr ""
+msgstr "Sobre"
 
 #: nepi/templates/base.html:94
 msgid "Help"
-msgstr ""
+msgstr "Ajuda"
 
 #: nepi/templates/base.html:95
 msgid "Contact"
-msgstr "Contactos"
+msgstr "Contato"
 
 #: nepi/templates/dashboard/tab_optionb.html:8
 msgid "Welcome!"
-msgstr ""
+msgstr "Bem-vindo"
 
 #: nepi/templates/dashboard/tab_optionb.html:9
 msgid ""
@@ -293,6 +330,9 @@ msgid ""
 "Course button, join a group (class) under the groups tab, and edit your "
 "account information under the Profile tab."
 msgstr ""
+"A partir desta página, você pode entrar no formato do módulo de aprendizagem online "
+"a partir do botão Comece o Curso, participe de um grupo (classe) sob a aba grupos, "
+"e edite as informações da sua conta sob a aba Perfil."
 
 #: nepi/templates/dashboard/tab_optionb.html:18
 msgid ""
@@ -305,6 +345,14 @@ msgid ""
 "the goal of an AIDS-Free Generation. Nurses and midwives are of critical "
 "importance to the scale-up of Option B+."
 msgstr ""
+"A Opção B+ é uma nova abordagem para prevenir a transmissão de HIV de mãe para filho "
+"e manter a saúda da mãe. Ela implica no início do tratamento antirretroviral "
+"ao longo da vida para mulheres grávidas e lactantes infectadas com HIV. "
+"Esta abordagem é recomendada pelas Diretrizes Consolidadas sobre o Uso de "
+"Medicamentos Antirretrovirais da OMS (2013) para Tratar e Prevenir a Infecção por HIV. "
+"Se realizada e executada de forma eficaz, esta abordagem vai avançar a meta de "
+"uma Geração Livre de AIDS. As enfermeiras e parteiras são de "
+"importância fundamental para o aumento da Opção B+."
 
 #: nepi/templates/dashboard/tab_optionb.html:31
 msgid ""
@@ -315,109 +363,117 @@ msgid ""
 "contents page where you can review what you have already learned, and "
 "proceed to complete the course."
 msgstr ""
+"Este treinamento online para a Opção B+ é designado para o aprendizado auto "
+"direcionado por estudantes de enfermaria ou profissionais, "
+"mas é aberto para qualquer pessoa. Você pode passar por cada módulo no seu próprio ritmo. " 
+"Você pode parar a qualquer momento e o seu progresso será salvo. "
+"Quando você retornar, você voltará para esta página de tabela de conteúdo onde você "
+"pode revisar o que você já aprendeu e prosseguir para completar o curso."
 
 #: nepi/templates/dashboard/tab_optionb.html:43
 msgid "Session Progress"
-msgstr ""
+msgstr "Progresso da Sessão"
 
 #: nepi/templates/dashboard/tab_optionb.html:47
 #: nepi/templates/dashboard/tab_optionb.html:50
 msgid "Begin the Course"
-msgstr ""
+msgstr "Comece o Curso"
 
 #: nepi/templates/dashboard/tab_optionb.html:56
 msgid "of"
-msgstr ""
+msgstr "de"
 
 #: nepi/templates/dashboard/tab_optionb.html:56
 msgid "sessions completed"
-msgstr ""
+msgstr "sessões concluídas"
 
 #: nepi/templates/dashboard/tab_optionb.html:59
 msgid "Continue"
-msgstr ""
+msgstr "Continuar"
 
 #: nepi/templates/dashboard/tab_optionb.html:69
 msgid "Progress Report"
-msgstr ""
+msgstr "Relate o Progresso"
 
 #: nepi/templates/dashboard/tab_optionb.html:71
 msgid "Pre-test score"
-msgstr ""
+msgstr "Pontuação pré-teste"
 
 #: nepi/templates/dashboard/tab_optionb.html:74
 #: nepi/templates/dashboard/tab_optionb.html:87
 #: nepi/templates/dashboard/tab_optionb.html:100
 msgid "n/a"
-msgstr ""
+msgstr "n/a"
 
 #: nepi/templates/dashboard/tab_optionb.html:76
 #: nepi/templates/dashboard/tab_optionb.html:89
 #: nepi/templates/dashboard/tab_optionb.html:102
 msgid "Incomplete"
-msgstr ""
+msgstr "Incompleto"
 
 #: nepi/templates/dashboard/tab_optionb.html:84
 msgid "Session"
-msgstr ""
+msgstr "Sessão"
 
 #: nepi/templates/dashboard/tab_optionb.html:84
 msgid "score"
-msgstr ""
+msgstr "pontuação"
 
 #: nepi/templates/dashboard/tab_optionb.html:97
 msgid "Post-test score"
-msgstr ""
+msgstr "Pontuação pós-teste"
 
 #: nepi/templates/dashboard/tab_optionb.html:109
 msgid "Average session score"
-msgstr ""
+msgstr "Média de pontuação da sessão"
 
 #: nepi/templates/dashboard/tab_optionb.html:119
 msgid "Pre/Post Change"
-msgstr ""
+msgstr "Pré/Pós Alteração"
 
 #: nepi/templates/main/confirm_language.html:25
 msgid "Confirm language choice"
-msgstr ""
+msgstr "Confirmar a escolha do idioma"
 
 #: nepi/templates/main/confirm_language.html:27
 msgid "You are beginning Option B+ in"
-msgstr ""
+msgstr "Você está comecendo a Opção B+ em"
 
 #: nepi/templates/main/confirm_language.html:28
 msgid ""
 "If you change languages part way through, you will have to start from the "
 "beginning in the new language."
 msgstr ""
+"Se você alterar os idiomas durante o processo, "
+"você terá que iniciar desde o início no novo idioma."
 
 #: nepi/templates/main/confirm_language.html:32
 msgid "Change Language"
-msgstr ""
+msgstr "Alterar o idioma"
 
 #: nepi/templates/main/confirm_language.html:49
 msgid "Continue in"
-msgstr ""
+msgstr "Continuar em"
 
 #: nepi/templates/main/page.html:136
 msgid "Try again"
-msgstr ""
+msgstr "Tente de novo"
 
 #: nepi/templates/main/page.html:148
 msgid "Submit"
-msgstr ""
+msgstr "Enviar"
 
 #: nepi/templates/main/page.html:164
 msgid "Previous"
-msgstr ""
+msgstr "Anterior"
 
 #: nepi/templates/main/page.html:171
 msgid "Home"
-msgstr ""
+msgstr "Pagina Inicial"
 
 #: nepi/templates/main/page.html:175
 msgid "Next"
-msgstr ""
+msgstr "Seguinte"
 
 #: nepi/templates/quizblock/question.html:20
 #: nepi/templates/quizblock/question.html:22
@@ -426,15 +482,15 @@ msgstr ""
 
 #: nepi/templates/quizblock/question.html:20
 msgid "That is correct"
-msgstr ""
+msgstr "Está correto"
 
 #: nepi/templates/quizblock/question.html:22
 msgid "That is incorrect"
-msgstr ""
+msgstr "Está incorreto"
 
 #: nepi/templates/quizblock/question.html:23
 msgid "The correct answer is"
-msgstr ""
+msgstr "A resposta correta é"
 
 #~ msgid "Login"
 #~ msgstr "Entrar"
