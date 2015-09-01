@@ -139,7 +139,7 @@ class UserProfile(models.Model):
     icap_affil = models.BooleanField(default=False)
     school = models.ForeignKey(School, null=True, default=None, blank=True)
     group = models.ManyToManyField(
-        Group, null=True, default=None, blank=True)
+        Group, default=None, blank=True)
     language = models.CharField(max_length=2,
                                 choices=settings.LANGUAGES,
                                 default=settings.DEFAULT_LANGUAGE)
