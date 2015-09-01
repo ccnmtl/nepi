@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-09 13:06-0400\n"
+"POT-Creation-Date: 2015-09-01 13:11-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: nepi/settings_shared.py:241
+#: nepi/settings_shared.py:240
 msgid "English"
 msgstr ""
 
-#: nepi/settings_shared.py:242
+#: nepi/settings_shared.py:241
 msgid "French"
 msgstr ""
 
-#: nepi/settings_shared.py:243
+#: nepi/settings_shared.py:242
 msgid "Portuguese"
 msgstr ""
 
@@ -260,23 +260,74 @@ msgid ""
 "Turn your mobile phone off and never take calls during a counseling session."
 msgstr ""
 
+#: nepi/templates/activities/retentionrate.html:15
+msgid "Cohort"
+msgstr ""
+
+#: nepi/templates/activities/retentionrate.html:18
+msgid "Patients who started ART in the same month are called a monthly cohort."
+msgstr ""
+
+#: nepi/templates/activities/retentionrate.html:23
+msgid "ART Start Date"
+msgstr ""
+
+#: nepi/templates/activities/retentionrate.html:26
+msgid "Date that each patient in the cohort was started on ART."
+msgstr ""
+
+#: nepi/templates/activities/retentionrate.html:31
+msgid "Why Eligible?"
+msgstr ""
+
+#: nepi/templates/activities/retentionrate.html:34
+msgid ""
+"Reason the patient was started on ART. The codes for each reason are listed "
+"in a box at the bottom of the register and include PG for pregnancy and BF "
+"for breastfeeding."
+msgstr ""
+
+#: nepi/templates/activities/retentionrate.html:39
+msgid "Estimated Date of Delivery"
+msgstr ""
+
+#: nepi/templates/activities/retentionrate.html:42
+msgid ""
+"Date that women who initiated ART during pregnancy are expected to deliver "
+"and/or date that women who fall pregnant while on ART are expected to "
+"deliver. This will help with interpretation of findings if a patient for "
+"example decides to go home to deliver."
+msgstr ""
+
+#: nepi/templates/activities/retentionrate.html:47
+msgid "Follow-up Status"
+msgstr ""
+
+#: nepi/templates/activities/retentionrate.html:50
+msgid ""
+"Whether or not the patient has remained on ART in the months after starting "
+"ART. The codes for follow-up status are listed in a box at the bottom of the "
+"register and include XX for patients on ART and other codes for patients not "
+"on ART."
+msgstr ""
+
 #: nepi/templates/base.html:35
 msgid "Hello"
 msgstr ""
 
-#: nepi/templates/base.html:60
+#: nepi/templates/base.html:65
 msgid "Log Out"
 msgstr ""
 
-#: nepi/templates/base.html:93
+#: nepi/templates/base.html:98
 msgid "About"
 msgstr ""
 
-#: nepi/templates/base.html:94
+#: nepi/templates/base.html:99
 msgid "Help"
 msgstr ""
 
-#: nepi/templates/base.html:95
+#: nepi/templates/base.html:100
 msgid "Contact"
 msgstr ""
 
