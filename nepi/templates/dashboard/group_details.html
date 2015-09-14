@@ -22,7 +22,7 @@
                     <dt>End Date</dt><dd>{{group.formatted_end_date}}</dd>
                     <dt>Roster</dt><dd><a href="{% url 'roster-details' group.id %}">View Student List</a></dd>
                 </dl>
-            </div>     
+            </div>
             <div class="pull-right">
                 <form action='/dashboard/reports/download/' method="post">{% csrf_token %}
                     <input type="hidden" name="report-type" value="aggregate" />

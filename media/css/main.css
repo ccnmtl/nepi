@@ -487,6 +487,10 @@ h1.pageheader {
 	line-height: 20px;
 }
 
+div.dashboard h1.pageheader {
+    margin-top: 0;
+}
+
 h2 {
 	font-size: 18px;
 	margin: 30px auto 0 auto;
@@ -1618,7 +1622,20 @@ div.dashboard .your-groups-created {
 }
 
 div.dashboard .your-groups-created .actions {
-    width: 170px;
+    width: 238px;
+    text-align: center;
+}
+
+div.dashboard .your-groups-created td.actions {
+    text-align: right;
+}
+
+div.dashboard .your-groups-created table {
+    font-size: .9em;
+}
+
+div.dashboard .your-groups-created table .btn-small {
+    padding: 2px 6px;
 }
 
 div.dashboard td.text-center,
