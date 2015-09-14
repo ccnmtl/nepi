@@ -596,6 +596,33 @@ class RemoveStudent(LoggedInMixin, AdministrationOnlyMixin,
         return self.render_to_json_response({'success': True})
 
 
+class AddStudent(LoggedInMixin, IcapAdministrationOnlyMixin, View):
+
+    '''Add one or more students to the course.'''
+    def post(self, request):
+        group_id = request.POST.get('group', None)
+        group = get_object_or_404(Group, pk=group_id)
+
+        errors = []
+        usernames = request.POST.get('usernames', '')
+        for username in usernames.split('\n'):
+            username = username.strip()
+            try:
+                user = User.objects.get(username=username)
+                user.profile.group.add(group)
+            except User.DoesNotExist:
+                errors.append(username)
+                pass  # username does not exist
+
+        if len(errors) > 0:
+            messages.add_message(
+                request, messages.ERROR,
+                'Some usernames could not be found %s' % ", ".join(errors))
+
+        return HttpResponseRedirect(
+            reverse('roster-details', kwargs={'pk': group_id}))
+
+
 class ContactView(FormView):
     '''changed contact view function to generic class based view'''
     template_name = 'main/contact.html'
@@ -797,8 +824,7 @@ class RosterDetail(LoggedInMixin, AdministrationOnlyMixin,
     success_url = '/'
 
     def get_context_data(self, **kwargs):
-        ctx = super(RosterDetail, self).get_context_data(**kwargs)
-        return ctx
+        return super(RosterDetail, self).get_context_data(**kwargs)
 
 
 class StudentGroupDetail(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
