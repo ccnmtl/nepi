@@ -3,18 +3,15 @@
 <div class="tab-pane" id="user-groups">
     {% if not user_profile.is_student %}
 
-        <blockquote>
             {% if user_profile.is_teacher or user_profile.is_institution_administrator %}
-                <h4>{{user.profile.school.name}}</h4>
-                <h4>{{user.profile.school.country.display_name}}</h4>
-                <br />
+                <h1 class="pageheader">{{user.profile.school.country.display_name}} &mdash; {{user.profile.school.name}}</h1>
             {% else %}{% if user_profile.is_country_administrator %}
-                <h4>{{user.profile.country.display_name}}</h4>
+                <h1 class="pageheader">{{user.profile.country.display_name}}</h1>
             {% endif %}{% endif %}
             
             {% if managed_groups.count > 0 %}
                 <div class="your-groups-created">
-                    <h4>Groups You Manage</h4>
+                    <h5>Groups You Manage</h5>
                     
                     <table width="100%" class="table table-striped table-condensed">
                         <tr>
@@ -35,22 +32,22 @@
                                 <td>{{group.formatted_start_date}}</td>
                                 <td>{{group.formatted_end_date}}</td>
                                 <td class="text-center">{{group.students.count}}</td>
-                                <td>
+                                <td class="actions">
                                     <a class="btn btn-default btn-small" href="{% url 'group-details' group.id %}">Progress</a>
                                     <a class="btn btn-default btn-small" href="{% url 'roster-details' group.id %}">Roster</a>
-                                    <button class="btn btn-default btn-small edit-group-button"
-                                        data-pk="{{group.pk}}" data-start-date="{{group.formatted_start_date}}"
-                                        data-end-date="{{group.formatted_end_date}}" data-name="{{group.name}}">
-                                            Edit
-                                    </button>
                                     <form action='/archive_group/' method='post'>
                                         <input type='hidden' name='group' value='{{group.id}}' />
                                         <button class="btn btn-default btn-small archive-group">Archive</button>
-                                    </form>
+                                    </form>                                    
+                                    <button class="btn btn-default btn-small edit-group-button"
+                                        data-pk="{{group.pk}}" data-start-date="{{group.formatted_start_date}}"
+                                        data-end-date="{{group.formatted_end_date}}" data-name="{{group.name}}">
+                                            <i class="icon-pencil"></i>
+                                    </button>
                                     {% if group.userprofile_set.count == 0 %}
                                         <form action='/delete_group/' method='post'>
                                             <input type='hidden' name='group' value='{{group.id}}' />
-                                            <button class="btn btn-default btn-small delete-group">Delete</button>
+                                            <button class="btn btn-default btn-small delete-group"><i class="icon-trash"></i></button>
                                         </form>
                                     {% endif %}
                                 </td>
@@ -60,12 +57,12 @@
                 </div>
             {% endif %}
             
-            <div>
+            <h3 class="role">AS ADMINISTRATOR</h3>
+            <blockquote>
                 <h5>Create</h5>
                 You may create a group for students or trainees to join. You will have access to the scores and progress of the members of this group.
                 <div><a href="#create-a-group" role="button" class="btn btn-primary create-group-button" data-toggle="modal">Create Group</a></div>
-            </div>
-        </blockquote>
+            </blockquote>
     {% endif %}
 
     {% if not user_profile.is_student %}
