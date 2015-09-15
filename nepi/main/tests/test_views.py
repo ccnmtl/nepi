@@ -397,8 +397,8 @@ class TestCountryAdminLoggedInViews(TestCase):
         pt1 = PendingTeacherFactory(school=self.alt_school)
         pt2 = PendingTeacherFactory(school=self.school)  # visible
         self.assertEquals(len(ctx['pending_teachers']), 2)
-        self.assertEquals(ctx['pending_teachers'][0], pt2)
-        self.assertEquals(ctx['pending_teachers'][1], pt1)
+        self.assertTrue(pt2 in ctx['pending_teachers'])
+        self.assertTrue(pt1 in ctx['pending_teachers'])
 
 
 class TestICAPLoggedInViews(TestCase):
@@ -1187,3 +1187,56 @@ class TestDetailViews(TestCase):
         self.assertEquals(ctx['progress_report']['total_users'], 1)
         self.assertEquals(ctx['progress_report']['sessions'],
                           [None, None, None])
+
+
+class AddUserToGroupTest(TestCase):
+
+    def setUp(self):
+        ModuleFactory("optionb-en", "/pages/optionb/en/")
+        hierarchy = Hierarchy.objects.get(name='optionb-en')
+
+        self.group = SchoolGroupFactory(module=hierarchy)
+        self.icap = ICAPProfileFactory(school=self.group.school,
+                                       country=self.group.school.country).user
+
+    def test_access(self):
+        student = StudentProfileFactory(country=self.group.school.country).user
+        data = {'group': self.group.id, 'usernames': student.username}
+
+        # not logged in
+        response = self.client.post(reverse('add-to-group'), data)
+        self.assertEquals(response.status_code, 302)
+
+        # not icap
+        self.client.login(username=student.username, password="test")
+        response = self.client.post(reverse('add-to-group'), data)
+        self.assertEquals(response.status_code, 403)
+
+    def test_add_one(self):
+        student = StudentProfileFactory(country=self.group.school.country).user
+        self.assertTrue(self.group not in student.profile.group.all())
+
+        data = {'group': self.group.id,
+                'usernames': student.username}
+
+        self.client.login(username=self.icap.username, password="test")
+        response = self.client.post(reverse('add-to-group'), data)
+        self.assertEquals(response.status_code, 302)
+
+        self.assertTrue(self.group in student.profile.group.all())
+
+    def test_add_many(self):
+        s1 = StudentProfileFactory(country=self.group.school.country).user
+        s2 = StudentProfileFactory(country=self.group.school.country).user
+        usernames = "%s\n%s\nfoobar" % (s1.username, s2.username)
+
+        data = {'group': self.group.id, 'usernames': usernames}
+
+        self.client.login(username=self.icap.username, password="test")
+        response = self.client.post(reverse('add-to-group'), data)
+        self.assertEquals(response.status_code, 302)
+
+        self.assertTrue(self.group in s1.profile.group.all())
+        self.assertTrue(self.group in s2.profile.group.all())
+
+        self.assertTrue('foobar' in response.cookies['messages'].value)

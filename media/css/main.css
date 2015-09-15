@@ -1666,6 +1666,11 @@ div.dashboard .control-group.wide select {
     width: 443px;
 }
 
+.dashboard .bulk-add-user textarea {
+    width: 97%;
+    height: 200px;
+}
+
 #create-a-group .modal-body,
 #edit-a-group .modal-body {
     max-height: 500px;
