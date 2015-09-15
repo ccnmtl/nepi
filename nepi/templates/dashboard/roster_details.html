@@ -110,13 +110,13 @@
 
     {% if user.profile.is_icap %}
         <br /><br />
-        <div class="well bulk-add-user">
+        <div class="user-profile-form bulk-add-user">
             <h5>Add Users</h5>
-            As an administrator, you can add additional users by pasting their usernames in the box below.<br />One per line.<br /><br />
-            <form action="{% url 'add-student' %}" method="post">
+            As an administrator, you can add additional users by pasting their usernames in the box below. One username per line.<br /><br />
+            <form action="{% url 'add-to-group' %}" method="post">
                 <input type="hidden" name="group" value="{{group.id}}" />
-                <div><textarea class="form-control"></textarea></div><br />
-                <input type="submit" value="Add Users" class="btn btn-primary"/>
+                <div><textarea name="usernames" class="form-control"></textarea></div><br />
+                <input type="submit" value="Add Users" class="btn btn-primary pull-right" />
             </form>
         </div>
     {% endif %}

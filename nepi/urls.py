@@ -16,7 +16,8 @@ from nepi.main.views import (
     ArchiveGroupView, ConfirmFacultyView, DenyFacultyView, UserProfileView,
     RemoveStudent, ReportView, DownloadableReportView, StudentGroupDetail,
     PeopleView, PeopleFilterView, RosterDetail, ConfirmLanguageView,
-    NepiPageView, NepiEditView, NepiDeprecatedPageView, AddStudent)
+    NepiPageView, NepiEditView, NepiDeprecatedPageView,
+    AddUserToGroup)
 
 
 admin.autodiscover()
@@ -104,12 +105,12 @@ urlpatterns = patterns(
     url(r'^archive_group/$', ArchiveGroupView.as_view()),
     url(r'^group_details/(?P<pk>\d+)/$',
         GroupDetail.as_view(), name='group-details'),
+    url(r'^/add_to_group/$', AddUserToGroup.as_view(), name='add-to-group'),
     url(r'^roster_details/(?P<pk>\d+)/$',
         RosterDetail.as_view(), name='roster-details'),
     url(r'^student_details/(?P<group_id>\d+)/(?P<student_id>\d+)/$',
         StudentGroupDetail.as_view(), name='student-group-details'),
     url(r'^remove_student/$', RemoveStudent.as_view(), name="remove-student"),
-    url(r'^/add_student/$', AddStudent.as_view(), name="add-student"),
 
     # ICAP related pages
     (r'^faculty/confirm/$', ConfirmFacultyView.as_view()),

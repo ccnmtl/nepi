@@ -515,6 +515,33 @@ class LeaveGroup(LoggedInMixin, JSONResponseMixin, View):
         return self.render_to_json_response({'success': True})
 
 
+class AddUserToGroup(LoggedInMixin, IcapAdministrationOnlyMixin, View):
+
+    '''Add one or more users to a group.'''
+    def post(self, request):
+        group_id = request.POST.get('group', None)
+        group = get_object_or_404(Group, pk=group_id)
+
+        errors = []
+        usernames = request.POST.get('usernames', '')
+        for username in usernames.split('\n'):
+            username = username.strip()
+            try:
+                user = User.objects.get(username=username)
+                user.profile.group.add(group)
+            except User.DoesNotExist:
+                errors.append(username)
+                pass  # username does not exist
+
+        if len(errors) > 0:
+            messages.add_message(
+                request, messages.ERROR,
+                'Some usernames could not be found: %s' % ", ".join(errors))
+
+        return HttpResponseRedirect(
+            reverse('roster-details', kwargs={'pk': group_id}))
+
+
 class ConfirmFacultyView(LoggedInMixin, AdministrationOnlyMixin,
                          JSONResponseMixin, View):
 
@@ -594,33 +621,6 @@ class RemoveStudent(LoggedInMixin, AdministrationOnlyMixin,
                                     pk=request.POST['student'])
         group.userprofile_set.remove(student)
         return self.render_to_json_response({'success': True})
-
-
-class AddStudent(LoggedInMixin, IcapAdministrationOnlyMixin, View):
-
-    '''Add one or more students to the course.'''
-    def post(self, request):
-        group_id = request.POST.get('group', None)
-        group = get_object_or_404(Group, pk=group_id)
-
-        errors = []
-        usernames = request.POST.get('usernames', '')
-        for username in usernames.split('\n'):
-            username = username.strip()
-            try:
-                user = User.objects.get(username=username)
-                user.profile.group.add(group)
-            except User.DoesNotExist:
-                errors.append(username)
-                pass  # username does not exist
-
-        if len(errors) > 0:
-            messages.add_message(
-                request, messages.ERROR,
-                'Some usernames could not be found %s' % ", ".join(errors))
-
-        return HttpResponseRedirect(
-            reverse('roster-details', kwargs={'pk': group_id}))
 
 
 class ContactView(FormView):
