@@ -11,7 +11,8 @@ from nepi.activities.models import ConversationResponse, RetentionResponse, \
     CalendarResponse
 from nepi.activities.tests.factories import ConversationScenarioFactory, \
     RetentionRateCardFactory, CalendarChartFactory, IncorrectDayOneFactory, \
-    IncorrectDayTwoFactory, CorrectDayFactory
+    IncorrectDayTwoFactory, CorrectDayFactory, GoodConversationFactory
+from nepi.activities.views import UpdateConversationView
 from nepi.main.tests.factories import UserProfileFactory
 
 
@@ -295,3 +296,22 @@ class TestCalendarResponseView(TestCase):
 
         upv = UserPageVisit.objects.get(user=up.user, section=self.section)
         self.assertEquals(upv.status, "complete")
+
+
+class TestUpdateConversationView(TestCase):
+
+    def test_get(self):
+        conversation = GoodConversationFactory()
+        url = reverse('update_conversation', kwargs={'pk': conversation.id})
+
+        up = UserProfileFactory()
+        self.client.login(username=up.user.username, password="test")
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+    def test_get_context_data(self):
+        view = UpdateConversationView()
+        view.object = GoodConversationFactory()
+
+        ctx = view.get_context_data()
+        self.assertEquals(ctx['scenario'], view.object.get_scenario())
