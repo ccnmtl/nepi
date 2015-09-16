@@ -51,6 +51,8 @@ class CreateConversationView(CreateView):
 class UpdateConversationView(UpdateView):
     model = Conversation
     template_name = 'activities/conversation_add_or_edit.html'
+    fields = ['scenario_type', 'text_one', 'response_one', 'response_two',
+              'response_three', 'complete_dialog']
 
     def get_context_data(self, **kwargs):
         ctx = super(UpdateConversationView, self).get_context_data(**kwargs)
