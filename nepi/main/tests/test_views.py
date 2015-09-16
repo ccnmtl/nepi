@@ -1240,3 +1240,5 @@ class AddUserToGroupTest(TestCase):
         self.assertTrue(self.group in s2.profile.group.all())
 
         self.assertTrue('foobar' in response.cookies['messages'].value)
+        self.assertTrue('Added 2 user(s)'
+                        in response.cookies['messages'].value)

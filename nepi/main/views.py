@@ -523,8 +523,8 @@ class AddUserToGroup(LoggedInMixin, IcapAdministrationOnlyMixin, View):
         group = get_object_or_404(Group, pk=group_id)
 
         errors = []
-        usernames = request.POST.get('usernames', '')
-        for username in usernames.split('\n'):
+        usernames = request.POST.get('usernames', '').split('\n')
+        for username in usernames:
             username = username.strip()
             try:
                 user = User.objects.get(username=username)
@@ -532,6 +532,10 @@ class AddUserToGroup(LoggedInMixin, IcapAdministrationOnlyMixin, View):
             except User.DoesNotExist:
                 errors.append(username)
                 pass  # username does not exist
+
+        messages.add_message(
+            request, messages.INFO,
+            'Added %s user(s)' % str(len(usernames) - len(errors)))
 
         if len(errors) > 0:
             messages.add_message(
