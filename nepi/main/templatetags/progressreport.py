@@ -161,8 +161,8 @@ def get_progress_report(users, hierarchy):
     ctx['pretest'] = average_quiz_score(users, hierarchy, 'pretest')
     ctx['posttest'] = average_quiz_score(users, hierarchy, 'posttest')
 
-    if (ctx['pretest'] is not None and ctx['pretest'] >= 0
-            and ctx['posttest'] is not None and ctx['posttest'] >= 0):
+    if (ctx['pretest'] is not None and ctx['pretest'] >= 0 and
+            ctx['posttest'] is not None and ctx['posttest'] >= 0):
         ctx['prepostchange'] = ctx['posttest'] - ctx['pretest']
 
     ctx['satisfaction'] = satisfaction_rating(users, hierarchy)
