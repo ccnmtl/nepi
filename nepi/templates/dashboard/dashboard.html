@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load waffle_tags %}
 {% block js %}
     <script src="{{STATIC_URL}}js/jquery-ui-1.10.3.min.js"></script>
     <script type="text/javascript">
@@ -50,9 +49,7 @@
         {% if not user_profile.is_student %}
             <li class="pull-right"><a class="reports" href="/dashboard/reports/">Reports</a></li>
             {% if user.profile.is_icap %}
-                {% flag peoplereport %}
-                    <li class="pull-right"><a class="people" href="/dashboard/people/">People</a></li>
-                {% endflag %}
+                <li class="pull-right"><a class="people" href="/dashboard/people/">People</a></li>
             {% endif %}
         {% endif %}
     </ul>
