@@ -151,7 +151,8 @@ class UserProfile(models.Model):
         ordering = ["user"]
 
     def last_location(self, hierarchy):
-        visits = UserPageVisit.objects.filter(user=self.user)
+        visits = UserPageVisit.objects.filter(user=self.user,
+                                              section__hierarchy=hierarchy)
 
         if visits.count() < 1:
             return hierarchy.get_root()

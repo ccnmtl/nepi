@@ -20,6 +20,7 @@
 
 {% block content %}
 {% get_language_info for user.profile.language as lang %}
+{% language request.user.profile.language %}
 
 <div class="pageblock change-language-block">
     <h1>{% trans 'Confirm language choice' %}</h1>
@@ -28,9 +29,6 @@
         {% trans 'If you change languages part way through, you will have to start from the beginning in the new language.' %}
     </p>
     <div style="width: 100%; text-align: center;">
-        <button data-toggle="collapse" href="#change-language-form" class="btn btn-default">
-            {% trans 'Change Language' %}
-        </button>
         <div id="change-language-form" class="collapse">
             <form action="." method="post" class="well">{% csrf_token %}
                 <select name="language">
@@ -46,8 +44,13 @@
             </form>
         </div>
         <a href="{{next}}" class="btn btn-default">
-            {% trans 'Continue in' %} {{lang.name}}
+            {% trans 'Continue in' %} {{lang.name_local}}
         </a>
+        <br />
+        <button data-toggle="collapse" href="#change-language-form" class="btn btn-default">
+            {% trans 'Change Language' %}
+        </button>
     </div>
-</div>        
+</div>
+{% endlanguage %}        
 {% endblock %}

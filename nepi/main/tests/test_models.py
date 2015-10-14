@@ -130,10 +130,15 @@ class TestUserProfile(TestCase):
         self.assertEquals(self.icap.profile.role(), 'icap')
 
     def test_last_location(self):
+        ModuleFactory("optionb-fr", "/")
+        alt_hierarchy = Hierarchy.objects.get(name='optionb-fr')
+        section = Section.objects.get(slug='two', hierarchy=alt_hierarchy)
+        UserPageVisit.objects.create(user=self.student, section=section)
+
         self.assertEquals(self.student.profile.last_location(self.hierarchy),
                           self.hierarchy.get_root())
 
-        section = Section.objects.get(slug='two')
+        section = Section.objects.get(slug='two', hierarchy=self.hierarchy)
         UserPageVisit.objects.create(user=self.student, section=section)
         self.assertEquals(self.student.profile.last_location(self.hierarchy),
                           section)

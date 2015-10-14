@@ -12,7 +12,7 @@ from django.test.client import Client
 from django.utils.translation import get_language, LANGUAGE_SESSION_KEY
 from pagetree.models import UserPageVisit, Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
-from waffle.models import Flag
+from waffle.models import Flag, Switch
 
 from factories import UserFactory, UserProfileFactory, ICAPProfileFactory
 from nepi.main.forms import ContactForm
@@ -160,6 +160,9 @@ class TestStudentLoggedInViews(TestCase):
         self.assertEquals(response.status_code, 302)
 
     def test_dashboard_post_change_language(self):
+        Switch.objects.create(name='language-fr', active=True)
+        Switch.objects.create(name='language-pt', active=True)
+
         self.assertEquals(self.student.profile.language,
                           settings.DEFAULT_LANGUAGE)
         self.assertEquals(get_language(), 'en')
