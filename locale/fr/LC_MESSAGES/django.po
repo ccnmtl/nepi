@@ -325,23 +325,25 @@ msgstr ""
 
 #: nepi/templates/activities/retentionrate.html:15
 msgid "Cohort"
-msgstr ""
+msgstr "Cohorte"
 
 #: nepi/templates/activities/retentionrate.html:18
 msgid "Patients who started ART in the same month are called a monthly cohort."
 msgstr ""
+"Les patientes ayant commencé le TAR au cours du même mois "
+"forment une cohorte mensuelle"
 
 #: nepi/templates/activities/retentionrate.html:23
 msgid "ART Start Date"
-msgstr ""
+msgstr "Date de début du TAR"
 
 #: nepi/templates/activities/retentionrate.html:26
 msgid "Date that each patient in the cohort was started on ART."
-msgstr ""
+msgstr "Date à laquelle chaque patiente de la cohorte a été mise sous TAR"
 
 #: nepi/templates/activities/retentionrate.html:31
 msgid "Why Eligible?"
-msgstr ""
+msgstr "Motif d'admissabilité"
 
 #: nepi/templates/activities/retentionrate.html:34
 msgid ""
@@ -349,10 +351,13 @@ msgid ""
 "in a box at the bottom of the register and include PG for pregnancy and BF "
 "for breastfeeding."
 msgstr ""
+"Raison pour laquelle la patiente a été mise sous TAR. Les codes pour "
+"chaque motif sont énumérés dans un encadré au bas du registre et "
+"incluent E pour enceinte et A pour allaitante."
 
 #: nepi/templates/activities/retentionrate.html:39
 msgid "Estimated Date of Delivery"
-msgstr ""
+msgstr "Date d’accouchement prévue"
 
 #: nepi/templates/activities/retentionrate.html:42
 msgid ""
@@ -361,12 +366,17 @@ msgid ""
 "deliver. This will help with interpretation of findings if a patient for "
 "example decides to go home to deliver."
 msgstr ""
+"La date à laquelle les femmes ayant commencé leur TAR pendant la grossesse "
+"devraient accoucher et/ou la date à laquelle les femmes qui tombent "
+"enceintes alors qu’elles sont sous TAR devraient accoucher. Cela facilitera "
+"l’interprétation des résultats si une patiente décide par exemple "
+"d’accoucher à domicile."
 
 #: nepi/templates/activities/retentionrate.html:47
 #, fuzzy
 #| msgid "Follow-Up Date"
 msgid "Follow-up Status"
-msgstr "Date de suivi"
+msgstr "Le statut de suivi"
 
 #: nepi/templates/activities/retentionrate.html:50
 msgid ""
@@ -375,6 +385,10 @@ msgid ""
 "register and include XX for patients on ART and other codes for patients not "
 "on ART."
 msgstr ""
+"La patiente est-elle restée ou non sous TAR dans les mois ayant suivi "
+"sa mise en route ? Les codes du statut de suivi sont énumérés dans un "
+"encadré au bas du registre et incluent XX pour les patientes sous TAR "
+"et d’autres codes pour les patientes qui ne sont pas sous TAR."
 
 #: nepi/templates/base.html:35
 msgid "Hello"
