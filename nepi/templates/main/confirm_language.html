@@ -29,20 +29,6 @@
         {% trans 'If you change languages part way through, you will have to start from the beginning in the new language.' %}
     </p>
     <div style="width: 100%; text-align: center;">
-        <div id="change-language-form" class="collapse">
-            <form action="." method="post" class="well">{% csrf_token %}
-                <select name="language">
-                    {% get_language_info_list for LANGUAGES as languages %}
-                    {% for language in languages %}
-                    <option value="{{language.code}}"
-                        {% if user.profile.language == language.code %} selected="selected"{% endif %}>
-                        {{language.name_local}}
-                    </option>
-                    {% endfor %}
-                </select>
-                <input type="submit" class="btn btn-primary" value="Save" />
-            </form>
-        </div>
         <a href="{{next}}" class="btn btn-default">
             {% trans 'Continue in' %} {{lang.name_local}}
         </a>
@@ -50,6 +36,21 @@
         <button data-toggle="collapse" href="#change-language-form" class="btn btn-default">
             {% trans 'Change Language' %}
         </button>
+        <div id="change-language-form" class="collapse">
+            <form action="." method="post" class="well">{% csrf_token %}
+                <select name="language">
+                    {% get_language_info_list for available_languages as languages %}
+                    {% for language in languages %}
+                    <option value="{{language.code}}"
+                        {% if user.profile.language == language.code %} selected="selected"{% endif %}>
+                        {{language.name_local}}
+                    </option>
+                    {% endfor %}
+                </select>
+                <br /><br />
+                <input type="submit" class="btn btn-primary" value="{% trans 'Save' %}" />
+            </form>
+        </div>        
     </div>
 </div>
 {% endlanguage %}        

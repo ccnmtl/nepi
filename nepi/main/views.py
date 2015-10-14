@@ -259,7 +259,8 @@ class ConfirmLanguageView(LoggedInMixin, TemplateView):
             'optionb', self.request.user.profile.language)
         return {
             'user': self.request.user,
-            'next': optionb.get_root().get_absolute_url()
+            'next': optionb.get_root().get_absolute_url(),
+            'available_languages': settings.LANGUAGES
         }
 
     def post(self, *args, **kwargs):
