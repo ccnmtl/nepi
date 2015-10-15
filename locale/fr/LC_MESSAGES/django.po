@@ -143,8 +143,6 @@ msgid "Regimen"
 msgstr "Schéma thérapeutique"
 
 #: nepi/templates/activities/artcard.html:95
-#, fuzzy
-#| msgid "Document the ARV dose, the number of pills dispensed."
 msgid "Document the ARV dose the number of pills dispensed."
 msgstr ""
 "Documentation de la dose des antirétroviraux, c'est-à-dire le nombre de "
