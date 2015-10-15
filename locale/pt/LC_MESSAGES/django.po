@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-13 16:01-0400\n"
+"POT-Creation-Date: 2015-10-15 15:51-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -431,65 +431,64 @@ msgstr ""
 "retornar, você voltará para esta página de tabela de conteúdo onde você pode "
 "revisar o que você já aprendeu e prosseguir para completar o curso."
 
-#: nepi/templates/dashboard/tab_optionb.html:44
+#: nepi/templates/dashboard/tab_optionb.html:43
 msgid "Session Progress"
 msgstr "Progresso da Sessão"
 
-#: nepi/templates/dashboard/tab_optionb.html:48
-#: nepi/templates/dashboard/tab_optionb.html:51
-#: nepi/templates/dashboard/tab_optionb.html:54
+#: nepi/templates/dashboard/tab_optionb.html:47
+#: nepi/templates/dashboard/tab_optionb.html:50
 msgid "Begin the Course"
 msgstr "Comece o Curso"
 
-#: nepi/templates/dashboard/tab_optionb.html:60
+#: nepi/templates/dashboard/tab_optionb.html:56
 msgid "of"
 msgstr "de"
 
-#: nepi/templates/dashboard/tab_optionb.html:60
+#: nepi/templates/dashboard/tab_optionb.html:56
 msgid "sessions completed"
 msgstr "sessões concluídas"
 
-#: nepi/templates/dashboard/tab_optionb.html:63
+#: nepi/templates/dashboard/tab_optionb.html:59
 msgid "Continue"
 msgstr "Continuar"
 
-#: nepi/templates/dashboard/tab_optionb.html:73
+#: nepi/templates/dashboard/tab_optionb.html:69
 msgid "Progress Report"
 msgstr "Relate o Progresso"
 
-#: nepi/templates/dashboard/tab_optionb.html:75
+#: nepi/templates/dashboard/tab_optionb.html:71
 msgid "Pre-test score"
 msgstr "Pontuação pré-teste"
 
-#: nepi/templates/dashboard/tab_optionb.html:78
-#: nepi/templates/dashboard/tab_optionb.html:91
-#: nepi/templates/dashboard/tab_optionb.html:104
+#: nepi/templates/dashboard/tab_optionb.html:74
+#: nepi/templates/dashboard/tab_optionb.html:87
+#: nepi/templates/dashboard/tab_optionb.html:100
 msgid "n/a"
 msgstr "n/a"
 
-#: nepi/templates/dashboard/tab_optionb.html:80
-#: nepi/templates/dashboard/tab_optionb.html:93
-#: nepi/templates/dashboard/tab_optionb.html:106
+#: nepi/templates/dashboard/tab_optionb.html:76
+#: nepi/templates/dashboard/tab_optionb.html:89
+#: nepi/templates/dashboard/tab_optionb.html:102
 msgid "Incomplete"
 msgstr "Incompleto"
 
-#: nepi/templates/dashboard/tab_optionb.html:88
+#: nepi/templates/dashboard/tab_optionb.html:84
 msgid "Session"
 msgstr "Sessão"
 
-#: nepi/templates/dashboard/tab_optionb.html:88
+#: nepi/templates/dashboard/tab_optionb.html:84
 msgid "score"
 msgstr "pontuação"
 
-#: nepi/templates/dashboard/tab_optionb.html:101
+#: nepi/templates/dashboard/tab_optionb.html:97
 msgid "Post-test score"
 msgstr "Pontuação pós-teste"
 
-#: nepi/templates/dashboard/tab_optionb.html:113
+#: nepi/templates/dashboard/tab_optionb.html:109
 msgid "Average session score"
 msgstr "Média de pontuação da sessão"
 
-#: nepi/templates/dashboard/tab_optionb.html:123
+#: nepi/templates/dashboard/tab_optionb.html:119
 msgid "Pre/Post Change"
 msgstr "Pré/Pós Alteração"
 
@@ -509,13 +508,17 @@ msgstr ""
 "Se você alterar os idiomas durante o processo, você terá que iniciar desde o "
 "início no novo idioma."
 
-#: nepi/templates/main/confirm_language.html:47
+#: nepi/templates/main/confirm_language.html:33
 msgid "Continue in"
 msgstr "Continuar em"
 
-#: nepi/templates/main/confirm_language.html:51
+#: nepi/templates/main/confirm_language.html:37
 msgid "Change Language"
 msgstr "Alterar o idioma"
+
+#: nepi/templates/main/confirm_language.html:51
+msgid "Save"
+msgstr ""
 
 #: nepi/templates/main/page.html:136
 msgid "Try again"
