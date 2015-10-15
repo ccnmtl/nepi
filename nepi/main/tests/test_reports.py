@@ -249,7 +249,7 @@ class TestDownloadableReportView(TestReportBase):
             rows = view.get_detailed_report_values(self.hierarchies, users)
             row = ['participant_id', 'country', 'group', 'percent_complete',
                    'total_time_elapsed', 'actual_time_spent',
-                   'completion_date']
+                   'completion_date', 'pre-test score', 'post-test score']
             self.assertEquals(rows.next(), row)
 
             # expecting 4 user results to show up
@@ -306,6 +306,14 @@ class TestDownloadableReportView(TestReportBase):
                'the date the user completed the module']
         self.assertEquals(rows.next(), row)
 
+        row = ['', 'pre-test score', 'profile', 'percent',
+               'Pre-test Score']
+        self.assertEquals(rows.next(), row)
+
+        row = ['', 'post-test score', 'profile', 'percent',
+               'Post-test Score']
+        self.assertEquals(rows.next(), row)
+
         try:
             rows.next()
             self.assertFalse('unexpected row')
@@ -326,7 +334,8 @@ class TestDownloadableReportView(TestReportBase):
         self.assertEquals(response.status_code, 200)
 
         row = ('participant_id,country,group,percent_complete,'
-               'total_time_elapsed,actual_time_spent,completion_date\r\n')
+               'total_time_elapsed,actual_time_spent,completion_date,'
+               'pre-test score,post-test score\r\n')
         self.assertEquals(row, response.streaming_content.next())  # header row
         with self.assertRaises(StopIteration):
             response.streaming_content.next()

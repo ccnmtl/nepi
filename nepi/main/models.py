@@ -362,6 +362,8 @@ class DetailedReport(PagetreeReport):
         return self.all_users
 
     def standalone_columns(self):
+        from nepi.main.templatetags.progressreport import average_quiz_score
+
         return [
             StandaloneReportColumn(
                 'participant_id', 'profile', 'string',
@@ -392,4 +394,12 @@ class DetailedReport(PagetreeReport):
                 'completion_date', 'profile', 'date/time',
                 'the date the user completed the module',
                 lambda x: x.profile.completion_date(self.hierarchy)),
+            StandaloneReportColumn(
+                'pre-test score', 'profile', 'percent',
+                'Pre-test Score',
+                lambda x: average_quiz_score([x], self.hierarchy, 'pretest')),
+            StandaloneReportColumn(
+                'post-test score', 'profile', 'percent',
+                'Post-test Score',
+                lambda x: average_quiz_score([x], self.hierarchy, 'posttest')),
             ]
