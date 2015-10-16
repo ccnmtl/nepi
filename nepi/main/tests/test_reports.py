@@ -113,18 +113,24 @@ class TestDownloadableReportView(TestReportBase):
         rows = view.get_aggregate_report(
             request, self.hierarchy, users, groups)
         self.assertEquals(rows.next(), ['CRITERIA'])
-        self.assertEquals(rows.next(), ['Country', 'Institution', 'Group'])
-        self.assertEquals(rows.next(), ["All Countries", None, None])
+        self.assertEquals(rows.next(),
+                          ['Country', 'Institution', 'Group', 'Total Members'])
+        self.assertEquals(rows.next(), ["All Countries", None, None, 4])
 
-        self.assertEquals(rows.next(), ['MEMBERS'])  # header
-        self.assertEquals(
-            rows.next(),
-            ['Total Users', 'Completed', 'Incomplete', 'In Progress'])
+        rows.next()  # separator
+        self.assertEquals(rows.next(), ['LANGUAGE'])  # header
+        self.assertEquals(rows.next(), [u'English'])
+
+        rows.next()  # separator
+        self.assertEquals(rows.next(), ['STUDENT PROGRESS'])  # header
+        self.assertEquals(rows.next(),
+                          ['Completed', 'Incomplete', 'In Progress'])
         # counts are in row 2. total, completed, incomplete inprogress
-        self.assertEquals(rows.next(), [4, 1, 0, 3])
+        self.assertEquals(rows.next(), [1, 0, 3])
 
         # aggregates are in row 4-8
         rows.next()  # header
+        self.assertEquals(rows.next(), ['COMPLETED USER AVERAGES'])
         self.assertEquals(rows.next(), ['Completed', 1])
         self.assertEquals(rows.next(), ['Pre-test Score', None])
         self.assertEquals(rows.next(), ['Post-test Score', None])
@@ -147,15 +153,19 @@ class TestDownloadableReportView(TestReportBase):
         rows = view.get_aggregate_report(
             request, self.hierarchy, users, groups)
         self.assertEquals(rows.next(), ['CRITERIA'])
-        self.assertEquals(rows.next(), ['Country', 'Institution', 'Group'])
+        self.assertEquals(rows.next(),
+                          ['Country', 'Institution', 'Group', 'Total Members'])
         self.assertEquals(
             rows.next(),
-            [country.display_name, 'Unaffiliated Students', None])
+            [country.display_name, 'Unaffiliated Students', None, 1])
         rows.next()  # header
         rows.next()  # header
-
+        self.assertEquals(rows.next(), [u'English'])
+        rows.next()  # header
+        rows.next()  # header
+        rows.next()  # header
         # counts are in row 2. total, completed, incomplete inprogress
-        self.assertEquals(rows.next(), [1, 0, 0, 1])
+        self.assertEquals(rows.next(), [0, 0, 1])
 
     def test_aggregate_report_all_schools(self):
         country = self.new_group.school.country
@@ -172,14 +182,19 @@ class TestDownloadableReportView(TestReportBase):
         rows = view.get_aggregate_report(
             request, self.hierarchy, users, groups)
         self.assertEquals(rows.next(), ['CRITERIA'])
-        self.assertEquals(rows.next(), ['Country', 'Institution', 'Group'])
+        self.assertEquals(rows.next(),
+                          ['Country', 'Institution', 'Group', 'Total Members'])
         self.assertEquals(
             rows.next(),
-            [country.display_name, 'All Institutions', None])
+            [country.display_name, 'All Institutions', None, 2])
+        rows.next()  # header
+        rows.next()  # header
+        self.assertEquals(rows.next(), [u'English'])
+        rows.next()  # header
         rows.next()  # header
         rows.next()  # header
         # counts are in row 2. total, completed, incomplete inprogress
-        self.assertEquals(rows.next(), [2, 1, 0, 1])
+        self.assertEquals(rows.next(), [1, 0, 1])
 
     def test_aggregate_report_all_groups(self):
         # country + institution specified
@@ -198,14 +213,19 @@ class TestDownloadableReportView(TestReportBase):
         rows = view.get_aggregate_report(
             request, self.hierarchy, users, groups)
         self.assertEquals(rows.next(), ['CRITERIA'])
-        self.assertEquals(rows.next(), ['Country', 'Institution', 'Group'])
+        self.assertEquals(rows.next(),
+                          ['Country', 'Institution', 'Group', 'Total Members'])
         self.assertEquals(
             rows.next(),
-            [country.display_name, school.name, None])
+            [country.display_name, school.name, None, 1])
+        rows.next()  # header
+        rows.next()  # header
+        self.assertEquals(rows.next(), [u'English'])
+        rows.next()  # header
         rows.next()  # header
         rows.next()  # header
         # counts are in row 2. total, completed, incomplete inprogress
-        self.assertEquals(rows.next(), [1, 0, 1, 0])
+        self.assertEquals(rows.next(), [0, 1, 0])
 
     def test_aggregate_report_single_group(self):
         # group id is specified
@@ -226,14 +246,18 @@ class TestDownloadableReportView(TestReportBase):
         rows = view.get_aggregate_report(
             request, self.hierarchy, users, groups)
         self.assertEquals(rows.next(), ['CRITERIA'])
-        self.assertEquals(rows.next(), ['Country', 'Institution', 'Group'])
+        self.assertEquals(rows.next(),
+                          ['Country', 'Institution', 'Group', 'Total Members'])
         self.assertEquals(
             rows.next(),
-            [country.display_name, school.name, group.name])
+            [country.display_name, school.name, group.name, 1])
         rows.next()  # header
         rows.next()  # header
-        # counts are in row 2. total, completed, incomplete inprogress
-        self.assertEquals(rows.next(), [1, 0, 1, 0])
+        self.assertEquals(rows.next(), [u'English'])
+        rows.next()  # header
+        rows.next()  # header
+        rows.next()  # header
+        self.assertEquals(rows.next(), [0, 1, 0])
 
     def test_detailed_report_values(self):
         with self.settings(PARTICIPANT_SECRET='foo'):

@@ -813,10 +813,15 @@ class GroupDetail(LoggedInMixin, AdministrationOnlyMixin,
 
     def get_context_data(self, **kwargs):
         ctx = super(GroupDetail, self).get_context_data(**kwargs)
+        ctx['stats'] = []
 
-        hierarchy = self.object.module
-        sections = HierarchyCache.get_descendant_ids(hierarchy.get_root())
-        ctx.update(self.classify_group_users([self.object], sections))
+        module_name = LearningModule.get_module_name(self.object.module)
+        for h in LearningModule.get_hierarchies_for_module(module_name):
+            sections = HierarchyCache.get_descendant_ids(h.get_root())
+            stat = self.classify_group_users([self.object], sections)
+            stat['language'] = LearningModule.get_module_language(h)
+            stat['hierarchy'] = h
+            ctx['stats'].append(stat)
 
         return ctx
 
@@ -827,9 +832,6 @@ class RosterDetail(LoggedInMixin, AdministrationOnlyMixin,
     model = Group
     template_name = 'dashboard/roster_details.html'
     success_url = '/'
-
-    def get_context_data(self, **kwargs):
-        return super(RosterDetail, self).get_context_data(**kwargs)
 
 
 class StudentGroupDetail(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
@@ -842,9 +844,14 @@ class StudentGroupDetail(LoggedInMixin, AdministrationOnlyMixin, TemplateView):
         group = get_object_or_404(Group, id=kwargs.get('group_id'))
         user = get_object_or_404(User, id=kwargs.get('student_id'))
 
+        module_name = LearningModule.get_module_name(group.module)
+        user_hierarchy = LearningModule.get_hierarchy_for_language(
+            module_name, user.profile.language)
+
         context['group'] = group
         context['student'] = user
-        context['progress_report'] = get_progress_report([user], group.module)
+        context['progress_report'] = get_progress_report([user],
+                                                         user_hierarchy)
         return context
 
 
@@ -880,17 +887,20 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
             ctx = self.classify_group_users(groups, sections)
 
         yield ['CRITERIA']
-        yield ['Country', 'Institution', 'Group']
+        yield ['Country', 'Institution', 'Group', 'Total Members']
         yield [self.get_country_criteria(request),
                self.get_school_criteria(request),
-               self.get_group_criteria(request)]
-
-        yield ['MEMBERS']
-        yield ['Total Users', 'Completed', 'Incomplete', 'In Progress']
-        yield [len(users), ctx['completed'],
-               ctx['incomplete'], ctx['inprogress']]
+               self.get_group_criteria(request), len(users)]
+        yield ['']
+        yield ['LANGUAGE']
+        yield [LearningModule.get_module_language(hierarchy)]
+        yield ['']
+        yield ['STUDENT PROGRESS']
+        yield ['Completed', 'Incomplete', 'In Progress']
+        yield [ctx['completed'], ctx['incomplete'], ctx['inprogress']]
 
         if ctx['completed'] > 0:
+            yield ['']
             users = ctx['completed_users']
             yield ['COMPLETED USER AVERAGES']
             yield ['Completed', ctx['completed']]

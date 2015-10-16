@@ -1,3 +1,4 @@
+from __builtin__ import classmethod
 import base64
 from datetime import timedelta
 import datetime
@@ -13,6 +14,7 @@ from django.db import models
 from django.db.models.aggregates import Min, Max
 from django.db.models.query_utils import Q
 from django.utils.encoding import smart_str
+from django.utils.translation import get_language_info
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from pagetree.reports import PagetreeReport, StandaloneReportColumn
 
@@ -35,6 +37,21 @@ class LearningModule(object):
     def get_hierarchy_for_language(cls, module, language):
         hierarchy_name = '%s-%s' % (module, language)
         return Hierarchy.objects.get(name=hierarchy_name)
+
+    @classmethod
+    def get_hierarchies_for_module(cls, module_name):
+        h = Hierarchy.objects.filter(name__startswith=module_name)
+        return h.exclude(name__contains='bk')  # backup on production
+
+    @classmethod
+    def get_module_name(cls, hierarchy):
+        return hierarchy.name.split('-')[0]
+
+    @classmethod
+    def get_module_language(cls, hierarchy):
+        code = hierarchy.name.split('-')[1]
+        li = get_language_info(code)
+        return li['name']
 
 
 class HierarchyCache(object):
@@ -127,6 +144,9 @@ class Group(models.Model):
     def students(self):
         students = self.userprofile_set.filter(profile_type='ST')
         return students.order_by('user__last_name', 'user__first_name')
+
+    def module_name(self):
+        return LearningModule.get_module_name(self.module)
 
 
 class UserProfile(models.Model):
@@ -289,6 +309,10 @@ class UserProfile(models.Model):
     def get_groups_by_hierarchy(self, hierarchy_name):
         groups = self.joined_groups().filter(module__name=hierarchy_name)
         return [grp.description() for grp in groups]
+
+    def get_preferred_language(self):
+        li = get_language_info(self.language)
+        return li['name']
 
 
 class PendingTeachers(models.Model):
