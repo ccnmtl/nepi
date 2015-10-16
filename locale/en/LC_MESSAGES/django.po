@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-13 16:01-0400\n"
+"POT-Creation-Date: 2015-10-15 15:51-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -364,65 +364,64 @@ msgid ""
 "proceed to complete the course."
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:44
+#: nepi/templates/dashboard/tab_optionb.html:43
 msgid "Session Progress"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:48
-#: nepi/templates/dashboard/tab_optionb.html:51
-#: nepi/templates/dashboard/tab_optionb.html:54
+#: nepi/templates/dashboard/tab_optionb.html:47
+#: nepi/templates/dashboard/tab_optionb.html:50
 msgid "Begin the Course"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:60
+#: nepi/templates/dashboard/tab_optionb.html:56
 msgid "of"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:60
+#: nepi/templates/dashboard/tab_optionb.html:56
 msgid "sessions completed"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:63
+#: nepi/templates/dashboard/tab_optionb.html:59
 msgid "Continue"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:73
+#: nepi/templates/dashboard/tab_optionb.html:69
 msgid "Progress Report"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:75
+#: nepi/templates/dashboard/tab_optionb.html:71
 msgid "Pre-test score"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:78
-#: nepi/templates/dashboard/tab_optionb.html:91
-#: nepi/templates/dashboard/tab_optionb.html:104
+#: nepi/templates/dashboard/tab_optionb.html:74
+#: nepi/templates/dashboard/tab_optionb.html:87
+#: nepi/templates/dashboard/tab_optionb.html:100
 msgid "n/a"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:80
-#: nepi/templates/dashboard/tab_optionb.html:93
-#: nepi/templates/dashboard/tab_optionb.html:106
+#: nepi/templates/dashboard/tab_optionb.html:76
+#: nepi/templates/dashboard/tab_optionb.html:89
+#: nepi/templates/dashboard/tab_optionb.html:102
 msgid "Incomplete"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:88
+#: nepi/templates/dashboard/tab_optionb.html:84
 msgid "Session"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:88
+#: nepi/templates/dashboard/tab_optionb.html:84
 msgid "score"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:101
+#: nepi/templates/dashboard/tab_optionb.html:97
 msgid "Post-test score"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:113
+#: nepi/templates/dashboard/tab_optionb.html:109
 msgid "Average session score"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:123
+#: nepi/templates/dashboard/tab_optionb.html:119
 msgid "Pre/Post Change"
 msgstr ""
 
@@ -440,12 +439,16 @@ msgid ""
 "beginning in the new language."
 msgstr ""
 
-#: nepi/templates/main/confirm_language.html:47
+#: nepi/templates/main/confirm_language.html:33
 msgid "Continue in"
 msgstr ""
 
-#: nepi/templates/main/confirm_language.html:51
+#: nepi/templates/main/confirm_language.html:37
 msgid "Change Language"
+msgstr ""
+
+#: nepi/templates/main/confirm_language.html:51
+msgid "Save"
 msgstr ""
 
 #: nepi/templates/main/page.html:136

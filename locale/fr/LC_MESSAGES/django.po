@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-13 16:01-0400\n"
+"POT-Creation-Date: 2015-10-15 15:51-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -143,8 +143,6 @@ msgid "Regimen"
 msgstr "Schéma thérapeutique"
 
 #: nepi/templates/activities/artcard.html:95
-#, fuzzy
-#| msgid "Document the ARV dose, the number of pills dispensed."
 msgid "Document the ARV dose the number of pills dispensed."
 msgstr ""
 "Documentation de la dose des antirétroviraux, c'est-à-dire le nombre de "
@@ -330,8 +328,8 @@ msgstr "Cohorte"
 #: nepi/templates/activities/retentionrate.html:18
 msgid "Patients who started ART in the same month are called a monthly cohort."
 msgstr ""
-"Les patientes ayant commencé le TAR au cours du même mois "
-"forment une cohorte mensuelle"
+"Les patientes ayant commencé le TAR au cours du même mois forment une "
+"cohorte mensuelle"
 
 #: nepi/templates/activities/retentionrate.html:23
 msgid "ART Start Date"
@@ -351,9 +349,9 @@ msgid ""
 "in a box at the bottom of the register and include PG for pregnancy and BF "
 "for breastfeeding."
 msgstr ""
-"Raison pour laquelle la patiente a été mise sous TAR. Les codes pour "
-"chaque motif sont énumérés dans un encadré au bas du registre et "
-"incluent E pour enceinte et A pour allaitante."
+"Raison pour laquelle la patiente a été mise sous TAR. Les codes pour chaque "
+"motif sont énumérés dans un encadré au bas du registre et incluent E pour "
+"enceinte et A pour allaitante."
 
 #: nepi/templates/activities/retentionrate.html:39
 msgid "Estimated Date of Delivery"
@@ -373,8 +371,6 @@ msgstr ""
 "d’accoucher à domicile."
 
 #: nepi/templates/activities/retentionrate.html:47
-#, fuzzy
-#| msgid "Follow-Up Date"
 msgid "Follow-up Status"
 msgstr "Le statut de suivi"
 
@@ -385,10 +381,10 @@ msgid ""
 "register and include XX for patients on ART and other codes for patients not "
 "on ART."
 msgstr ""
-"La patiente est-elle restée ou non sous TAR dans les mois ayant suivi "
-"sa mise en route ? Les codes du statut de suivi sont énumérés dans un "
-"encadré au bas du registre et incluent XX pour les patientes sous TAR "
-"et d’autres codes pour les patientes qui ne sont pas sous TAR."
+"La patiente est-elle restée ou non sous TAR dans les mois ayant suivi sa "
+"mise en route ? Les codes du statut de suivi sont énumérés dans un encadré "
+"au bas du registre et incluent XX pour les patientes sous TAR et d’autres "
+"codes pour les patientes qui ne sont pas sous TAR."
 
 #: nepi/templates/base.html:35
 msgid "Hello"
@@ -464,65 +460,64 @@ msgstr ""
 "formation, vous accédez à cette table des matières où vous pouvez voir les "
 "modules terminés et ceux qui restent à explorer."
 
-#: nepi/templates/dashboard/tab_optionb.html:44
+#: nepi/templates/dashboard/tab_optionb.html:43
 msgid "Session Progress"
 msgstr "Progression des séances"
 
-#: nepi/templates/dashboard/tab_optionb.html:48
-#: nepi/templates/dashboard/tab_optionb.html:51
-#: nepi/templates/dashboard/tab_optionb.html:54
+#: nepi/templates/dashboard/tab_optionb.html:47
+#: nepi/templates/dashboard/tab_optionb.html:50
 msgid "Begin the Course"
 msgstr "Commencer la formation"
 
-#: nepi/templates/dashboard/tab_optionb.html:60
+#: nepi/templates/dashboard/tab_optionb.html:56
 msgid "of"
 msgstr "sur"
 
-#: nepi/templates/dashboard/tab_optionb.html:60
+#: nepi/templates/dashboard/tab_optionb.html:56
 msgid "sessions completed"
 msgstr "séances terminée"
 
-#: nepi/templates/dashboard/tab_optionb.html:63
+#: nepi/templates/dashboard/tab_optionb.html:59
 msgid "Continue"
 msgstr "Continuer"
 
-#: nepi/templates/dashboard/tab_optionb.html:73
+#: nepi/templates/dashboard/tab_optionb.html:69
 msgid "Progress Report"
 msgstr "Rapport sur la progression"
 
-#: nepi/templates/dashboard/tab_optionb.html:75
+#: nepi/templates/dashboard/tab_optionb.html:71
 msgid "Pre-test score"
 msgstr "Score au pré-test"
 
-#: nepi/templates/dashboard/tab_optionb.html:78
-#: nepi/templates/dashboard/tab_optionb.html:91
-#: nepi/templates/dashboard/tab_optionb.html:104
+#: nepi/templates/dashboard/tab_optionb.html:74
+#: nepi/templates/dashboard/tab_optionb.html:87
+#: nepi/templates/dashboard/tab_optionb.html:100
 msgid "n/a"
 msgstr "s/o"
 
-#: nepi/templates/dashboard/tab_optionb.html:80
-#: nepi/templates/dashboard/tab_optionb.html:93
-#: nepi/templates/dashboard/tab_optionb.html:106
+#: nepi/templates/dashboard/tab_optionb.html:76
+#: nepi/templates/dashboard/tab_optionb.html:89
+#: nepi/templates/dashboard/tab_optionb.html:102
 msgid "Incomplete"
 msgstr "Incomplète"
 
-#: nepi/templates/dashboard/tab_optionb.html:88
+#: nepi/templates/dashboard/tab_optionb.html:84
 msgid "Session"
 msgstr "Séance"
 
-#: nepi/templates/dashboard/tab_optionb.html:88
+#: nepi/templates/dashboard/tab_optionb.html:84
 msgid "score"
 msgstr "score"
 
-#: nepi/templates/dashboard/tab_optionb.html:101
+#: nepi/templates/dashboard/tab_optionb.html:97
 msgid "Post-test score"
 msgstr "Score au post-test"
 
-#: nepi/templates/dashboard/tab_optionb.html:113
+#: nepi/templates/dashboard/tab_optionb.html:109
 msgid "Average session score"
 msgstr "Score moyen aux séances"
 
-#: nepi/templates/dashboard/tab_optionb.html:123
+#: nepi/templates/dashboard/tab_optionb.html:119
 msgid "Pre/Post Change"
 msgstr "Différences entre le pré-test et le post-test"
 
@@ -542,13 +537,17 @@ msgstr ""
 "Si vous changez de langue en cours de formation, vous devrez recommencer "
 "depuis le début avec la nouvelle langue sélectionnée."
 
-#: nepi/templates/main/confirm_language.html:47
+#: nepi/templates/main/confirm_language.html:33
 msgid "Continue in"
 msgstr "Continuer en"
 
-#: nepi/templates/main/confirm_language.html:51
+#: nepi/templates/main/confirm_language.html:37
 msgid "Change Language"
 msgstr "Changer de langue"
+
+#: nepi/templates/main/confirm_language.html:51
+msgid "Save"
+msgstr "Enregistrer"
 
 #: nepi/templates/main/page.html:136
 msgid "Try again"
@@ -568,7 +567,7 @@ msgstr "Page d'accueil"
 
 #: nepi/templates/main/page.html:175
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 #: nepi/templates/quizblock/question.html:20
 #: nepi/templates/quizblock/question.html:22
@@ -581,11 +580,11 @@ msgstr "Bonne réponse"
 
 #: nepi/templates/quizblock/question.html:22
 msgid "That is incorrect"
-msgstr ""
+msgstr "Mauvaise réponse"
 
 #: nepi/templates/quizblock/question.html:23
 msgid "The correct answer is"
-msgstr "Mauvaise réponse"
+msgstr ""
 
 #~ msgid "Login"
 #~ msgstr "Connexion"
