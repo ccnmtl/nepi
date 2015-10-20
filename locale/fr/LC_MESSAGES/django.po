@@ -417,8 +417,8 @@ msgid ""
 "account information under the Profile tab."
 msgstr ""
 "À partir de cette page, vous pouvez lancer le module de formation en ligneen "
-"cliquant sur le bouton « Commencer la formation », rejoindre un groupe "
-"(classe)sous l'onglet dédié aux groupes et modifier les informations de "
+"cliquant sur le bouton « Commencer la formation, » rejoindre un groupe "
+"(classe) sous l'onglet dédié aux groupes et modifier les informations de "
 "votre compte sousl'onglet réservé aux profils."
 
 #: nepi/templates/dashboard/tab_optionb.html:18
