@@ -25,7 +25,7 @@
             jQuery("form").submit(function(evt) {
                 if (!is_form_complete(this)) {
                     evt.stopImmediatePropagation();
-                    alert("Please complete all form fields before continuing.");
+                    alert("{% trans 'Please complete all form fields before continuing.' %}");
                     return false;
                 } else {
                     return true;

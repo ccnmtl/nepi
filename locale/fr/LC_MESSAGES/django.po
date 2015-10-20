@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-15 15:51-0400\n"
+"POT-Creation-Date: 2015-10-20 09:22-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -285,7 +285,7 @@ msgstr "Bouche"
 #: nepi/templates/activities/imagemapchart.html:15
 msgid "Smile! Use good body language, nod your head, lean forward."
 msgstr ""
-"Souriez ! Utilisez un langage du corps approprié, hochez de la tête, penchez-"
+"Souriez ! Utilisez un langage du corps approprié, hochez de la tête, penchez-"
 "vous vers la patiente."
 
 #: nepi/templates/activities/imagemapchart.html:21
@@ -303,8 +303,8 @@ msgstr "Chaise"
 #: nepi/templates/activities/imagemapchart.html:33
 msgid "Sit squarely facing the person. Do not sit behind a desk!"
 msgstr ""
-"Asseyez-vous bien en face de la patiente.Ne vous asseyez pas derrière un "
-"bureau !"
+"Asseyez-vous bien en face de la patiente. Ne vous asseyez pas derrière un "
+"bureau !"
 
 #: nepi/templates/activities/imagemapchart.html:39
 msgid "Chart"
@@ -318,7 +318,7 @@ msgid ""
 msgstr ""
 "Essayez de ne pas écrire pendant la séance de conseil et de dépistage du "
 "VIHsauf si vous notez des informations essentielles que la patiente "
-"emporterachez elle ou pour vos dossiers.Éteignez votre téléphone portable et "
+"emporterachez elle ou pour vos dossiers. Éteignez votre téléphone portable et "
 "ne répondez jamais au téléphonependant une séance de conseil."
 
 #: nepi/templates/activities/retentionrate.html:15
@@ -549,6 +549,10 @@ msgstr "Changer de langue"
 msgid "Save"
 msgstr "Enregistrer"
 
+#: nepi/templates/main/page.html:28
+msgid "Please complete all form fields before continuing."
+msgstr "Veuillez remplir tous les champs du formulaire avant de poursuivre, s'il vous plaît"
+
 #: nepi/templates/main/page.html:136
 msgid "Try again"
 msgstr "Réessayer"
@@ -584,7 +588,7 @@ msgstr "Mauvaise réponse"
 
 #: nepi/templates/quizblock/question.html:23
 msgid "The correct answer is"
-msgstr ""
+msgstr "La bonne résponse est"
 
 #~ msgid "Login"
 #~ msgstr "Connexion"
