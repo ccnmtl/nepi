@@ -55,12 +55,13 @@ jQuery(document).ready(function () {
     });
     
     jQuery('.user-profile-form form').submit(function() {
-        if (currentLanguage !== 
-                jQuery("div.user-profile-form select[name='language']").val()) {
-            jQuery('#confirm-language-modal').modal({
-                backdrop: 'static',
-                keyboard: false,
-            });
+        if (jQuery('#confirm-language-modal').length > 0) {
+            var selector = "div.user-profile-form select[name='language']";
+            if (currentLanguage !== jQuery(selector).val()) {
+                jQuery('#confirm-language-modal').modal({
+                    backdrop: 'static',
+                    keyboard: false,
+                });
             jQuery('#confirm-language-modal').modal('show');
             return false;
         }
