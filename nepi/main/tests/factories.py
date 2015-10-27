@@ -8,7 +8,8 @@ import string
 
 
 class UserFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = User
+    class Meta:
+        model = User
     username = factory.Sequence(lambda n: "user%d" % n)
     password = factory.PostGenerationMethodCall('set_password', 'test')
     last_name = factory.Sequence(lambda n: "Last%d" % n)
@@ -25,20 +26,23 @@ def country_choice(n):
 
 
 class CountryFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Country
+    class Meta:
+        model = Country
 
     name = factory.Sequence(lambda n: country_choice(n))
     display_name = factory.Sequence(lambda n: "country %d" % n)
 
 
 class SchoolFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = School
+    class Meta:
+        model = School
     country = factory.SubFactory(CountryFactory)
     name = factory.Sequence(lambda n: "school %d" % n)
 
 
 class SchoolGroupFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Group
+    class Meta:
+        model = Group
     school = factory.SubFactory(SchoolFactory)
     creator = factory.SubFactory(UserFactory)
     name = factory.Sequence(lambda n: "group %d" % n)
@@ -47,7 +51,8 @@ class SchoolGroupFactory(factory.DjangoModelFactory):
 
 
 class UserProfileFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = UserProfile
+    class Meta:
+        model = UserProfile
     user = factory.SubFactory(UserFactory)
     profile_type = 'ST'
     country = factory.SubFactory(CountryFactory)
@@ -76,6 +81,7 @@ class CountryAdministratorProfileFactory(UserProfileFactory):
 
 
 class PendingTeacherFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = PendingTeachers
+    class Meta:
+        model = PendingTeachers
     user_profile = factory.SubFactory(StudentProfileFactory)
     school = factory.SubFactory(SchoolFactory)
