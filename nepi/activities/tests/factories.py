@@ -7,7 +7,8 @@ from nepi.activities.models import ConversationScenario, \
 
 
 class GoodConversationFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Conversation
+    class Meta:
+        model = Conversation
     text_one = "We assume text one is the starting text"
     response_one = "Text 1 is the response to whatever the other party says"
     response_two = "Text 2 is the response to whatever the other party says"
@@ -18,7 +19,8 @@ class GoodConversationFactory(factory.DjangoModelFactory):
 
 
 class BadConversationFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Conversation
+    class Meta:
+        model = Conversation
     text_one = "We assume text one is the starting text"
     response_one = "Text 1 is the response to whatever the other party says"
     response_two = "Text 2 is the response to whatever the other party says"
@@ -29,7 +31,8 @@ class BadConversationFactory(factory.DjangoModelFactory):
 
 
 class ConversationScenarioFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = ConversationScenario
+    class Meta:
+        model = ConversationScenario
     description = "Description for the Conversation Scenario"
     '''do I even need a good and bad factory? doesn't really matter
     except for how it is save here in the scenario.'''
@@ -38,70 +41,82 @@ class ConversationScenarioFactory(factory.DjangoModelFactory):
 
 
 class ConvClickFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = ConvClick
+    class Meta:
+        model = ConvClick
     conversation = factory.SubFactory(GoodConversationFactory)
 
 
 class RetentionRateCardFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = RetentionRateCard
+    class Meta:
+        model = RetentionRateCard
     intro_text = "intro text"
 
 
 class RetentionClickFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = RetentionClick
+    class Meta:
+        model = RetentionClick
     click_string = "cohort_click"
 
 
 class MonthFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Month
+    class Meta:
+        model = Month
     display_name = "January 2015"
 
 
 class CalendarChartFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = CalendarChart
+    class Meta:
+        model = CalendarChart
     month = factory.SubFactory(MonthFactory)
     correct_date = 4
     description = 'description'
 
 
 class IncorrectDayOneFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Day
+    class Meta:
+        model = Day
     calendar = factory.SubFactory(MonthFactory)
     number = 1
     explanation = "This is the wrong day"
 
 
 class IncorrectDayTwoFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Day
+    class Meta:
+        model = Day
     calendar = factory.SubFactory(MonthFactory)
     number = 2
     explanation = "This is the wrong day"
 
 
 class CorrectDayFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Day
+    class Meta:
+        model = Day
     calendar = factory.SubFactory(MonthFactory)
     number = 4
     explanation = "This is the correct day"
 
 
 class ImageInteractiveFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = ImageInteractive
+    class Meta:
+        model = ImageInteractive
     intro_text = "intro text"
 
 
 class ARTCardFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = ARTCard
+    class Meta:
+        model = ARTCard
     intro_text = "intro text"
 
 
 class AdherenceCardFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = AdherenceCard
+    class Meta:
+        model = AdherenceCard
     quiz_class = "quiz class"
 
 
 class DosageActivityFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = DosageActivity
+    class Meta:
+        model = DosageActivity
     explanation = 'the explanation'
     question = 'the question'
     ml_nvp = Decimal(1.5)
