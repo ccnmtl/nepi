@@ -1,18 +1,22 @@
-jQuery(document).ready(function () {
-    
+jQuery(document).ready(function() {
+
     function resetSchoolChoice() {
-        jQuery("div.user-profile-form select[name='school']").find('option').not('.all-or-none-option').remove();
-        jQuery("div.user-profile-form input[name='profile_type']").removeAttr('checked');
+        jQuery('div.user-profile-form select[name="school"]')
+            .find('option').not('.all-or-none-option').remove();
+        jQuery('div.user-profile-form input[name="profile_type"]')
+            .removeAttr('checked');
     }
-    
+
     function disableFacultyAccess() {
-        jQuery("div.user-profile-form input[name='profile_type']").attr('disabled', 'disabled');
-        jQuery("div.user-profile-form .faculty-access").addClass('disabled');
+        jQuery('div.user-profile-form input[name="profile_type"]')
+            .attr('disabled', 'disabled');
+        jQuery('div.user-profile-form .faculty-access').addClass('disabled');
     }
 
     function enableFacultyAccess() {
-        jQuery("div.user-profile-form input[name='profile_type']").removeAttr('disabled');
-        jQuery("div.user-profile-form .faculty-access").removeClass('disabled');
+        jQuery('div.user-profile-form input[name="profile_type"]')
+            .removeAttr('disabled');
+        jQuery('div.user-profile-form .faculty-access').removeClass('disabled');
     }
 
     function profileSchoolChoices(countryName) {
@@ -20,62 +24,73 @@ jQuery(document).ready(function () {
             type: 'GET',
             url: '/schools/' + countryName + '/',
             dataType: 'json',
-            error: function () {
+            error: function() {
                 // This country does not exist in the database
                 disableFacultyAccess();
             },
-            success: function (json, textStatus, xhr) {
+            success: function(json, textStatus, xhr) {
                 if (json.schools.length < 1) {
                     // There are no schools for this country
                     disableFacultyAccess();
                 } else {
-                    for (var i=0; i < json.schools.length; i++) {
+                    for (var i = 0; i < json.schools.length; i++) {
                         var school = json.schools[i];
-                        var option = "<option value='"  + school.id + "'>" + school.name + "</option>";
-                        jQuery("div.user-profile-form select[name='school']").append(option);
+                        var option = '<option value="'  + school.id + '">' +
+                            school.name + '</option>';
+                        jQuery('div.user-profile-form select[name="school"]')
+                            .append(option);
                     }
-        
+
                     if (currentSchoolId) {
-                        jQuery("div.user-profile-form select[name='school']").val(currentSchoolId);
+                        jQuery('div.user-profile-form select[name="school"]')
+                            .val(currentSchoolId);
                         currentSchoolId = undefined;
                     }
-                    enableFacultyAccess();          
+                    enableFacultyAccess();
                 }
             }
         });
     }
 
-    jQuery("div.user-profile-form select[name='country']").change(function() {
-        var countryName = jQuery("div.user-profile-form select[name='country']").val();
+    jQuery('div.user-profile-form select[name="country"]').change(function() {
+        var countryName = jQuery('div.user-profile-form select[name="country"]')
+            .val();
         if (currentCountryName !== countryName) {
             currentCountryName = countryName;
             resetSchoolChoice();
             profileSchoolChoices(countryName);
         }
     });
-    
+
     jQuery('.user-profile-form form').submit(function() {
         if (jQuery('#confirm-language-modal').length > 0) {
-            var selector = "div.user-profile-form select[name='language']";
+            var selector = 'div.user-profile-form select[name="language"]';
             if (currentLanguage !== jQuery(selector).val()) {
                 jQuery('#confirm-language-modal').modal({
                     backdrop: 'static',
-                    keyboard: false,
+                    keyboard: false
                 });
-            jQuery('#confirm-language-modal').modal('show');
-            return false;
+                jQuery('#confirm-language-modal').modal('show');
+                return false;
+            }
         }
     });
-    
+
     jQuery('#confirm-language-yes').click(function() {
-        currentLanguage = jQuery("div.user-profile-form select[name='language']").val();
+        currentLanguage = jQuery(
+            'div.user-profile-form select[name="language"]')
+            .val();
         jQuery('.user-profile-form form').submit();
     });
-    
-    var currentSchoolId = jQuery("div.user-profile-form div.control-group.school").data('school-id');
-    var currentCountryName = jQuery("div.user-profile-form select[name='country']").val();
+
+    var currentSchoolId = jQuery(
+        'div.user-profile-form div.control-group.school')
+        .data('school-id');
+    var currentCountryName = jQuery(
+        'div.user-profile-form select[name="country"]').val();
     if (currentCountryName !== undefined && currentCountryName !== '-----') {
         profileSchoolChoices(currentCountryName);
     }
-    var currentLanguage = jQuery("div.user-profile-form select[name='language']").val();
+    var currentLanguage = jQuery(
+        'div.user-profile-form select[name="language"]').val();
 });
