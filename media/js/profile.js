@@ -60,10 +60,11 @@ jQuery(document).ready(function () {
             if (currentLanguage !== jQuery(selector).val()) {
                 jQuery('#confirm-language-modal').modal({
                     backdrop: 'static',
-                    keyboard: false,
+                    keyboard: false
                 });
-            jQuery('#confirm-language-modal').modal('show');
-            return false;
+                jQuery('#confirm-language-modal').modal('show');
+                return false;
+            }
         }
     });
     

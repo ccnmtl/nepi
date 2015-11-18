@@ -2,7 +2,9 @@
      
      // handle hash tag navigation
      var hash = window.location.hash;
-     hash && jQuery('.dashboard-nav a[href="' + hash + '"]').tab('show');
+     if (hash) {
+         jQuery('.dashboard-nav a[href="' + hash + '"]').tab('show');
+     }
      
      // when the nav item is selected update the page hash
      jQuery('.dashboard-nav a').on('shown', function (e) {
@@ -81,20 +83,22 @@
                 showError(eltSchoolSelect);
             },
             success: function (json, textStatus, xhr) {
+                var i;
+                var group;
                 if (json.groups.length < 1) {
                     // There are no groups for this country
                     showError(eltSchoolSelect);
                 } else {
                     // @todo - a client-side template would do nicely here
                     if (eltGroup.tagName === 'SELECT') {
-                        for (var i=0; i < json.groups.length; i++) {
-                            var group = json.groups[i];
+                        for (i=0; i < json.groups.length; i++) {
+                            group = json.groups[i];
                             var option = "<option value='"  + group.id + "'>" + group.name + "</option>";
                             jQuery(eltGroup).append(option);
                         }
                     } else {
-                        for (var i=0; i < json.groups.length; i++) {
-                            var group = json.groups[i];
+                        for (i=0; i < json.groups.length; i++) {
+                            group = json.groups[i];
                             var choice = "<tr class='content-row'>" + 
                                 "<td>" + group.name + "</td>" + 
                                 "<td>" + group.start_date + "</td>" +
@@ -201,7 +205,7 @@
                 data: jQuery(frm).serialize(),
                 type: "POST",
                 success: function (data) {
-                    if (jQuery(table).find('tr.content-row').length == 1) {
+                    if (jQuery(table).find('tr.content-row').length === 1) {
                         jQuery(".your-groups").fadeOut(function() {
                             jQuery(row).remove();
                         });
@@ -230,7 +234,7 @@
                 data: jQuery(frm).serialize(),
                 type: "POST",
                 success: function (data) {
-                    if (jQuery(table).find('tr.content-row').length == 1) {
+                    if (jQuery(table).find('tr.content-row').length === 1) {
                         jQuery(".your-groups-created").fadeOut(function() {
                             jQuery(row).remove();
                         });
@@ -259,7 +263,7 @@
                 data: jQuery(frm).serialize(),
                 type: "POST",
                 success: function (data) {
-                    if (jQuery(table).find('tr.content-row').length == 1) {
+                    if (jQuery(table).find('tr.content-row').length === 1) {
                         jQuery(".your-groups-created").fadeOut(function() {
                             jQuery(row).remove();
                         });
@@ -319,12 +323,12 @@
         }
         
         
-        if (startdate == 'Invalid Date') {
+        if (startdate === 'Invalid Date') {
             jQuery(this).find("div.control-group.start_date").addClass("error");
             submit = false;
         }
 
-        if (enddate == 'Invalid Date') {
+        if (enddate === 'Invalid Date') {
             jQuery(this).find("div.control-group.end_date").addClass("error");
             submit = false;
         }
@@ -387,9 +391,9 @@
     });
     
     // initialize country selectors based on roles
-    if (profile_attributes.role == 'faculty' ||
-        profile_attributes.role == 'institution' ||
-            profile_attributes.role == 'country') {
+    if (profile_attributes.role === 'faculty' ||
+        profile_attributes.role === 'institution' ||
+            profile_attributes.role === 'country') {
         
         var containers = jQuery("#create-a-group, #report-selector");
         var eltCountrySelect =  jQuery(containers).find("select[name='country']");
@@ -401,8 +405,8 @@
         populateSchoolChoices(jQuery(containers),
             eltCountrySelect, eltSchoolSelect,
             function() {
-                if (profile_attributes.role == 'faculty' ||
-                        profile_attributes.role == 'institution') {
+                if (profile_attributes.role === 'faculty' ||
+                        profile_attributes.role === 'institution') {
                     jQuery(eltSchoolSelect).val(profile_attributes.school);
                     jQuery(eltSchoolSelect).attr('disabled', 'disabled');
                     

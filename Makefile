@@ -2,7 +2,7 @@ MANAGE=./manage.py
 APP=nepi
 FLAKE8=./ve/bin/flake8
 
-jenkins: ./ve/bin/python check test flake8
+jenkins: ./ve/bin/python check test flake8 jshint
 
 ./ve/bin/python: requirements.txt bootstrap.py virtualenv.py
 	./bootstrap.py
@@ -24,6 +24,18 @@ check: ./ve/bin/python
 
 shell: ./ve/bin/python
 	$(MANAGE) shell_plus
+
+jshint: node_modules/jshint/bin/jshint
+	./node_modules/jshint/bin/jshint --config=.jshintrc media/js/captcha.js media/js/dashboard.js media/js/people.js media/js/profile.js media/js/util.js
+
+jscs: node_modules/jscs/bin/jscs
+	./node_modules/jscs/bin/jscs  media/js/captcha.js media/js/dashboard.js media/js/people.js media/js/profile.js media/js/util.js
+
+node_modules/jshint/bin/jshint:
+	npm install jshint --prefix .
+
+node_modules/jscs/bin/jscs:
+	npm install jscs --prefix .
 
 clean:
 	rm -rf ve

@@ -1,10 +1,10 @@
 (function() {
     
-    Participant = Backbone.Model.extend({
+    var Participant = Backbone.Model.extend({
         url: '/dashboard/people/filter/'
     });
     
-    ParticipantCollection = Backbone.Collection.extend({
+    var ParticipantCollection = Backbone.Collection.extend({
         urlRoot: '/dashboard/people/filter/',
         model: Participant,
         offset: 0,

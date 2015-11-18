@@ -12,3 +12,4 @@ local_settings.py
 .settings
 .idea
 uploads
+node_modules
