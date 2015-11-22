@@ -522,7 +522,7 @@ msgstr ""
 
 #: nepi/templates/main/page.html:28
 msgid "Please complete all form fields before continuing."
-msgstr ""
+msgstr "Favor completar todos os campos do formulário antes de continuar."
 
 #: nepi/templates/main/page.html:136
 msgid "Try again"
