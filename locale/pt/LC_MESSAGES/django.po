@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-20 09:22-0400\n"
+"POT-Creation-Date: 2015-12-07 15:32-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -309,23 +309,23 @@ msgstr ""
 
 #: nepi/templates/activities/retentionrate.html:15
 msgid "Cohort"
-msgstr ""
+msgstr "Coorte"
 
 #: nepi/templates/activities/retentionrate.html:18
 msgid "Patients who started ART in the same month are called a monthly cohort."
-msgstr ""
+msgstr "Pacientes que iniciaram ART no mesmo mês são chamadas em coorte mensal"
 
 #: nepi/templates/activities/retentionrate.html:23
 msgid "ART Start Date"
-msgstr ""
+msgstr "Data de início de ART"
 
 #: nepi/templates/activities/retentionrate.html:26
 msgid "Date that each patient in the cohort was started on ART."
-msgstr ""
+msgstr "Data em que cada paciente no coorte foi iniciada em ART"
 
 #: nepi/templates/activities/retentionrate.html:31
 msgid "Why Eligible?"
-msgstr ""
+msgstr "Por que elegível?"
 
 #: nepi/templates/activities/retentionrate.html:34
 msgid ""
@@ -333,10 +333,13 @@ msgid ""
 "in a box at the bottom of the register and include PG for pregnancy and BF "
 "for breastfeeding."
 msgstr ""
+"Motivo pelo qual o paciente foi iniciado em ART. Os códigos para cada motivo "
+"estão listados em uma caixa no fundo do registro e incluem G para gravidez e "
+"A para amamentação."
 
 #: nepi/templates/activities/retentionrate.html:39
 msgid "Estimated Date of Delivery"
-msgstr ""
+msgstr "Data estimada do parto (DEP)"
 
 #: nepi/templates/activities/retentionrate.html:42
 msgid ""
@@ -345,10 +348,12 @@ msgid ""
 "deliver. This will help with interpretation of findings if a patient for "
 "example decides to go home to deliver."
 msgstr ""
+"Data em que as mulheres que iniciaram ART durante a gravidez são esperadas a "
+"fazer o parto e /ou data em que as mulheres engravidaram enquanto em ART são "
+"esperadas a fazer o parto. Isso vai ajudar com a interpretação dos achados "
+"se uma paciente por exemplo decide vir para casa para o parto."
 
 #: nepi/templates/activities/retentionrate.html:47
-#, fuzzy
-#| msgid "Follow-Up Date"
 msgid "Follow-up Status"
 msgstr "Data de Acompanhamento"
 
@@ -359,6 +364,10 @@ msgid ""
 "register and include XX for patients on ART and other codes for patients not "
 "on ART."
 msgstr ""
+"Se ou não a paciente permaneceu em ART nos meses após iniciar ART. Os "
+"códigos para o estado de acompanhamento são listados em uma caixa na parte "
+"de baixo do registro e incluem XX para pacientes em ART e outros códigos "
+"para pacientes que não estão em ART."
 
 #: nepi/templates/base.html:35
 msgid "Hello"
@@ -547,7 +556,7 @@ msgstr "Seguinte"
 #: nepi/templates/quizblock/question.html:20
 #: nepi/templates/quizblock/question.html:22
 msgid "You chose"
-msgstr ""
+msgstr "Você escolheu"
 
 #: nepi/templates/quizblock/question.html:20
 msgid "That is correct"

@@ -60,9 +60,9 @@ rebase:
 	make flake8
 
 makemessages: ./ve/bin/python
-	$(MANAGE) makemessages -l en --ignore="ve" --ignore="login.html" --ignore="password*.html" --ignore="registration*.html"
-	$(MANAGE) makemessages -l fr --ignore="ve" --ignore="login.html" --ignore="password*.html" --ignore="registration*.html"
-	$(MANAGE) makemessages -l pt --ignore="ve" --ignore="login.html" --ignore="password*.html" --ignore="registration*.html"
+	$(MANAGE) makemessages -l en --ignore="ve" --ignore="login.html" --ignore="password*.html" --ignore="registration*.html" --ignore="node_modules"
+	$(MANAGE) makemessages -l fr --ignore="ve" --ignore="login.html" --ignore="password*.html" --ignore="registration*.html" --ignore="node_modules"
+	$(MANAGE) makemessages -l pt --ignore="ve" --ignore="login.html" --ignore="password*.html" --ignore="registration*.html" --ignore="node_modules"
 
 compilemessages: ./ve/bin/python
 	$(MANAGE) compilemessages
