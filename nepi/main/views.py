@@ -38,12 +38,8 @@ from nepi.mixins import (
 # Set the user's language on login & profile update
 def set_session_language(sender, user, request, **kwargs):
     try:
-        if flag_is_active(request, 'set-session-language'):
-            translation.activate(user.profile.language)
-            request.session[LANGUAGE_SESSION_KEY] = user.profile.language
-        else:
-            translation.activate('en')
-            request.session[LANGUAGE_SESSION_KEY] = 'en'
+        translation.activate(user.profile.language)
+        request.session[LANGUAGE_SESSION_KEY] = user.profile.language
     except UserProfile.DoesNotExist:
         pass  # uni user logged in with no profile
 
@@ -197,11 +193,7 @@ class UserProfileView(LoggedInMixin, DetailView):
         profile = self.request.user.profile
         context = super(UserProfileView, self).get_context_data(**kwargs)
 
-        # todo - this will require some addition when new modules are added
-        if flag_is_active(self.request, 'set-session-language'):
-            hierarchy_name = 'optionb-%s' % profile.language
-        else:
-            hierarchy_name = 'optionb-en'
+        hierarchy_name = 'optionb-%s' % profile.language
         hierarchy = Hierarchy.objects.get(name=hierarchy_name)
         context['optionb'] = hierarchy
 
@@ -226,11 +218,8 @@ class UserProfileView(LoggedInMixin, DetailView):
         language = form.cleaned_data.get('language', settings.DEFAULT_LANGUAGE)
 
         if self.request.user.profile.language != language:
-            # the user profile object on request needs a refresh from db
-            # @todo - Django 1.8 has a "refresh_from_db" method that can be
-            # substituted here.
-            user = User.objects.get(id=self.request.user.id)
-            set_session_language(None, user, self.request)
+            self.request.user.profile.refresh_from_db()
+            set_session_language(None, self.request.user, self.request)
 
     def post(self, *args, **kwargs):
         self.object = self.get_object()
