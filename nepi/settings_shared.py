@@ -1,3 +1,4 @@
+# flake8: noqa
 # Django settings for nepi project.
 import os
 import sys
