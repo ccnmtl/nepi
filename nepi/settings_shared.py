@@ -1,3 +1,4 @@
+# flake8: noqa
 # Django settings for nepi project.
 import os
 import sys
@@ -27,6 +28,10 @@ ALLOWED_HOSTS = [
 
 USE_TZ = True
 USE_I18N = True
+
+MIDDLEWARE_CLASSES += [
+    'django.middleware.locale.LocaleMiddleware',
+]
 
 TEMPLATE_CONTEXT_PROCESSORS += [  # noqa
     'nepi.main.views.context_processor',
