@@ -86,10 +86,10 @@ msgstr ""
 "<table> <tr> <td><strong>Aderência</strong></td> <td><strong>%%</strong></"
 "td> <td colspan=2><strong>Doses perdidas por mês</strong></td> </tr> <tr> "
 "<td></td> <td></td> <td>1 x dosagem diária</td> <td>2 x dosagem diária</td> "
-"</tr> <tr> <td><strong>G (Bom)</strong></td> <td> <u>></u>95%%</td> <td>< 2 "
-"doses</td> <td><u><</u> 3 doses</td> </tr> <tr> <td><strong>F (Justo)</"
+"</tr> <tr> <td><strong>B (Bom)</strong></td> <td> <u>></u>95%%</td> <td>< 2 "
+"doses</td> <td><u><</u> 3 doses</td> </tr> <tr> <td><strong>R (Razoável)</"
 "strong></td> <td>85-94%%</td> <td>2-4 doses</td> <td>4-8 doses</td> </tr> "
-"<tr> <td><strong>P (Pobre)</strong></td> <td>< 85%%</td> <td><u>></u> 5 "
+"<tr> <td><strong>F (Fraco)</strong></td> <td>< 85%%</td> <td><u>></u> 5 "
 "doses</td> <td><u>></u> 9 doses</td> </tr> </table>"
 
 #: nepi/templates/activities/artcard.html:55
