@@ -42,13 +42,8 @@
         <div class="span3 session-progress">
             <h4>{% trans 'Session Progress' %}</h4>
             {% if user_profile|percent_complete:optionb == '0.00' %}
-                {% flag "set-session-language" %}
-                    <a href="{% url 'confirm-language-choice' %}" class="btn btn-large btn-primary">
-                        {% trans 'Begin the Course' %} <i class="icon-arrow-right icon-white"></i></a>
-                {% else %}
-                    <a href="{{user_profile|last_location_url:optionb}}" class="btn btn-large btn-primary">
-                        {% trans 'Begin the Course' %} <i class="icon-arrow-right icon-white"></i></a>
-                {% endflag %}
+                <a href="{% url 'confirm-language-choice' %}" class="btn btn-large btn-primary">
+                    {% trans 'Begin the Course' %} <i class="icon-arrow-right icon-white"></i></a>
             {% else %}
                 <div class="progress progress-striped">
                     <div class="bar" style="width: {{user_profile|percent_complete:optionb}}%;"></div>

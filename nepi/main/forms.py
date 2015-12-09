@@ -8,7 +8,6 @@ from django.core.mail import send_mail
 from django.forms.fields import ChoiceField
 from django.template import loader
 from django.template.context import Context
-from waffle import switch_is_active
 
 from nepi.main.models import UserProfile, Country, School, PendingTeachers
 
@@ -54,19 +53,9 @@ class UserProfileForm(forms.Form):
         max_length=25, widget=forms.PasswordInput, required=True)
     profile_type = forms.BooleanField(required=False)
 
-    def include_language(self, choice):
-        if choice[0] == 'fr' and not switch_is_active('language-fr'):
-            return False
-        if choice[0] == 'pt' and not switch_is_active('language-pt'):
-            return False
-        return True
-
     def __init__(self, *args, **kwargs):
         super(UserProfileForm, self).__init__(*args, **kwargs)
         self.fields["country"].choices = Country.choices()
-
-        self.fields['language'].choices = [v for i, v in enumerate(
-            self.fields['language'].choices) if self.include_language(v)]
 
     def clean(self):
         cleaned_data = super(UserProfileForm, self).clean()
