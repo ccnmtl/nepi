@@ -1,0 +1,22 @@
+{
+  "name": "nepi",
+  "version": "0.0.0",
+  "description": "ICAP Nursing eLearning ==========",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ccnmtl/nepi.git"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/ccnmtl/nepi/issues"
+  },
+  "devDependencies": {
+    "jshint": "~2.9.1-rc1",
+    "jscs": "~2.7.0"
+  }
+}
