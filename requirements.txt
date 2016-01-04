@@ -30,7 +30,7 @@ path.py==8.1.2
 ipython==4.0.0
 ipdb==0.8.1
 rdflib==4.2.1
-selenium==2.47.1
+selenium==2.48.0
 coverage==3.7.1
 pyasn1==0.1.9
 pyOpenSSL==0.15.1
