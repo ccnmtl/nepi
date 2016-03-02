@@ -47,7 +47,8 @@ user_logged_in.connect(set_session_language)
 
 
 def context_processor(request):
-    return dict(hierarchies=Hierarchy.objects.all())
+    return dict(
+        hierarchies=Hierarchy.objects.all(), MEDIA_URL=settings.MEDIA_URL)
 
 
 class NepiDeprecatedPageView(LoggedInMixin, RedirectView):
