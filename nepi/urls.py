@@ -3,10 +3,12 @@ import os.path
 import debug_toolbar
 from django.conf import settings
 from django.conf.urls import patterns, include, url
+from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.contrib.auth.views import (
     password_change, password_change_done, password_reset_done,
     password_reset_confirm, password_reset_complete)
+from django.contrib.flatpages import views
 from django.views.generic import TemplateView
 
 from nepi.main.views import (
@@ -141,6 +143,11 @@ urlpatterns = patterns(
      NepiPageView.as_view()),
 )
 
+
+urlpatterns += i18n_patterns(
+    url(r'^about/$', views.flatpage, {'url': '/about/'}, name='about'),
+    url(r'^help/$', views.flatpage, {'url': '/help/'}, name='help'),
+)
 
 if settings.DEBUG:
     urlpatterns += patterns('',
