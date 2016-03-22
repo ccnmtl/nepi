@@ -110,6 +110,19 @@ def average_quiz_score(users, hierarchy, cls):
         return int(round(score * 100))
 
 
+def completed(user, hierarchy):
+    if user.profile.percent_complete(hierarchy.get_root()) < 100:
+        return False
+
+    if average_quiz_score([user], hierarchy, 'pretest') < 0:
+        return False
+
+    if average_quiz_score([user], hierarchy, 'posttest') < 0:
+        return False
+
+    return True
+
+
 @register.simple_tag
 def display_average_quiz_score(user, hierarchy, css_extra_contains):
     score = average_quiz_score([user], hierarchy, css_extra_contains)

@@ -387,6 +387,7 @@ class DetailedReport(PagetreeReport):
 
     def standalone_columns(self):
         from nepi.main.templatetags.progressreport import average_quiz_score
+        from nepi.main.templatetags.progressreport import completed
 
         return [
             StandaloneReportColumn(
@@ -402,6 +403,10 @@ class DetailedReport(PagetreeReport):
                 'Groups',
                 lambda x: ','.join(
                     x.profile.get_groups_by_hierarchy(self.hierarchy))),
+            StandaloneReportColumn(
+                'completed', 'profile', 'boolean',
+                'pages visits + pre + post tests',
+                lambda x: completed(x, self.hierarchy)),
             StandaloneReportColumn(
                 'percent_complete', 'profile', 'percent',
                 '% of hierarchy completed',

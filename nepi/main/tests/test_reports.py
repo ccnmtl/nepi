@@ -271,9 +271,10 @@ class TestDownloadableReportView(TestReportBase):
             users, groups = view.get_users_and_groups(request, self.hierarchy)
 
             rows = view.get_detailed_report_values(self.hierarchies, users)
-            row = ['participant_id', 'country', 'group', 'percent_complete',
-                   'total_time_elapsed', 'actual_time_spent',
-                   'completion_date', 'pre-test score', 'post-test score']
+            row = ['participant_id', 'country', 'group', 'completed',
+                   'percent_complete', 'total_time_elapsed',
+                   'actual_time_spent', 'completion_date', 'pre-test score',
+                   'post-test score']
             self.assertEquals(rows.next(), row)
 
             # expecting 4 user results to show up
@@ -312,6 +313,10 @@ class TestDownloadableReportView(TestReportBase):
         self.assertEquals(rows.next(), row)
 
         row = ['', 'group', 'profile', 'list', 'Groups']
+        self.assertEquals(rows.next(), row)
+
+        row = ['', 'completed', 'profile', 'boolean',
+               'pages visits + pre + post tests']
         self.assertEquals(rows.next(), row)
 
         row = ['', 'percent_complete', 'profile', 'percent',
@@ -357,7 +362,7 @@ class TestDownloadableReportView(TestReportBase):
         response = self.client.post(self.report_download_url, data)
         self.assertEquals(response.status_code, 200)
 
-        row = ('participant_id,country,group,percent_complete,'
+        row = ('participant_id,country,group,completed,percent_complete,'
                'total_time_elapsed,actual_time_spent,completion_date,'
                'pre-test score,post-test score\r\n')
         self.assertEquals(row, response.streaming_content.next())  # header row
