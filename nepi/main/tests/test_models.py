@@ -6,9 +6,11 @@ from django.core.cache import cache
 from django.test import TestCase
 from pagetree.models import Hierarchy, Section, UserPageVisit
 from pagetree.tests.factories import HierarchyFactory, ModuleFactory
+from quizblock.models import Quiz, Question, Answer, Submission, Response
 
 from factories import SchoolGroupFactory
 from nepi.main.models import AggregateQuizScore, PendingTeachers, Country
+from nepi.main.templatetags.progressreport import completed
 from nepi.main.tests.factories import StudentProfileFactory, \
     TeacherProfileFactory, ICAPProfileFactory, \
     CountryAdministratorProfileFactory, \
@@ -155,6 +157,43 @@ class TestUserProfile(TestCase):
         UserPageVisit.objects.create(
             user=self.student, section=child_one, status="complete")
         self.assertEquals(self.student.profile.percent_complete(root), 50)
+
+    def test_completed(self):
+        pretest = Quiz.objects.create()
+        q1 = Question.objects.create(
+            quiz=pretest, text='single answer', question_type='single choice')
+        Answer.objects.create(question=q1, label='Yes', value='1')
+        Answer.objects.create(question=q1, label='No', value='0')
+
+        posttest = Quiz.objects.create()
+        q2 = Question.objects.create(
+            quiz=posttest, text='single answer', question_type='single choice')
+        Answer.objects.create(question=q2, label='Yes', value='1')
+        Answer.objects.create(question=q2, label='No', value='0')
+
+        section = Section.objects.get(slug='two')
+        section.append_pageblock('Quiz', 'pretest', content_object=pretest)
+        section = Section.objects.get(slug='four')
+        section.append_pageblock('Quiz', 'posttest', content_object=posttest)
+
+        self.assertFalse(completed(self.student, self.hierarchy))
+
+        # add page visits
+        for section in self.hierarchy.get_root().get_descendants():
+            UserPageVisit.objects.create(
+                user=self.student, section=section, status='complete')
+
+        self.assertFalse(completed(self.student, self.hierarchy))
+
+        # answer the pretest
+        s = Submission.objects.create(quiz=pretest, user=self.student)
+        Response.objects.create(question=q1, submission=s, value="1")
+        self.assertFalse(completed(self.student, self.hierarchy))
+
+        # answer the posttest
+        s = Submission.objects.create(quiz=posttest, user=self.student)
+        Response.objects.create(question=q2, submission=s, value="1")
+        self.assertTrue(completed(self.student, self.hierarchy))
 
     def test_percent_complete_session(self):
         root = self.hierarchy.get_root()
