@@ -1,13 +1,31 @@
 {% extends "base.html" %}
 {% load markup %}
 
-{% block title %}{{ flatpage.title }}{% endblock %}
+{% block title %}
+  {{ flatpage.title }}
+{% endblock %}
 
-
+<script src="{{STATIC_URL}}js/change_lang_btn.js"></script>
 {% block pagetitle %}
-<h1 class="pageheader">{{ flatpage.title }}</h1>
+  <h1 class="pageheader">
+    {{ flatpage.title }}
+  </h1>
 {% endblock %}
 
 {% block content %}
-{{ flatpage.content|markdown}}
+  <div class="btn-group">
+    <button id=langChoice" type="button" 
+            class="btn btn-primary dropdown-toggle" 
+            data-toggle="dropdown" 
+            aria-haspopup="true" aria-expanded="false">
+      Language
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="langChoice">
+      <li><a class="dropdown-item chng-lang" href="/en/about/">English</a></li>
+      <li><a class="dropdown-item chng-lang" href="/fr/about/">French</a></li>
+      <li><a class="dropdown-item chng-lang" href="/pt/about/">Portuguese</a></li>
+    </ul>
+  </div>      
+  {{ flatpage.content|markdown }}
 {% endblock %}
