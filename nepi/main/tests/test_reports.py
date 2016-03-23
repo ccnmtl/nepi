@@ -1,11 +1,13 @@
 from datetime import date
 import datetime
+
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.test.client import RequestFactory
 from django.test.testcases import TestCase
-from pagetree.models import Hierarchy, UserPageVisit
+from pagetree.models import Hierarchy, UserPageVisit, Section
 from pagetree.tests.factories import ModuleFactory
+from quizblock.models import Quiz, Question, Answer, Submission, Response
 
 from nepi.main.tests.factories import SchoolGroupFactory, \
     StudentProfileFactory, ICAPProfileFactory, TeacherProfileFactory, \
@@ -42,7 +44,8 @@ class TestReportBase(TestCase):
             StudentProfileFactory(school=self.new_group.school).user
         self.new_group.userprofile_set.add(complete_user.profile)
         for section in descendants:
-            UserPageVisit.objects.create(user=complete_user, section=section)
+            UserPageVisit.objects.create(user=complete_user, section=section,
+                                         status='complete')
 
         inprogress_user = \
             StudentProfileFactory(school=self.new_group.school).user
@@ -50,6 +53,7 @@ class TestReportBase(TestCase):
         UserPageVisit.objects.create(user=inprogress_user,
                                      section=descendants[0])
 
+        # unaffiliated
         self.icap = ICAPProfileFactory(
             country=self.new_group.school.country).user
         UserPageVisit.objects.create(user=self.icap, section=descendants[0])
@@ -57,6 +61,35 @@ class TestReportBase(TestCase):
         self.student = StudentProfileFactory(
             country=self.old_group.school.country).user  # unaffiliated user
         UserPageVisit.objects.create(user=self.student, section=descendants[0])
+
+        pretest = Quiz.objects.create()
+        q1 = Question.objects.create(
+            quiz=pretest, text='single answer',
+            question_type='single choice')
+        Answer.objects.create(question=q1, label='Yes', value='1',
+                              correct=True)
+        Answer.objects.create(question=q1, label='No', value='0')
+
+        posttest = Quiz.objects.create()
+        q2 = Question.objects.create(
+            quiz=posttest, text='single answer',
+            question_type='single choice')
+        Answer.objects.create(question=q2, label='Yes', value='1',
+                              correct=True)
+        Answer.objects.create(question=q2, label='No', value='0')
+
+        section = Section.objects.get(slug='two')
+        section.append_pageblock('Quiz', 'pretest', content_object=pretest)
+        section = Section.objects.get(slug='four')
+        section.append_pageblock('Quiz', 'posttest', content_object=posttest)
+
+        # answer the pretest
+        s = Submission.objects.create(quiz=pretest, user=complete_user)
+        Response.objects.create(question=q1, submission=s, value='0')
+
+        # answer the posttest
+        s = Submission.objects.create(quiz=posttest, user=complete_user)
+        Response.objects.create(question=q2, submission=s, value='1')
 
 
 class TestReportView(TestReportBase):
@@ -129,12 +162,12 @@ class TestDownloadableReportView(TestReportBase):
         self.assertEquals(rows.next(), [1, 0, 3])
 
         # aggregates are in row 4-8
-        rows.next()  # header
+        rows.next()  # separator
         self.assertEquals(rows.next(), ['COMPLETED USER AVERAGES'])
         self.assertEquals(rows.next(), ['Completed', 1])
-        self.assertEquals(rows.next(), ['Pre-test Score', None])
-        self.assertEquals(rows.next(), ['Post-test Score', None])
-        self.assertEquals(rows.next(), ['Pre/Post Change', None])
+        self.assertEquals(rows.next(), ['Pre-test Score', 0])
+        self.assertEquals(rows.next(), ['Post-test Score', 100])
+        self.assertEquals(rows.next(), ['Pre/Post Change', 100])
         self.assertEquals(rows.next(), ['Satisfaction Score', None])
 
     def test_aggregate_report_country_unaffiliated(self):
@@ -274,7 +307,7 @@ class TestDownloadableReportView(TestReportBase):
             row = ['participant_id', 'country', 'group', 'completed',
                    'percent_complete', 'total_time_elapsed',
                    'actual_time_spent', 'completion_date', 'pre-test score',
-                   'post-test score']
+                   'post-test score', '1_1', '1_2']
             self.assertEquals(rows.next(), row)
 
             # expecting 4 user results to show up
@@ -343,6 +376,22 @@ class TestDownloadableReportView(TestReportBase):
                'Post-test Score']
         self.assertEquals(rows.next(), row)
 
+        row = [u'optionb-en', '1_1', 'Quiz', u'single choice',
+               'single answer', 1, 'Yes']
+        self.assertEquals(rows.next(), row)
+
+        row = [u'optionb-en', '1_1', 'Quiz', u'single choice',
+               'single answer', 2, 'No']
+        self.assertEquals(rows.next(), row)
+
+        row = [u'optionb-en', '1_2', 'Quiz', u'single choice',
+               'single answer', 3, 'Yes']
+        self.assertEquals(rows.next(), row)
+
+        row = [u'optionb-en', '1_2', 'Quiz', u'single choice',
+               'single answer', 4, 'No']
+        self.assertEquals(rows.next(), row)
+
         try:
             rows.next()
             self.assertFalse('unexpected row')
@@ -364,7 +413,7 @@ class TestDownloadableReportView(TestReportBase):
 
         row = ('participant_id,country,group,completed,percent_complete,'
                'total_time_elapsed,actual_time_spent,completion_date,'
-               'pre-test score,post-test score\r\n')
+               'pre-test score,post-test score,1_1,1_2\r\n')
         self.assertEquals(row, response.streaming_content.next())  # header row
         with self.assertRaises(StopIteration):
             response.streaming_content.next()

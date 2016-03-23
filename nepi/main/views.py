@@ -29,7 +29,7 @@ from nepi.main.models import Group, UserProfile, Country, School, \
     PendingTeachers, DetailedReport, PROFILE_CHOICES, HierarchyCache, \
     LearningModule
 from nepi.main.templatetags.progressreport import get_progress_report, \
-    average_quiz_score, satisfaction_rating
+    average_quiz_score, satisfaction_rating, completed
 from nepi.mixins import (
     LoggedInMixin, JSONResponseMixin, AdministrationOnlyMixin,
     IcapAdministrationOnlyMixin, InitializeHierarchyMixin, LoggedInMixinStaff)
@@ -755,7 +755,7 @@ class BaseReportMixin(object):
                                               section__in=sections)
         return len(visits) / float(len(sections)) * 100
 
-    def classify_group_users(self, groups, sections):
+    def classify_group_users(self, groups, hierarchy, sections):
         ctx = {'total': 0, 'completed': 0, 'completed_users': [],
                'incomplete': 0, 'inprogress': 0}
         users = []
@@ -765,12 +765,11 @@ class BaseReportMixin(object):
             for profile in group.students():
                 if profile.user.username not in users:
                     ctx['total'] += 1
-                    pct = self.percent_complete(profile.user, sections)
 
-                    if pct == 100:
+                    if completed(profile.user, hierarchy):
                         ctx['completed'] += 1
                         ctx['completed_users'].append(profile.user)
-                    elif pct > 0:
+                    elif self.percent_complete(profile.user, sections) > 0:
                         if active:
                             ctx['inprogress'] += 1
                         else:
@@ -778,17 +777,16 @@ class BaseReportMixin(object):
                     users.append(profile.user.username)
         return ctx
 
-    def classify_unaffiliated_users(self, users, sections):
+    def classify_unaffiliated_users(self, users, hierarchy, sections):
         ctx = {'total': 0, 'completed': 0, 'completed_users': [],
                'incomplete': 0, 'inprogress': 0}
 
         for user in users:
             ctx['total'] += 1
-            pct = self.percent_complete(user, sections)
-            if pct == 100:
+            if completed(user, hierarchy):
                 ctx['completed'] += 1
                 ctx['completed_users'].append(user)
-            elif pct > 0:
+            elif self.percent_complete(user, sections) > 0:
                 ctx['inprogress'] += 1
 
         return ctx
@@ -808,7 +806,7 @@ class GroupDetail(LoggedInMixin, AdministrationOnlyMixin,
         module_name = LearningModule.get_module_name(self.object.module)
         for h in LearningModule.get_hierarchies_for_module(module_name):
             sections = HierarchyCache.get_descendant_ids(h.get_root())
-            stat = self.classify_group_users([self.object], sections)
+            stat = self.classify_group_users([self.object], h, sections)
             stat['language'] = LearningModule.get_module_language(h)
             stat['hierarchy'] = h
             ctx['stats'].append(stat)
@@ -868,13 +866,12 @@ class DownloadableReportView(LoggedInMixin, AdministrationOnlyMixin,
         return report.values(hierarchies)
 
     def get_aggregate_report(self, request, hierarchy, users, groups):
-
         sections = HierarchyCache.get_descendant_ids(hierarchy.get_root())
 
         if groups is None:  # reporting on unaffiliated users
-            ctx = self.classify_unaffiliated_users(users, sections)
+            ctx = self.classify_unaffiliated_users(users, hierarchy, sections)
         else:
-            ctx = self.classify_group_users(groups, sections)
+            ctx = self.classify_group_users(groups, hierarchy, sections)
 
         yield ['CRITERIA']
         yield ['Country', 'Institution', 'Group', 'Total Members']
