@@ -1,26 +1,28 @@
 jQuery(document).ready(function() {
 
-	jQuery('.switch-lang').on("click", function(evt) {	
-		
-		var langpref = evt.currentTarget.dataset.lang;
-    	var domainstr = window.location.origin;
-    	var path = window.location.pathname;
-    	var newpath = "";
-    	/*/about/ length is 7 so if length of path is longer
-    	 * than that it has a language already indicated in
-    	 * url and we need to remove it, /help/ with a language
-    	 * prefix is also more than 7 for the pathname attribute */
-    	if(window.location.pathname.length > 7)
-    	{
-    		path = window.location.pathname.split( '/' )[2];
-    		newpath = "/" + langpref + "/" + path + "/";
-    	}
-    	else if(window.location.pathname.length <= 7)
-    	{
-    		newpath = "/" + langpref +  path;
-    	}
-    	
-    	window.location.href = newpath;
+    var lang_choices = ['pt','fr','en'];
 
+    function langInPath() {
+        for (i = 0; i < lang_choices.length; i++) {
+            if (window.location.pathname.indexOf(lang_choices[i]) >= 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+    jQuery('.switch-lang').on('click', function(evt) {
+        var langpref = evt.currentTarget.dataset.lang;
+        var domainstr = window.location.origin;
+        var path = window.location.pathname;
+        var newpath = '';
+        /* check if there is a language prefix in path, allows
+         * for furture language choices to be added */
+        if (langInPath()) {
+            path = window.location.pathname.split('/')[2];
+            newpath = '/' + langpref + '/' + path + '/';
+        } else {
+            newpath = '/' + langpref +  path;
+        }
+        window.location.href = newpath;
     });
 });
