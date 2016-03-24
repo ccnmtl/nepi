@@ -3,7 +3,7 @@ jQuery(document).ready(function() {
     var lang_choices = ['pt','fr','en'];
 
     function langInPath() {
-        for (i = 0; i < lang_choices.length; i++) {
+        for (var i = 0; i < lang_choices.length; i++) {
             if (window.location.pathname.indexOf(lang_choices[i]) >= 0) {
                 return true;
             }
