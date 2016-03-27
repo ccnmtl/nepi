@@ -1,31 +1,55 @@
-<div id="login-fr" class="login-welcome">
-  <img src="{{STATIC_URL}}img/landingphoto.jpg" />
+<div  id="lang-fr" style="display:none;">
+ <div class="login-welcome">
+    <img src="{{STATIC_URL}}img/landingphoto.jpg" />
   <h1 class="pageheader">
-    Welcome!
-  </h2>
+    Bienvenue!
+  </h1>
   <p>
-   This platform was developed to support online learning for nurses and midwives and to share resources with nursing education institutions.
-  </p>
-  <p> 
+    L'enseignement et la formation en soins infirmiers forment un volet essentiel de la mission de l'
     <a href="http://icap.columbia.edu" target="_blank">
       ICAP
     </a> 
-    is based at Columbia University and is a global leader in HIV/AIDS and health systems strengthening.
-Our Global Nurse Capacity Building Program is a multi-country initiative to strengthen and sustain nursing’s role in the care of people living with HIV. It is composed of two projects: the Nursing Education Partnership Initiative (NEPI), which is working to strengthen the capacity of nursing and midwifery educational
-institutions and ensure the production of sufficient numbers of well-trained, clinically competent graduates in sub-Saharan Africa; and our General Nursing capacity program, which promotes the maintenance of a skilled nursing workforce through on-going training.
+    qui consiste à veiller sur la santé des familles et des populations du monde entier.
   </p>
+  <p>
+    Cette plateforme a été mise au point dans le but de promouvoir l'apprentissage en ligne du 
+    personnel infirmier et des sages-femmes et de partager les ressources avec les établissements 
+    d'enseignement infirmier.
+  </p>
+  <p> 
+    L'<a href="http://icap.columbia.edu" target="_blank">
+      ICAP
+    </a> 
+    , à l'Université de Columbia, est un chef de file mondial en matière de renforcement des 
+    systèmes de santé et de la lutte contre le VIH/sida. Notre programme international de 
+    renforcement des capacités du personnel infirmier est une initiative lancée par plusieurs 
+    pays pour soutenir le rôle des infirmiers(ères) dans la prise en charge des personnes 
+    vivant avec le VIH. Il se compose de deux projets : l'initiative NEPI 
+    (Nursing Education Partnership Initiative), qui vise à renforcer les capacités des 
+    établissements d'enseignement pour les infirmiers(ères) et les sages-femmes et à garantir 
+    un nombre suffisant de diplômés qualifiés et compétents sur le plan clinique en Afrique 
+    subsaharienne, d'une part, et notre programme de capacités infirmières générales qui 
+    promeut le maintien d'un personnel infirmier qualifié par le biais de la formation 
+    continue, d'autre part.
+  </p>
+  
   <small>
-    This work has been supported by the President’s Emergency Plan for AIDS Relief (PEPFAR) through the U.S. Department of Health and Human Services, Health Resources and Services Administration (HRSA) under the terms of the Global Nurse Capacity Building Program, cooperative agreement #U92HA12772. The contents are the responsibility of ICAP and do not necessarily reflect the views of the United States Government.
+    Cette initiative bénéficie du soutien du Plan d'urgence du Président des États-Unis pour 
+    la lutte contre le SIDA (PEPFAR) par l'intermédiaire de la HRSA (Health Resources and 
+    Services Administration) du ministère américain de la Santé et des Services sociaux, en 
+    vertu de l'accord de coopération n° U92HA12772 du programme international de renforcement 
+    des capacités des infirmiers. Le contenu relève de la responsabilité de l'ICAP et ne reflète 
+    pas nécessairement l'opinion du gouvernement des États-Unis.
   </small>
 </div>
 
 <div class="login-form">
   <div class="login-form-register">
     <a href="/register/" class="btn">
-      Click here to register for a free account.
+      Cliquez ici pour vous enregistrer et ouvrir un compte gratuit
     </a>
   </div>
-  <h4>Log In</h4>
+  <h4>Connexion</h4>
   {% if form.errors %}
   <div class="alert alert-danger">
     <span>
@@ -41,7 +65,7 @@ institutions and ensure the production of sufficient numbers of well-trained, cl
          <tr>
            <td>
              <label for="id_username">
-               Username:&nbsp;
+               Identifiant:&nbsp;
              </label>
            </td>
            <td>
@@ -51,7 +75,7 @@ institutions and ensure the production of sufficient numbers of well-trained, cl
          <tr>
            <td>
              <label for="id_password">
-               Password:&nbsp;
+              Mot de passe:&nbsp;
              </label>
            </td>
            <td>
@@ -61,11 +85,11 @@ institutions and ensure the production of sufficient numbers of well-trained, cl
        </table>
        <div class="login-form-forgot">
          <a href="/accounts/password_reset/">
-           Forgot Password?
+           Mot de passe oublié?
          </a>
        </div>
        <div class="login-form-submit">
-                    <input class="btn" type="submit" value="Log In"></input>
+         <input class="btn" type="submit" value="Log In"></input>
        </div>
      </div>
      <input type="hidden" name="next" value="{{ next }}"></input>
@@ -74,18 +98,11 @@ institutions and ensure the production of sufficient numbers of well-trained, cl
    <div class="login-form-ques">
      <ul>
        <li>
-         {% comment %}
-         <a href="/forgot_unipass/">
-           Forgot username or password?
-         </a>
-         <br />
-         {% endcomment %}
-       </li> 
-       <li>
          <a href="/contact/">
-           Contact ICAP
+           Contacter l'ICAP
          </a>
        </li>
      </ul> 
    </div>
+</div>
 </div>
