@@ -26,7 +26,7 @@
   </div>      
   <div class="contact-icap">
     <h1>
-      Contact ICAP
+      Entre em contato com ICAP
     </h1>
     <form action="/contact/" method="post">
       {% csrf_token %}
@@ -42,21 +42,22 @@
           {% endif %}
         </div>
       {% endif %}
-      <div class="fieldWrapper control-group {% if form.first_name.errors %}error{% endif %}">
+      <div class="fieldWrapper control-group 
+      {% if form.first_name.errors %}error{% endif %}">
         <label for="id_first_name">
           <b>
-            Your name is:
+            Seu nome é:
           </b>
         </label>
         <div class="controls">
           <span>
             <input id="id_first_name" maxlength="50" name="first_name" type="text"
-              value="{{form.data.first_name}}" placeholder="Given Name">
+              value="{{form.data.first_name}}" placeholder="Primeiro nome">
           </span>&nbsp;&nbsp;
           <span>
             <input id="id_last_name" maxlength="50" name="last_name"
               value="{{form.data.last_name}}"
-              type="text" placeholder="Surname">
+              type="text" placeholder="Sobrenome">
          </span>
           {% if form.first_name.errors or form.last_name.errors %}
             <div class="help-inline">
@@ -65,10 +66,11 @@
           {% endif %}
         </div>
       </div>
-      <div class="fieldWrapper control-group {% if form.sender.errors %}error{% endif %} wide">
+      <div class="fieldWrapper control-group 
+      {% if form.sender.errors %}error{% endif %} wide">
         <label for="id_sender">
           <b>
-            Your email address:
+            Seu endereço de e-mail:
           </b>
         </label>
         <div class="controls">
@@ -80,10 +82,11 @@
           {% endif %}
         </div>
       </div>
-      <div class="fieldWrapper control-group {% if form.subject.errors %}error{% endif %} wide">
+      <div class="fieldWrapper control-group 
+      {% if form.subject.errors %}error{% endif %} wide">
         <label for="id_subject">
           <b>
-            Subject:
+            Assunto:
           </b>
         </label>
         <div class="controls">
@@ -96,10 +99,11 @@
         </div>
       </div>
     
-    <div class="fieldWrapper control-group {% if form.message.errors %}error{% endif %} wide">
+    <div class="fieldWrapper control-group 
+    {% if form.message.errors %}error{% endif %} wide">
         <label for="id_message">
           <b>
-            Message:
+            Mensagem:
           </b>
         </label>
         <div class="controls">
@@ -112,11 +116,12 @@
         </div>
       </div>    
     
-      <div class="fieldWrapper control-group {% if form.captcha.errors %}error{% endif %}">
+      <div class="fieldWrapper control-group 
+      {% if form.captcha.errors %}error{% endif %}">
         <label for="id_captcha_0">
           <div>
             <b>
-              Please verify you are a person:
+              Favor verificar que você é uma pessoa:
             </b>
           </div>
         </label>
@@ -130,16 +135,16 @@
         </div>
       </div>
       <div class="help-inline captcha">
-        Type the characters you see in the picture.
+        Digite os caracteres que você visualiza na imagem.
         <br />
         <button class="btn btn-default js-captcha-refresh">
-          Refresh the image
+          Atualize a imagem 
         </button>
-         if you can't read the picture.
+         se você não conseguir ler a imagem.
        <br />
      </div>
     <br />
-    <input type="submit" value="Send Message" class="btn btn-primary" />
+    <input type="submit" value="Envie a mensagem" class="btn btn-primary" />
     </form>
   </div>    
 {% endblock %}
