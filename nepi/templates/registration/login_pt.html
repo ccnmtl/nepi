@@ -1,0 +1,103 @@
+<div id="lang-pt" style="display:none;">
+ <div class="login-welcome">
+    <img src="{{STATIC_URL}}img/landingphoto.jpg" />
+  <h1 class="pageheader">
+    Bem-vindos!
+  </h1>
+  <p>
+    A formação e educação em enfermagem é uma parte essencial da missão do 
+    <a href="http://icap.columbia.edu" target="_blank">
+      ICAP
+    </a> 
+    para garantir a saúde das famílias e comunidades ao redor do mundo.
+  </p>
+  <p>
+    Esta plataforma foi desenvolvida para apoiar o aprendizado online de enfermeiras e 
+    parteiras e compartilhar recursos com instituições de educação em enfermagem.
+  </p>
+  <p> 
+    <a href="http://icap.columbia.edu" target="_blank">
+      ICAP
+    </a> 
+    é baseado na Universidade de Columbia e é um líder global em HIV/AIDS e 
+    fortalecimento dos sistemas de saúde. O nosso Programa de Capacitação Global em 
+    Enfermagem é uma iniciativa multinacional para fortalecer e sustentar o papel da 
+    enfermagem no cuidado de pessoas que vivem com HIV. É composto por dois projetos: a 
+    Iniciativa de Parceria Educacional em Enfermagem (NEPI), que está trabalhando para 
+    fortalecer a capacidade das instituições educacionais de enfermagem e obstetrícia e 
+    garantir a produção de números suficientes de formados bem treinados e clinicamente 
+    competentes na África subsaariana; e nosso programa de Enfermagem Geral, que promove 
+    a manutenção de uma força de trabalho de enfermagem qualificada através da formação contínua.
+  </p>
+  <small>
+    Este trabalho foi apoiado pelo Plano de Emergência para Alívio da AIDS (PEPFAR) do 
+    Presidente através do Departamento de Saúde e Serviços Humanos dos EUA, Administração 
+    de Serviços e Recursos de Saúde (HRSA) sob os termos do Programa Global de Capacitação 
+    de Enfermeiras, acordo de cooperação nºU92HA12772. O conteúdo é de responsabilidade do 
+    ICAP e não necessariamente reflete as opiniões do Governo dos Estados Unidos.
+  </small>
+  </div>
+
+  <div class="login-form">
+    <div class="login-form-register">
+    <a href="/register/" class="btn">
+      Clique aqui para se registrar para uma conta gratuita.
+    </a>
+    </div>
+    <h4>Log In</h4>
+    {% if form.errors %}
+    <div class="alert alert-danger">
+    <span>
+      <b>Invalid username or password.</b>
+    </span>
+    Note that both username and password are case-sensitive.
+  </div>
+  {% endif %}
+        
+   <form method="post" action=".">
+     <div class="login-form-div">
+       <table class="login-form-table">
+         <tr>
+           <td>
+             <label for="id_username">
+               Nome de usuário:&nbsp;
+             </label>
+           </td>
+           <td>
+             {{ form.username }}
+           </td>
+         </tr>
+         <tr>
+           <td>
+             <label for="id_password">
+               Senha:&nbsp;
+             </label>
+           </td>
+           <td>
+             {{ form.password }}
+           </td>
+         </tr>
+       </table>
+       <div class="login-form-forgot">
+         <a href="/accounts/password_reset/">
+           Esqueceu a senha?
+         </a>
+       </div>
+       <div class="login-form-submit">
+         <input class="btn" type="submit" value="Log In"></input>
+       </div>
+     </div>
+     <input type="hidden" name="next" value="{{ next }}"></input>
+   </form>
+        
+   <div class="login-form-ques">
+     <ul>
+       <li>
+         <a href="/contact/">
+           Contato
+         </a>
+       </li>
+     </ul> 
+   </div>
+</div>
+</div>

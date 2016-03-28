@@ -1,5 +1,5 @@
 APP=nepi
-JS_FILES=media/js/captcha.js media/js/dashboard.js media/js/people.js media/js/profile.js media/js/util.js media/js/changelanguage.js
+JS_FILES=media/js/captcha.js media/js/dashboard.js media/js/people.js media/js/profile.js media/js/util.js media/js/changelanguage.js media/js/changeloginlanguage.js
 MAX_COMPLEXITY=7
 
 all: jenkins
