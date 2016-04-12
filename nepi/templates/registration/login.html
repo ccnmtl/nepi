@@ -3,25 +3,14 @@
 
 {% block title %}Please Log In{% endblock %}
 
+{% block languageswitcher %}
+    {% include "main/languageswitcher.html" %}
+{% endblock %}
+
 {% block content %}
 <div>
     <div class="login-welcome">
         <img src="{{STATIC_URL}}img/landingphoto.jpg" />
-        <br /><br />
-        <form class="pull-right" action="{% url 'set_language' %}" method="post">
-            {% csrf_token %} <input name="next" type="hidden"
-                value="{{ redirect_to }}" /> <select name="language">
-                {% get_current_language as LANGUAGE_CODE %}
-                {% get_available_languages as LANGUAGES %}
-                {% get_language_info_list for LANGUAGES as languages %}
-                {% for language in languages %}
-                <option value="{{ language.code }}"
-                    {% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>
-                    {{ language.name_local }} ({{ language.code }})</option>
-                {% endfor %}
-            </select>
-            <input class="btn btn-default" type="submit" value="Go" />
-        </form>
 
         <h1 class="pageheader">{% trans 'Welcome!' %}</h1>
         <p>
@@ -66,14 +55,13 @@
     </div>
     <div class="login-form">
         <div class="login-form-register">
-            <a href="/register/" class="btn"> Click here to register
-                for a free account. </a>
+            <a href="/register/" class="btn">{% trans 'Click here to register for a free account' %}</a>
         </div>
-        <h4>Log In</h4>
+
+        <h4>{% trans 'Log In' %}</h4>
         {% if form.errors %}
         <div class="alert alert-danger">
-            <span> <b>Invalid username or password.</b>
-            </span> Note that both username and password are case-sensitive.
+            <small><b>{% trans 'Invalid username or password' %}.</b></small>
         </div>
         {% endif %}
 
@@ -82,23 +70,22 @@
                 <table class="login-form-table">
                     <tr>
                         <td><label for="id_username">
-                                Username:&nbsp; </label></td>
+                                {% trans 'Username' %}:&nbsp; </label></td>
                         <td>{{ form.username }}</td>
                     </tr>
                     <tr>
                         <td>
                             <label for="id_password">
-                                Password:&nbsp; </label>
+                                {% trans 'Password' %}:&nbsp; </label>
                         </td>
                         <td>{{ form.password }}</td>
                     </tr>
                 </table>
-                <div class="login-form-forgot">
-                    <a href="/accounts/password_reset/"> Forgot
-                        Password? </a>
-                </div>
                 <div class="login-form-submit">
-                    <input class="btn" type="submit" value="Log In"></input>
+                    <input class="btn pull-right" type="submit" value="{% trans 'Log In' %}"></input>
+                </div>
+                <div class="login-form-forgot">
+                    <a class="pull-right" href="/accounts/password_reset/">{% trans 'Forgotten your password or username?' %}</a>
                 </div>
             </div>
             <input type="hidden" name="next" value="{{ next }}"></input>
@@ -106,7 +93,7 @@
 
         <div class="login-form-ques">
             <ul>
-                <li><a href="/contact/"> Contact ICAP </a></li>
+                <li><a class="pull-right" href="/contact/">{% trans 'Contact ICAP' %}</a></li>
             </ul>
         </div>
     </div>

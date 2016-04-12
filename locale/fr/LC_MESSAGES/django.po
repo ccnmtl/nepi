@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-12 10:46-0400\n"
+"POT-Creation-Date: 2016-04-13 13:22-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -404,6 +404,10 @@ msgstr "Déconnexion"
 msgid "Hello"
 msgstr "Bonjour"
 
+#: nepi/templates/base.html:38
+msgid "Change Password"
+msgstr "Modifier le mot de passe"
+
 #: nepi/templates/base.html:66
 msgid "Log Out"
 msgstr "Déconnexion"
@@ -423,7 +427,7 @@ msgid "Contact"
 msgstr "Personne à contacter"
 
 #: nepi/templates/dashboard/tab_optionb.html:8
-#: nepi/templates/registration/login.html:26
+#: nepi/templates/registration/login.html:25
 msgid "Welcome!"
 msgstr "Bienvenue !"
 
@@ -628,6 +632,68 @@ msgstr "Changer de langue"
 msgid "Save"
 msgstr "Enregistrer"
 
+#: nepi/templates/main/contact.html:5 nepi/templates/main/contact.html:29
+#: nepi/templates/registration/login.html:106
+msgid "Contact ICAP"
+msgstr "Contacter l'ICAP"
+
+#: nepi/templates/main/contact.html:34
+msgid "Please correct the errors below"
+msgstr "Corrigez les erreurs ci-dessous"
+
+#: nepi/templates/main/contact.html:41
+msgid "Your name is"
+msgstr "Votre identité"
+
+#: nepi/templates/main/contact.html:46
+msgid "Given Name"
+msgstr "Prénom"
+
+#: nepi/templates/main/contact.html:51
+msgid "Surname"
+msgstr "Nom"
+
+#: nepi/templates/main/contact.html:56
+msgid "First and last name are required"
+msgstr ""
+
+#: nepi/templates/main/contact.html:64
+msgid "Your email address"
+msgstr "Adresse e-mail"
+
+#: nepi/templates/main/contact.html:71 nepi/templates/main/contact.html:86
+#: nepi/templates/main/contact.html:102 nepi/templates/main/contact.html:120
+msgid "This field is required"
+msgstr "Ce champ est obligatoire"
+
+#: nepi/templates/main/contact.html:79
+msgid "Subject"
+msgstr "Objet"
+
+#: nepi/templates/main/contact.html:95
+msgid "Message"
+msgstr "Message"
+
+#: nepi/templates/main/contact.html:112
+msgid "Please verify you are a person"
+msgstr "Pour vérifier que vous êtes bien une personne"
+
+#: nepi/templates/main/contact.html:126
+msgid "Type the characters you see in the picture"
+msgstr "Saisissez les caractères que vous apercevez dans l'image"
+
+#: nepi/templates/main/contact.html:129
+msgid "Refresh the image"
+msgstr "Actualisez l'image"
+
+#: nepi/templates/main/contact.html:131
+msgid "if you can't read the picture"
+msgstr "si vous ne parvenez pas à la lire"
+
+#: nepi/templates/main/contact.html:135
+msgid "Send Message"
+msgstr "Envoyer le message"
+
 #: nepi/templates/main/help.html:33
 msgid ""
 "<h3 class=\"pageheader\">Technical Support Contact</h3> For problems related "
@@ -689,73 +755,70 @@ msgid ""
 "group, including number of members, and how far each student in the group "
 "has progressed through the course.</p>"
 msgstr ""
-"<h3 class=\"pageheader\">Assistance technique</h3>"
-"<p>En cas de problèmes liés à l'environnement en ligne, envoyez un e-mail à "
-"l'adresse <a href=\"mailto:ccnmtl-nepi@columbia.edu\">"
-"ccnmtl-nepi@columbia.edu</a></p><h3 class=\"pageheader\">ICAP contact</h3>"
-"<p>Pour toute question ou demande d'adhésion à la plateforme d'e-learning en "
-"tant que pays/école participant(e), envoyez un e-mail à l'adresse "
-"ccnmtl-icap@columbia.edu</p><h3 class=\"pageheader\">Création d'un compte</h3>"
-"<p>Pour créer un compte, consultez la page "
-"https://elearning.icap.columbia.edu/register/</p><h3 "
-"class=\"pageheader\">Connexion</h3><p>Pour ouvrir une session, saisissez vos "
-"nom d'utilisateur et mot de passe ici "
-"https://elearning.icap.columbia.edu/accounts/login/</p><h3 "
-"class=\"pageheader\">Modification du mot de passe</h3><p>Vous pouvez "
-"demander à réinitialiser votre mot de passe à condition d'avoir fourni une "
-"adresse e-mail valide lors de votre enregistrement. Consultez la page "
-"https://elearning.icap.columbia.edu/accounts/password_reset/</p><h3 "
-"class=\"pageheader\">Tableau de bord</h3><p>Votre tableau de bord apparaît "
-"dès votre connexion. Il se compose des onglets Module Option B+, Groupes et "
-"Profil. Cette page vous permet de voir votre progression pour le module, de "
-"rejoindre des groupes (ou cours) mais aussi de consulter et de modifier "
-"votre profil.</p><h3 class=\"pageheader\">Onglet Option B+</h3>"
-"<p>L'onglet Option B+ comporte un bouton bleu qui vous invite à démarrer le "
-"module. Cliquez sur ce bouton pour ouvrir la première page du module. Après "
-"avoir consulté le module, vous pouvez revenir à cet onglet pour voir vos "
-"résultats et votre progression.</p><h3 class=\"pageheader\">Onglet Groupes"
-"</h3><p>Un groupe est un cours universitaire ou un module de formation. Si "
-"vous êtes enseignant, vous pouvez créer un groupe. Si vous êtes étudiant, "
-"vous pouvez rejoindre un groupe. Si votre enseignant vous invite à chercher "
-"et rejoindre votre cours sur l'Option B+, cela signifie qu'il a créé un "
-"groupe au sein de votre université ou organisation et que vous pouvez le "
-"rejoindre. Après avoir rejoint votre groupe, votre enseignant aura accès à "
-"vos résultats et à votre progression dans le système.</p><h3 "
+"<h3 class=\"pageheader\">Assistance technique</h3><p>En cas de problèmes "
+"liés à l'environnement en ligne, envoyez un e-mail à l'adresse <a href="
+"\"mailto:ccnmtl-nepi@columbia.edu\">ccnmtl-nepi@columbia.edu</a></p><h3 "
+"class=\"pageheader\">ICAP contact</h3><p>Pour toute question ou demande "
+"d'adhésion à la plateforme d'e-learning en tant que pays/école "
+"participant(e), envoyez un e-mail à l'adresse ccnmtl-icap@columbia.edu</"
+"p><h3 class=\"pageheader\">Création d'un compte</h3><p>Pour créer un compte, "
+"consultez la page https://elearning.icap.columbia.edu/register/</p><h3 class="
+"\"pageheader\">Connexion</h3><p>Pour ouvrir une session, saisissez vos nom "
+"d'utilisateur et mot de passe ici https://elearning.icap.columbia.edu/"
+"accounts/login/</p><h3 class=\"pageheader\">Modification du mot de passe</"
+"h3><p>Vous pouvez demander à réinitialiser votre mot de passe à condition "
+"d'avoir fourni une adresse e-mail valide lors de votre enregistrement. "
+"Consultez la page https://elearning.icap.columbia.edu/accounts/"
+"password_reset/</p><h3 class=\"pageheader\">Tableau de bord</h3><p>Votre "
+"tableau de bord apparaît dès votre connexion. Il se compose des onglets "
+"Module Option B+, Groupes et Profil. Cette page vous permet de voir votre "
+"progression pour le module, de rejoindre des groupes (ou cours) mais aussi "
+"de consulter et de modifier votre profil.</p><h3 class=\"pageheader\">Onglet "
+"Option B+</h3><p>L'onglet Option B+ comporte un bouton bleu qui vous invite "
+"à démarrer le module. Cliquez sur ce bouton pour ouvrir la première page du "
+"module. Après avoir consulté le module, vous pouvez revenir à cet onglet "
+"pour voir vos résultats et votre progression.</p><h3 class=\"pageheader"
+"\">Onglet Groupes</h3><p>Un groupe est un cours universitaire ou un module "
+"de formation. Si vous êtes enseignant, vous pouvez créer un groupe. Si vous "
+"êtes étudiant, vous pouvez rejoindre un groupe. Si votre enseignant vous "
+"invite à chercher et rejoindre votre cours sur l'Option B+, cela signifie "
+"qu'il a créé un groupe au sein de votre université ou organisation et que "
+"vous pouvez le rejoindre. Après avoir rejoint votre groupe, votre enseignant "
+"aura accès à vos résultats et à votre progression dans le système.</p><h3 "
 "class=\"pageheader\"> Rejoindre un groupe en tant qu'étudiant</h3><p>Cliquez "
 "sur « rechercher un groupe », choisissez votre pays, votre école ou "
 "institution puis votre groupe. Si votre groupe n'apparaît pas, votre "
-"enseignant ne l'a pas encore créé. Vous devrez réessayer plus tard.</p>"
-"<h3 class=\"pageheader\">Onglet Profil</h3><p>L'onglet Profil contient les "
+"enseignant ne l'a pas encore créé. Vous devrez réessayer plus tard.</p><h3 "
+"class=\"pageheader\">Onglet Profil</h3><p>L'onglet Profil contient les "
 "informations que vous avez saisies lors de votre enregistrement. Vous pouvez "
 "modifier votre nom, votre mot de passe ainsi que votre pays d'affiliation. "
-"Si vous êtes enseignant, vous pouvez demander un accès aux enseignants "
-"ici.</p><h3 class=\"pageheader\">Module Option B+</h3>"
-"<p>À l'ouverture du module, vous arrivez sur la première page ou à l'endroit "
-"où vous vous êtes arrêté(e).</p><p>Une icône en forme de livre se situe en "
-"haut à gauche de la page. C'est la table des matières. Cliquez sur le livre "
-"pour ouvrir la table des matières.</p><p>Le bouton « suivant », situé en bas "
-"de la page, vous permet de passer à la page suivante.</p><p>Le module "
-"Option B+ contient un test préalable et un test final, des diapositives pour "
-"information ainsi que de brèves études de cas assorties de questions et "
-"d'activités interactives. Vous devez terminer une page avant de passer à la "
-"suivante. Vous pouvez revenir à tout moment. La table des matières vous "
-"permet de revenir à une page en particulier que vous avez consulté "
-"précédemment.</p><h3 class=\"pageheader\">POUR LES ENSEIGNANTS</h3>"
-"<h3 class=\"pageheader\">Groupes</h3><p>Pour voir les résultats de votre "
-"élève, vous devez créer un groupe que vos élèves rejoindront. Pour créer un "
-"groupe, allez sur l'onglet Groupes.</p><p>Cliquez sur « créer un groupe ».</p>"
-"<p>Votre pays et votre établissement sont déjà présélectionnés.</p>"
-"<p>Définissez les dates de début et de fin de votre module.</p>"
-"<p>Cliquez sur « créer un groupe ».</p>"
-"<p>Vous venez de créer votre groupe. Ensuite, vos élèves devront trouver et "
+"Si vous êtes enseignant, vous pouvez demander un accès aux enseignants ici.</"
+"p><h3 class=\"pageheader\">Module Option B+</h3><p>À l'ouverture du module, "
+"vous arrivez sur la première page ou à l'endroit où vous vous êtes arrêté(e)."
+"</p><p>Une icône en forme de livre se situe en haut à gauche de la page. "
+"C'est la table des matières. Cliquez sur le livre pour ouvrir la table des "
+"matières.</p><p>Le bouton « suivant », situé en bas de la page, vous permet "
+"de passer à la page suivante.</p><p>Le module Option B+ contient un test "
+"préalable et un test final, des diapositives pour information ainsi que de "
+"brèves études de cas assorties de questions et d'activités interactives. "
+"Vous devez terminer une page avant de passer à la suivante. Vous pouvez "
+"revenir à tout moment. La table des matières vous permet de revenir à une "
+"page en particulier que vous avez consulté précédemment.</p><h3 class="
+"\"pageheader\">POUR LES ENSEIGNANTS</h3><h3 class=\"pageheader\">Groupes</"
+"h3><p>Pour voir les résultats de votre élève, vous devez créer un groupe que "
+"vos élèves rejoindront. Pour créer un groupe, allez sur l'onglet Groupes.</"
+"p><p>Cliquez sur « créer un groupe ».</p><p>Votre pays et votre "
+"établissement sont déjà présélectionnés.</p><p>Définissez les dates de début "
+"et de fin de votre module.</p><p>Cliquez sur « créer un groupe ».</p><p>Vous "
+"venez de créer votre groupe. Ensuite, vos élèves devront trouver et "
 "rejoindre votre groupe.</p><h3 class=\"pageheader\">Informations sur les "
 "groupes et résultats</h3><p>Vous pouvez consulter les informations de vos "
 "groupes, les résultats de vos élèves au test préalable et au test final et "
-"voir leur progression pour le module Option B+.</p>"
-"<p>Allez sur l'onglet Groupes. Cliquez sur le bouton « Détails » qui figure "
-"à côté du nom de chaque groupe.</p><p>Vous pouvez désormais voir les "
-"informations de votre groupe, notamment le nombre de membres du groupe ou "
-"la progression de chaque élève du groupe pour le module.</p>"
+"voir leur progression pour le module Option B+.</p><p>Allez sur l'onglet "
+"Groupes. Cliquez sur le bouton « Détails » qui figure à côté du nom de "
+"chaque groupe.</p><p>Vous pouvez désormais voir les informations de votre "
+"groupe, notamment le nombre de membres du groupe ou la progression de chaque "
+"élève du groupe pour le module.</p>"
 
 #: nepi/templates/main/page.html:28
 msgid "Please complete all form fields before continuing."
@@ -800,7 +863,7 @@ msgstr "Mauvaise réponse"
 msgid "The correct answer is"
 msgstr "La bonne résponse est"
 
-#: nepi/templates/registration/login.html:28
+#: nepi/templates/registration/login.html:27
 msgid ""
 "This platform was developed to support online learning for nurses and "
 "midwives and to share resources with nursing education institutions."
@@ -813,7 +876,7 @@ msgstr ""
 "des sages-femmes et de partager les ressources avec les établissements "
 "d'enseignement infirmier.</p>"
 
-#: nepi/templates/registration/login.html:35
+#: nepi/templates/registration/login.html:34
 msgid ""
 "<a href=\"http://icap.columbia.edu\" target=\"_blank\"> ICAP </a> is based "
 "at Columbia University and is a global leader in HIV/AIDS and health systems "
@@ -840,7 +903,7 @@ msgstr ""
 "capacités infirmières générales qui promeut le maintien d'un personnel "
 "infirmier qualifié par le biais de la formation continue, d'autre part. "
 
-#: nepi/templates/registration/login.html:54
+#: nepi/templates/registration/login.html:53
 msgid ""
 "This work has been supported by the President’s Emergency Plan for AIDS "
 "Relief (PEPFAR) through the U.S. Department of Health and Human Services, "
@@ -857,10 +920,27 @@ msgstr ""
 "infirmiers. Le contenu relève de la responsabilité de l'ICAP et ne reflète "
 "pas nécessairement l'opinion du gouvernement des États-Unis."
 
-#, fuzzy
-#~| msgid "Welcome!"
-#~ msgid "Welcome"
-#~ msgstr "Bienvenue !"
+#: nepi/templates/registration/login.html:68
+msgid "Click here to register for a free account"
+msgstr "Cliquez ici pour vous enregistrer et ouvrir un compte gratuit"
 
-#~ msgid "Login"
-#~ msgstr "Connexion"
+#: nepi/templates/registration/login.html:73
+msgid "Invalid username or password"
+msgstr "Les informations saisies ne correspondent pas"
+
+#: nepi/templates/registration/login.html:83
+msgid "Username"
+msgstr "Identifiant"
+
+#: nepi/templates/registration/login.html:89
+msgid "Password"
+msgstr "Mot de passe"
+
+#: nepi/templates/registration/login.html:95
+msgid "Log In"
+msgstr "Connexion"
+
+#: nepi/templates/registration/login.html:98
+msgid "Forgotten your password or username?"
+msgstr "Mot de passe ou nom d'utilisateur oublié ?"
+

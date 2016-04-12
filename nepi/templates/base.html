@@ -26,8 +26,8 @@
         {% block masthead %}        
             <div id="titlebar">
                 <div class="title-left">
-                <a href="/" title="ICAP Nursing E-Learning">
-                <img src="{{STATIC_URL}}img/icap-nursing-elearning.png" title="ICAP Nursing E-Learning"></a>
+                    <a href="/" title="ICAP Nursing E-Learning">
+                    <img src="{{STATIC_URL}}img/icap-nursing-elearning.png" title="ICAP Nursing E-Learning"></a>
                 </div>
                 <div class="title-right">
             		{% block usernav %}
@@ -72,6 +72,9 @@
                         <li><a href="http://icap.columbia.edu" target="_blank" title="ICAP"><img src="{{STATIC_URL}}img/icap-full.png" alt="ICAP" class="header-logo icap-logo"></a></li>
                         <li><a href="http://www.pepfar.gov/" target="_blank" title="PEPFAR"><img src="{{STATIC_URL}}img/pepfar.png" class="header-logo"></a></li>
                     </ul>
+                    <div class="clearfix"></div>
+                    {% block languageswitcher %}
+                    {% endblock %}
                 </div>
             </div>
     
