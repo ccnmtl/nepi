@@ -62,6 +62,8 @@ urlpatterns = patterns(
 
     url(r'^about/$', TemplateView.as_view(
         template_name='main/about.html'), name='about'),
+    url(r'^help/$', TemplateView.as_view(
+        template_name='main/help.html'), name='help'),
     url(r'^contact/$', ContactView.as_view(), name='contactus'),
 
     url(r'^register/$', RegistrationView.as_view(), name='register'),
