@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+  {{ flatpage.title }}
+{% endblock %}
+
+{% block pagetitle %}
+    <div>
+        <h1 class="pageheader pull-left">
+            {% trans 'About' %}
+        </h1>
+      
+        <form class="pull-right" action="{% url 'set_language' %}" method="post">
+            {% csrf_token %} <input name="next" type="hidden"
+                value="{{ redirect_to }}" /> <select name="language">
+                {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% get_language_info_list for LANGUAGES as languages %}
+                {% for language in languages %}
+                <option value="{{ language.code }}"
+                    {% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                    {{ language.name_local }} ({{ language.code }})</option>
+                {% endfor %}
+            </select>
+            <input class="btn btn-default" type="submit" value="Go" />
+        </form>
+    </div>
+    <div class="clearfix"></div>
+{% endblock %}
+
+{% block content %}
+    {% blocktrans trimmed %}    
+        <p>The ICAP nursing e-learning platform is supported with funding from the President’s Emergency Plan for AIDS Relief (PEPFAR) and was developed in collaboration with the Columbia Center for New Media Teaching and Learning (CCNMTL). The e-learning platform is designed to support nursing and midwifery education and training. This platform will serve as an online hub for nursing education and training resources to be accessed by nursing education institutions, in-service training programs, and continuing professional development programs. 
+        Supporting nursing education and training is strategic for advancing ICAP’s goal of improving the health of families and communities.</p>
+
+        <p><i>Note:</i></p>
+        <p><i>This module covers key concepts and guidelines recommended at the time of publication. Country specific protocols may vary and new updates provided over time. Please consult your local protocols and treatment guidelines.</i></p>
+        <p><i>This module does not replace local training requirements. Please consult your local authority (nursing council or ministry of health) for training and practice requirements.</i></p>
+
+        <h1 class="pageheader">ICAP, Columbia University Mailman School of Public Health</h1>
+        <ul>
+        <li>Janel Smith, MPH, RN, Nursing Education Officer</li>
+        
+        <li>Anne Langston, MSN, FNP, Nursing Education Consultant</li>
+        
+        <li>Elaine Abrams, MD, Senior Research Director</li>
+        
+        <li>Marita Murrman, EdD, MS, RN, CHES, Senior Training and Education Specialist</li>
+        </ul>
+        
+        <h1 class="pageheader">Columbia Center for New Media Teaching and Learning</h1>
+        
+        <ul>
+        <li>Maurice Matiz, Executive Producer</li>
+        
+        <li>Lucy Appert, Producer</li>
+        
+        <li>Jessica Rowe, Project Manager</li>
+        
+        <li>Rachelle White, Designer</li>
+        
+        <li>Cassandra Dunlop, Developer</li>
+        
+        <li>Susan Dreher, Developer</li>
+        </ul>
+        
+        <h1 class="pageheader">Illustrations</h4>
+
+        <ul><li>Petra Röhr-Rouendaal</li></ul>        
+    {% endblocktrans %}
+{% endblock %}

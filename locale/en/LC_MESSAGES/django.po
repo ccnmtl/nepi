@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-11 15:42-0400\n"
+"POT-Creation-Date: 2016-04-12 10:20-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -331,7 +331,7 @@ msgstr ""
 msgid "Log Out"
 msgstr ""
 
-#: nepi/templates/base.html:99
+#: nepi/templates/base.html:99 nepi/templates/main/about.html:12
 msgid "About"
 msgstr ""
 
@@ -344,6 +344,7 @@ msgid "Contact"
 msgstr ""
 
 #: nepi/templates/dashboard/tab_optionb.html:8
+#: nepi/templates/registration/login.html:26
 msgid "Welcome!"
 msgstr ""
 
@@ -436,6 +437,36 @@ msgstr ""
 msgid "Pre/Post Change"
 msgstr ""
 
+#: nepi/templates/main/about.html:34
+msgid ""
+"<p>The ICAP nursing e-learning platform is supported with funding from the "
+"President’s Emergency Plan for AIDS Relief (PEPFAR) and was developed in "
+"collaboration with the Columbia Center for New Media Teaching and Learning "
+"(CCNMTL). The e-learning platform is designed to support nursing and "
+"midwifery education and training. This platform will serve as an online hub "
+"for nursing education and training resources to be accessed by nursing "
+"education institutions, in-service training programs, and continuing "
+"professional development programs. Supporting nursing education and training "
+"is strategic for advancing ICAP’s goal of improving the health of families "
+"and communities.</p> <p><i>Note:</i></p> <p><i>This module covers key "
+"concepts and guidelines recommended at the time of publication. Country "
+"specific protocols may vary and new updates provided over time. Please "
+"consult your local protocols and treatment guidelines.</i></p> <p><i>This "
+"module does not replace local training requirements. Please consult your "
+"local authority (nursing council or ministry of health) for training and "
+"practice requirements.</i></p> <h1 class=\"pageheader\">ICAP, Columbia "
+"University Mailman School of Public Health</h1> <ul> <li>Janel Smith, MPH, "
+"RN, Nursing Education Officer</li> <li>Anne Langston, MSN, FNP, Nursing "
+"Education Consultant</li> <li>Elaine Abrams, MD, Senior Research Director</"
+"li> <li>Marita Murrman, EdD, MS, RN, CHES, Senior Training and Education "
+"Specialist</li> </ul> <h1 class=\"pageheader\">Columbia Center for New Media "
+"Teaching and Learning</h1> <ul> <li>Maurice Matiz, Executive Producer</li> "
+"<li>Lucy Appert, Producer</li> <li>Jessica Rowe, Project Manager</li> "
+"<li>Rachelle White, Designer</li> <li>Cassandra Dunlop, Developer</li> "
+"<li>Susan Dreher, Developer</li> </ul> <h1 class=\"pageheader"
+"\">Illustrations</h4> <ul><li>Petra Röhr-Rouendaal</li></ul>"
+msgstr ""
+
 #: nepi/templates/main/confirm_language.html:26
 msgid "Confirm language choice"
 msgstr ""
@@ -503,17 +534,13 @@ msgstr ""
 msgid "The correct answer is"
 msgstr ""
 
-#: nepi/templates/registration/login.html:24
-msgid "Welcome"
-msgstr ""
-
-#: nepi/templates/registration/login.html:26
+#: nepi/templates/registration/login.html:28
 msgid ""
 "This platform was developed to support online learning for nurses and "
-"midwives and to share resources with nursing education institutions.'"
+"midwives and to share resources with nursing education institutions."
 msgstr ""
 
-#: nepi/templates/registration/login.html:33
+#: nepi/templates/registration/login.html:35
 msgid ""
 "<a href=\"http://icap.columbia.edu\" target=\"_blank\"> ICAP </a> is based "
 "at Columbia University and is a global leader in HIV/AIDS and health systems "
@@ -527,7 +554,7 @@ msgid ""
 "maintenance of a skilled nursing workforce through on-going training.'"
 msgstr ""
 
-#: nepi/templates/registration/login.html:52
+#: nepi/templates/registration/login.html:54
 msgid ""
 "This work has been supported by the President’s Emergency Plan for AIDS "
 "Relief (PEPFAR) through the U.S. Department of Health and Human Services, "
