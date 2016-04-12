@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-    Contact ICAP
+    {% trans 'Contact ICAP' %}
 {% endblock %}
 
 {% block js %}
@@ -9,73 +10,64 @@
 {% endblock %}
 
 {% block content %}
-  <script src="{{STATIC_URL}}js/changelanguage.js"></script>
-  <div class="btn-group">
-    <button id=langChoice" type="button" 
-            class="btn btn-primary dropdown-toggle" 
-            data-toggle="dropdown" 
-            aria-haspopup="true" aria-expanded="false">
-      Language
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="langChoice">
-      <li><a class="dropdown-item switch-lang chng-lang" data-lang="en">English</a></li>
-      <li><a class="dropdown-item switch-lang chng-lang" data-lang="fr">French</a></li>
-      <li><a class="dropdown-item switch-lang chng-lang" data-lang="pt">Portuguese</a></li>
-    </ul>
-  </div>      
-  <div class="contact-icap">
-    <h1>
-      Contact ICAP
-    </h1>
-    <form action="/contact/" method="post">
-      {% csrf_token %}
-      {% if form.errors|length %}
-        <div class="alert alert-block alert-error">
-          <strong>
-            Please correct errors before continuing
-          </strong>
-          {% if form.non_field_errors %}
-            <div>
-              {{ form.non_field_errors}}
-            </div>
-          {% endif %}
-        </div>
-      {% endif %}
-      <div class="fieldWrapper control-group {% if form.first_name.errors %}error{% endif %}">
-        <label for="id_first_name">
-          <b>
-            Your name is:
-          </b>
-        </label>
-        <div class="controls">
-          <span>
-            <input id="id_first_name" maxlength="50" name="first_name" type="text"
-              value="{{form.data.first_name}}" placeholder="Given Name">
-          </span>&nbsp;&nbsp;
-          <span>
-            <input id="id_last_name" maxlength="50" name="last_name"
-              value="{{form.data.last_name}}"
-              type="text" placeholder="Surname">
-         </span>
-          {% if form.first_name.errors or form.last_name.errors %}
-            <div class="help-inline">
-              First and last name are required
-            </div>
-          {% endif %}
+      <form class="pull-right" action="{% url 'set_language' %}" method="post">
+        {% csrf_token %} <input name="next" type="hidden"
+            value="{{ redirect_to }}" /> <select name="language">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
+            {% get_language_info_list for LANGUAGES as languages %}
+            {% for language in languages %}
+            <option value="{{ language.code }}"
+                {% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                {{ language.name_local }} ({{ language.code }})</option>
+            {% endfor %}
+        </select>
+        <input class="btn btn-default" type="submit" value="Go" />
+    </form>
+   
+    <div class="contact-icap">
+        <h1>{% trans 'Contact ICAP' %}</h1>
+        <form action="/contact/" method="post">{% csrf_token %}
+            {% if form.errors|length %}
+                <div class="alert alert-block alert-error">
+                    <strong>
+                    {% trans 'Please correct errors before continuing' %}
+                    </strong>
+                </div>
+            {% endif %}
+      
+            <div class="fieldWrapper control-group {% if form.first_name.errors %}error{% endif %}">
+                <label for="id_first_name">
+                    <b>{% trans 'Your name is' %}:</b>
+                </label>
+                <div class="controls">
+                <span>
+                    <input id="id_first_name" maxlength="50" name="first_name" type="text"
+                        value="{{form.data.first_name}}" placeholder="{% trans 'Given Name' %}">
+                </span>&nbsp;&nbsp;
+                <span>
+                    <input id="id_last_name" maxlength="50" name="last_name"
+                      value="{{form.data.last_name}}"
+                      type="text" placeholder="{% trans 'Surname' %}">
+                 </span>
+                {% if form.first_name.errors or form.last_name.errors %}
+                <div class="help-inline">
+                    {% trans 'First and last name are required' %}
+                </div>
+                {% endif %}
         </div>
       </div>
       <div class="fieldWrapper control-group {% if form.sender.errors %}error{% endif %} wide">
         <label for="id_sender">
           <b>
-            Your email address:
+            {% trans 'Your email address' %}:
           </b>
         </label>
         <div class="controls">
           {{form.sender}}
           {% if form.sender.errors %}
             <div class="help-inline">
-              {{form.sender.errors}}
+              {% trans 'This field is required' %}
             </div>
           {% endif %}
         </div>
@@ -83,14 +75,14 @@
       <div class="fieldWrapper control-group {% if form.subject.errors %}error{% endif %} wide">
         <label for="id_subject">
           <b>
-            Subject:
+            {% trans 'Subject' %}:
           </b>
         </label>
         <div class="controls">
           {{form.subject}}
           {% if form.subject.errors %}
             <div class="help-inline">
-              {{form.subject.errors}}
+              {% trans 'This field is required' %}
             </div>
           {% endif %}
         </div>
@@ -99,14 +91,14 @@
     <div class="fieldWrapper control-group {% if form.message.errors %}error{% endif %} wide">
         <label for="id_message">
           <b>
-            Message:
+            {% trans 'Message' %}:
           </b>
         </label>
         <div class="controls">
           {{form.message}}
           {% if form.message.errors %}
             <div class="help-inline">
-              {{form.message.errors}}
+              {% trans 'This field is required' %}
             </div>
           {% endif %}
         </div>
@@ -116,7 +108,7 @@
         <label for="id_captcha_0">
           <div>
             <b>
-              Please verify you are a person:
+              {% trans 'Please verify you are a person' %}:
             </b>
           </div>
         </label>
@@ -124,26 +116,22 @@
           {{form.captcha}} 
           {% if form.captcha.errors %} 
             <span class="help-inline">
-              {{form.captcha.errors}}
+              {% trans 'This field is required' %}
             </span>
           {% endif %}
         </div>
       </div>
       <div class="help-inline captcha">
-        Type the characters you see in the picture.
+        {% trans 'Type the characters you see in the picture' %}. 
         <br />
         <button class="btn btn-default js-captcha-refresh">
-          Refresh the image
+          {% trans 'Refresh the image' %}
         </button>
-         if you can't read the picture.
+         {% trans "if you can't read the picture" %}.
        <br />
      </div>
     <br />
-    <input type="submit" value="Send Message" class="btn btn-primary" />
+    <input type="submit" value="{% trans 'Send Message' %}" class="btn btn-primary" />
     </form>
   </div>    
 {% endblock %}
-
-
-
-

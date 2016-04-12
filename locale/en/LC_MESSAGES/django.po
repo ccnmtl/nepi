@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-12 10:46-0400\n"
+"POT-Creation-Date: 2016-04-12 15:36-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -493,6 +493,67 @@ msgstr ""
 
 #: nepi/templates/main/confirm_language.html:51
 msgid "Save"
+msgstr ""
+
+#: nepi/templates/main/contact.html:5 nepi/templates/main/contact.html:29
+msgid "Contact ICAP"
+msgstr ""
+
+#: nepi/templates/main/contact.html:34
+msgid "Please correct errors before continuing"
+msgstr ""
+
+#: nepi/templates/main/contact.html:41
+msgid "Your name is"
+msgstr ""
+
+#: nepi/templates/main/contact.html:46
+msgid "Given Name"
+msgstr ""
+
+#: nepi/templates/main/contact.html:51
+msgid "Surname"
+msgstr ""
+
+#: nepi/templates/main/contact.html:55
+msgid "First and last name are required"
+msgstr ""
+
+#: nepi/templates/main/contact.html:63
+msgid "Your email address"
+msgstr ""
+
+#: nepi/templates/main/contact.html:70 nepi/templates/main/contact.html:85
+#: nepi/templates/main/contact.html:101 nepi/templates/main/contact.html:119
+msgid "This field is required"
+msgstr ""
+
+#: nepi/templates/main/contact.html:78
+msgid "Subject"
+msgstr ""
+
+#: nepi/templates/main/contact.html:94
+msgid "Message"
+msgstr ""
+
+#: nepi/templates/main/contact.html:111
+msgid "Please verify you are a person"
+msgstr ""
+
+#: nepi/templates/main/contact.html:125
+msgid "Type the characters you see in the picture"
+msgstr ""
+
+#: nepi/templates/main/contact.html:128
+msgid "Refresh the image"
+msgstr ""
+
+#: nepi/templates/main/contact.html:130
+msgid "if you can't read the picture"
+msgstr ""
+
+#: nepi/templates/main/contact.html:134
+msgid "Send Message"
 msgstr ""
 
 #: nepi/templates/main/help.html:33
