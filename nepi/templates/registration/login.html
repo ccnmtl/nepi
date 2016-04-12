@@ -1,123 +1,114 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}Please Log In{% endblock %}
 
 {% block content %}
-  <div class="btn-group">
-    <button id="langChoice" type="button" 
-            class="btn btn-primary dropdown-toggle" 
-            data-toggle="dropdown" 
-            aria-haspopup="true" aria-expanded="false">
-      Language
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="langChoice">
-      <li>
-        <a class="dropdown-item switch-lang chng-lang" data-lang="en">
-          English
-        </a>
-      </li>
-      <li>
-        <a class="dropdown-item switch-lang chng-lang" data-lang="fr">
-          French
-        </a>
-      </li>
-      <li>
-        <a class="dropdown-item switch-lang chng-lang" data-lang="pt">
-          Portuguese
-        </a>
-      </li>
-    </ul>
-  </div>
-  {% include 'registration/login_fr.html' %}
-  {% include 'registration/login_pt.html' %}
-  
-  <script src="{{STATIC_URL}}js/changeloginlanguage.js"></script>
+<div>
+    <div class="login-welcome">
+        <img src="{{STATIC_URL}}img/landingphoto.jpg" />
+        <br /><br />
+        <form class="pull-right" action="{% url 'set_language' %}" method="post">
+            {% csrf_token %} <input name="next" type="hidden"
+                value="{{ redirect_to }}" /> <select name="language">
+                {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% get_language_info_list for LANGUAGES as languages %}
+                {% for language in languages %}
+                <option value="{{ language.code }}"
+                    {% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>
+                    {{ language.name_local }} ({{ language.code }})</option>
+                {% endfor %}
+            </select>
+            <input class="btn btn-default" type="submit" value="Go" />
+        </form>
 
-  <div  id="lang-en" style="display:block;">
-  <div class="login-welcome">
-    <img src="{{STATIC_URL}}img/landingphoto.jpg" />
-
-    <h1 class="pageheader">
-      Welcome!
-    </h1>
-    <p>
-     This platform was developed to support online learning for nurses and midwives and to share resources with nursing education institutions.
-    </p>
-    <p> 
-      <a href="http://icap.columbia.edu" target="_blank">
-        ICAP
-      </a> 
-    is based at Columbia University and is a global leader in HIV/AIDS and health systems strengthening.
-Our Global Nurse Capacity Building Program is a multi-country initiative to strengthen and sustain nursing’s role in the care of people living with HIV. It is composed of two projects: the Nursing Education Partnership Initiative (NEPI), which is working to strengthen the capacity of nursing and midwifery educational
-institutions and ensure the production of sufficient numbers of well-trained, clinically competent graduates in sub-Saharan Africa; and our General Nursing capacity program, which promotes the maintenance of a skilled nursing workforce through on-going training.
-    </p>
-    <small>
-      This work has been supported by the President’s Emergency Plan for AIDS Relief (PEPFAR) through the U.S. Department of Health and Human Services, Health Resources and Services Administration (HRSA) under the terms of the Global Nurse Capacity Building Program, cooperative agreement #U92HA12772. The contents are the responsibility of ICAP and do not necessarily reflect the views of the United States Government.
-    </small>
+        <h1 class="pageheader">{% trans 'Welcome!' %}</h1>
+        <p>
+            {% blocktrans trimmed %}
+            This platform was developed to support online
+            learning for nurses and midwives and to share resources
+            with nursing education institutions.
+            {% endblocktrans %}
+        </p>
+        <p>
+            {% blocktrans trimmed %}
+            <a href="http://icap.columbia.edu" target="_blank">
+                ICAP </a> is based at Columbia University and is a
+            global leader in HIV/AIDS and health systems
+            strengthening. Our Global Nurse Capacity Building
+            Program is a multi-country initiative to strengthen and
+            sustain nursing’s role in the care of people living with
+            HIV. It is composed of two projects: the Nursing
+            Education Partnership Initiative (NEPI), which is
+            working to strengthen the capacity of nursing and
+            midwifery educational institutions and ensure the
+            production of sufficient numbers of well-trained,
+            clinically competent graduates in sub-Saharan Africa;
+            and our General Nursing capacity program, which promotes
+            the maintenance of a skilled nursing workforce through
+            on-going training.'
+            {% endblocktrans %}
+        </p>
+        <small>
+            {% blocktrans trimmed %}
+            This work has been supported by the
+            President’s Emergency Plan for AIDS Relief (PEPFAR)
+            through the U.S. Department of Health and Human
+            Services, Health Resources and Services Administration
+            (HRSA) under the terms of the Global Nurse Capacity
+            Building Program, cooperative agreement #U92HA12772. The
+            contents are the responsibility of ICAP and do not
+            necessarily reflect the views of the United States
+            Government.
+            {% endblocktrans %}
+        </small>            
     </div>
     <div class="login-form">
-      <div class="login-form-register">
-        <a href="/register/" class="btn">
-          Click here to register for a free account.
-        </a>
-      </div>
-      <h4>Log In</h4>
-      {% if form.errors %}
-      <div class="alert alert-danger">
-        <span>
-          <b>Invalid username or password.</b>
-        </span>
-        Note that both username and password are case-sensitive.
-      </div>
-      {% endif %}    
-        
-      <form method="post" action=".">
-        <div class="login-form-div">
-          <table class="login-form-table">
-            <tr>
-              <td>
-                <label for="id_username">
-                  Username:&nbsp;
-                </label>
-              </td>
-              <td>
-                {{ form.username }}
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="id_password">
-                  Password:&nbsp;
-                </label>
-              </td>
-              <td>
-                {{ form.password }}
-              </td>
-            </tr>
-          </table>
-          <div class="login-form-forgot">
-            <a href="/accounts/password_reset/">
-              Forgot Password?
-            </a>
-          </div>
-          <div class="login-form-submit">
-            <input class="btn" type="submit" value="Log In"></input>
-          </div>
+        <div class="login-form-register">
+            <a href="/register/" class="btn"> Click here to register
+                for a free account. </a>
         </div>
-        <input type="hidden" name="next" value="{{ next }}"></input>
-      </form>
-        
-      <div class="login-form-ques">
-        <ul>
-          <li>
-            <a href="/contact/">
-              Contact ICAP
-            </a>
-          </li>
-        </ul> 
-      </div>
+        <h4>Log In</h4>
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <span> <b>Invalid username or password.</b>
+            </span> Note that both username and password are case-sensitive.
+        </div>
+        {% endif %}
+
+        <form method="post" action=".">
+            <div class="login-form-div">
+                <table class="login-form-table">
+                    <tr>
+                        <td><label for="id_username">
+                                Username:&nbsp; </label></td>
+                        <td>{{ form.username }}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="id_password">
+                                Password:&nbsp; </label>
+                        </td>
+                        <td>{{ form.password }}</td>
+                    </tr>
+                </table>
+                <div class="login-form-forgot">
+                    <a href="/accounts/password_reset/"> Forgot
+                        Password? </a>
+                </div>
+                <div class="login-form-submit">
+                    <input class="btn" type="submit" value="Log In"></input>
+                </div>
+            </div>
+            <input type="hidden" name="next" value="{{ next }}"></input>
+        </form>
+
+        <div class="login-form-ques">
+            <ul>
+                <li><a href="/contact/"> Contact ICAP </a></li>
+            </ul>
+        </div>
     </div>
-    </div>
-  </div><!-- end login-en-->
+</div>
 {% endblock %}

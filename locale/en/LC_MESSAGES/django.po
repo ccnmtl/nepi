@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-20 09:22-0400\n"
+"POT-Creation-Date: 2016-04-11 15:42-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: nepi/settings_shared.py:240
+#: nepi/settings_shared.py:81
 msgid "English"
 msgstr ""
 
-#: nepi/settings_shared.py:241
+#: nepi/settings_shared.py:82
 msgid "French"
 msgstr ""
 
-#: nepi/settings_shared.py:242
+#: nepi/settings_shared.py:83
 msgid "Portuguese"
 msgstr ""
 
@@ -311,23 +311,35 @@ msgid ""
 "on ART."
 msgstr ""
 
-#: nepi/templates/base.html:35
+#: nepi/templates/admin/login.html:27
+msgid "Username:"
+msgstr ""
+
+#: nepi/templates/admin/login.html:30
+msgid "Password:"
+msgstr ""
+
+#: nepi/templates/admin/login.html:35
+msgid "Log in"
+msgstr ""
+
+#: nepi/templates/base.html:36
 msgid "Hello"
 msgstr ""
 
-#: nepi/templates/base.html:65
+#: nepi/templates/base.html:66
 msgid "Log Out"
 msgstr ""
 
-#: nepi/templates/base.html:98
+#: nepi/templates/base.html:99
 msgid "About"
 msgstr ""
 
-#: nepi/templates/base.html:99
+#: nepi/templates/base.html:100
 msgid "Help"
 msgstr ""
 
-#: nepi/templates/base.html:100
+#: nepi/templates/base.html:101
 msgid "Contact"
 msgstr ""
 
@@ -368,60 +380,59 @@ msgstr ""
 msgid "Session Progress"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:47
-#: nepi/templates/dashboard/tab_optionb.html:50
+#: nepi/templates/dashboard/tab_optionb.html:46
 msgid "Begin the Course"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:56
+#: nepi/templates/dashboard/tab_optionb.html:51
 msgid "of"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:56
+#: nepi/templates/dashboard/tab_optionb.html:51
 msgid "sessions completed"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:59
+#: nepi/templates/dashboard/tab_optionb.html:54
 msgid "Continue"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:69
+#: nepi/templates/dashboard/tab_optionb.html:64
 msgid "Progress Report"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:71
+#: nepi/templates/dashboard/tab_optionb.html:66
 msgid "Pre-test score"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:74
-#: nepi/templates/dashboard/tab_optionb.html:87
-#: nepi/templates/dashboard/tab_optionb.html:100
+#: nepi/templates/dashboard/tab_optionb.html:69
+#: nepi/templates/dashboard/tab_optionb.html:82
+#: nepi/templates/dashboard/tab_optionb.html:95
 msgid "n/a"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:76
-#: nepi/templates/dashboard/tab_optionb.html:89
-#: nepi/templates/dashboard/tab_optionb.html:102
+#: nepi/templates/dashboard/tab_optionb.html:71
+#: nepi/templates/dashboard/tab_optionb.html:84
+#: nepi/templates/dashboard/tab_optionb.html:97
 msgid "Incomplete"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:84
+#: nepi/templates/dashboard/tab_optionb.html:79
 msgid "Session"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:84
+#: nepi/templates/dashboard/tab_optionb.html:79
 msgid "score"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:97
+#: nepi/templates/dashboard/tab_optionb.html:92
 msgid "Post-test score"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:109
+#: nepi/templates/dashboard/tab_optionb.html:104
 msgid "Average session score"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:119
+#: nepi/templates/dashboard/tab_optionb.html:114
 msgid "Pre/Post Change"
 msgstr ""
 
@@ -490,4 +501,38 @@ msgstr ""
 
 #: nepi/templates/quizblock/question.html:23
 msgid "The correct answer is"
+msgstr ""
+
+#: nepi/templates/registration/login.html:24
+msgid "Welcome"
+msgstr ""
+
+#: nepi/templates/registration/login.html:26
+msgid ""
+"This platform was developed to support online learning for nurses and "
+"midwives and to share resources with nursing education institutions.'"
+msgstr ""
+
+#: nepi/templates/registration/login.html:33
+msgid ""
+"<a href=\"http://icap.columbia.edu\" target=\"_blank\"> ICAP </a> is based "
+"at Columbia University and is a global leader in HIV/AIDS and health systems "
+"strengthening. Our Global Nurse Capacity Building Program is a multi-country "
+"initiative to strengthen and sustain nursing’s role in the care of people "
+"living with HIV. It is composed of two projects: the Nursing Education "
+"Partnership Initiative (NEPI), which is working to strengthen the capacity "
+"of nursing and midwifery educational institutions and ensure the production "
+"of sufficient numbers of well-trained, clinically competent graduates in sub-"
+"Saharan Africa; and our General Nursing capacity program, which promotes the "
+"maintenance of a skilled nursing workforce through on-going training.'"
+msgstr ""
+
+#: nepi/templates/registration/login.html:52
+msgid ""
+"This work has been supported by the President’s Emergency Plan for AIDS "
+"Relief (PEPFAR) through the U.S. Department of Health and Human Services, "
+"Health Resources and Services Administration (HRSA) under the terms of the "
+"Global Nurse Capacity Building Program, cooperative agreement #U92HA12772. "
+"The contents are the responsibility of ICAP and do not necessarily reflect "
+"the views of the United States Government."
 msgstr ""

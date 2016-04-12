@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-07 15:32-0500\n"
+"POT-Creation-Date: 2016-04-11 15:42-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: nepi/settings_shared.py:240
+#: nepi/settings_shared.py:81
 msgid "English"
 msgstr "Inglês"
 
-#: nepi/settings_shared.py:241
+#: nepi/settings_shared.py:82
 msgid "French"
 msgstr "Francês"
 
-#: nepi/settings_shared.py:242
+#: nepi/settings_shared.py:83
 msgid "Portuguese"
 msgstr "Português"
 
@@ -185,20 +185,19 @@ msgid ""
 "30mg (3ml) once a day</td></tr> <tr> <td>Over 9 months until breastfeeding "
 "ends</td> <td> 40mg (4ml) once a day</td> </tr> </table>"
 msgstr ""
-"<h4>Gráfico de dosagem de NVP</h4> <h5>Dose diária para NVP para bebês "
-"a partir de 6 "
-"semanas do nascimento </h5> <table> <tr><td>Peso do nascimento 2000-2499 g </"
-"td><td> 1ml (10mg) uma vez ao dia </td></tr> <tr><td>Peso do nascimento ≥ "
-"2500 g </"
-"td><td> 1.5 ml (15mg) uma vez ao dia </td></tr> <tr><td>Criança < 200 g </"
-"td><td> 0.2 ml (2mg)/kg uma vez ao dia </td></tr> </table> <br /> <h5>Dose "
-"diária para NVP para bebês > 6  semanas de idade</h5> <div> Dependendo das "
-"diretrizes do país, pode haver casos raros em que as crianças com mais de 6 "
-"semanas são administradas com NVP como profilaxia. Neste caso, as doses são: "
-"</div> <table> <tr><td>6 semanas a 6 meses </td><td> 20mg (2ml) uma vez ao "
-"dia</td></tr> <tr><td>Mais de 6 meses a 9 meses </td><td> 30mg (3ml) uma vez "
-"ao dia</td></tr> <tr> <td>Mais de 9 meses até o final  da amamentação</td> "
-"<td> 40mg (4ml) uma vez ao dia</td> </tr> </table>"
+"<h4>Gráfico de dosagem de NVP</h4> <h5>Dose diária para NVP para bebês a "
+"partir de 6 semanas do nascimento </h5> <table> <tr><td>Peso do nascimento "
+"2000-2499 g </td><td> 1ml (10mg) uma vez ao dia </td></tr> <tr><td>Peso do "
+"nascimento ≥ 2500 g </td><td> 1.5 ml (15mg) uma vez ao dia </td></tr> "
+"<tr><td>Criança < 200 g </td><td> 0.2 ml (2mg)/kg uma vez ao dia </td></tr> "
+"</table> <br /> <h5>Dose diária para NVP para bebês > 6  semanas de idade</"
+"h5> <div> Dependendo das diretrizes do país, pode haver casos raros em que "
+"as crianças com mais de 6 semanas são administradas com NVP como profilaxia. "
+"Neste caso, as doses são: </div> <table> <tr><td>6 semanas a 6 meses </"
+"td><td> 20mg (2ml) uma vez ao dia</td></tr> <tr><td>Mais de 6 meses a 9 "
+"meses </td><td> 30mg (3ml) uma vez ao dia</td></tr> <tr> <td>Mais de 9 meses "
+"até o final  da amamentação</td> <td> 40mg (4ml) uma vez ao dia</td> </tr> </"
+"table>"
 
 #: nepi/templates/activities/dosageactivity.html:41
 msgid "How many ml of NVP?"
@@ -371,23 +370,37 @@ msgstr ""
 "de baixo do registro e incluem XX para pacientes em ART e outros códigos "
 "para pacientes que não estão em ART."
 
-#: nepi/templates/base.html:35
+#: nepi/templates/admin/login.html:27
+msgid "Username:"
+msgstr ""
+
+#: nepi/templates/admin/login.html:30
+msgid "Password:"
+msgstr ""
+
+#: nepi/templates/admin/login.html:35
+#, fuzzy
+#| msgid "Log Out"
+msgid "Log in"
+msgstr "Sair"
+
+#: nepi/templates/base.html:36
 msgid "Hello"
 msgstr "Olá"
 
-#: nepi/templates/base.html:65
+#: nepi/templates/base.html:66
 msgid "Log Out"
 msgstr "Sair"
 
-#: nepi/templates/base.html:98
+#: nepi/templates/base.html:99
 msgid "About"
 msgstr "Sobre"
 
-#: nepi/templates/base.html:99
+#: nepi/templates/base.html:100
 msgid "Help"
 msgstr "Ajuda"
 
-#: nepi/templates/base.html:100
+#: nepi/templates/base.html:101
 msgid "Contact"
 msgstr "Contato"
 
@@ -446,60 +459,59 @@ msgstr ""
 msgid "Session Progress"
 msgstr "Progresso da Sessão"
 
-#: nepi/templates/dashboard/tab_optionb.html:47
-#: nepi/templates/dashboard/tab_optionb.html:50
+#: nepi/templates/dashboard/tab_optionb.html:46
 msgid "Begin the Course"
 msgstr "Comece o Curso"
 
-#: nepi/templates/dashboard/tab_optionb.html:56
+#: nepi/templates/dashboard/tab_optionb.html:51
 msgid "of"
 msgstr "de"
 
-#: nepi/templates/dashboard/tab_optionb.html:56
+#: nepi/templates/dashboard/tab_optionb.html:51
 msgid "sessions completed"
 msgstr "sessões concluídas"
 
-#: nepi/templates/dashboard/tab_optionb.html:59
+#: nepi/templates/dashboard/tab_optionb.html:54
 msgid "Continue"
 msgstr "Continuar"
 
-#: nepi/templates/dashboard/tab_optionb.html:69
+#: nepi/templates/dashboard/tab_optionb.html:64
 msgid "Progress Report"
 msgstr "Relate o Progresso"
 
-#: nepi/templates/dashboard/tab_optionb.html:71
+#: nepi/templates/dashboard/tab_optionb.html:66
 msgid "Pre-test score"
 msgstr "Pontuação pré-teste"
 
-#: nepi/templates/dashboard/tab_optionb.html:74
-#: nepi/templates/dashboard/tab_optionb.html:87
-#: nepi/templates/dashboard/tab_optionb.html:100
+#: nepi/templates/dashboard/tab_optionb.html:69
+#: nepi/templates/dashboard/tab_optionb.html:82
+#: nepi/templates/dashboard/tab_optionb.html:95
 msgid "n/a"
 msgstr "n/a"
 
-#: nepi/templates/dashboard/tab_optionb.html:76
-#: nepi/templates/dashboard/tab_optionb.html:89
-#: nepi/templates/dashboard/tab_optionb.html:102
+#: nepi/templates/dashboard/tab_optionb.html:71
+#: nepi/templates/dashboard/tab_optionb.html:84
+#: nepi/templates/dashboard/tab_optionb.html:97
 msgid "Incomplete"
 msgstr "Incompleto"
 
-#: nepi/templates/dashboard/tab_optionb.html:84
+#: nepi/templates/dashboard/tab_optionb.html:79
 msgid "Session"
 msgstr "Sessão"
 
-#: nepi/templates/dashboard/tab_optionb.html:84
+#: nepi/templates/dashboard/tab_optionb.html:79
 msgid "score"
 msgstr "pontuação"
 
-#: nepi/templates/dashboard/tab_optionb.html:97
+#: nepi/templates/dashboard/tab_optionb.html:92
 msgid "Post-test score"
 msgstr "Pontuação pós-teste"
 
-#: nepi/templates/dashboard/tab_optionb.html:109
+#: nepi/templates/dashboard/tab_optionb.html:104
 msgid "Average session score"
 msgstr "Média de pontuação da sessão"
 
-#: nepi/templates/dashboard/tab_optionb.html:119
+#: nepi/templates/dashboard/tab_optionb.html:114
 msgid "Pre/Post Change"
 msgstr "Pré/Pós Alteração"
 
@@ -571,6 +583,64 @@ msgstr "Está incorreto"
 #: nepi/templates/quizblock/question.html:23
 msgid "The correct answer is"
 msgstr "A resposta correta é"
+
+#: nepi/templates/registration/login.html:24
+msgid "Welcome"
+msgstr "Bem-vindo"
+
+#: nepi/templates/registration/login.html:26
+msgid ""
+"This platform was developed to support online learning for nurses and "
+"midwives and to share resources with nursing education institutions."
+msgstr ""
+"<p>A formação e educação em enfermagem é uma parte essencial da missão do "
+"<a href=\"http://icap.columbia.edu\" target=\"_blank\">ICAP</a> " 
+"para garantir a saúde das famílias e comunidades ao redor do mundo.</p>"
+"<p>Esta plataforma foi desenvolvida para apoiar o aprendizado online de "
+"enfermeiras e  parteiras e compartilhar recursos com instituições de "
+"educação em enfermagem.</p>"
+
+#: nepi/templates/registration/login.html:33
+msgid ""
+"<a href=\"http://icap.columbia.edu\" target=\"_blank\"> ICAP </a> is based "
+"at Columbia University and is a global leader in HIV/AIDS and health systems "
+"strengthening. Our Global Nurse Capacity Building Program is a multi-country "
+"initiative to strengthen and sustain nursing’s role in the care of people "
+"living with HIV. It is composed of two projects: the Nursing Education "
+"Partnership Initiative (NEPI), which is working to strengthen the capacity "
+"of nursing and midwifery educational institutions and ensure the production "
+"of sufficient numbers of well-trained, clinically competent graduates in sub-"
+"Saharan Africa; and our General Nursing capacity program, which promotes the "
+"maintenance of a skilled nursing workforce through on-going training.'"
+msgstr ""
+"<a href=\"http://icap.columbia.edu\" target=\"_blank\">ICAP</a> " 
+"é baseado na Universidade de Columbia e é um líder global em HIV/AIDS e "
+"fortalecimento dos sistemas de saúde. O nosso Programa de Capacitação Global "
+"em Enfermagem é uma iniciativa multinacional para fortalecer e sustentar o "
+"papel da enfermagem no cuidado de pessoas que vivem com HIV. É composto por "
+"dois projetos: a Iniciativa de Parceria Educacional em Enfermagem (NEPI), "
+"que está trabalhando para fortalecer a capacidade das instituições "
+"educacionais de enfermagem e obstetrícia e garantir a produção de números "
+"suficientes de formados bem treinados e clinicamente competentes na África "
+"subsaariana; e nosso programa de Enfermagem Geral, que promove a manutenção "
+"de uma força de trabalho de enfermagem qualificada através da "
+"formação contínua."
+
+#: nepi/templates/registration/login.html:52
+msgid ""
+"This work has been supported by the President’s Emergency Plan for AIDS "
+"Relief (PEPFAR) through the U.S. Department of Health and Human Services, "
+"Health Resources and Services Administration (HRSA) under the terms of the "
+"Global Nurse Capacity Building Program, cooperative agreement #U92HA12772. "
+"The contents are the responsibility of ICAP and do not necessarily reflect "
+"the views of the United States Government."
+msgstr ""
+"Este trabalho foi apoiado pelo Plano de Emergência para Alívio da AIDS "
+"(PEPFAR) do Presidente através do Departamento de Saúde e Serviços Humanos "
+"dos EUA, Administração de Serviços e Recursos de Saúde (HRSA) sob os termos "
+"do Programa Global de Capacitação de Enfermeiras, acordo de cooperação "
+"nºU92HA12772. O conteúdo é de responsabilidade do ICAP e não "
+"necessariamente reflete as opiniões do Governo dos Estados Unidos."
 
 #~ msgid "Login"
 #~ msgstr "Entrar"
