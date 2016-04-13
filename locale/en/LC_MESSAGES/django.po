@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-12 15:36-0400\n"
+"POT-Creation-Date: 2016-04-13 12:17-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -327,6 +327,10 @@ msgstr ""
 msgid "Hello"
 msgstr ""
 
+#: nepi/templates/base.html:38
+msgid "Change Password"
+msgstr ""
+
 #: nepi/templates/base.html:66
 msgid "Log Out"
 msgstr ""
@@ -500,7 +504,7 @@ msgid "Contact ICAP"
 msgstr ""
 
 #: nepi/templates/main/contact.html:34
-msgid "Please correct errors before continuing"
+msgid "Please correct the errors below"
 msgstr ""
 
 #: nepi/templates/main/contact.html:41
@@ -515,44 +519,44 @@ msgstr ""
 msgid "Surname"
 msgstr ""
 
-#: nepi/templates/main/contact.html:55
+#: nepi/templates/main/contact.html:56
 msgid "First and last name are required"
 msgstr ""
 
-#: nepi/templates/main/contact.html:63
+#: nepi/templates/main/contact.html:64
 msgid "Your email address"
 msgstr ""
 
-#: nepi/templates/main/contact.html:70 nepi/templates/main/contact.html:85
-#: nepi/templates/main/contact.html:101 nepi/templates/main/contact.html:119
+#: nepi/templates/main/contact.html:71 nepi/templates/main/contact.html:86
+#: nepi/templates/main/contact.html:102 nepi/templates/main/contact.html:120
 msgid "This field is required"
 msgstr ""
 
-#: nepi/templates/main/contact.html:78
+#: nepi/templates/main/contact.html:79
 msgid "Subject"
 msgstr ""
 
-#: nepi/templates/main/contact.html:94
+#: nepi/templates/main/contact.html:95
 msgid "Message"
 msgstr ""
 
-#: nepi/templates/main/contact.html:111
+#: nepi/templates/main/contact.html:112
 msgid "Please verify you are a person"
 msgstr ""
 
-#: nepi/templates/main/contact.html:125
+#: nepi/templates/main/contact.html:126
 msgid "Type the characters you see in the picture"
 msgstr ""
 
-#: nepi/templates/main/contact.html:128
+#: nepi/templates/main/contact.html:129
 msgid "Refresh the image"
 msgstr ""
 
-#: nepi/templates/main/contact.html:130
+#: nepi/templates/main/contact.html:131
 msgid "if you can't read the picture"
 msgstr ""
 
-#: nepi/templates/main/contact.html:134
+#: nepi/templates/main/contact.html:135
 msgid "Send Message"
 msgstr ""
 
