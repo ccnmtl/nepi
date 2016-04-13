@@ -1468,6 +1468,17 @@ div.user-profile-form div.control-group.wide select {
     margin-bottom: 10px;
 }
 
+.password-change .errornote {
+    color: #b94a48;
+}
+
+.password-change ul.errorlist,
+.password-reset ul.errorlist {
+    color: #b94a48;
+    margin: 0 0 0 5px;
+    font-size: .8em;
+}
+
 div.contact-icap ul.errorlist,
 div.user-profile-form ul.errorlist {
     list-style-type: none;
