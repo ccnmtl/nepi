@@ -12,20 +12,5 @@
 {% endblock %}
 
 {% block content %}
-  <script src="{{STATIC_URL}}js/changelanguage.js"></script>
-  <div class="btn-group">
-    <button id=langChoice" type="button" 
-            class="btn btn-primary dropdown-toggle" 
-            data-toggle="dropdown" 
-            aria-haspopup="true" aria-expanded="false">
-      Language
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="langChoice">
-      <li><a class="dropdown-item switch-lang chng-lang" data-lang="en">English</a></li>
-      <li><a class="dropdown-item switch-lang chng-lang" data-lang="fr">French</a></li>
-      <li><a class="dropdown-item switch-lang chng-lang" data-lang="pt">Portuguese</a></li>
-    </ul>
-  </div>      
   {{ flatpage.content|markdown }}
 {% endblock %}

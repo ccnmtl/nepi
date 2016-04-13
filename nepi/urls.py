@@ -60,16 +60,11 @@ urlpatterns = patterns(
 
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
+    url(r'^about/$', TemplateView.as_view(
+        template_name='main/about.html'), name='about'),
+    url(r'^help/$', TemplateView.as_view(
+        template_name='main/help.html'), name='help'),
     url(r'^contact/$', ContactView.as_view(), name='contactus'),
-    url(r'^en/contact/$',
-        ContactView.as_view(template_name="main/contact_en.html"),
-        name='contactus-en'),
-    url(r'^fr/contact/$',
-        ContactView.as_view(template_name="main/contact_fr.html"),
-        name='contactus-fr'),
-    url(r'^pt/contact/$',
-        ContactView.as_view(template_name="main/contact_pt.html"),
-        name='contactus-pt'),
 
     url(r'^register/$', RegistrationView.as_view(), name='register'),
     # password change & reset. overriding to gate them.

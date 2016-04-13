@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-20 09:22-0400\n"
+"POT-Creation-Date: 2016-04-12 10:46-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: nepi/settings_shared.py:240
+#: nepi/settings_shared.py:81
 msgid "English"
 msgstr ""
 
-#: nepi/settings_shared.py:241
+#: nepi/settings_shared.py:82
 msgid "French"
 msgstr ""
 
-#: nepi/settings_shared.py:242
+#: nepi/settings_shared.py:83
 msgid "Portuguese"
 msgstr ""
 
@@ -311,27 +311,42 @@ msgid ""
 "on ART."
 msgstr ""
 
-#: nepi/templates/base.html:35
+#: nepi/templates/admin/login.html:27
+msgid "Username:"
+msgstr ""
+
+#: nepi/templates/admin/login.html:30
+msgid "Password:"
+msgstr ""
+
+#: nepi/templates/admin/login.html:35
+msgid "Log in"
+msgstr ""
+
+#: nepi/templates/base.html:36
 msgid "Hello"
 msgstr ""
 
-#: nepi/templates/base.html:65
+#: nepi/templates/base.html:66
 msgid "Log Out"
 msgstr ""
 
-#: nepi/templates/base.html:98
+#: nepi/templates/base.html:99 nepi/templates/main/about.html:5
+#: nepi/templates/main/about.html.py:11
 msgid "About"
 msgstr ""
 
-#: nepi/templates/base.html:99
+#: nepi/templates/base.html:100 nepi/templates/main/help.html:5
+#: nepi/templates/main/help.html.py:11
 msgid "Help"
 msgstr ""
 
-#: nepi/templates/base.html:100
+#: nepi/templates/base.html:101
 msgid "Contact"
 msgstr ""
 
 #: nepi/templates/dashboard/tab_optionb.html:8
+#: nepi/templates/registration/login.html:26
 msgid "Welcome!"
 msgstr ""
 
@@ -368,61 +383,90 @@ msgstr ""
 msgid "Session Progress"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:47
-#: nepi/templates/dashboard/tab_optionb.html:50
+#: nepi/templates/dashboard/tab_optionb.html:46
 msgid "Begin the Course"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:56
+#: nepi/templates/dashboard/tab_optionb.html:51
 msgid "of"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:56
+#: nepi/templates/dashboard/tab_optionb.html:51
 msgid "sessions completed"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:59
+#: nepi/templates/dashboard/tab_optionb.html:54
 msgid "Continue"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:69
+#: nepi/templates/dashboard/tab_optionb.html:64
 msgid "Progress Report"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:71
+#: nepi/templates/dashboard/tab_optionb.html:66
 msgid "Pre-test score"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:74
-#: nepi/templates/dashboard/tab_optionb.html:87
-#: nepi/templates/dashboard/tab_optionb.html:100
+#: nepi/templates/dashboard/tab_optionb.html:69
+#: nepi/templates/dashboard/tab_optionb.html:82
+#: nepi/templates/dashboard/tab_optionb.html:95
 msgid "n/a"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:76
-#: nepi/templates/dashboard/tab_optionb.html:89
-#: nepi/templates/dashboard/tab_optionb.html:102
+#: nepi/templates/dashboard/tab_optionb.html:71
+#: nepi/templates/dashboard/tab_optionb.html:84
+#: nepi/templates/dashboard/tab_optionb.html:97
 msgid "Incomplete"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:84
+#: nepi/templates/dashboard/tab_optionb.html:79
 msgid "Session"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:84
+#: nepi/templates/dashboard/tab_optionb.html:79
 msgid "score"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:97
+#: nepi/templates/dashboard/tab_optionb.html:92
 msgid "Post-test score"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:109
+#: nepi/templates/dashboard/tab_optionb.html:104
 msgid "Average session score"
 msgstr ""
 
-#: nepi/templates/dashboard/tab_optionb.html:119
+#: nepi/templates/dashboard/tab_optionb.html:114
 msgid "Pre/Post Change"
+msgstr ""
+
+#: nepi/templates/main/about.html:33
+msgid ""
+"<p>The ICAP nursing e-learning platform is supported with funding from the "
+"President’s Emergency Plan for AIDS Relief (PEPFAR) and was developed in "
+"collaboration with the Columbia Center for New Media Teaching and Learning "
+"(CCNMTL). The e-learning platform is designed to support nursing and "
+"midwifery education and training. This platform will serve as an online hub "
+"for nursing education and training resources to be accessed by nursing "
+"education institutions, in-service training programs, and continuing "
+"professional development programs. Supporting nursing education and training "
+"is strategic for advancing ICAP’s goal of improving the health of families "
+"and communities.</p> <p><i>Note:</i></p> <p><i>This module covers key "
+"concepts and guidelines recommended at the time of publication. Country "
+"specific protocols may vary and new updates provided over time. Please "
+"consult your local protocols and treatment guidelines.</i></p> <p><i>This "
+"module does not replace local training requirements. Please consult your "
+"local authority (nursing council or ministry of health) for training and "
+"practice requirements.</i></p> <h1 class=\"pageheader\">ICAP, Columbia "
+"University Mailman School of Public Health</h1> <ul> <li>Janel Smith, MPH, "
+"RN, Nursing Education Officer</li> <li>Anne Langston, MSN, FNP, Nursing "
+"Education Consultant</li> <li>Elaine Abrams, MD, Senior Research Director</"
+"li> <li>Marita Murrman, EdD, MS, RN, CHES, Senior Training and Education "
+"Specialist</li> </ul> <h1 class=\"pageheader\">Columbia Center for New Media "
+"Teaching and Learning</h1> <ul> <li>Maurice Matiz, Executive Producer</li> "
+"<li>Lucy Appert, Producer</li> <li>Jessica Rowe, Project Manager</li> "
+"<li>Rachelle White, Designer</li> <li>Cassandra Dunlop, Developer</li> "
+"<li>Susan Dreher, Developer</li> </ul> <h1 class=\"pageheader"
+"\">Illustrations</h4> <ul><li>Petra Röhr-Rouendaal</li></ul>"
 msgstr ""
 
 #: nepi/templates/main/confirm_language.html:26
@@ -449,6 +493,68 @@ msgstr ""
 
 #: nepi/templates/main/confirm_language.html:51
 msgid "Save"
+msgstr ""
+
+#: nepi/templates/main/help.html:33
+msgid ""
+"<h3 class=\"pageheader\">Technical Support Contact</h3> For problems related "
+"to the online environment please contact <a href=\"mailto:ccnmtl-"
+"nepi@columbia.edu\">ccnmtl-nepi@columbia.edu</a> <h3 class=\"pageheader"
+"\">ICAP contact</h3> For questions or requests to join the elearning "
+"platform as a participating country/school please contact ccnmtl-"
+"icap@columbia.edu <h3 class=\"pageheader\">Creating an Account</h3> To "
+"create an account visit https://elearning.icap.columbia.edu/register/ <h3 "
+"class=\"pageheader\">Logging in</h3> To log in enter your user name and "
+"password here https://elearning.icap.columbia.edu/accounts/login/ <h3 class="
+"\"pageheader\">Changing your password</h3> If you provided a valid email "
+"address when you registered you can request password change at any time. "
+"Visit https://elearning.icap.columbia.edu/accounts/password_reset/ <h3 class="
+"\"pageheader\">Dashboard</h3> After you log in you will see your dashboard. "
+"You will see tabs for the Option B+ Course, Groups and Profile. The "
+"Dashboard is the place where you will return to see your progress in the "
+"course, join groups (i.e. classes) and see and edit your profile. <h3 class="
+"\"pageheader\">Option B+ Tab</h3> <p>On the Option B+ Tab you will see a "
+"blue button that says \"Begin the Course.\" When you click this button you "
+"will go to the first page of the course.</p> <p>After you've first visited "
+"the course, you can return to this tab to see your scores and progress "
+"through the course.</p> <h3 class=\"pageheader\">Groups Tab</h3> <p>A group "
+"is a class at a university or a training course. If you are a faculty you "
+"may create a group. If you are a student you may join a group. You may have "
+"been told to find and join your Option B+ class. This means that your "
+"instructor has created a group at your university or organization for you to "
+"join. Once you've joined your group, your instructor will have access to "
+"your scores and progress through the system.</p> <h3 class=\"pageheader\">To "
+"join a group as a student</h3> <p>Click \"find a group\" choice, choose your "
+"country, choose your school or institution, choose the group</p> <p>If you "
+"don't see your group, this means that your instructor hasn't created one yet "
+"and you will need to try again later.</p> <h3 class=\"pageheader\">Profile "
+"Tab</h3> <p>On the Profile Tab you will see the information you entered when "
+"you registered. You can edit your name, password, and country affiliation. "
+"If you are faculty, you can request faculty access here.</p> <h3 class="
+"\"pageheader\">Option B+ Course</h3> <p>Once you've entered the course, you "
+"will see the first page of the course or where you left off.</p> <p>You will "
+"see the an icon shaped like a book on the upper left. This is the table of "
+"contents. Click the book to open the table of contents.</p> <p>At the bottom "
+"of the page is a \"next\" button. Use this button to move forward to the "
+"next page.</p> <p>The Option B+ Course contains a pre and post text, "
+"informational slides, short case studies with questions and interactive "
+"activities. You must complete one page before moving onto the next. You can "
+"go back at any time. You can use the table of contents to go back to a "
+"specific page you've visited before.</p> <h3 class=\"pageheader\">FOR "
+"FACULTY</h3> <h3 class=\"pageheader\">Groups</h3> <p>To see your student's "
+"scores you must create a group and then your students must join it. To "
+"create a group:</p> <ul> <li>go to your groups tab</li> <li>click \"create "
+"group\"</li> <li>your country and institution are already selected for you</"
+"li> <li>set the beginning and ending dates for your course.</li> <li>click "
+"\"create group\"</li> <li>Now that you've created a group, it is your "
+"students' responsibility to find and join this group.</li> </ul> <h3 class="
+"\"pageheader\">Group Information and Scores</h3> <p>You can view information "
+"about your groups the scores your students received on the pre and post "
+"tests and view their progress through the Option B+ Course.</p> <p>Go to "
+"your groups tab. Next to the name of each group is a button labeled "
+"'details' Click Details</p> <p>Now you can see some information about your "
+"group, including number of members, and how far each student in the group "
+"has progressed through the course.</p>"
 msgstr ""
 
 #: nepi/templates/main/page.html:28
@@ -490,4 +596,34 @@ msgstr ""
 
 #: nepi/templates/quizblock/question.html:23
 msgid "The correct answer is"
+msgstr ""
+
+#: nepi/templates/registration/login.html:28
+msgid ""
+"This platform was developed to support online learning for nurses and "
+"midwives and to share resources with nursing education institutions."
+msgstr ""
+
+#: nepi/templates/registration/login.html:35
+msgid ""
+"<a href=\"http://icap.columbia.edu\" target=\"_blank\"> ICAP </a> is based "
+"at Columbia University and is a global leader in HIV/AIDS and health systems "
+"strengthening. Our Global Nurse Capacity Building Program is a multi-country "
+"initiative to strengthen and sustain nursing’s role in the care of people "
+"living with HIV. It is composed of two projects: the Nursing Education "
+"Partnership Initiative (NEPI), which is working to strengthen the capacity "
+"of nursing and midwifery educational institutions and ensure the production "
+"of sufficient numbers of well-trained, clinically competent graduates in sub-"
+"Saharan Africa; and our General Nursing capacity program, which promotes the "
+"maintenance of a skilled nursing workforce through on-going training.'"
+msgstr ""
+
+#: nepi/templates/registration/login.html:54
+msgid ""
+"This work has been supported by the President’s Emergency Plan for AIDS "
+"Relief (PEPFAR) through the U.S. Department of Health and Human Services, "
+"Health Resources and Services Administration (HRSA) under the terms of the "
+"Global Nurse Capacity Building Program, cooperative agreement #U92HA12772. "
+"The contents are the responsibility of ICAP and do not necessarily reflect "
+"the views of the United States Government."
 msgstr ""
