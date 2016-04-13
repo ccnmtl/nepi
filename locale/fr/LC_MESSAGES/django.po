@@ -635,12 +635,9 @@ msgid "Contact ICAP"
 msgstr "Personne à contacter"
 
 #: nepi/templates/main/contact.html:34
-#, fuzzy
-#| msgid "Please complete all form fields before continuing."
-msgid "Please correct errors before continuing"
+msgid "Please correct the errors below"
 msgstr ""
-"Veuillez remplir tous les champs du formulaire avant de poursuivre, s'il "
-"vous plaît"
+"Corrigez les erreurs ci-dessous"
 
 #: nepi/templates/main/contact.html:41
 msgid "Your name is"
@@ -665,7 +662,7 @@ msgstr "Adresse e-mail"
 #: nepi/templates/main/contact.html:70 nepi/templates/main/contact.html:85
 #: nepi/templates/main/contact.html:101 nepi/templates/main/contact.html:119
 msgid "This field is required"
-msgstr ""
+msgstr "Ce champ est obligatoire"
 
 #: nepi/templates/main/contact.html:78
 msgid "Subject"
