@@ -610,7 +610,6 @@ msgid "Save"
 msgstr ""
 
 #: nepi/templates/main/contact.html:5 nepi/templates/main/contact.html:29
-#: nepi/templates/registration/login.html:106
 msgid "Contact ICAP"
 msgstr "Entre em contato com ICAP"
 

@@ -633,7 +633,6 @@ msgid "Save"
 msgstr "Enregistrer"
 
 #: nepi/templates/main/contact.html:5 nepi/templates/main/contact.html:29
-#: nepi/templates/registration/login.html:106
 msgid "Contact ICAP"
 msgstr "Contacter l'ICAP"
 
