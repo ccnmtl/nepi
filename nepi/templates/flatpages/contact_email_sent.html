@@ -1,8 +1,16 @@
 {% extends "base.html" %}
-{% block content %}
-<h2>Contact ICAP</h2><br />
+{% load i18n %}
 
-<h4>Your email has been sent!</h4>
-<p>Your message has been sent to ICAP. An ICAP administrator will follow up with you soon. Thank you.</p>
-<a href="/">Return to ICAP Nursing E-learning</a><br /> 
+{% block languageswitcher %}
+    {% include "main/languageswitcher.html" %}
+{% endblock %}
+
+{% block pagetitle %}
+    <h1 class="pageheader">{% trans 'Contact ICAP' %}</h1>
+{% endblock %}
+
+{% block content %}
+    <p>{% trans 'Your message has been sent to ICAP' %}.</p>
+    <p>{% trans 'An ICAP administrator will follow up with you soon. Thank you.' %}</p>
+    <a href="/">{% trans 'Return to ICAP Nursing E-learning' %}</a><br /> 
 {% endblock %}

@@ -544,7 +544,7 @@ h4.pagetitle {
 #titlebar {
 	background-color: #f9f9f9;
 	padding: 10px 35px 10px 45px;
-	height: 120px;
+	height: 125px;
 }
 
 .title-left {
@@ -755,12 +755,13 @@ ul.title-logos li {
 }
 
 .login-form {
-	width: 30%;
+	width: 32%;
 	float: left;
-	margin: 20px 10px 20px 10px;
+	margin: 20px 0px 20px 0px;
 	padding: 2%;
 	font-size: 1em;
 	background-color: #d9eaf5;
+	min-height: 322px;
 }
 
 .login-form a:link, .login-form a:active, .login-form a:visited {
@@ -790,7 +791,7 @@ ul.title-logos li {
 .login-form h4 {
 	font-size: 20px;
 	padding: 0;
-	margin: 0 0 15px 0;
+	margin: 50px 0 15px 0;
 }
 
 .login-form-table td {
@@ -798,18 +799,13 @@ ul.title-logos li {
 }
 
 .login-form-table td label {
-	padding: 0 15px 7px 7px;
-}
-
-.login-form-forgot {
-	clear: both;
-	float: right;
+	padding: 0 7px 7px 7px;
+	width: 95%
 }
 
 .login-form-submit {
-	clear: both;
-	float: left;
 	padding: 0 0 10px 0;
+	margin-bottom: 40px;
 	font-family: 'Arial Narrow', Arial, Helvetica, sans-serif;
 }
 
@@ -819,11 +815,6 @@ ul.title-logos li {
 	font-weight: bold;
 	clear: both;
 	color: #00284c;
-}
-
-.login-form-ques {
-	clear: both;
-	float: left;
 }
 
 .login-form-ques ul li {
@@ -1423,6 +1414,8 @@ div.contact-icap div.help-inline,
 div.user-profile-form div.help-inline {
     display: block;
     padding-bottom: 10px;
+}
+div.user-profile-form div.help-inline {    
     margin-top: -5px;
 }
 
@@ -2049,15 +2042,7 @@ img.footer-logo {
     border: 0;
 }
 
-.change-language-block form {
-    width: 310px;
-    display: inline-block;
-    margin-top: 5px;
-}
-
-.change-language-block .btn-default,
-.change-language-block a {
-  width: 350px;
-  padding: 4px 0;
-  margin-top: 20px;
+form.change-language {
+    margin-left: 30px;
+    font-size: 12px;    
 }

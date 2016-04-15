@@ -9,24 +9,19 @@
     <script src="{{STATIC_URL}}js/captcha.js"></script>
 {% endblock %}
 
-{% block content %}
-      <form class="pull-right" action="{% url 'set_language' %}" method="post">
-        {% csrf_token %} <input name="next" type="hidden"
-            value="{{ redirect_to }}" /> <select name="language">
-            {% get_current_language as LANGUAGE_CODE %}
-            {% get_available_languages as LANGUAGES %}
-            {% get_language_info_list for LANGUAGES as languages %}
-            {% for language in languages %}
-            <option value="{{ language.code }}"
-                {% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>
-                {{ language.name_local }} ({{ language.code }})</option>
-            {% endfor %}
-        </select>
-        <input class="btn btn-default" type="submit" value="Go" />
-    </form>
+{% block languageswitcher %}
+    {% include "main/languageswitcher.html" %}
+{% endblock %}
 
+{% block pagetitle %}
+    <h1 class="pageheader">
+        {% trans 'Contact ICAP' %}
+    </h1>
+{% endblock %}
+
+
+{% block content %}
     <div class="contact-icap">
-        <h1>{% trans 'Contact ICAP' %}</h1>
         <form action="/contact/" method="post">{% csrf_token %}
             {% if form.errors|length %}
                 <div class="alert alert-block alert-error">
@@ -50,7 +45,6 @@
                       value="{{form.data.last_name}}"
                       type="text" placeholder="{% trans 'Surname' %}">
                  </span>
-                 <div class="visualclear"></div>
                 {% if form.first_name.errors or form.last_name.errors %}
                 <div class="help-inline">
                     {% trans 'First and last name are required' %}

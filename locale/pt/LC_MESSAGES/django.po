@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-13 12:17-0400\n"
+"POT-Creation-Date: 2016-04-13 13:22-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -372,17 +372,15 @@ msgstr ""
 
 #: nepi/templates/admin/login.html:27
 msgid "Username:"
-msgstr ""
+msgstr "Nome de usuário"
 
 #: nepi/templates/admin/login.html:30
 msgid "Password:"
-msgstr ""
+msgstr "Senha"
 
 #: nepi/templates/admin/login.html:35
-#, fuzzy
-#| msgid "Log Out"
 msgid "Log in"
-msgstr "Sair"
+msgstr "Entrar"
 
 #: nepi/templates/base.html:36
 msgid "Hello"
@@ -411,7 +409,7 @@ msgid "Contact"
 msgstr "Contato"
 
 #: nepi/templates/dashboard/tab_optionb.html:8
-#: nepi/templates/registration/login.html:26
+#: nepi/templates/registration/login.html:25
 msgid "Welcome!"
 msgstr "Bem-vindo"
 
@@ -836,7 +834,7 @@ msgstr "Está incorreto"
 msgid "The correct answer is"
 msgstr "A resposta correta é"
 
-#: nepi/templates/registration/login.html:28
+#: nepi/templates/registration/login.html:27
 msgid ""
 "This platform was developed to support online learning for nurses and "
 "midwives and to share resources with nursing education institutions."
@@ -848,7 +846,7 @@ msgstr ""
 "parteiras e compartilhar recursos com instituições de educação em enfermagem."
 "</p>"
 
-#: nepi/templates/registration/login.html:35
+#: nepi/templates/registration/login.html:34
 msgid ""
 "<a href=\"http://icap.columbia.edu\" target=\"_blank\"> ICAP </a> is based "
 "at Columbia University and is a global leader in HIV/AIDS and health systems "
@@ -873,7 +871,7 @@ msgstr ""
 "nosso programa de Enfermagem Geral, que promove a manutenção de uma força de "
 "trabalho de enfermagem qualificada através da formação contínua."
 
-#: nepi/templates/registration/login.html:54
+#: nepi/templates/registration/login.html:53
 msgid ""
 "This work has been supported by the President’s Emergency Plan for AIDS "
 "Relief (PEPFAR) through the U.S. Department of Health and Human Services, "
@@ -889,8 +887,26 @@ msgstr ""
 "nºU92HA12772. O conteúdo é de responsabilidade do ICAP e não necessariamente "
 "reflete as opiniões do Governo dos Estados Unidos."
 
-#~ msgid "Welcome"
-#~ msgstr "Bem-vindo"
+#: nepi/templates/registration/login.html:68
+msgid "Click here to register for a free account"
+msgstr "Clique aqui para se registrar para uma conta gratuita."
 
-#~ msgid "Login"
-#~ msgstr "Entrar"
+#: nepi/templates/registration/login.html:73
+msgid "Invalid username or password"
+msgstr "O nome de usuário ou a palavra-passe estão incorrectos"
+
+#: nepi/templates/registration/login.html:83
+msgid "Username"
+msgstr "Nome de usuário"
+
+#: nepi/templates/registration/login.html:89
+msgid "Password"
+msgstr "Palavra-passe"
+
+#: nepi/templates/registration/login.html:95
+msgid "Log In"
+msgstr "Entrar"
+
+#: nepi/templates/registration/login.html:98
+msgid "Forgotten your password or username?"
+msgstr "Esqueceu-se da sua palavra-passe ou utilizador?"

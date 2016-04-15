@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-13 12:17-0400\n"
+"POT-Creation-Date: 2016-04-13 13:22-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -350,7 +350,7 @@ msgid "Contact"
 msgstr ""
 
 #: nepi/templates/dashboard/tab_optionb.html:8
-#: nepi/templates/registration/login.html:26
+#: nepi/templates/registration/login.html:25
 msgid "Welcome!"
 msgstr ""
 
@@ -663,13 +663,13 @@ msgstr ""
 msgid "The correct answer is"
 msgstr ""
 
-#: nepi/templates/registration/login.html:28
+#: nepi/templates/registration/login.html:27
 msgid ""
 "This platform was developed to support online learning for nurses and "
 "midwives and to share resources with nursing education institutions."
 msgstr ""
 
-#: nepi/templates/registration/login.html:35
+#: nepi/templates/registration/login.html:34
 msgid ""
 "<a href=\"http://icap.columbia.edu\" target=\"_blank\"> ICAP </a> is based "
 "at Columbia University and is a global leader in HIV/AIDS and health systems "
@@ -683,7 +683,7 @@ msgid ""
 "maintenance of a skilled nursing workforce through on-going training.'"
 msgstr ""
 
-#: nepi/templates/registration/login.html:54
+#: nepi/templates/registration/login.html:53
 msgid ""
 "This work has been supported by the President’s Emergency Plan for AIDS "
 "Relief (PEPFAR) through the U.S. Department of Health and Human Services, "
@@ -691,4 +691,32 @@ msgid ""
 "Global Nurse Capacity Building Program, cooperative agreement #U92HA12772. "
 "The contents are the responsibility of ICAP and do not necessarily reflect "
 "the views of the United States Government."
+msgstr ""
+
+#: nepi/templates/registration/login.html:68
+msgid "Click here to register for a free account"
+msgstr ""
+
+#: nepi/templates/registration/login.html:73
+msgid "Invalid username or password"
+msgstr ""
+
+#: nepi/templates/registration/login.html:74
+msgid "Note that both username and password are case-sensitive"
+msgstr ""
+
+#: nepi/templates/registration/login.html:83
+msgid "Username"
+msgstr ""
+
+#: nepi/templates/registration/login.html:89
+msgid "Password"
+msgstr ""
+
+#: nepi/templates/registration/login.html:95
+msgid "Log In"
+msgstr ""
+
+#: nepi/templates/registration/login.html:98
+msgid "Forgotten your password or username?"
 msgstr ""

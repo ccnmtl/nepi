@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-13 12:17-0400\n"
+"POT-Creation-Date: 2016-04-13 13:22-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -427,7 +427,7 @@ msgid "Contact"
 msgstr "Personne à contacter"
 
 #: nepi/templates/dashboard/tab_optionb.html:8
-#: nepi/templates/registration/login.html:26
+#: nepi/templates/registration/login.html:25
 msgid "Welcome!"
 msgstr "Bienvenue !"
 
@@ -633,10 +633,8 @@ msgid "Save"
 msgstr "Enregistrer"
 
 #: nepi/templates/main/contact.html:5 nepi/templates/main/contact.html:29
-#, fuzzy
-#| msgid "Contact"
 msgid "Contact ICAP"
-msgstr "Personne à contacter"
+msgstr "Contacter l'ICAP"
 
 #: nepi/templates/main/contact.html:34
 msgid "Please correct the errors below"
@@ -864,7 +862,7 @@ msgstr "Mauvaise réponse"
 msgid "The correct answer is"
 msgstr "La bonne résponse est"
 
-#: nepi/templates/registration/login.html:28
+#: nepi/templates/registration/login.html:27
 msgid ""
 "This platform was developed to support online learning for nurses and "
 "midwives and to share resources with nursing education institutions."
@@ -877,7 +875,7 @@ msgstr ""
 "des sages-femmes et de partager les ressources avec les établissements "
 "d'enseignement infirmier.</p>"
 
-#: nepi/templates/registration/login.html:35
+#: nepi/templates/registration/login.html:34
 msgid ""
 "<a href=\"http://icap.columbia.edu\" target=\"_blank\"> ICAP </a> is based "
 "at Columbia University and is a global leader in HIV/AIDS and health systems "
@@ -904,7 +902,7 @@ msgstr ""
 "capacités infirmières générales qui promeut le maintien d'un personnel "
 "infirmier qualifié par le biais de la formation continue, d'autre part. "
 
-#: nepi/templates/registration/login.html:54
+#: nepi/templates/registration/login.html:53
 msgid ""
 "This work has been supported by the President’s Emergency Plan for AIDS "
 "Relief (PEPFAR) through the U.S. Department of Health and Human Services, "
@@ -921,10 +919,27 @@ msgstr ""
 "infirmiers. Le contenu relève de la responsabilité de l'ICAP et ne reflète "
 "pas nécessairement l'opinion du gouvernement des États-Unis."
 
-#, fuzzy
-#~| msgid "Welcome!"
-#~ msgid "Welcome"
-#~ msgstr "Bienvenue !"
+#: nepi/templates/registration/login.html:68
+msgid "Click here to register for a free account"
+msgstr "Cliquez ici pour vous enregistrer et ouvrir un compte gratuit"
 
-#~ msgid "Login"
-#~ msgstr "Connexion"
+#: nepi/templates/registration/login.html:73
+msgid "Invalid username or password"
+msgstr "Les informations saisies ne correspondent pas"
+
+#: nepi/templates/registration/login.html:83
+msgid "Username"
+msgstr "Identifiant"
+
+#: nepi/templates/registration/login.html:89
+msgid "Password"
+msgstr "Mot de passe"
+
+#: nepi/templates/registration/login.html:95
+msgid "Log In"
+msgstr "Connexion"
+
+#: nepi/templates/registration/login.html:98
+msgid "Forgotten your password or username?"
+msgstr "Mot de passe ou nom d'utilisateur oublié ?"
+
