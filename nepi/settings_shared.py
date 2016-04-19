@@ -39,7 +39,6 @@ TEMPLATE_CONTEXT_PROCESSORS += [  # noqa
 
 INSTALLED_APPS += [  # noqa
     'sorl.thumbnail',
-    'tagging',
     'typogrify',
     'bootstrapform',
     'django_extensions',
