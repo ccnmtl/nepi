@@ -73,7 +73,7 @@ django-pagetree==1.1.14
 django-pageblocks==1.0.4
 django-quizblock==1.2.0
 django-markwhat==1.4
-django-simple-captcha==0.4.1
+django-simple-captcha==0.5.1
 gunicorn==19.3.0
 boto==2.38.0
 python-dateutil==2.5.2
