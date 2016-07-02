@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-13 13:22-0400\n"
+"POT-Creation-Date: 2016-07-01 12:16-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: nepi/settings_shared.py:81
+#: nepi/settings_shared.py:80
 msgid "English"
 msgstr "Inglês"
 
-#: nepi/settings_shared.py:82
+#: nepi/settings_shared.py:81
 msgid "French"
 msgstr "Francês"
 
-#: nepi/settings_shared.py:83
+#: nepi/settings_shared.py:82
 msgid "Portuguese"
 msgstr "Português"
 
@@ -394,22 +394,22 @@ msgstr "Modificar palavra-passe"
 msgid "Log Out"
 msgstr "Sair"
 
-#: nepi/templates/base.html:99 nepi/templates/main/about.html:5
-#: nepi/templates/main/about.html.py:11
+#: nepi/templates/base.html:102 nepi/templates/main/about.html:5
+#: nepi/templates/main/about.html.py:14
 msgid "About"
 msgstr "Sobre"
 
-#: nepi/templates/base.html:100 nepi/templates/main/help.html:5
-#: nepi/templates/main/help.html.py:11
+#: nepi/templates/base.html:103 nepi/templates/main/help.html:5
+#: nepi/templates/main/help.html.py:14
 msgid "Help"
 msgstr "Ajuda"
 
-#: nepi/templates/base.html:101
+#: nepi/templates/base.html:104
 msgid "Contact"
 msgstr "Contato"
 
 #: nepi/templates/dashboard/tab_optionb.html:8
-#: nepi/templates/registration/login.html:25
+#: nepi/templates/registration/login.html:15
 msgid "Welcome!"
 msgstr "Bem-vindo"
 
@@ -520,7 +520,25 @@ msgstr "Média de pontuação da sessão"
 msgid "Pre/Post Change"
 msgstr "Pré/Pós Alteração"
 
-#: nepi/templates/main/about.html:33
+#: nepi/templates/flatpages/contact_email_sent.html:9
+#: nepi/templates/main/contact.html:5 nepi/templates/main/contact.html:18
+#: nepi/templates/registration/login.html:96
+msgid "Contact ICAP"
+msgstr "Entre em contato com ICAP"
+
+#: nepi/templates/flatpages/contact_email_sent.html:13
+msgid "Your message has been sent to ICAP"
+msgstr "Sua mensagem foi enviada ao ICAP"
+
+#: nepi/templates/flatpages/contact_email_sent.html:14
+msgid "An ICAP administrator will follow up with you soon. Thank you."
+msgstr "Um administrador do ICAP entrará em contato com você em breve. Obrigado."
+
+#: nepi/templates/flatpages/contact_email_sent.html:15
+msgid "Return to ICAP Nursing E-learning"
+msgstr "Voltar ao ICAP Nursing E-learning"
+
+#: nepi/templates/main/about.html:19
 msgid ""
 "<p>The ICAP nursing e-learning platform is supported with funding from the "
 "President’s Emergency Plan for AIDS Relief (PEPFAR) and was developed in "
@@ -609,68 +627,64 @@ msgstr "Alterar o idioma"
 msgid "Save"
 msgstr ""
 
-#: nepi/templates/main/contact.html:5 nepi/templates/main/contact.html:29
-msgid "Contact ICAP"
-msgstr "Entre em contato com ICAP"
-
-#: nepi/templates/main/contact.html:34
+#: nepi/templates/main/contact.html:29
 msgid "Please correct the errors below"
 msgstr "Por favor corrija os erros abaixo"
 
-#: nepi/templates/main/contact.html:41
+#: nepi/templates/main/contact.html:36
 msgid "Your name is"
 msgstr "Seu nome é"
 
-#: nepi/templates/main/contact.html:46
+#: nepi/templates/main/contact.html:41
 msgid "Given Name"
 msgstr "Primeiro nome"
 
-#: nepi/templates/main/contact.html:51
+#: nepi/templates/main/contact.html:46
 msgid "Surname"
 msgstr "Sobrenome"
 
-#: nepi/templates/main/contact.html:56
+#: nepi/templates/main/contact.html:50
 msgid "First and last name are required"
-msgstr ""
+msgstr "Nome e sobrenome obrigatórios"
 
-#: nepi/templates/main/contact.html:64
+#: nepi/templates/main/contact.html:58
 msgid "Your email address"
 msgstr "Seu endereço de e-mail"
 
-#: nepi/templates/main/contact.html:71 nepi/templates/main/contact.html:86
-#: nepi/templates/main/contact.html:102 nepi/templates/main/contact.html:120
+#: nepi/templates/main/contact.html:65 nepi/templates/main/contact.html:80
+#: nepi/templates/main/contact.html:96 nepi/templates/main/contact.html:114
 msgid "This field is required"
 msgstr "Este campo é obrigatório"
 
-#: nepi/templates/main/contact.html:79
+#: nepi/templates/main/contact.html:73
 msgid "Subject"
 msgstr "Assunto"
 
-#: nepi/templates/main/contact.html:95
+#: nepi/templates/main/contact.html:89
 msgid "Message"
 msgstr "Mensagem"
 
-#: nepi/templates/main/contact.html:112
+#: nepi/templates/main/contact.html:106
 msgid "Please verify you are a person"
 msgstr "Favor verificar que você é uma pessoa"
 
-#: nepi/templates/main/contact.html:126
+#: nepi/templates/main/contact.html:120
 msgid "Type the characters you see in the picture"
 msgstr "Digite os caracteres que você visualiza na imagem"
 
-#: nepi/templates/main/contact.html:129
+#: nepi/templates/main/contact.html:123
 msgid "Refresh the image"
 msgstr "Atualize a imagem "
 
-#: nepi/templates/main/contact.html:131
+#: nepi/templates/main/contact.html:125
 msgid "if you can't read the picture"
 msgstr "se você não conseguir ler a imagem"
 
-#: nepi/templates/main/contact.html:135
+#: nepi/templates/main/contact.html:129
 msgid "Send Message"
 msgstr "Envie a mensagem"
 
-#: nepi/templates/main/help.html:33
+#: nepi/templates/main/help.html:19
 msgid ""
 "<h3 class=\"pageheader\">Technical Support Contact</h3> For problems related "
 "to the online environment please contact <a href=\"mailto:ccnmtl-"
@@ -834,7 +848,7 @@ msgstr "Está incorreto"
 msgid "The correct answer is"
 msgstr "A resposta correta é"
 
-#: nepi/templates/registration/login.html:27
+#: nepi/templates/registration/login.html:17
 msgid ""
 "This platform was developed to support online learning for nurses and "
 "midwives and to share resources with nursing education institutions."
@@ -846,7 +860,7 @@ msgstr ""
 "parteiras e compartilhar recursos com instituições de educação em enfermagem."
 "</p>"
 
-#: nepi/templates/registration/login.html:34
+#: nepi/templates/registration/login.html:24
 msgid ""
 "<a href=\"http://icap.columbia.edu\" target=\"_blank\"> ICAP </a> is based "
 "at Columbia University and is a global leader in HIV/AIDS and health systems "
@@ -871,7 +885,7 @@ msgstr ""
 "nosso programa de Enfermagem Geral, que promove a manutenção de uma força de "
 "trabalho de enfermagem qualificada através da formação contínua."
 
-#: nepi/templates/registration/login.html:53
+#: nepi/templates/registration/login.html:43
 msgid ""
 "This work has been supported by the President’s Emergency Plan for AIDS "
 "Relief (PEPFAR) through the U.S. Department of Health and Human Services, "
@@ -887,26 +901,27 @@ msgstr ""
 "nºU92HA12772. O conteúdo é de responsabilidade do ICAP e não necessariamente "
 "reflete as opiniões do Governo dos Estados Unidos."
 
-#: nepi/templates/registration/login.html:68
+#: nepi/templates/registration/login.html:58
 msgid "Click here to register for a free account"
 msgstr "Clique aqui para se registrar para uma conta gratuita."
 
-#: nepi/templates/registration/login.html:73
-msgid "Invalid username or password"
-msgstr "O nome de usuário ou a palavra-passe estão incorrectos"
-
-#: nepi/templates/registration/login.html:83
-msgid "Username"
-msgstr "Nome de usuário"
-
-#: nepi/templates/registration/login.html:89
-msgid "Password"
-msgstr "Palavra-passe"
-
-#: nepi/templates/registration/login.html:95
+#: nepi/templates/registration/login.html:61
+#: nepi/templates/registration/login.html:85
 msgid "Log In"
 msgstr "Entrar"
 
-#: nepi/templates/registration/login.html:98
+#: nepi/templates/registration/login.html:64
+msgid "Invalid username or password"
+msgstr "O nome de usuário ou a palavra-passe estão incorrectos"
+
+#: nepi/templates/registration/login.html:73
+msgid "Username"
+msgstr "Nome de usuário"
+
+#: nepi/templates/registration/login.html:79
+msgid "Password"
+msgstr "Palavra-passe"
+
+#: nepi/templates/registration/login.html:88
 msgid "Forgotten your password or username?"
 msgstr "Esqueceu-se da sua palavra-passe ou utilizador?"
