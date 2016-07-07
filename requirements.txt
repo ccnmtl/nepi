@@ -27,7 +27,6 @@ ptyprocess==0.5.1
 pexpect==4.1.0
 pickleshare==0.7.2
 simplegeneric==0.8.1
-path.py==8.2.1
 ipython==4.2.0
 ipdb==0.10.1
 rdflib==4.2.1
