@@ -27,7 +27,7 @@ ptyprocess==0.5.1
 pexpect==4.2.0
 pickleshare==0.7.2
 simplegeneric==0.8.1
-ipython==4.2.0
+ipython==5.0.0
 ipdb==0.10.1
 rdflib==4.2.1
 selenium==2.48.0
