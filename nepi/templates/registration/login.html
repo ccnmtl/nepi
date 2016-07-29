@@ -84,18 +84,15 @@
                 <div class="login-form-submit">
                     <input class="btn pull-right" type="submit" value="{% trans 'Log In' %}"></input>
                 </div>
-                <div class="login-form-forgot">
-                    <a class="pull-right" href="/accounts/password_reset/">{% trans 'Forgotten your password or username?' %}</a>
+                <div class="text-right">
+                    <a href="/accounts/password_reset/">{% trans 'Forgotten your password or username?' %}</a>
+                </div>
+                <div class="text-right">
+                    <a href="/contact/">{% trans 'Contact ICAP' %}</a>
                 </div>
             </div>
             <input type="hidden" name="next" value="{{ next }}"></input>
         </form>
-
-        <div class="login-form-ques">
-            <ul>
-                <li><a class="pull-right" href="/contact/">{% trans 'Contact ICAP' %}</a></li>
-            </ul>
-        </div>
     </div>
 </div>
 {% endblock %}
