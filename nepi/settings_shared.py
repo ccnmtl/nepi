@@ -33,9 +33,9 @@ MIDDLEWARE_CLASSES += [
     'django.middleware.locale.LocaleMiddleware',
 ]
 
-TEMPLATE_CONTEXT_PROCESSORS += [  # noqa
-    'nepi.main.views.context_processor',
-]
+TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
+    'nepi.main.views.context_processor'
+)
 
 INSTALLED_APPS += [  # noqa
     'sorl.thumbnail',
