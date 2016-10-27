@@ -81,7 +81,7 @@ class TestRegistrationView(TestCase):
         self.assertEquals(PendingTeachers.objects.count(), 0)
 
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/account_created/', 302)])
+                          [('/account_created/', 302)])
         self.assertTemplateUsed(response, 'flatpages/account_created.html')
 
         student = User.objects.get(username='student')
@@ -103,7 +103,7 @@ class TestRegistrationView(TestCase):
         self.assertEquals(PendingTeachers.objects.count(), 1)
 
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/account_created/', 302)])
+                          [('/account_created/', 302)])
         self.assertTemplateUsed(response, 'flatpages/account_created.html')
 
         teacher = User.objects.get(username='teacher')

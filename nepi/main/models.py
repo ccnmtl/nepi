@@ -8,7 +8,7 @@ import hmac
 from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericRelation
 from django.core.cache import cache
 from django.db import models
 from django.db.models.aggregates import Min, Max
@@ -325,7 +325,7 @@ class PendingTeachers(models.Model):
 
 
 class AggregateQuizScore(models.Model):
-    pageblocks = generic.GenericRelation(
+    pageblocks = GenericRelation(
         PageBlock, related_query_name="aggregate_quiz_score")
     quiz_class = models.TextField()
     display_name = 'Aggregate Quiz Score'

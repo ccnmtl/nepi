@@ -1,4 +1,5 @@
 from django import template
+from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from pagetree.models import PageBlock
@@ -19,7 +20,7 @@ def get_quizzes_by_css_class(hierarchy, cls):
 
 def get_scorable_content_types():
     types = []
-    hierarchy = models.get_model('pagetree', 'hierarchy')
+    hierarchy = apps.get_model('pagetree', 'hierarchy')
     for block in hierarchy.available_pageblocks():
         if (hasattr(block, 'score')):
             types.append(ContentType.objects.get_for_model(block))

@@ -32,7 +32,7 @@ class TestBasicViews(TestCase):
         response = self.client.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(response.redirect_chain[0],
-                          ('http://testserver/accounts/login/?next=/', 302))
+                          ('/accounts/login/?next=/', 302))
 
     def test_contact(self):
         response = self.client.post(reverse('contactus'),
@@ -94,19 +94,19 @@ class TestStudentLoggedInViews(TestCase):
                                    follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/pages/optionb/en/one/', 302)])
+                          [('/pages/optionb/en/one/', 302)])
 
     def test_deprecated_page(self):
-        response = self.client.get('http://testserver/pages/main/one/',
+        response = self.client.get('/pages/main/one/',
                                    follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/pages/optionb/en/one/', 301)])
+                          [('/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/dashboard/#user-modules', 302)])
+                          [('/dashboard/#user-modules', 302)])
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
     def test_home_noprofile(self):
@@ -116,7 +116,7 @@ class TestStudentLoggedInViews(TestCase):
         response = self.client.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(response.redirect_chain[0],
-                          ('http://testserver/register/', 302))
+                          ('/register/', 302))
 
     def test_dashboard(self):
         response = self.client.get(reverse('dashboard'))
@@ -184,12 +184,12 @@ class TestTeacherLoggedInViews(TestCase):
                                    follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/pages/optionb/en/one/', 302)])
+                          [('/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/dashboard/#user-groups', 302)])
+                          [('/dashboard/#user-groups', 302)])
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
     def test_dashboard(self):
@@ -247,12 +247,12 @@ class TestInstitutionAdminLoggedInViews(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/pages/optionb/en/one/', 302)])
+                          [('/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/dashboard/#user-groups', 302)])
+                          [('/dashboard/#user-groups', 302)])
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
     def test_dashboard(self):
@@ -329,12 +329,12 @@ class TestCountryAdminLoggedInViews(TestCase):
                                    follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/pages/optionb/en/one/', 302)])
+                          [('/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/dashboard/#user-groups', 302)])
+                          [('/dashboard/#user-groups', 302)])
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
     def test_dashboard(self):
@@ -404,12 +404,12 @@ class TestICAPLoggedInViews(TestCase):
                                    follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/pages/optionb/en/one/', 302)])
+                          [('/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/dashboard/#user-groups', 302)])
+                          [('/dashboard/#user-groups', 302)])
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
     def test_dashboard(self):
@@ -900,7 +900,7 @@ class TestCreateGroupView(TestCase):
 
         response = self.client.post("/create_group/", data, follow=True)
         self.assertEquals(response.redirect_chain, [(
-            'http://testserver/dashboard/#user-groups', 302)])
+            '/dashboard/#user-groups', 302)])
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
         group = Group.objects.get(name='The Group')
