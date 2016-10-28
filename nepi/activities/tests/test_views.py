@@ -310,8 +310,12 @@ class TestUpdateConversationView(TestCase):
         self.assertEquals(response.status_code, 200)
 
     def test_get_context_data(self):
+        conversation = GoodConversationFactory()
+        url = reverse('update_conversation', kwargs={'pk': conversation.id})
+
         view = UpdateConversationView()
-        view.object = GoodConversationFactory()
+        view.object = conversation
+        view.request = RequestFactory().post(url)
 
         ctx = view.get_context_data()
         self.assertEquals(ctx['scenario'], view.object.get_scenario())
