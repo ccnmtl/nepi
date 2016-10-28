@@ -1,7 +1,6 @@
 from django import template
 from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
-from django.db import models
 from pagetree.models import PageBlock
 from quizblock.models import Answer, Quiz
 
