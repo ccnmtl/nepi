@@ -40,10 +40,6 @@ class TestRegistrationView(TestCase):
         response = self.client.post('/register/', data, follow=True)
         self.assertTrue('username' in response.context_data['form']._errors)
 
-        data['username'] = ' spaces '
-        response = self.client.post('/register/', data, follow=True)
-        self.assertTrue('username' in response.context_data['form']._errors)
-
         data['username'] = 'sp aces'
         response = self.client.post('/register/', data, follow=True)
         self.assertTrue('username' in response.context_data['form']._errors)
