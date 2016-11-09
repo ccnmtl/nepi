@@ -2,7 +2,7 @@ from decimal import Decimal
 from datetime import datetime
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericRelation
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.query_utils import Q
@@ -57,7 +57,7 @@ class Conversation(models.Model):
 
 
 class ConversationScenario(models.Model):
-    pageblocks = generic.GenericRelation(PageBlock)
+    pageblocks = GenericRelation(PageBlock)
     description = models.TextField(blank=True)
     display_name = "Conversation Scenario"
     template_file = "activities/conversation.html"
@@ -267,7 +267,7 @@ class ConversationResponse(models.Model):
 
 
 class ImageInteractive(models.Model):
-    pageblocks = generic.GenericRelation(PageBlock)
+    pageblocks = GenericRelation(PageBlock)
     template_file = "activities/imagemapchart.html"
     js_template_file = "activities/imagemapchart_js.html"
     css_template_file = "activities/imagemapchart_css.html"
@@ -318,7 +318,7 @@ class ImageInteractiveForm(forms.ModelForm):
 
 
 class ARTCard(models.Model):
-    pageblocks = generic.GenericRelation(PageBlock)
+    pageblocks = GenericRelation(PageBlock)
     template_file = "activities/artcard.html"
     js_template_file = "activities/artcard_js.html"
     css_template_file = "activities/artcard_css.html"
@@ -369,7 +369,7 @@ class ARTCardForm(forms.ModelForm):
 
 
 class AdherenceCard(models.Model):
-    pageblocks = generic.GenericRelation(PageBlock)
+    pageblocks = GenericRelation(PageBlock)
     template_file = "activities/adherencecard.html"
     quiz_class = models.TextField()
     display_name = "Adherence Card"
@@ -418,7 +418,7 @@ class AdherenceCardForm(forms.ModelForm):
 
 
 class RetentionRateCard(models.Model):
-    pageblocks = generic.GenericRelation(PageBlock)
+    pageblocks = GenericRelation(PageBlock)
     template_file = "activities/retentionrate.html"
     js_template_file = "activities/retentionrate_js.html"
     css_template_file = "activities/retentionrate_css.html"
@@ -580,7 +580,7 @@ class Day(models.Model):
 
 
 class CalendarChart(models.Model):
-    pageblocks = generic.GenericRelation(PageBlock)
+    pageblocks = GenericRelation(PageBlock)
     template_file = "activities/calendarchart.html"
     js_template_file = "activities/calendarchart_js.html"
     css_template_file = "activities/calendarchart_css.html"
@@ -713,7 +713,7 @@ class CalendarResponse(models.Model):
 
 
 class DosageActivity(models.Model):
-    pageblocks = generic.GenericRelation(PageBlock)
+    pageblocks = GenericRelation(PageBlock)
     template_file = "activities/dosageactivity.html"
     js_template_file = "activities/dosageactivity_js.html"
     css_template_file = "activities/dosageactivity_css.html"
