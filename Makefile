@@ -13,3 +13,8 @@ makemessages: check
 
 compilemessages: check
 	$(MANAGE) compilemessages
+
+eslint: $(JS_SENTINAL)
+	$(NODE_MODULES)/.bin/eslint $(JS_FILES)
+
+.PHONY: eslint
