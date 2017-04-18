@@ -10,6 +10,7 @@ from django.contrib.auth.views import (
     password_change, password_change_done, password_reset_done,
     password_reset_confirm, password_reset_complete)
 from django.views.generic import TemplateView
+import django.views.static
 
 from nepi.main.views import (
     CreateGroupView, UpdateGroupView, DeleteGroupView, CreateSchoolView,
@@ -129,9 +130,9 @@ urlpatterns = [
     url(r'^stats/$', TemplateView.as_view(template_name="stats.html")),
     url(r'smoketest/', include('smoketest.urls')),
     url(r'^site_media/(?P<path>.*)$',
-        'django.views.static.serve', {'document_root': site_media_root}),
+        django.views.static.serve, {'document_root': site_media_root}),
     url(r'^uploads/(?P<path>.*)$',
-        'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+        django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
 
     url(r'^quizblock/', include('quizblock.urls')),
     url(r'^pagetree/', include('pagetree.urls')),

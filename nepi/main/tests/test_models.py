@@ -4,6 +4,8 @@ import datetime
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.test import TestCase
+from django.utils import timezone
+
 from pagetree.models import Hierarchy, Section, UserPageVisit
 from pagetree.tests.factories import HierarchyFactory, ModuleFactory
 from quizblock.models import Quiz, Question, Answer, Submission, Response
@@ -317,6 +319,8 @@ class TestUserProfile(TestCase):
         self.assertEquals(delta, "00:00:00")
 
         now = datetime.datetime.now()
+        now = timezone.make_aware(now, timezone.get_current_timezone())
+
         section_one = Section.objects.get(slug='one')
         child_one = Section.objects.get(slug='introduction')
         child_two = Section.objects.get(slug='two')

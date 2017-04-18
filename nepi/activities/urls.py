@@ -1,11 +1,10 @@
-from django.conf.urls import url, patterns
+from django.conf.urls import url
 from nepi.activities.views import (
     CreateConversationView, UpdateConversationView,
     SaveResponse, LastResponse, SaveRetentionResponse, SaveCalendarResponse)
 
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^create_conversation/(?P<pk>\d+)/(?P<type>\w)/$',
         CreateConversationView.as_view(),
         name='create_conversation'),
@@ -23,4 +22,4 @@ urlpatterns = patterns(
     url(r'^calendar_click/$',
         SaveCalendarResponse.as_view(),
         name='calendar_click'),
-)
+]
