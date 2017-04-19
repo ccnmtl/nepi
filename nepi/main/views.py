@@ -12,7 +12,6 @@ from django.http import HttpResponseRedirect
 from django.http.response import HttpResponseForbidden, StreamingHttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
-from django.template.context import Context
 from django.utils import translation
 from django.utils.translation import LANGUAGE_SESSION_KEY
 from django.views.generic import View
@@ -547,7 +546,7 @@ class ConfirmFacultyView(LoggedInMixin, AdministrationOnlyMixin,
         subject = "Your request for faculty access to the " \
             "ICAP Nursing E-learning system has been approved"
 
-        ctx = Context({'user': user, 'school': user.profile.school})
+        ctx = {'user': user, 'school': user.profile.school}
         message = template.render(ctx)
 
         sender = settings.NEPI_MAILING_LIST
@@ -584,8 +583,7 @@ class DenyFacultyView(LoggedInMixin, AdministrationOnlyMixin,
         subject = "Your request for faculty access to the "\
             "ICAP Nursing E-learning system has been denied"
 
-        ctx = Context({'user': user, 'school': school})
-        message = template.render(ctx)
+        message = template.render({'user': user, 'school': school})
 
         sender = settings.NEPI_MAILING_LIST
         send_mail(subject, message, sender, [user.email])
@@ -626,7 +624,7 @@ class ContactView(FormView):
 
     def form_valid(self, form):
         form.cleaned_data['user'] = self.request.user
-        ctx = Context(form.cleaned_data)
+        ctx = form.cleaned_data
 
         template = loader.get_template('dashboard/contact_us_email.txt')
         message = template.render(ctx)
