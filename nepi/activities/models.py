@@ -1,5 +1,4 @@
 from decimal import Decimal
-from datetime import datetime
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
@@ -245,7 +244,7 @@ class ConversationScenarioForm(forms.ModelForm):
 
 
 class ConvClick(models.Model):
-    created = models.DateTimeField(default=datetime.now)
+    created = models.DateTimeField(auto_now_add=True)
     conversation = models.ForeignKey(Conversation, null=True, blank=True)
 
     def __unicode__(self):
@@ -490,7 +489,7 @@ class RetentionRateCardForm(forms.ModelForm):
 
 
 class RetentionClick(models.Model):
-    created = models.DateTimeField(default=datetime.now)
+    created = models.DateTimeField(auto_now_add=True)
     click_string = models.CharField(max_length=50)
 
     def __unicode__(self):
