@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.forms.fields import ChoiceField
 from django.template import loader
-from django.template.context import Context
 
 from nepi.main.models import UserProfile, Country, School, PendingTeachers
 
@@ -95,8 +94,7 @@ class UserProfileForm(forms.Form):
 
         subject = "ICAP Nursing E-Learning Registration"
 
-        ctx = Context({'user': user})
-        message = template.render(ctx)
+        message = template.render({'user': user})
 
         sender = settings.NEPI_MAILING_LIST
         recipients = [user.email]
@@ -109,8 +107,7 @@ class UserProfileForm(forms.Form):
         subject = "A request for faculty level access has " \
             "been submitted to the ICAP Nursing E-Learning system"
 
-        ctx = Context({'user': user, 'school': school})
-        message = template.render(ctx)
+        message = template.render({'user': user, 'school': school})
 
         sender = settings.NEPI_MAILING_LIST
         recipients = [settings.ICAP_MAILING_LIST]
