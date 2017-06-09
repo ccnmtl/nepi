@@ -32,7 +32,6 @@ class PendingTeacherAdmin(admin.ModelAdmin):
 
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Hierarchy)
-
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Group, SchoolGroupAdmin)
@@ -48,5 +47,6 @@ def section_hierarchy(obj):
 class UserPageVisitAdmin(admin.ModelAdmin):
     search_fields = ['user__username']
     list_display = ['user', 'section', section_hierarchy, 'status']
+
 
 admin.site.register(UserPageVisit, UserPageVisitAdmin)
