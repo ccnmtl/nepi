@@ -16,8 +16,8 @@
     "url": "https://github.com/ccnmtl/nepi/issues"
   },
   "devDependencies": {
-    "eslint": "~3.17.1",
+    "eslint": "~3.19.0",
     "jshint": "~2.9.1-rc1",
-    "jscs": "~2.7.0"
+    "jscs": "~3.0.7"
   }
 }
