@@ -42,6 +42,7 @@ def set_session_language(sender, user, request, **kwargs):
     except UserProfile.DoesNotExist:
         pass  # uni user logged in with no profile
 
+
 user_logged_in.connect(set_session_language)
 
 

@@ -31,12 +31,14 @@ class MonthAdmin(admin.ModelAdmin):
         DayInline,
     ]
 
+
 admin.site.register(Month, MonthAdmin)
 
 
 class RetentionResponseAdmin(admin.ModelAdmin):
     search_fields = ['user__username']
     list_display = ['user', ]
+
 
 admin.site.register(RetentionClick)
 admin.site.register(RetentionResponse, RetentionResponseAdmin)
