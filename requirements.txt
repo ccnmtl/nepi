@@ -43,7 +43,7 @@ urllib3==1.21.1
 certifi==2017.4.17
 
 requests==2.18.1
-logilab-common==1.4.0
+logilab-common==1.4.1
 logilab-astng==0.24.3
 editdistance==0.3.1
 pylint==1.7.2
