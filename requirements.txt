@@ -42,7 +42,7 @@ idna==2.6
 urllib3==1.22
 certifi==2017.7.27.1
 
-requests==2.18.3
+requests==2.18.4
 logilab-common==1.4.1
 logilab-astng==0.24.3
 editdistance==0.3.1
