@@ -73,11 +73,8 @@
             'change select[name="country"]': 'onCountryChange'
         },
         initialize: function(options) {
-            _.bindAll(this,
-                      'render',
-                      'onClearParticipantSearch',
-                      'onSearchParticipants',
-                      'onTurnPage');
+            _.bindAll(this, 'render', 'onClearParticipantSearch',
+                'onSearchParticipants', 'onTurnPage');
 
             var html = jQuery('#people-template').html();
             this.template = _.template(html);
@@ -161,6 +158,7 @@
             });
         },
         getParameterByName: function(name, url) {
+            // eslint-disable-next-line  no-useless-escape
             name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
             // eslint-disable-next-line security/detect-non-literal-regexp
             var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');

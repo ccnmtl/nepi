@@ -45,8 +45,8 @@ jQuery(document).ready(function() {
             .find('option').not('.all-or-none-option').remove();
     }
 
-    function populateSchoolChoices(elt, eltCountrySelect,
-                                   eltSchoolSelect, callback) {
+    function populateSchoolChoices(
+        elt, eltCountrySelect, eltSchoolSelect, callback) {
         clearSchoolChoices(elt);
 
         jQuery.ajax({
@@ -77,8 +77,8 @@ jQuery(document).ready(function() {
         });
     }
 
-    function populateSchoolGroupChoices(elt, eltSchoolSelect,
-                                        eltGroup, params) {
+    function populateSchoolGroupChoices(
+        elt, eltSchoolSelect, eltGroup, params) {
         jQuery.ajax({
             type: 'POST',
             url: '/groups/' + jQuery(eltSchoolSelect).val() + '/',
@@ -438,8 +438,8 @@ jQuery(document).ready(function() {
                         var eltGroupChoice = jQuery(elt)
                             .find('div.schoolgroup select')[0];
                         var params = {'managed': true};
-                        populateSchoolGroupChoices(elt, eltSchoolSelect,
-                                                   eltGroupChoice, params);
+                        populateSchoolGroupChoices(
+                            elt, eltSchoolSelect, eltGroupChoice, params);
                     }
                 }
             });
