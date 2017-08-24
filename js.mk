@@ -9,7 +9,6 @@ JS_FILES ?= media/js
 
 NODE_MODULES ?= ./node_modules
 JS_SENTINAL ?= $(NODE_MODULES)/sentinal
-JSHINT ?= $(NODE_MODULES)/jshint/bin/jshint
 ESLINT ?= $(NODE_MODULES)/.bin/eslint
 
 $(JS_SENTINAL): package.json
@@ -17,13 +16,10 @@ $(JS_SENTINAL): package.json
 	npm install
 	touch $(JS_SENTINAL)
 
-jshint: $(JS_SENTINAL)
-	$(JSHINT) $(JS_FILES)
-
 eslint: $(JS_SENTINAL)
 	$(ESLINT) $(JS_FILES)
 
 jstest: $(JS_SENTINAL)
 	npm test
 
-.PHONY: jshint eslint jstest
+.PHONY: eslint jstest
