@@ -117,7 +117,6 @@
             return false;
         },
         onSearchParticipants: function(evt) {
-            var self = this;
             evt.preventDefault();
 
             this.participants.role = jQuery('select[name="role"]').val();
@@ -163,6 +162,7 @@
         },
         getParameterByName: function(name, url) {
             name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            // eslint-disable-next-line security/detect-non-literal-regexp
             var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
             var results = regex.exec(url);
             return results === null ? '' : decodeURIComponent(

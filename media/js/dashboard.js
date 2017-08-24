@@ -364,7 +364,6 @@ jQuery(document).ready(function() {
     function updateFacultyAccess(msg, url, elt) {
         if (confirm(msg)) {
             var row = jQuery(elt).parents('tr')[0];
-            var table = jQuery(row).parents('table')[0];
 
             jQuery.ajax({
                 url: url,
@@ -410,6 +409,8 @@ jQuery(document).ready(function() {
     });
 
     // initialize country selectors based on roles
+    // profile_attributes is defined in the template
+    /* eslint-disable no-undef */
     if (profile_attributes.role === 'faculty' ||
         profile_attributes.role === 'institution' ||
         profile_attributes.role === 'country') {
@@ -443,4 +444,5 @@ jQuery(document).ready(function() {
                 }
             });
     }
+    /* eslint-enable no-undef */
 });
