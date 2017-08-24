@@ -45,8 +45,8 @@ jQuery(document).ready(function() {
             .find('option').not('.all-or-none-option').remove();
     }
 
-    function populateSchoolChoices(elt, eltCountrySelect,
-                                   eltSchoolSelect, callback) {
+    function populateSchoolChoices(
+        elt, eltCountrySelect, eltSchoolSelect, callback) {
         clearSchoolChoices(elt);
 
         jQuery.ajax({
@@ -77,8 +77,8 @@ jQuery(document).ready(function() {
         });
     }
 
-    function populateSchoolGroupChoices(elt, eltSchoolSelect,
-                                        eltGroup, params) {
+    function populateSchoolGroupChoices(
+        elt, eltSchoolSelect, eltGroup, params) {
         jQuery.ajax({
             type: 'POST',
             url: '/groups/' + jQuery(eltSchoolSelect).val() + '/',
@@ -364,7 +364,6 @@ jQuery(document).ready(function() {
     function updateFacultyAccess(msg, url, elt) {
         if (confirm(msg)) {
             var row = jQuery(elt).parents('tr')[0];
-            var table = jQuery(row).parents('table')[0];
 
             jQuery.ajax({
                 url: url,
@@ -410,6 +409,8 @@ jQuery(document).ready(function() {
     });
 
     // initialize country selectors based on roles
+    // profile_attributes is defined in the template
+    /* eslint-disable no-undef */
     if (profile_attributes.role === 'faculty' ||
         profile_attributes.role === 'institution' ||
         profile_attributes.role === 'country') {
@@ -437,10 +438,11 @@ jQuery(document).ready(function() {
                         var eltGroupChoice = jQuery(elt)
                             .find('div.schoolgroup select')[0];
                         var params = {'managed': true};
-                        populateSchoolGroupChoices(elt, eltSchoolSelect,
-                                                   eltGroupChoice, params);
+                        populateSchoolGroupChoices(
+                            elt, eltSchoolSelect, eltGroupChoice, params);
                     }
                 }
             });
     }
+    /* eslint-enable no-undef */
 });

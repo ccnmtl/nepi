@@ -1,6 +1,7 @@
+/* exported showAnswer, is_form_complete, validate_numeric_input */
+
 function showAnswer(questionId) {
     var qid = '#q' + questionId;
-    var display_type = jQuery(qid).css('display');
     jQuery(qid).css('display', 'block');
 }
 
