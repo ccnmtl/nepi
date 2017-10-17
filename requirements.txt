@@ -49,8 +49,8 @@ editdistance==0.3.1
 pylint==1.7.4
 six==1.11.0
 ipaddress==1.0.18
-Unidecode==0.04.21  # for faker
-Faker==0.8.5
+text-unidecode==1.0  # for faker
+Faker==0.8.6
 factory_boy==2.9.2
 ldap3==2.3
 contextlib2==0.5.5
