@@ -3,6 +3,6 @@ https://docs.djangoproject.com/en/1.7/topics/i18n/translation
 * Translation files are located in <language>/LC_MESSAGES/django.po.
 * For local development, set the fully qualified path for LOCALE_PATHS in your local_settings.py
 
-* Regenerate messages by running make makemessages. This is not a destructive operation and will retain translations alredy completed. 
+* Regenerate messages by running make makemessages. This is not a destructive operation and will retain translations already completed. 
 
 * Compile messages by running make compilemessages. Check in the resulting .mo files
