@@ -9,6 +9,7 @@ from nepi.activities.models import (
     ConversationForm, RetentionRateCard, RetentionClick, RetentionResponse,
     CalendarResponse, CalendarChart, Day)
 from nepi.mixins import JSONResponseMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class CreateConversationView(CreateView):
@@ -170,7 +171,7 @@ class SaveRetentionResponse(View, JSONResponseMixin):
             return self.render_to_json_response({'success': False})
 
 
-class SaveCalendarResponse(View, JSONResponseMixin):
+class SaveCalendarResponse(LoginRequiredMixin, View, JSONResponseMixin):
     def post(self, request):
         calendar = get_object_or_404(CalendarChart,
                                      pk=request.POST['calendar'])
