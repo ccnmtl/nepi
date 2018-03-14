@@ -29,7 +29,7 @@ ALLOWED_HOSTS = [
 USE_TZ = True
 USE_I18N = True
 
-MIDDLEWARE_CLASSES += [
+MIDDLEWARE += [
     'django.middleware.locale.LocaleMiddleware',
 ]
 
