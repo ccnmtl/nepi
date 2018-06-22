@@ -3,7 +3,6 @@ httplib2==0.11.3
 feedparser==5.2.1
 Markdown==2.6.11
 smartypants==2.0.1
-uuid==1.30
 psycopg2==2.7.5
 olefile==0.45.1
 Pillow==5.1.0
