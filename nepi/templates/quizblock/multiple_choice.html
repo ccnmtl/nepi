@@ -6,15 +6,21 @@
     {% if response %}
         {% for answer in question.answer_set.all %}
             <li class="{% if 'show-correct' in block.pageblock.css_extra %}
-                {% if answer.correct %}correct{% else %}incorrect{% endif %}{% endif %}">
-                <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"                        
-                    value="{{answer.value}}" type="checkbox" disabled="disabled"
-                    {% ifanswerin response answer %}checked="checked"{%else%}{% endifanswerin %} "/>&nbsp;{{answer.label|safe}}
+                       {% if answer.correct %}correct{% else %}incorrect{% endif %}{% endif %}">
+                <label>
+                    <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+                           value="{{answer.value}}" type="checkbox" disabled="disabled"
+                           {% ifanswerin response answer %}checked="checked"{%else%}{% endifanswerin %} "/>&nbsp;{{answer.label|safe}}
+                </label>
             </li>
         {% endfor %}
     {% else %}
         {% for answer in question.answer_set.all %}
-            <li><input name="pageblock-{{block.pageblock.id}}-question{{question.id}}" value="{{answer.value}}" type="checkbox" /> &nbsp;{{answer.label|safe}}</li>
+            <li>
+                <label>
+                    <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}" value="{{answer.value}}" type="checkbox" /> &nbsp;{{answer.label|safe}}
+                </label>
+            </li>
         {% endfor %}
     {% endif %}
     </ul>

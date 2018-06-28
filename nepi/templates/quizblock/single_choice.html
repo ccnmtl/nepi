@@ -4,16 +4,18 @@
 <ol class="caseanswers">
     {% for answer in question.answer_set.all %}
         <li class="{% if 'show-correct' in block.pageblock.css_extra and response %}
-         {% if answer.correct %}correct{% else %}incorrect{% endif %}{% endif %}">
-            <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
-                   value="{{answer.value}}" type="radio"
-                   {% if response %}
+                   {% if answer.correct %}correct{% else %}incorrect{% endif %}{% endif %}">
+            <label>
+                <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+                       value="{{answer.value}}" type="radio"
+                       {% if response %}
                        disabled="disabled"
                        {% ifequal response.value answer.value %}
-                           checked="checked"
+                       checked="checked"
                        {% endifequal %}
-                   {% endif %} />
+                       {% endif %} />
                 &nbsp;{{answer.label|safe}}
+            </label>
         </li>
     {% endfor %}
 </ol>
