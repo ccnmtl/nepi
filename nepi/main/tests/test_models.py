@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from datetime import date
 import datetime
 
@@ -5,12 +7,13 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.encoding import smart_text
 
 from pagetree.models import Hierarchy, Section, UserPageVisit
 from pagetree.tests.factories import HierarchyFactory, ModuleFactory
 from quizblock.models import Quiz, Question, Answer, Submission, Response
 
-from factories import SchoolGroupFactory
+from nepi.main.tests.factories import SchoolGroupFactory
 from nepi.main.models import AggregateQuizScore, PendingTeachers, Country
 from nepi.main.templatetags.progressreport import completed
 from nepi.main.tests.factories import StudentProfileFactory, \
@@ -89,7 +92,7 @@ class TestUserProfile(TestCase):
         self.hierarchy = Hierarchy.objects.get(name='optionb-en')
 
     def test_user_profile_unis(self):
-        self.assertEquals(unicode(self.student), self.student.username)
+        self.assertEquals(smart_text(self.student), self.student.username)
 
     def test_display_name(self):
         self.assertEquals(self.student.profile.display_name(),
@@ -373,7 +376,7 @@ class TestPendingTeachers(TestCase):
                                                  school=school)
 
         label = "%s - %s" % (student, school)
-        self.assertEquals(label, teacher.__unicode__())
+        self.assertEquals(label, smart_text(teacher))
 
 
 class TestAggregateQuizScore(TestCase):

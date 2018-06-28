@@ -1,4 +1,5 @@
-from __builtin__ import classmethod
+from __future__ import unicode_literals
+
 import base64
 from datetime import timedelta
 import datetime
@@ -13,7 +14,7 @@ from django.core.cache import cache
 from django.db import models
 from django.db.models.aggregates import Min, Max
 from django.db.models.query_utils import Q
-from django.utils.encoding import smart_str
+from django.utils.encoding import python_2_unicode_compatible, smart_text
 from django.utils.translation import get_language_info
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from pagetree.reports import PagetreeReport, StandaloneReportColumn
@@ -76,6 +77,7 @@ class HierarchyCache(object):
         return ids
 
 
+@python_2_unicode_compatible
 class Country(models.Model):
     '''Users can select counties from drop down menu,
     countries are stored by their official 2 letter codes.'''
@@ -85,7 +87,7 @@ class Country(models.Model):
     class Meta:
         ordering = ['name']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.display_name
 
     @classmethod
@@ -94,6 +96,7 @@ class Country(models.Model):
                 for c in Country.objects.all().order_by('display_name')]
 
 
+@python_2_unicode_compatible
 class School(models.Model):
     '''Some of the countries have fairly long names,
     assuming the schools may also have long names.'''
@@ -104,10 +107,11 @@ class School(models.Model):
         ordering = ['name']
         unique_together = ['name', 'country']
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s - %s' % (self.country.display_name, self.name)
 
 
+@python_2_unicode_compatible
 class Group(models.Model):
     '''Allow association of group with module.'''
     school = models.ForeignKey(School)
@@ -118,7 +122,7 @@ class Group(models.Model):
     module = models.ForeignKey(Hierarchy, null=True, default=None, blank=True)
     archived = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def created_by(self):
@@ -149,6 +153,7 @@ class Group(models.Model):
         return LearningModule.get_module_name(self.module)
 
 
+@python_2_unicode_compatible
 class UserProfile(models.Model):
     '''UserProfile adds extra information to a user,
     and associates the user with a group, school,
@@ -164,7 +169,7 @@ class UserProfile(models.Model):
                                 choices=settings.LANGUAGES,
                                 default=settings.DEFAULT_LANGUAGE)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.user.username
 
     class Meta:
@@ -315,15 +320,17 @@ class UserProfile(models.Model):
         return li['name']
 
 
+@python_2_unicode_compatible
 class PendingTeachers(models.Model):
     user_profile = models.ForeignKey(UserProfile,
                                      related_name="pending_teachers")
     school = models.ForeignKey(School)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s - %s" % (self.user_profile, self.school)
 
 
+@python_2_unicode_compatible
 class AggregateQuizScore(models.Model):
     pageblocks = GenericRelation(
         PageBlock, related_query_name="aggregate_quiz_score")
@@ -334,8 +341,8 @@ class AggregateQuizScore(models.Model):
     def pageblock(self):
         return self.pageblocks.all()[0]
 
-    def __unicode__(self):
-        return "%s -- %s" % (unicode(self.pageblock()), self.quiz_category)
+    def __str__(self):
+        return "%s -- %s" % (smart_text(self.pageblock()), self.quiz_category)
 
     @classmethod
     def add_form(self):
@@ -368,7 +375,7 @@ class AggregateQuizScoreForm(forms.ModelForm):
 
 
 def random_user(username):
-    username = smart_str(username)
+    username = smart_text(username)
     digest = hmac.new(settings.PARTICIPANT_SECRET,
                       msg=username, digestmod=hashlib.sha256).digest()
     return base64.b64encode(digest).decode()
@@ -397,7 +404,7 @@ class DetailedReport(PagetreeReport):
             StandaloneReportColumn(
                 'country', 'profile', 'string',
                 'affiliated country',
-                lambda x: smart_str(x.profile.country.display_name)),
+                lambda x: smart_text(x.profile.country.display_name)),
             StandaloneReportColumn(
                 'group', 'profile', 'list',
                 'Groups',
