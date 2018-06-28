@@ -1,4 +1,3 @@
-from __builtin__ import classmethod
 import base64
 from datetime import timedelta
 import datetime
