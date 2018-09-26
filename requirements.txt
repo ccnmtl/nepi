@@ -26,7 +26,7 @@ ipython_genutils==0.2.0
 decorator==4.2.1
 ptyprocess==0.6.0
 pexpect==4.6.0
-pickleshare==0.7.4
+pickleshare==0.7.5
 simplegeneric==0.8.1
 ipython==5.8.0 # pyup: <6.0.0
 ipdb==0.11
