@@ -14,7 +14,9 @@ from django.core.cache import cache
 from django.db import models
 from django.db.models.aggregates import Min, Max
 from django.db.models.query_utils import Q
-from django.utils.encoding import python_2_unicode_compatible, smart_text
+from django.utils.encoding import (
+    python_2_unicode_compatible, smart_text, smart_bytes
+)
 from django.utils.translation import get_language_info
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from pagetree.reports import PagetreeReport, StandaloneReportColumn
@@ -376,8 +378,9 @@ class AggregateQuizScoreForm(forms.ModelForm):
 
 def random_user(username):
     username = smart_text(username)
-    digest = hmac.new(settings.PARTICIPANT_SECRET,
-                      msg=username, digestmod=hashlib.sha256).digest()
+    digest = hmac.new(smart_bytes(settings.PARTICIPANT_SECRET),
+                      msg=smart_bytes(username),
+                      digestmod=hashlib.sha256).digest()
     return base64.b64encode(digest).decode()
 
 
