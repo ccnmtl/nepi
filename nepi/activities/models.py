@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from decimal import Decimal
 from django import forms
 from django.contrib.auth.models import User
@@ -5,6 +7,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.query_utils import Q
+from django.utils.encoding import python_2_unicode_compatible, smart_text
 from pagetree.models import PageBlock
 from pagetree.reports import ReportableInterface, ReportColumnInterface
 
@@ -15,6 +18,7 @@ CONV_CHOICES = (
 )
 
 
+@python_2_unicode_compatible
 class Conversation(models.Model):
     scenario_type = models.CharField(max_length=1, choices=CONV_CHOICES,
                                      default='G')
@@ -24,8 +28,8 @@ class Conversation(models.Model):
     response_three = models.TextField(null=True, blank=True)
     complete_dialog = models.TextField(null=True, blank=True)
 
-    def __unicode__(self):
-        return unicode(self.scenario_type)
+    def __str__(self):
+        return smart_text(self.scenario_type)
 
     def as_dict(self):
         return dict(
@@ -55,6 +59,7 @@ class Conversation(models.Model):
             return self.bad_conversation.first()
 
 
+@python_2_unicode_compatible
 class ConversationScenario(models.Model):
     pageblocks = GenericRelation(PageBlock)
     description = models.TextField(blank=True)
@@ -72,8 +77,8 @@ class ConversationScenario(models.Model):
     def pageblock(self):
         return self.pageblocks.all()[0]
 
-    def __unicode__(self):
-        return unicode(self.pageblock())
+    def __str__(self):
+        return smart_text(self.pageblock())
 
     def needs_submit(self):
         '''Pageblock will see that block has needs
@@ -243,14 +248,16 @@ class ConversationScenarioForm(forms.ModelForm):
         exclude = ('good_conversation', 'bad_conversation',)
 
 
+@python_2_unicode_compatible
 class ConvClick(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     conversation = models.ForeignKey(Conversation, null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s Click" % self.conversation.scenario_type
 
 
+@python_2_unicode_compatible
 class ConversationResponse(models.Model):
     conv_scen = models.ForeignKey(ConversationScenario, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
@@ -261,10 +268,11 @@ class ConversationResponse(models.Model):
     third_click = models.ForeignKey(ConvClick, related_name="third_click",
                                     null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return "Response to %s" % self.conv_scen
 
 
+@python_2_unicode_compatible
 class ImageInteractive(models.Model):
     pageblocks = GenericRelation(PageBlock)
     template_file = "activities/imagemapchart.html"
@@ -276,8 +284,8 @@ class ImageInteractive(models.Model):
     def pageblock(self):
         return self.pageblocks.all()[0]
 
-    def __unicode__(self):
-        return unicode(self.pageblock())
+    def __str__(self):
+        return smart_text(self.pageblock())
 
     def needs_submit(self):
         return False
@@ -316,6 +324,7 @@ class ImageInteractiveForm(forms.ModelForm):
         exclude = []
 
 
+@python_2_unicode_compatible
 class ARTCard(models.Model):
     pageblocks = GenericRelation(PageBlock)
     template_file = "activities/artcard.html"
@@ -327,8 +336,8 @@ class ARTCard(models.Model):
     def pageblock(self):
         return self.pageblocks.all()[0]
 
-    def __unicode__(self):
-        return unicode(self.pageblock())
+    def __str__(self):
+        return smart_text(self.pageblock())
 
     def needs_submit(self):
         return False
@@ -367,6 +376,7 @@ class ARTCardForm(forms.ModelForm):
         exclude = []
 
 
+@python_2_unicode_compatible
 class AdherenceCard(models.Model):
     pageblocks = GenericRelation(PageBlock)
     template_file = "activities/adherencecard.html"
@@ -376,8 +386,8 @@ class AdherenceCard(models.Model):
     def pageblock(self):
         return self.pageblocks.all()[0]
 
-    def __unicode__(self):
-        return unicode(self.pageblock())
+    def __str__(self):
+        return smart_text(self.pageblock())
 
     def needs_submit(self):
         return False
@@ -416,6 +426,7 @@ class AdherenceCardForm(forms.ModelForm):
         exclude = []
 
 
+@python_2_unicode_compatible
 class RetentionRateCard(models.Model):
     pageblocks = GenericRelation(PageBlock)
     template_file = "activities/retentionrate.html"
@@ -427,8 +438,8 @@ class RetentionRateCard(models.Model):
     def pageblock(self):
         return self.pageblocks.all()[0]
 
-    def __unicode__(self):
-        return unicode(self.pageblock())
+    def __str__(self):
+        return smart_text(self.pageblock())
 
     def needs_submit(self):
         return True
@@ -488,14 +499,16 @@ class RetentionRateCardForm(forms.ModelForm):
         exclude = []
 
 
+@python_2_unicode_compatible
 class RetentionClick(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     click_string = models.CharField(max_length=50)
 
-    def __unicode__(self):
-        return self.click_string
+    def __str__(self):
+        return smart_text(self.click_string)
 
 
+@python_2_unicode_compatible
 class RetentionResponse(models.Model):
     retentionrate = models.ForeignKey(RetentionRateCard, null=True, blank=True)
     user = models.ForeignKey(User, null=True, blank=True)
@@ -518,17 +531,18 @@ class RetentionResponse(models.Model):
         related_name="retention_follow_up_click",
         null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return("Response to " + str(self.retentionrate))
 
 
+@python_2_unicode_compatible
 class Month(models.Model):
     display_name = models.CharField(max_length=255, default="")
 
     def month_name(self):
         return self.display_name.split(' ')[0]
 
-    def __unicode__(self):
+    def __str__(self):
         hierarchy_name = None
         chart = self.calendarchart_set.first()
         if chart:
@@ -552,6 +566,7 @@ class Month(models.Model):
         return d
 
 
+@python_2_unicode_compatible
 class Day(models.Model):
     calendar = models.ForeignKey(Month)
     number = models.IntegerField(default=1)
@@ -560,8 +575,8 @@ class Day(models.Model):
     class Meta:
         ordering = ['number']
 
-    def __unicode__(self):
-        return"%s %s" % (self.number, self.explanation)
+    def __str__(self):
+        return "%s %s" % (self.number, self.explanation)
 
     @classmethod
     def create_from_dict(cls, d):
@@ -578,6 +593,7 @@ class Day(models.Model):
         )
 
 
+@python_2_unicode_compatible
 class CalendarChart(models.Model):
     pageblocks = GenericRelation(PageBlock)
     template_file = "activities/calendarchart.html"
@@ -591,8 +607,8 @@ class CalendarChart(models.Model):
     def pageblock(self):
         return self.pageblocks.all()[0]
 
-    def __unicode__(self):
-        return unicode(self.pageblock())
+    def __str__(self):
+        return smart_text(self.pageblock())
 
     def needs_submit(self):
         return True
@@ -711,6 +727,7 @@ class CalendarResponse(models.Model):
                                       related_name="correct_click")
 
 
+@python_2_unicode_compatible
 class DosageActivity(models.Model):
     pageblocks = GenericRelation(PageBlock)
     template_file = "activities/dosageactivity.html"
@@ -726,8 +743,8 @@ class DosageActivity(models.Model):
     def pageblock(self):
         return self.pageblocks.all()[0]
 
-    def __unicode__(self):
-        return unicode(self.pageblock())
+    def __str__(self):
+        return smart_text(self.pageblock())
 
     def needs_submit(self):
         return True

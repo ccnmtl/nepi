@@ -13,7 +13,9 @@ from django.utils.translation import get_language, LANGUAGE_SESSION_KEY
 from pagetree.models import UserPageVisit, Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
 
-from factories import UserFactory, UserProfileFactory, ICAPProfileFactory
+from nepi.main.tests.factories import (
+    UserFactory, UserProfileFactory, ICAPProfileFactory
+)
 from nepi.main.forms import ContactForm
 from nepi.main.models import Country, School, Group, PendingTeachers
 from nepi.main.tests.factories import SchoolFactory, CountryFactory, \

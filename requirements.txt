@@ -12,11 +12,10 @@ pep8==1.7.1
 pyflakes==2.0.0
 mccabe==0.6.1
 pycodestyle==2.4.0
-enum34==1.1.6
+enum34==1.1.6; python_version < '3.4'
 configparser==3.5.0
 flake8==3.6.0
 tornado==4.5.3 # pyup: <5.0
-BeautifulSoup==3.2.1
 cssselect==1.0.3
 lxml==4.2.5
 fuzzywuzzy==0.17.0
@@ -41,6 +40,9 @@ idna==2.7
 urllib3==1.24.1
 certifi==2018.11.29
 
+asn1crypto==0.24.0  # cryptography
+cryptography==2.4.2
+
 requests==2.20.1
 logilab-common==1.4.2
 logilab-astng==0.24.3
@@ -57,7 +59,7 @@ rcssmin==1.0.6
 rjsmin==1.0.12
 
 djangowind==1.2.1
-requirements/src/sorl-3.1.tar.gz
+requirements/src/sorl-3.2ctl-py2.py3-none-any.whl
 django-staticmedia==0.2.2
 django-indexer==0.3.0
 django-templatetag-sugar==1.0
