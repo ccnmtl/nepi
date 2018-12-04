@@ -62,7 +62,7 @@ class TestLastResponseSaveViews(TestCase):
         self.assertIsNone(cr.third_click)
 
         upv = UserPageVisit.objects.get(user=up.user, section=self.section)
-        self.assertEquals(upv.status, "incomplete")
+        self.assertEqual(upv.status, "incomplete")
 
         '''Now check that get last response works'''
         response = client.post(
@@ -123,7 +123,7 @@ class TestLastResponseSaveViews(TestCase):
                                     })
 
         upv = UserPageVisit.objects.get(user=up.user, section=self.section)
-        self.assertEquals(upv.status, "complete")
+        self.assertEqual(upv.status, "complete")
 
 
 class TestRetentionResponseView(TestCase):
@@ -150,7 +150,7 @@ class TestRetentionResponseView(TestCase):
                   'retention_id': self.rf.pk}
             )
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(1, RetentionResponse.objects.filter(
+        self.assertEqual(1, RetentionResponse.objects.filter(
             retentionrate=self.rf, user=self.user).count())
         the_json = json.loads(response.content)
         self.assertEqual(the_json, {'done': False, 'success': True})
@@ -189,7 +189,7 @@ class TestRetentionResponseView(TestCase):
         the_json = loads(response.content)
         self.assertFalse(the_json['done'])
         self.assertTrue(the_json['success'])
-        self.assertEquals(0, UserPageVisit.objects.filter(
+        self.assertEqual(0, UserPageVisit.objects.filter(
             user=self.user, section=self.section).count())
 
         data['click_string'] = 'start_date_click'
@@ -209,7 +209,7 @@ class TestRetentionResponseView(TestCase):
         self.assertTrue(self.rf.unlocked(self.user))
 
         upv = UserPageVisit.objects.get(user=self.user, section=self.section)
-        self.assertEquals(upv.status, 'complete')
+        self.assertEqual(upv.status, 'complete')
 
     def test_retention_response_duplicate(self):
         self.client.login(username=self.user.username, password="test")
@@ -263,7 +263,7 @@ class TestCalendarResponseView(TestCase):
         self.assertEqual(the_json, {'success': True})
 
         upv = UserPageVisit.objects.get(user=up.user, section=self.section)
-        self.assertEquals(upv.status, "incomplete")
+        self.assertEqual(upv.status, "incomplete")
 
         '''Make sure it still needs to be submitted since we
         only have one user response'''
@@ -295,7 +295,7 @@ class TestCalendarResponseView(TestCase):
         self.assertEqual(the_json, {'success': True})
 
         upv = UserPageVisit.objects.get(user=up.user, section=self.section)
-        self.assertEquals(upv.status, "complete")
+        self.assertEqual(upv.status, "complete")
 
 
 class TestUpdateConversationView(TestCase):
@@ -307,7 +307,7 @@ class TestUpdateConversationView(TestCase):
         up = UserProfileFactory()
         self.client.login(username=up.user.username, password="test")
         response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_get_context_data(self):
         conversation = GoodConversationFactory()
@@ -318,4 +318,4 @@ class TestUpdateConversationView(TestCase):
         view.request = RequestFactory().post(url)
 
         ctx = view.get_context_data()
-        self.assertEquals(ctx['scenario'], view.object.get_scenario())
+        self.assertEqual(ctx['scenario'], view.object.get_scenario())

@@ -35,8 +35,8 @@ class TestBasicViews(TestCase):
     def test_home(self):
         response = self.client.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.redirect_chain[0],
-                          ('/accounts/login/?next=/', 302))
+        self.assertEqual(response.redirect_chain[0],
+                         ('/accounts/login/?next=/', 302))
 
     def test_contact(self):
         response = self.client.post(reverse('contactus'),
@@ -63,7 +63,7 @@ class TestBasicViews(TestCase):
 
     def test_smoketest(self):
         response = self.client.get("/smoketest/")
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_edit_page_form(self):
         staff = ICAPProfileFactory().user
@@ -97,20 +97,20 @@ class TestStudentLoggedInViews(TestCase):
         response = self.client.get(self.section.get_absolute_url(),
                                    follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.redirect_chain,
-                          [('/pages/optionb/en/one/', 302)])
+        self.assertEqual(response.redirect_chain,
+                         [('/pages/optionb/en/one/', 302)])
 
     def test_deprecated_page(self):
         response = self.client.get('/pages/main/one/',
                                    follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.redirect_chain,
-                          [('/pages/optionb/en/one/', 302)])
+        self.assertEqual(response.redirect_chain,
+                         [('/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
-        self.assertEquals(response.redirect_chain,
-                          [('/dashboard/#user-modules', 302)])
+        self.assertEqual(response.redirect_chain,
+                         [('/dashboard/#user-modules', 302)])
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
     def test_home_noprofile(self):
@@ -119,12 +119,12 @@ class TestStudentLoggedInViews(TestCase):
 
         response = self.client.get("/", follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.redirect_chain[0],
-                          ('/register/', 302))
+        self.assertEqual(response.redirect_chain[0],
+                         ('/register/', 302))
 
     def test_dashboard(self):
         response = self.client.get(reverse('dashboard'))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_dashboard_context(self):
         request = RequestFactory().get(reverse('dashboard'))
@@ -133,15 +133,15 @@ class TestStudentLoggedInViews(TestCase):
         view = UserProfileView()
         view.request = request
 
-        self.assertEquals(view.get_object(), request.user.profile)
+        self.assertEqual(view.get_object(), request.user.profile)
 
         view.object = request.user.profile
         ctx = view.get_context_data()
 
-        self.assertEquals(ctx['optionb'], self.hierarchy)
+        self.assertEqual(ctx['optionb'], self.hierarchy)
         self.assertIsNotNone(ctx['profile_form'])
-        self.assertEquals(ctx['countries'], Country.choices())
-        self.assertEquals(ctx['joined_groups'].count(), 0)
+        self.assertEqual(ctx['countries'], Country.choices())
+        self.assertEqual(ctx['joined_groups'].count(), 0)
         self.assertTrue('managed_groups' not in ctx)
         self.assertTrue('pending_teachers' not in ctx)
 
@@ -157,19 +157,19 @@ class TestStudentLoggedInViews(TestCase):
                 u'email': [self.student.email]}
 
         response = self.client.post(reverse('dashboard'), data)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_dashboard_post_change_language(self):
-        self.assertEquals(self.student.profile.language,
-                          settings.DEFAULT_LANGUAGE)
-        self.assertEquals(get_language(), 'en')
-        self.assertEquals(self.client.session[LANGUAGE_SESSION_KEY], 'en')
+        self.assertEqual(self.student.profile.language,
+                         settings.DEFAULT_LANGUAGE)
+        self.assertEqual(get_language(), 'en')
+        self.assertEqual(self.client.session[LANGUAGE_SESSION_KEY], 'en')
 
         self.update_user_language(u'pt')
         student = User.objects.get(id=self.student.id)
-        self.assertEquals(student.profile.language, 'pt')
-        self.assertEquals(get_language(), 'pt')
-        self.assertEquals(self.client.session[LANGUAGE_SESSION_KEY], 'pt')
+        self.assertEqual(student.profile.language, 'pt')
+        self.assertEqual(get_language(), 'pt')
+        self.assertEqual(self.client.session[LANGUAGE_SESSION_KEY], 'pt')
 
 
 class TestTeacherLoggedInViews(TestCase):
@@ -187,18 +187,18 @@ class TestTeacherLoggedInViews(TestCase):
         response = self.client.get(self.section.get_absolute_url(),
                                    follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.redirect_chain,
-                          [('/pages/optionb/en/one/', 302)])
+        self.assertEqual(response.redirect_chain,
+                         [('/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
-        self.assertEquals(response.redirect_chain,
-                          [('/dashboard/#user-groups', 302)])
+        self.assertEqual(response.redirect_chain,
+                         [('/dashboard/#user-groups', 302)])
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
     def test_dashboard(self):
         response = self.client.get('/dashboard/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_dashboard_context(self):
         request = RequestFactory().get('/dashboard/')
@@ -217,17 +217,17 @@ class TestTeacherLoggedInViews(TestCase):
         view = UserProfileView()
         view.request = request
 
-        self.assertEquals(view.get_object(), request.user.profile)
+        self.assertEqual(view.get_object(), request.user.profile)
 
         view.object = request.user.profile
         ctx = view.get_context_data()
 
-        self.assertEquals(ctx['optionb'], self.hierarchy)
+        self.assertEqual(ctx['optionb'], self.hierarchy)
         self.assertIsNotNone(ctx['profile_form'])
-        self.assertEquals(ctx['countries'], Country.choices())
-        self.assertEquals(ctx['joined_groups'].count(), 0)
-        self.assertEquals(len(ctx['managed_groups']), 1)
-        self.assertEquals(ctx['managed_groups'][0], school_group)
+        self.assertEqual(ctx['countries'], Country.choices())
+        self.assertEqual(ctx['joined_groups'].count(), 0)
+        self.assertEqual(len(ctx['managed_groups']), 1)
+        self.assertEqual(ctx['managed_groups'][0], school_group)
         self.assertTrue('pending_teachers' not in ctx)
 
 
@@ -250,18 +250,18 @@ class TestInstitutionAdminLoggedInViews(TestCase):
                                    follow=True)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.redirect_chain,
-                          [('/pages/optionb/en/one/', 302)])
+        self.assertEqual(response.redirect_chain,
+                         [('/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
-        self.assertEquals(response.redirect_chain,
-                          [('/dashboard/#user-groups', 302)])
+        self.assertEqual(response.redirect_chain,
+                         [('/dashboard/#user-groups', 302)])
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
     def test_dashboard(self):
         response = self.client.get('/dashboard/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_dashboard_context(self):
         request = RequestFactory().get('/dashboard/')
@@ -286,26 +286,26 @@ class TestInstitutionAdminLoggedInViews(TestCase):
         view = UserProfileView()
         view.request = request
 
-        self.assertEquals(view.get_object(), request.user.profile)
+        self.assertEqual(view.get_object(), request.user.profile)
 
         view.object = request.user.profile
         ctx = view.get_context_data()
 
-        self.assertEquals(ctx['optionb'], self.hierarchy)
+        self.assertEqual(ctx['optionb'], self.hierarchy)
         self.assertIsNotNone(ctx['profile_form'])
-        self.assertEquals(ctx['countries'], Country.choices())
-        self.assertEquals(ctx['joined_groups'].count(), 0)
-        self.assertEquals(len(ctx['managed_groups']), 2)
-        self.assertEquals(ctx['managed_groups'][0], admin_group)
-        self.assertEquals(ctx['managed_groups'][1], teacher_group)
+        self.assertEqual(ctx['countries'], Country.choices())
+        self.assertEqual(ctx['joined_groups'].count(), 0)
+        self.assertEqual(len(ctx['managed_groups']), 2)
+        self.assertEqual(ctx['managed_groups'][0], admin_group)
+        self.assertEqual(ctx['managed_groups'][1], teacher_group)
 
         # pending teachers
         PendingTeacherFactory()  # random country/school
         alt_school = SchoolFactory(country=self.admin.profile.country)
         PendingTeacherFactory(school=alt_school)  # same country, diff school
         pt = PendingTeacherFactory(school=self.admin.profile.school)  # visible
-        self.assertEquals(len(ctx['pending_teachers']), 1)
-        self.assertEquals(ctx['pending_teachers'][0], pt)
+        self.assertEqual(len(ctx['pending_teachers']), 1)
+        self.assertEqual(ctx['pending_teachers'][0], pt)
 
 
 class TestCountryAdminLoggedInViews(TestCase):
@@ -332,18 +332,18 @@ class TestCountryAdminLoggedInViews(TestCase):
         response = self.client.get(self.section.get_absolute_url(),
                                    follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.redirect_chain,
-                          [('/pages/optionb/en/one/', 302)])
+        self.assertEqual(response.redirect_chain,
+                         [('/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
-        self.assertEquals(response.redirect_chain,
-                          [('/dashboard/#user-groups', 302)])
+        self.assertEqual(response.redirect_chain,
+                         [('/dashboard/#user-groups', 302)])
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
     def test_dashboard(self):
         response = self.client.get('/dashboard/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_dashboard_context(self):
         request = RequestFactory().get('/dashboard/')
@@ -369,16 +369,16 @@ class TestCountryAdminLoggedInViews(TestCase):
         view = UserProfileView()
         view.request = request
 
-        self.assertEquals(view.get_object(), request.user.profile)
+        self.assertEqual(view.get_object(), request.user.profile)
 
         view.object = request.user.profile
         ctx = view.get_context_data()
 
-        self.assertEquals(ctx['optionb'], self.hierarchy)
+        self.assertEqual(ctx['optionb'], self.hierarchy)
         self.assertIsNotNone(ctx['profile_form'])
-        self.assertEquals(ctx['countries'], Country.choices())
-        self.assertEquals(ctx['joined_groups'].count(), 0)
-        self.assertEquals(len(ctx['managed_groups']), 3)
+        self.assertEqual(ctx['countries'], Country.choices())
+        self.assertEqual(ctx['joined_groups'].count(), 0)
+        self.assertEqual(len(ctx['managed_groups']), 3)
         self.assertTrue(admin_group in ctx['managed_groups'])
         self.assertTrue(teacher_group in ctx['managed_groups'])
         self.assertTrue(iadmin_group in ctx['managed_groups'])
@@ -387,7 +387,7 @@ class TestCountryAdminLoggedInViews(TestCase):
         PendingTeacherFactory()  # random country/school
         pt1 = PendingTeacherFactory(school=self.alt_school)
         pt2 = PendingTeacherFactory(school=self.school)  # visible
-        self.assertEquals(len(ctx['pending_teachers']), 2)
+        self.assertEqual(len(ctx['pending_teachers']), 2)
         self.assertTrue(pt2 in ctx['pending_teachers'])
         self.assertTrue(pt1 in ctx['pending_teachers'])
 
@@ -407,18 +407,18 @@ class TestICAPLoggedInViews(TestCase):
         response = self.client.get(self.section.get_absolute_url(),
                                    follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertEquals(response.redirect_chain,
-                          [('/pages/optionb/en/one/', 302)])
+        self.assertEqual(response.redirect_chain,
+                         [('/pages/optionb/en/one/', 302)])
 
     def test_home(self):
         response = self.client.get("/", follow=True)
-        self.assertEquals(response.redirect_chain,
-                          [('/dashboard/#user-groups', 302)])
+        self.assertEqual(response.redirect_chain,
+                         [('/dashboard/#user-groups', 302)])
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
     def test_dashboard(self):
         response = self.client.get('/dashboard/')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_dashboard_context(self):
         request = RequestFactory().get('/dashboard/')
@@ -431,23 +431,23 @@ class TestICAPLoggedInViews(TestCase):
         view = UserProfileView()
         view.request = request
 
-        self.assertEquals(view.get_object(), request.user.profile)
+        self.assertEqual(view.get_object(), request.user.profile)
 
         view.object = request.user.profile
         ctx = view.get_context_data()
 
-        self.assertEquals(ctx['optionb'], self.hierarchy)
+        self.assertEqual(ctx['optionb'], self.hierarchy)
         self.assertIsNotNone(ctx['profile_form'])
-        self.assertEquals(ctx['countries'], Country.choices())
-        self.assertEquals(ctx['joined_groups'].count(), 0)
-        self.assertEquals(len(ctx['managed_groups']), 2)
+        self.assertEqual(ctx['countries'], Country.choices())
+        self.assertEqual(ctx['joined_groups'].count(), 0)
+        self.assertEqual(len(ctx['managed_groups']), 2)
         self.assertTrue(a in ctx['managed_groups'])
         self.assertTrue(b in ctx['managed_groups'])
 
         # pending teachers
         pt = PendingTeacherFactory()  # random country/school
-        self.assertEquals(len(ctx['pending_teachers']), 1)
-        self.assertEquals(ctx['pending_teachers'][0], pt)
+        self.assertEqual(len(ctx['pending_teachers']), 1)
+        self.assertEqual(ctx['pending_teachers'][0], pt)
 
 
 class TestPageView(TestCase):
@@ -459,11 +459,12 @@ class TestPageView(TestCase):
                 'label': 'Welcome',
                 'slug': 'welcome',
                 'pageblocks': [
-                    {'label': 'Introduction',
-                     'css_extra': '',
-                     'block_type': 'Text Block',
-                     'body': 'random text goes here',
-                     },
+                    {
+                        'label': 'Introduction',
+                        'css_extra': '',
+                        'block_type': 'Text Block',
+                        'body': 'random text goes here',
+                    },
                 ],
                 'children': [],
             })
@@ -472,11 +473,12 @@ class TestPageView(TestCase):
                 'label': 'Page One',
                 'slug': 'page-one',
                 'pageblocks': [
-                    {'label': 'Introduction',
-                     'css_extra': '',
-                     'block_type': 'Text Block',
-                     'body': 'random text goes here',
-                     },
+                    {
+                        'label': 'Introduction',
+                        'css_extra': '',
+                        'block_type': 'Text Block',
+                        'body': 'random text goes here',
+                    },
                 ],
                 'children': [],
             })
@@ -485,11 +487,12 @@ class TestPageView(TestCase):
                 'label': 'Page Two',
                 'slug': 'page-two',
                 'pageblocks': [
-                    {'label': 'Content',
-                     'css_extra': '',
-                     'block_type': 'Text Block',
-                     'body': 'random text goes here',
-                     },
+                    {
+                        'label': 'Content',
+                        'css_extra': '',
+                        'block_type': 'Text Block',
+                        'body': 'random text goes here',
+                    },
                 ],
                 'children': [],
             })
@@ -514,28 +517,28 @@ class TestPageView(TestCase):
 
         ctx = view.get_extra_context()
         self.assertTrue('menu' in ctx)
-        self.assertEquals(len(ctx['menu']), 3)
+        self.assertEqual(len(ctx['menu']), 3)
 
-        self.assertEquals(ctx['menu'][0]['id'], section_one.id)
+        self.assertEqual(ctx['menu'][0]['id'], section_one.id)
         self.assertFalse(ctx['menu'][0]['disabled'])
-        self.assertEquals(ctx['menu'][0]['label'], 'Welcome')
-        self.assertEquals(ctx['menu'][0]['url'], u'/welcome/')
-        self.assertEquals(ctx['menu'][0]['depth'], 2)
+        self.assertEqual(ctx['menu'][0]['label'], 'Welcome')
+        self.assertEqual(ctx['menu'][0]['url'], u'/welcome/')
+        self.assertEqual(ctx['menu'][0]['depth'], 2)
 
-        self.assertEquals(ctx['menu'][1]['id'], section_two.id)
+        self.assertEqual(ctx['menu'][1]['id'], section_two.id)
         self.assertTrue(ctx['menu'][1]['disabled'])
-        self.assertEquals(ctx['menu'][2]['id'], section_three.id)
+        self.assertEqual(ctx['menu'][2]['id'], section_three.id)
         self.assertTrue(ctx['menu'][2]['disabled'])
 
         UserPageVisit.objects.create(user=self.u,
                                      section=section_one,
                                      status='complete')
         ctx = view.get_extra_context()
-        self.assertEquals(ctx['menu'][0]['id'], section_one.id)
+        self.assertEqual(ctx['menu'][0]['id'], section_one.id)
         self.assertFalse(ctx['menu'][0]['disabled'])
-        self.assertEquals(ctx['menu'][1]['id'], section_two.id)
+        self.assertEqual(ctx['menu'][1]['id'], section_two.id)
         self.assertFalse(ctx['menu'][1]['disabled'])
-        self.assertEquals(ctx['menu'][2]['id'], section_three.id)
+        self.assertEqual(ctx['menu'][2]['id'], section_three.id)
         self.assertTrue(ctx['menu'][2]['disabled'])
 
 
@@ -551,30 +554,30 @@ class TestSchoolChoiceView(TestCase):
 
     def test_ajax_only(self):
         response = self.client.get('/schools/%s/' % self.school.country.name)
-        self.assertEquals(response.status_code, 405)
+        self.assertEqual(response.status_code, 405)
 
     def test_get_country_not_found(self):
         response = self.client.get('/schools/11/', {},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def test_get_no_schools(self):
         response = self.client.get('/schools/%s/' % self.country.name, {},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = json.loads(response.content)
-        self.assertEquals(len(the_json['schools']), 0)
+        self.assertEqual(len(the_json['schools']), 0)
 
     def test_get_schools(self):
         response = self.client.get('/schools/%s/' % self.school.country.name,
                                    {},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = json.loads(response.content)
-        self.assertEquals(len(the_json['schools']), 1)
+        self.assertEqual(len(the_json['schools']), 1)
 
-        self.assertEquals(the_json['schools'][0]['id'], str(self.school.id))
-        self.assertEquals(the_json['schools'][0]['name'], self.school.name)
+        self.assertEqual(the_json['schools'][0]['id'], str(self.school.id))
+        self.assertEqual(the_json['schools'][0]['name'], self.school.name)
 
 
 class TestSchoolGroupChoiceView(TestCase):
@@ -587,21 +590,21 @@ class TestSchoolGroupChoiceView(TestCase):
     def test_ajax_only(self):
         grp = SchoolGroupFactory()
         response = self.client.post('/groups/%s/' % grp.school.id)
-        self.assertEquals(response.status_code, 405)
+        self.assertEqual(response.status_code, 405)
 
     def test_get_school_not_found(self):
         response = self.client.post('/groups/782/', {},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def test_get_no_groups(self):
         school = SchoolFactory()
         response = self.client.post('/groups/%s/' % school.id,
                                     {},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = json.loads(response.content)
-        self.assertEquals(len(the_json['groups']), 0)
+        self.assertEqual(len(the_json['groups']), 0)
 
     def test_get_groups(self):
         grp = SchoolGroupFactory()
@@ -609,12 +612,12 @@ class TestSchoolGroupChoiceView(TestCase):
         response = self.client.post('/groups/%s/' % grp.school.id,
                                     {},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = json.loads(response.content)
-        self.assertEquals(len(the_json['groups']), 1)
+        self.assertEqual(len(the_json['groups']), 1)
 
-        self.assertEquals(the_json['groups'][0]['id'], str(grp.id))
-        self.assertEquals(the_json['groups'][0]['name'], grp.name)
+        self.assertEqual(the_json['groups'][0]['id'], str(grp.id))
+        self.assertEqual(the_json['groups'][0]['name'], grp.name)
 
     def test_get_visible_groups(self):
         school = SchoolFactory()
@@ -628,12 +631,12 @@ class TestSchoolGroupChoiceView(TestCase):
         response = self.client.post('/groups/%s/' % school.id,
                                     {},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = json.loads(response.content)
-        self.assertEquals(len(the_json['groups']), 1)
+        self.assertEqual(len(the_json['groups']), 1)
 
-        self.assertEquals(the_json['groups'][0]['id'], str(grp.id))
-        self.assertEquals(the_json['groups'][0]['name'], grp.name)
+        self.assertEqual(the_json['groups'][0]['id'], str(grp.id))
+        self.assertEqual(the_json['groups'][0]['name'], grp.name)
 
     def test_get_managed_groups(self):
         school = self.user.profile.school
@@ -647,12 +650,12 @@ class TestSchoolGroupChoiceView(TestCase):
         response = self.client.post('/groups/%s/' % school.id,
                                     {'managed': True},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         the_json = json.loads(response.content)
-        self.assertEquals(len(the_json['groups']), 1)
+        self.assertEqual(len(the_json['groups']), 1)
 
-        self.assertEquals(the_json['groups'][0]['id'], str(created.id))
-        self.assertEquals(the_json['groups'][0]['name'], created.name)
+        self.assertEqual(the_json['groups'][0]['id'], str(created.id))
+        self.assertEqual(the_json['groups'][0]['name'], created.name)
 
 
 class TestCreateSchoolView(TestCase):
@@ -698,27 +701,27 @@ class TestUpdateGroupView(TestCase):
     def test_access(self):
         # not logged in
         response = self.client.post('/edit_group/', {})
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         # not authorized
         self.client.login(username=self.student.username, password="test")
         response = self.client.post('/edit_group/', {'pk': self.group.id})
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
         # not authorized
         self.client.login(username=self.teacher.username, password="test")
         response = self.client.post('/edit_group/', {'pk': self.group.id})
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
         # invalid method
         self.client.login(username=self.creator.username, password="test")
         response = self.client.get('/edit_group/')
-        self.assertEquals(response.status_code, 405)
+        self.assertEqual(response.status_code, 405)
 
         # required data not available
         self.client.login(username=self.creator.username, password="test")
         response = self.client.post('/edit_group/', {})
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def test_post(self):
         self.client.login(username=self.creator.username, password="test")
@@ -727,13 +730,13 @@ class TestUpdateGroupView(TestCase):
                                      'name': 'New Group',
                                      'start_date': '01/01/2015',
                                      'end_date': '01/05/2015'})
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         # refresh from database
         group = Group.objects.get(id=self.group.id)
-        self.assertEquals(group.name, 'New Group')
-        self.assertEquals(str(group.start_date), '2015-01-01')
-        self.assertEquals(str(group.end_date), '2015-01-05')
+        self.assertEqual(group.name, 'New Group')
+        self.assertEqual(str(group.start_date), '2015-01-01')
+        self.assertEqual(str(group.end_date), '2015-01-05')
 
 
 class TestJoinGroupView(TestCase):
@@ -744,25 +747,25 @@ class TestJoinGroupView(TestCase):
     def test_access(self):
         # not logged in
         response = self.client.post('/join_group/', {})
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         # method not authorized
         self.client.login(username=self.student.username, password="test")
         response = self.client.get('/join_group/')
-        self.assertEquals(response.status_code, 405)
+        self.assertEqual(response.status_code, 405)
 
         # invalid data
         response = self.client.post('/join_group/', {})
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def test_join_group(self):
-        self.assertEquals(self.student.profile.group.count(), 0)
+        self.assertEqual(self.student.profile.group.count(), 0)
 
         self.client.login(username=self.student.username, password="test")
         response = self.client.post('/join_group/', {'group': self.group.id})
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
-        self.assertEquals(self.student.profile.group.count(), 1)
+        self.assertEqual(self.student.profile.group.count(), 1)
 
 
 class TestDeleteGroupView(TestCase):
@@ -776,40 +779,40 @@ class TestDeleteGroupView(TestCase):
     def test_access(self):
         # not logged in
         response = self.client.post('/delete_group/', {})
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         # not authorized
         self.client.login(username=self.student.username, password="test")
         response = self.client.post('/delete_group/', {'group': self.group.id})
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
         # not authorized
         self.client.login(username=self.teacher.username, password="test")
         response = self.client.post('/delete_group/', {'group': self.group.id},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
         # invalid method
         self.client.login(username=self.creator.username, password="test")
         response = self.client.get('/delete_group/')
-        self.assertEquals(response.status_code, 405)
+        self.assertEqual(response.status_code, 405)
 
         # not ajax
         self.client.login(username=self.creator.username, password="test")
         response = self.client.post('/delete_group/', {})
-        self.assertEquals(response.status_code, 405)
+        self.assertEqual(response.status_code, 405)
 
         # required data not available
         self.client.login(username=self.creator.username, password="test")
         response = self.client.post('/delete_group/', {},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def test_post(self):
         self.client.login(username=self.creator.username, password="test")
         response = self.client.post('/delete_group/', {'group': self.group.id},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(loads(response.content)['success'])
 
         with self.assertRaises(Group.DoesNotExist):
@@ -832,36 +835,36 @@ class TestConfirmAndDenyFacultyViews(TestCase):
         self.client.login(username=self.icap.username, password="test")
 
         response = self.client.post('/faculty/confirm/', {})
-        self.assertEquals(response.status_code, 405)
+        self.assertEqual(response.status_code, 405)
 
         response = self.client.post('/faculty/deny/', {})
-        self.assertEquals(response.status_code, 405)
+        self.assertEqual(response.status_code, 405)
 
     def test_unauthorized(self):
         self.client.login(username=self.teacher.username, password="test")
         response = self.client.post('/faculty/confirm/',
                                     {'user_id': self.pending.id},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
         response = self.client.post('/faculty/deny/',
                                     {'user_id': self.pending.id},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
     def test_confirm_faculty(self):
         self.client.login(username=self.icap.username, password="test")
         response = self.client.post('/faculty/confirm/',
                                     {'user_id': self.pending.id},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.pending = User.objects.get(username=self.pending.username)
         self.assertTrue(self.pending.profile.is_teacher())
-        self.assertEquals(self.pending.profile.school, self.school)
-        self.assertEquals(self.pending.profile.country, self.school.country)
+        self.assertEqual(self.pending.profile.school, self.school)
+        self.assertEqual(self.pending.profile.country, self.school.country)
 
-        self.assertEquals(PendingTeachers.objects.count(), 0)
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(PendingTeachers.objects.count(), 0)
+        self.assertEqual(len(mail.outbox), 1)
 
     def test_deny_faculty(self):
         self.client.login(username=self.icap.username, password="test")
@@ -869,12 +872,12 @@ class TestConfirmAndDenyFacultyViews(TestCase):
         response = self.client.post('/faculty/deny/',
                                     {'user_id': self.pending.id},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.pending = User.objects.get(username=self.pending.username)
         self.assertTrue(self.pending.profile.is_student())
 
-        self.assertEquals(PendingTeachers.objects.count(), 0)
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(PendingTeachers.objects.count(), 0)
+        self.assertEqual(len(mail.outbox), 1)
 
 
 class TestCreateGroupView(TestCase):
@@ -890,7 +893,7 @@ class TestCreateGroupView(TestCase):
         student = StudentProfileFactory().user
         self.client.login(username=student.username, password="test")
         response = self.client.get('/create_group/')
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
     def test_create_group(self):
         self.client.login(username=self.teacher.username, password="test")
@@ -903,14 +906,14 @@ class TestCreateGroupView(TestCase):
         }
 
         response = self.client.post("/create_group/", data, follow=True)
-        self.assertEquals(response.redirect_chain, [(
+        self.assertEqual(response.redirect_chain, [(
             '/dashboard/#user-groups', 302)])
         self.assertTemplateUsed(response, 'dashboard/dashboard.html')
 
         group = Group.objects.get(name='The Group')
-        self.assertEquals(group.formatted_start_date(), '09/20/2018')
-        self.assertEquals(group.formatted_end_date(), '09/29/2018')
-        self.assertEquals(group.module, self.hierarchy)
+        self.assertEqual(group.formatted_start_date(), '09/20/2018')
+        self.assertEqual(group.formatted_end_date(), '09/29/2018')
+        self.assertEqual(group.module, self.hierarchy)
 
 
 class TestPeopleViews(TestCase):
@@ -938,7 +941,7 @@ class TestPeopleViews(TestCase):
         ctx = view.get_context_data()
         self.assertTrue('countries' in ctx)
         self.assertTrue('roles' in ctx)
-        self.assertEquals(ctx['user'], self.icap.user)
+        self.assertEqual(ctx['user'], self.icap.user)
 
     def test_serialize(self):
         request = RequestFactory().get('/dashboard/people/filter/')
@@ -950,30 +953,30 @@ class TestPeopleViews(TestCase):
         profiles = [self.affiliated_student, self.affiliated_teacher,
                     self.icap]
         the_json = view.serialize_participants(profiles)
-        self.assertEquals(len(the_json), 3)
+        self.assertEqual(len(the_json), 3)
 
         # student with an associated country
-        self.assertEquals(the_json[0]['last_name'],
-                          self.affiliated_student.user.last_name)
+        self.assertEqual(the_json[0]['last_name'],
+                         self.affiliated_student.user.last_name)
         self.assertTrue('school' not in the_json)
-        self.assertEquals(the_json[0]['country'],
-                          self.affiliated_student.country.display_name)
+        self.assertEqual(the_json[0]['country'],
+                         self.affiliated_student.country.display_name)
 
         # teacher with an associated country + school
-        self.assertEquals(the_json[1]['last_name'],
-                          self.affiliated_teacher.user.last_name)
-        self.assertEquals(the_json[1]['school'],
-                          self.affiliated_teacher.school.name)
-        self.assertEquals(the_json[1]['country'],
-                          self.affiliated_teacher.country.display_name)
+        self.assertEqual(the_json[1]['last_name'],
+                         self.affiliated_teacher.user.last_name)
+        self.assertEqual(the_json[1]['school'],
+                         self.affiliated_teacher.school.name)
+        self.assertEqual(the_json[1]['country'],
+                         self.affiliated_teacher.country.display_name)
 
         # icap admin
-        self.assertEquals(the_json[2]['last_name'],
-                          self.icap.user.last_name)
-        self.assertEquals(the_json[2]['school'],
-                          self.icap.school.name)
-        self.assertEquals(the_json[2]['country'],
-                          self.icap.country.display_name)
+        self.assertEqual(the_json[2]['last_name'],
+                         self.icap.user.last_name)
+        self.assertEqual(the_json[2]['school'],
+                         self.icap.school.name)
+        self.assertEqual(the_json[2]['country'],
+                         self.icap.country.display_name)
 
     def test_filter_by_role(self):
         request = RequestFactory().get('/dashboard/people/filter/',
@@ -985,7 +988,7 @@ class TestPeopleViews(TestCase):
 
         results = view.filter()
 
-        self.assertEquals(results.count(), 2)
+        self.assertEqual(results.count(), 2)
         self.assertTrue(results.get(id=self.affiliated_student.id))
         self.assertTrue(results.get(id=self.random_student.id))
 
@@ -999,7 +1002,7 @@ class TestPeopleViews(TestCase):
 
         results = view.filter()
 
-        self.assertEquals(results.count(), 3)
+        self.assertEqual(results.count(), 3)
         self.assertTrue(results.get(id=self.affiliated_student.id))
         self.assertTrue(results.get(id=self.affiliated_teacher.id))
         self.assertTrue(results.get(id=self.icap.id))
@@ -1015,7 +1018,7 @@ class TestPeopleViews(TestCase):
 
         results = view.filter()
 
-        self.assertEquals(results.count(), 2)
+        self.assertEqual(results.count(), 2)
         self.assertTrue(results.get(id=self.affiliated_teacher.id))
         self.assertTrue(results.get(id=self.icap.id))
 
@@ -1031,7 +1034,7 @@ class TestPeopleViews(TestCase):
 
         results = view.filter()
 
-        self.assertEquals(results.count(), 1)
+        self.assertEqual(results.count(), 1)
         self.assertTrue(results.get(id=self.icap.id))
 
     def test_get(self):
@@ -1047,34 +1050,34 @@ class TestPeopleViews(TestCase):
         response = view.get()
 
         the_json = json.loads(response.content)
-        self.assertEquals(the_json['offset'], 0)
-        self.assertEquals(the_json['total'], 1)
-        self.assertEquals(the_json['count'], 1)
-        self.assertEquals(the_json['limit'], view.MAX_PEOPLE)
-        self.assertEquals(len(the_json['participants']), 1)
+        self.assertEqual(the_json['offset'], 0)
+        self.assertEqual(the_json['total'], 1)
+        self.assertEqual(the_json['count'], 1)
+        self.assertEqual(the_json['limit'], view.MAX_PEOPLE)
+        self.assertEqual(len(the_json['participants']), 1)
 
     def test_forbidden(self):
         self.client.login(username=self.random_student.user.username,
                           password="test")
         response = self.client.get('/dashboard/people/')
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
         response = self.client.get('/dashboard/people/filter/')
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
         self.client.login(username=self.affiliated_teacher.user.username,
                           password="test")
         response = self.client.get('/dashboard/people/')
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
         response = self.client.get('/dashboard/people/filter/')
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
         country_admin = CountryAdministratorProfileFactory()
         self.client.login(username=country_admin.user.username,
                           password="test")
         response = self.client.get('/dashboard/people/')
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
         response = self.client.get('/dashboard/people/filter/')
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
 
 class TestDetailViews(TestCase):
@@ -1098,27 +1101,27 @@ class TestDetailViews(TestCase):
         args = [self.group.id]
 
         resp = self.client.get(reverse('group-details', args=args))
-        self.assertEquals(resp.status_code, 403)
+        self.assertEqual(resp.status_code, 403)
 
         resp = self.client.get(reverse('roster-details', args=args))
-        self.assertEquals(resp.status_code, 403)
+        self.assertEqual(resp.status_code, 403)
 
         args.append(self.student.id)
         resp = self.client.get(reverse('student-group-details', args=args))
-        self.assertEquals(resp.status_code, 403)
+        self.assertEqual(resp.status_code, 403)
 
     def test_icap_access(self):
         self.client.login(username=self.icap.username, password="test")
         args = [self.group.id]
 
         resp = self.client.get(reverse('group-details', args=args))
-        self.assertEquals(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 200)
         resp = self.client.get(reverse('roster-details', args=args))
-        self.assertEquals(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 200)
 
         args.append(self.student.id)
         resp = self.client.get(reverse('student-group-details', args=args))
-        self.assertEquals(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 200)
 
     def test_group_detail(self):
         url = reverse('group-details', args=[self.group.id])
@@ -1130,18 +1133,18 @@ class TestDetailViews(TestCase):
         view.object = self.group
         view.kwargs = {'pk': self.group.id}
 
-        self.assertEquals(view.get_object(), self.group)
+        self.assertEqual(view.get_object(), self.group)
 
         ctx = view.get_context_data(**view.kwargs)
-        self.assertEquals(ctx['group'], self.group)
-        self.assertEquals(ctx['object'], self.group)
-        self.assertEquals(len(ctx['stats']), 1)
+        self.assertEqual(ctx['group'], self.group)
+        self.assertEqual(ctx['object'], self.group)
+        self.assertEqual(len(ctx['stats']), 1)
 
-        self.assertEquals(ctx['stats'][0]['completed'], 0)
-        self.assertEquals(ctx['stats'][0]['inprogress'], 0)
-        self.assertEquals(ctx['stats'][0]['incomplete'], 0)
-        self.assertEquals(ctx['stats'][0]['total'], 2)
-        self.assertEquals(ctx['stats'][0]['language'], 'English')
+        self.assertEqual(ctx['stats'][0]['completed'], 0)
+        self.assertEqual(ctx['stats'][0]['inprogress'], 0)
+        self.assertEqual(ctx['stats'][0]['incomplete'], 0)
+        self.assertEqual(ctx['stats'][0]['total'], 2)
+        self.assertEqual(ctx['stats'][0]['language'], 'English')
 
     def test_roster_detail(self):
         url = reverse('roster-details', args=[self.group.id])
@@ -1153,11 +1156,11 @@ class TestDetailViews(TestCase):
         view.object = self.group
         view.kwargs = {'pk': self.group.id}
 
-        self.assertEquals(view.get_object(), self.group)
+        self.assertEqual(view.get_object(), self.group)
 
         ctx = view.get_context_data(**view.kwargs)
-        self.assertEquals(ctx['group'], self.group)
-        self.assertEquals(ctx['object'], self.group)
+        self.assertEqual(ctx['group'], self.group)
+        self.assertEqual(ctx['object'], self.group)
 
     def test_student_detail(self):
         url = reverse('student-group-details',
@@ -1172,14 +1175,14 @@ class TestDetailViews(TestCase):
                        'student_id': self.student.id}
 
         ctx = view.get_context_data(**view.kwargs)
-        self.assertEquals(ctx['group'], self.group)
-        self.assertEquals(ctx['student'], self.student)
+        self.assertEqual(ctx['group'], self.group)
+        self.assertEqual(ctx['student'], self.student)
         self.assertIsNone(ctx['progress_report']['satisfaction'])
         self.assertIsNone(ctx['progress_report']['pretest'])
         self.assertIsNone(ctx['progress_report']['posttest'])
-        self.assertEquals(ctx['progress_report']['total_users'], 1)
-        self.assertEquals(ctx['progress_report']['sessions'],
-                          [None, None, None])
+        self.assertEqual(ctx['progress_report']['total_users'], 1)
+        self.assertEqual(ctx['progress_report']['sessions'],
+                         [None, None, None])
 
 
 class AddUserToGroupTest(TestCase):
@@ -1198,12 +1201,12 @@ class AddUserToGroupTest(TestCase):
 
         # not logged in
         response = self.client.post(reverse('add-to-group'), data)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         # not icap
         self.client.login(username=student.username, password="test")
         response = self.client.post(reverse('add-to-group'), data)
-        self.assertEquals(response.status_code, 403)
+        self.assertEqual(response.status_code, 403)
 
     def test_add_one(self):
         student = StudentProfileFactory(country=self.group.school.country).user
@@ -1214,7 +1217,7 @@ class AddUserToGroupTest(TestCase):
 
         self.client.login(username=self.icap.username, password="test")
         response = self.client.post(reverse('add-to-group'), data)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         self.assertTrue(self.group in student.profile.group.all())
 
@@ -1227,7 +1230,7 @@ class AddUserToGroupTest(TestCase):
 
         self.client.login(username=self.icap.username, password="test")
         response = self.client.post(reverse('add-to-group'), data)
-        self.assertEquals(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
         self.assertTrue(self.group in s1.profile.group.all())
         self.assertTrue(self.group in s2.profile.group.all())

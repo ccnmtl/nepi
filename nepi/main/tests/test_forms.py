@@ -40,7 +40,7 @@ class TestUserProfileForm(TestCase):
         }
 
         form.clean()
-        self.assertEquals(len(form._errors.keys()), 0)
+        self.assertEqual(len(form._errors.keys()), 0)
 
     def test_clean_teacher_errors(self):
         form = UserProfileForm()
@@ -67,17 +67,17 @@ class TestUserProfileForm(TestCase):
             'school': self.school.id
         }
         form.clean()
-        self.assertEquals(len(form._errors.keys()), 0)
+        self.assertEqual(len(form._errors.keys()), 0)
 
     def test_create_pending_teacher(self):
         form = UserProfileForm()
         form.create_pending_teacher(self.student, self.school.id)
-        self.assertEquals(PendingTeachers.objects.count(), 1)
+        self.assertEqual(PendingTeachers.objects.count(), 1)
         self.assertEqual(len(mail.outbox), 1)
 
         # duplicate -- only 1 object & 1 email
         form.create_pending_teacher(self.student, self.school.id)
-        self.assertEquals(PendingTeachers.objects.count(), 1)
+        self.assertEqual(PendingTeachers.objects.count(), 1)
         self.assertEqual(len(mail.outbox), 1)
 
     def test_send_success_email(self):
@@ -103,7 +103,7 @@ class TestCreateAccountForm(TestCase):
         }
 
         form.clean()
-        self.assertEquals(len(form._errors.keys()), 1)
+        self.assertEqual(len(form._errors.keys()), 1)
         self.assertTrue('username' in form._errors)
 
     def test_save_success_student(self):
@@ -118,12 +118,12 @@ class TestCreateAccountForm(TestCase):
         }
         form.save()
         user = User.objects.get(username='janedoe21')
-        self.assertEquals(user.email, 'janedoe21@ccnmtl.columbia.edu')
-        self.assertEquals(user.profile.profile_type, 'ST')
-        self.assertEquals(user.first_name, 'Jane')
-        self.assertEquals(user.last_name, 'Doe')
+        self.assertEqual(user.email, 'janedoe21@ccnmtl.columbia.edu')
+        self.assertEqual(user.profile.profile_type, 'ST')
+        self.assertEqual(user.first_name, 'Jane')
+        self.assertEqual(user.last_name, 'Doe')
 
-        self.assertEquals(user.profile.country, self.country)
+        self.assertEqual(user.profile.country, self.country)
 
         self.assertFalse(user.profile.icap_affil)
 
@@ -148,12 +148,12 @@ class TestCreateAccountForm(TestCase):
         }
         form.save()
         user = User.objects.get(username='janedoe21')
-        self.assertEquals(user.email, 'janedoe21@ccnmtl.columbia.edu')
-        self.assertEquals(user.profile.profile_type, 'ST')
-        self.assertEquals(user.first_name, 'Jane')
-        self.assertEquals(user.last_name, 'Doe')
+        self.assertEqual(user.email, 'janedoe21@ccnmtl.columbia.edu')
+        self.assertEqual(user.profile.profile_type, 'ST')
+        self.assertEqual(user.first_name, 'Jane')
+        self.assertEqual(user.last_name, 'Doe')
 
-        self.assertEquals(user.profile.country, self.school.country)
+        self.assertEqual(user.profile.country, self.school.country)
 
         self.assertTrue(user.profile.icap_affil)
 
@@ -164,7 +164,7 @@ class TestCreateAccountForm(TestCase):
                          'ICAP Nursing E-Learning Registration')
         self.assertTrue('faculty level access' in mail.outbox[1].subject)
 
-        self.assertEquals(PendingTeachers.objects.all().count(), 1)
+        self.assertEqual(PendingTeachers.objects.all().count(), 1)
 
 
 class TestUpdateProfileForm(TestCase):
@@ -175,16 +175,16 @@ class TestUpdateProfileForm(TestCase):
 
     def test_init(self):
         form = UpdateProfileForm(instance=self.student)
-        self.assertEquals(form.initial['first_name'], self.student.first_name)
-        self.assertEquals(form.initial['last_name'], self.student.last_name)
-        self.assertEquals(form.initial['email'], self.student.email)
-        self.assertEquals(form.initial['username'], self.student.username)
+        self.assertEqual(form.initial['first_name'], self.student.first_name)
+        self.assertEqual(form.initial['last_name'], self.student.last_name)
+        self.assertEqual(form.initial['email'], self.student.email)
+        self.assertEqual(form.initial['username'], self.student.username)
 
-        self.assertEquals(form.initial['country'],
-                          self.student.profile.country.name)
+        self.assertEqual(form.initial['country'],
+                         self.student.profile.country.name)
         self.assertFalse('school' in form.initial)
-        self.assertEquals(form.initial['nepi_affiliated'],
-                          self.student.profile.icap_affil)
+        self.assertEqual(form.initial['nepi_affiliated'],
+                         self.student.profile.icap_affil)
 
     def test_save_success_student(self):
         form = UpdateProfileForm(instance=self.student)
@@ -202,11 +202,11 @@ class TestUpdateProfileForm(TestCase):
         form.save()
 
         user = User.objects.get(username=self.student.username)
-        self.assertEquals(user.email, 'janedoe21@ccnmtl.columbia.edu')
-        self.assertEquals(user.profile.profile_type, 'ST')
-        self.assertEquals(user.first_name, 'Jane')
-        self.assertEquals(user.last_name, 'Doe')
-        self.assertEquals(user.profile.country, self.country)
+        self.assertEqual(user.email, 'janedoe21@ccnmtl.columbia.edu')
+        self.assertEqual(user.profile.profile_type, 'ST')
+        self.assertEqual(user.first_name, 'Jane')
+        self.assertEqual(user.last_name, 'Doe')
+        self.assertEqual(user.profile.country, self.country)
         self.assertTrue(user.profile.icap_affil)
 
         self.assertTrue(Client().login(username=self.student.username,
@@ -227,11 +227,11 @@ class TestUpdateProfileForm(TestCase):
         }
         form.save()
         user = User.objects.get(username=self.student.username)
-        self.assertEquals(user.email, 'janedoe21@ccnmtl.columbia.edu')
-        self.assertEquals(user.profile.profile_type, 'ST')
-        self.assertEquals(user.first_name, 'Jane')
-        self.assertEquals(user.last_name, 'Doe')
-        self.assertEquals(user.profile.country, self.school.country)
+        self.assertEqual(user.email, 'janedoe21@ccnmtl.columbia.edu')
+        self.assertEqual(user.profile.profile_type, 'ST')
+        self.assertEqual(user.first_name, 'Jane')
+        self.assertEqual(user.last_name, 'Doe')
+        self.assertEqual(user.profile.country, self.school.country)
         self.assertFalse(user.profile.icap_affil)
 
         self.assertTrue(Client().login(username=self.student.username,
@@ -239,4 +239,4 @@ class TestUpdateProfileForm(TestCase):
 
         self.assertEqual(len(mail.outbox), 1)
         self.assertTrue('faculty level access' in mail.outbox[0].subject)
-        self.assertEquals(PendingTeachers.objects.all().count(), 1)
+        self.assertEqual(PendingTeachers.objects.all().count(), 1)

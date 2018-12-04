@@ -27,7 +27,7 @@ class TestRegistrationView(TestCase):
              "password1": "test", "password2": "test",
              "country": self.country.name, "nepi_affiliated": False,
              "captcha_0": 'dummy_value', "captcha_1": 'PASSED'}, follow=True)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue('username' in response.context_data['form']._errors)
 
     def test_student_registration_valid_username(self):
@@ -63,7 +63,7 @@ class TestRegistrationView(TestCase):
              "password1": "test", "password2": "test",
              "country": self.country.name, "nepi_affiliated": False,
              "captcha_0": 'dummy_value', "captcha_1": 'PASSED'}, follow=True)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue('username' in response.context_data['form']._errors)
 
     def test_student_registration_view(self):
@@ -75,11 +75,11 @@ class TestRegistrationView(TestCase):
              "password1": "test", "password2": "test",
              "country": self.country.name, "nepi_affiliated": False,
              "captcha_0": 'dummy_value', "captcha_1": 'PASSED'}, follow=True)
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(PendingTeachers.objects.count(), 0)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(PendingTeachers.objects.count(), 0)
 
-        self.assertEquals(response.redirect_chain,
-                          [('/account_created/', 302)])
+        self.assertEqual(response.redirect_chain,
+                         [('/account_created/', 302)])
         self.assertTemplateUsed(response, 'flatpages/account_created.html')
 
         student = User.objects.get(username='student')
@@ -96,12 +96,12 @@ class TestRegistrationView(TestCase):
              "country": self.country.name, "school": self.school.id,
              "nepi_affiliated": True,
              "captcha_0": 'dummy_value', "captcha_1": 'PASSED'}, follow=True)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
-        self.assertEquals(PendingTeachers.objects.count(), 1)
+        self.assertEqual(PendingTeachers.objects.count(), 1)
 
-        self.assertEquals(response.redirect_chain,
-                          [('/account_created/', 302)])
+        self.assertEqual(response.redirect_chain,
+                         [('/account_created/', 302)])
         self.assertTemplateUsed(response, 'flatpages/account_created.html')
 
         teacher = User.objects.get(username='teacher')

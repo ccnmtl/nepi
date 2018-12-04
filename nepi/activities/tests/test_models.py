@@ -69,91 +69,91 @@ class TestConversationScenario(TestCase):
 
         responses = ConversationResponse.objects.filter(
             user=self.user, conv_scen=self.scenario)
-        self.assertEquals(responses.count(), 0)
+        self.assertEqual(responses.count(), 0)
 
     def test_edit(self):
         self.scenario.edit({'description': 'updated description'}, None)
-        self.assertEquals(self.scenario.description, 'updated description')
+        self.assertEqual(self.scenario.description, 'updated description')
 
     def test_create(self):
         r = FakeReq()
         r.POST = {'description': 'create'}
         artcard = ConversationScenario.create(r)
-        self.assertEquals(artcard.description, 'create')
+        self.assertEqual(artcard.description, 'create')
 
     def test_as_dict(self):
         d = self.scenario.as_dict()
-        self.assertEquals(self.scenario.description, d['description'])
+        self.assertEqual(self.scenario.description, d['description'])
 
         good = d['good_conversation']
-        self.assertEquals(self.scenario.good_conversation.scenario_type,
-                          good['scenario_type'])
-        self.assertEquals(self.scenario.good_conversation.text_one,
-                          good['text_one'])
-        self.assertEquals(self.scenario.good_conversation.response_one,
-                          good['response_one'])
-        self.assertEquals(self.scenario.good_conversation.response_two,
-                          good['response_two'])
-        self.assertEquals(self.scenario.good_conversation.response_three,
-                          good['response_three'])
-        self.assertEquals(self.scenario.good_conversation.complete_dialog,
-                          good['complete_dialog'])
+        self.assertEqual(self.scenario.good_conversation.scenario_type,
+                         good['scenario_type'])
+        self.assertEqual(self.scenario.good_conversation.text_one,
+                         good['text_one'])
+        self.assertEqual(self.scenario.good_conversation.response_one,
+                         good['response_one'])
+        self.assertEqual(self.scenario.good_conversation.response_two,
+                         good['response_two'])
+        self.assertEqual(self.scenario.good_conversation.response_three,
+                         good['response_three'])
+        self.assertEqual(self.scenario.good_conversation.complete_dialog,
+                         good['complete_dialog'])
 
         bad = d['bad_conversation']
-        self.assertEquals(self.scenario.bad_conversation.scenario_type,
-                          bad['scenario_type'])
-        self.assertEquals(self.scenario.bad_conversation.text_one,
-                          bad['text_one'])
-        self.assertEquals(self.scenario.bad_conversation.response_one,
-                          bad['response_one'])
-        self.assertEquals(self.scenario.bad_conversation.response_two,
-                          bad['response_two'])
-        self.assertEquals(self.scenario.bad_conversation.response_three,
-                          bad['response_three'])
-        self.assertEquals(self.scenario.bad_conversation.complete_dialog,
-                          bad['complete_dialog'])
+        self.assertEqual(self.scenario.bad_conversation.scenario_type,
+                         bad['scenario_type'])
+        self.assertEqual(self.scenario.bad_conversation.text_one,
+                         bad['text_one'])
+        self.assertEqual(self.scenario.bad_conversation.response_one,
+                         bad['response_one'])
+        self.assertEqual(self.scenario.bad_conversation.response_two,
+                         bad['response_two'])
+        self.assertEqual(self.scenario.bad_conversation.response_three,
+                         bad['response_three'])
+        self.assertEqual(self.scenario.bad_conversation.complete_dialog,
+                         bad['complete_dialog'])
 
     def test_as_dict_incomplete(self):
         scenario = ConversationScenarioFactory(good_conversation=None,
                                                bad_conversation=None)
 
         d = scenario.as_dict()
-        self.assertEquals(self.scenario.description, d['description'])
+        self.assertEqual(self.scenario.description, d['description'])
         self.assertFalse('good_conversation' in d)
         self.assertFalse('bad_conversation' in d)
 
     def test_create_from_dict(self):
         d = self.scenario.as_dict()
         block = ConversationScenario.create_from_dict(d)
-        self.assertEquals(block.description, self.scenario.description)
+        self.assertEqual(block.description, self.scenario.description)
 
         good = block.good_conversation
-        self.assertEquals(self.scenario.good_conversation.scenario_type,
-                          good.scenario_type)
-        self.assertEquals(self.scenario.good_conversation.text_one,
-                          good.text_one)
-        self.assertEquals(self.scenario.good_conversation.response_one,
-                          good.response_one)
-        self.assertEquals(self.scenario.good_conversation.response_two,
-                          good.response_two)
-        self.assertEquals(self.scenario.good_conversation.response_three,
-                          good.response_three)
-        self.assertEquals(self.scenario.good_conversation.complete_dialog,
-                          good.complete_dialog)
+        self.assertEqual(self.scenario.good_conversation.scenario_type,
+                         good.scenario_type)
+        self.assertEqual(self.scenario.good_conversation.text_one,
+                         good.text_one)
+        self.assertEqual(self.scenario.good_conversation.response_one,
+                         good.response_one)
+        self.assertEqual(self.scenario.good_conversation.response_two,
+                         good.response_two)
+        self.assertEqual(self.scenario.good_conversation.response_three,
+                         good.response_three)
+        self.assertEqual(self.scenario.good_conversation.complete_dialog,
+                         good.complete_dialog)
 
         bad = block.bad_conversation
-        self.assertEquals(self.scenario.good_conversation.scenario_type,
-                          bad.scenario_type)
-        self.assertEquals(self.scenario.good_conversation.text_one,
-                          bad.text_one)
-        self.assertEquals(self.scenario.good_conversation.response_one,
-                          bad.response_one)
-        self.assertEquals(self.scenario.good_conversation.response_two,
-                          bad.response_two)
-        self.assertEquals(self.scenario.good_conversation.response_three,
-                          bad.response_three)
-        self.assertEquals(self.scenario.good_conversation.complete_dialog,
-                          bad.complete_dialog)
+        self.assertEqual(self.scenario.good_conversation.scenario_type,
+                         bad.scenario_type)
+        self.assertEqual(self.scenario.good_conversation.text_one,
+                         bad.text_one)
+        self.assertEqual(self.scenario.good_conversation.response_one,
+                         bad.response_one)
+        self.assertEqual(self.scenario.good_conversation.response_two,
+                         bad.response_two)
+        self.assertEqual(self.scenario.good_conversation.response_three,
+                         bad.response_three)
+        self.assertEqual(self.scenario.good_conversation.complete_dialog,
+                         bad.complete_dialog)
 
     def test_add_form(self):
         self.assertTrue("description" in self.scenario.add_form().fields)
@@ -184,29 +184,29 @@ class TestConversationScenario(TestCase):
         self.assertTrue("add bad conversation" in edit_form.alt_text)
 
     def test_score_incomplete(self):
-        self.assertEquals(self.scenario.score(self.user), None)
+        self.assertEqual(self.scenario.score(self.user), None)
 
         resp = ConversationResponse.objects.create(user=self.user,
                                                    conv_scen=self.scenario)
-        self.assertEquals(self.scenario.score(self.user), None)
+        self.assertEqual(self.scenario.score(self.user), None)
 
         resp.first_click = self.good
         resp.save()
-        self.assertEquals(self.scenario.score(self.user), None)
+        self.assertEqual(self.scenario.score(self.user), None)
 
     def test_score_correct(self):
         ConversationResponse.objects.create(user=self.user,
                                             conv_scen=self.scenario,
                                             first_click=self.good,
                                             second_click=self.bad)
-        self.assertEquals(self.scenario.score(self.user), 1)
+        self.assertEqual(self.scenario.score(self.user), 1)
 
     def test_score_incorrect(self):
         ConversationResponse.objects.create(user=self.user,
                                             conv_scen=self.scenario,
                                             first_click=self.bad,
                                             second_click=self.good)
-        self.assertEquals(self.scenario.score(self.user), 0)
+        self.assertEqual(self.scenario.score(self.user), 0)
 
     def test_conversation_response(self):
         r = ConversationResponse.objects.create(user=self.user,
@@ -230,45 +230,45 @@ class TestLRConversationScenario(TestCase):
 
         # No Clicks
         self.assertFalse(scenario.unlocked(user))
-        self.assertEquals(scenario.last_response(user), 0)
+        self.assertEqual(scenario.last_response(user), 0)
 
         '''Test first click'''
         cr = ConversationResponse.objects.create(conv_scen=scenario,
                                                  user=user,
                                                  first_click=click_one)
-        self.assertEquals(click_one.conversation.scenario_type,
-                          cr.first_click.conversation.scenario_type)
+        self.assertEqual(click_one.conversation.scenario_type,
+                         cr.first_click.conversation.scenario_type)
         self.assertIsNone(cr.second_click)
         self.assertFalse(scenario.unlocked(user))
-        self.assertEquals(scenario.last_response(user),
-                          click_one.conversation.scenario_type)
+        self.assertEqual(scenario.last_response(user),
+                         click_one.conversation.scenario_type)
 
         '''Test second click'''
         cr.second_click = click_two
         cr.save()
-        self.assertEquals(click_two.conversation.scenario_type,
-                          cr.second_click.conversation.scenario_type)
+        self.assertEqual(click_two.conversation.scenario_type,
+                         cr.second_click.conversation.scenario_type)
         self.assertIsNone(cr.third_click)
         self.assertTrue(scenario.unlocked(user))
-        self.assertEquals(scenario.last_response(user),
-                          click_two.conversation.scenario_type)
+        self.assertEqual(scenario.last_response(user),
+                         click_two.conversation.scenario_type)
 
         '''Test third click'''
         cr.third_click = click_three
         cr.save()
-        self.assertEquals(click_three.conversation.scenario_type,
-                          cr.third_click.conversation.scenario_type)
+        self.assertEqual(click_three.conversation.scenario_type,
+                         cr.third_click.conversation.scenario_type)
         self.assertIsNotNone(cr.third_click)
         self.assertTrue(scenario.unlocked(user))
-        self.assertEquals(scenario.last_response(user),
-                          click_three.conversation.scenario_type)
+        self.assertEqual(scenario.last_response(user),
+                         click_three.conversation.scenario_type)
 
         # Multiple responses - use the first response
         ConversationResponse.objects.create(conv_scen=scenario,
                                             user=user,
                                             first_click=click_one)
-        self.assertEquals(scenario.last_response(user),
-                          click_three.conversation.scenario_type)
+        self.assertEqual(scenario.last_response(user),
+                         click_three.conversation.scenario_type)
 
     def test_both_responses_clicked(self):
         user = UserFactory()
@@ -307,20 +307,20 @@ class TestDosageActivity(TestCase):
         user = UserFactory()
         activity = DosageActivity.objects.create(
             ml_nvp=0.4, times_day=2, weeks=1)
-        self.assertEquals(activity.score(user), None)
+        self.assertEqual(activity.score(user), None)
 
         resp = DosageActivityResponse.objects.create(user=user,
                                                      dosage_activity=activity,
                                                      ml_nvp=1,
                                                      times_day=2,
                                                      weeks=4)
-        self.assertEquals(activity.score(user), 0)
+        self.assertEqual(activity.score(user), 0)
 
         resp.ml_nvp = 0.4
         resp.times_day = 2
         resp.weeks = 1
         resp.save()
-        self.assertEquals(activity.score(user), 1)
+        self.assertEqual(activity.score(user), 1)
 
     def test_add_form(self):
         add_form = DosageActivityFactory().add_form()
@@ -343,11 +343,11 @@ class TestDosageActivity(TestCase):
         r.POST = {'explanation': 'explanation', 'question': 'question',
                   'ml_nvp': 1.6, 'times_day': 3, 'weeks': 3}
         block = DosageActivity.create(r)
-        self.assertEquals(block.explanation, 'explanation')
-        self.assertEquals(block.question, "question")
-        self.assertEquals(block.ml_nvp, Decimal('1.6'))
-        self.assertEquals(block.times_day, 3)
-        self.assertEquals(block.weeks, 3)
+        self.assertEqual(block.explanation, 'explanation')
+        self.assertEqual(block.question, "question")
+        self.assertEqual(block.ml_nvp, Decimal('1.6'))
+        self.assertEqual(block.times_day, 3)
+        self.assertEqual(block.weeks, 3)
 
     def test_edit(self):
         block = DosageActivityFactory()
@@ -355,11 +355,11 @@ class TestDosageActivity(TestCase):
         data = {'explanation': 'explanation', 'question': 'question',
                 'ml_nvp': 1.6, 'times_day': 3, 'weeks': 3}
         block.edit(data, None)
-        self.assertEquals(block.explanation, 'explanation')
-        self.assertEquals(block.question, "question")
-        self.assertEquals(block.ml_nvp, Decimal('1.6'))
-        self.assertEquals(block.times_day, 3)
-        self.assertEquals(block.weeks, 3)
+        self.assertEqual(block.explanation, 'explanation')
+        self.assertEqual(block.question, "question")
+        self.assertEqual(block.ml_nvp, Decimal('1.6'))
+        self.assertEqual(block.times_day, 3)
+        self.assertEqual(block.weeks, 3)
 
     def test_unlocked(self):
         user = UserFactory()
@@ -382,35 +382,35 @@ class TestDosageActivity(TestCase):
 
         resp = DosageActivityResponse.objects.filter(
             user=user, dosage_activity=block).first()
-        self.assertEquals(resp.times_day, 1)
-        self.assertEquals(resp.ml_nvp, Decimal('2.1'))
-        self.assertEquals(resp.weeks, 6)
+        self.assertEqual(resp.times_day, 1)
+        self.assertEqual(resp.ml_nvp, Decimal('2.1'))
+        self.assertEqual(resp.weeks, 6)
 
     def test_as_dict(self):
         block = DosageActivityFactory()
         d = block.as_dict()
-        self.assertEquals(block.explanation, d['explanation'])
-        self.assertEquals(block.question, d['question'])
-        self.assertEquals(block.ml_nvp, Decimal(d['ml_nvp']))
-        self.assertEquals(block.times_day, d['times_day'])
-        self.assertEquals(block.weeks, d['weeks'])
+        self.assertEqual(block.explanation, d['explanation'])
+        self.assertEqual(block.question, d['question'])
+        self.assertEqual(block.ml_nvp, Decimal(d['ml_nvp']))
+        self.assertEqual(block.times_day, d['times_day'])
+        self.assertEqual(block.weeks, d['weeks'])
 
     def test_json_serialize_round_trip(self):
         block = DosageActivityFactory()
         d1 = block.as_dict()
         serialized = json.dumps(d1)
         d2 = json.loads(serialized)
-        self.assertEquals(d1['ml_nvp'], d2['ml_nvp'])
+        self.assertEqual(d1['ml_nvp'], d2['ml_nvp'])
 
     def test_create_from_dict(self):
         original = DosageActivityFactory()
         duplicate = DosageActivity.create_from_dict(original.as_dict())
 
-        self.assertEquals(original.explanation, duplicate.explanation)
-        self.assertEquals(original.question, duplicate.question)
-        self.assertEquals(original.ml_nvp, duplicate.ml_nvp)
-        self.assertEquals(original.times_day, duplicate.times_day)
-        self.assertEquals(original.weeks, duplicate.weeks)
+        self.assertEqual(original.explanation, duplicate.explanation)
+        self.assertEqual(original.question, duplicate.question)
+        self.assertEqual(original.ml_nvp, duplicate.ml_nvp)
+        self.assertEqual(original.times_day, duplicate.times_day)
+        self.assertEqual(original.weeks, duplicate.weeks)
 
 
 class TestDayAndMonthObjects(TestCase):
@@ -487,23 +487,23 @@ class TestRetentionRate(TestCase):
         r = FakeReq()
         r.POST = {'intro_text': 'intro_text info here'}
         block = RetentionRateCard.create(r)
-        self.assertEquals(block.intro_text, 'intro_text info here')
-        self.assertEquals(block.display_name, "Retention Rate Card")
+        self.assertEqual(block.intro_text, 'intro_text info here')
+        self.assertEqual(block.display_name, "Retention Rate Card")
 
     def test_edit(self):
         block = RetentionRateCardFactory()
         block.edit({'intro_text': 'updated text'}, None)
-        self.assertEquals(block.intro_text, 'updated text')
+        self.assertEqual(block.intro_text, 'updated text')
 
     def test_as_dict(self):
         block = RetentionRateCardFactory()
         d = block.as_dict()
-        self.assertEquals(block.intro_text, d['intro_text'])
+        self.assertEqual(block.intro_text, d['intro_text'])
 
     def test_create_from_dict(self):
         d = RetentionRateCardFactory().as_dict()
         block = RetentionRateCard.create_from_dict(d)
-        self.assertEquals(d['intro_text'], block.intro_text)
+        self.assertEqual(d['intro_text'], block.intro_text)
 
 
 class TestConversationNoFactory(TestCase):
@@ -523,7 +523,7 @@ class TestConversationNoFactory(TestCase):
             "This is the entire Nurse/Patient exchange"
 
     def test_conv_unicode(self):
-        self.assertEquals(str(self.test_conversation), 'G')
+        self.assertEqual(str(self.test_conversation), 'G')
 
 
 class TestCalendarChart(TestCase):
@@ -539,7 +539,7 @@ class TestCalendarChart(TestCase):
 
     def test_month(self):
         month = MonthFactory()
-        self.assertEquals(month.month_name(), 'January')
+        self.assertEqual(month.month_name(), 'January')
 
     def test_unlocked(self):
         user = UserFactory()
@@ -570,32 +570,32 @@ class TestCalendarChart(TestCase):
 
         responses = CalendarResponse.objects.filter(
             user=user, calendar_activity=chart)
-        self.assertEquals(responses.count(), 0)
+        self.assertEqual(responses.count(), 0)
 
     def test_score(self):
         user = UserFactory()
         month = MonthFactory()
         chart = CalendarChartFactory(month=month)
 
-        self.assertEquals(chart.score(user), None)
+        self.assertEqual(chart.score(user), None)
 
         resp = CalendarResponse.objects.create(user=user,
                                                calendar_activity=chart)
-        self.assertEquals(chart.score(user), None)
+        self.assertEqual(chart.score(user), None)
 
         incorrect = Day.objects.create(calendar=month, number=1)
         resp.first_click = incorrect
         resp.save()
-        self.assertEquals(chart.score(user), None)
+        self.assertEqual(chart.score(user), None)
 
         correct = Day.objects.create(calendar=month, number=4)
         resp.correct_click = correct
         resp.save()
-        self.assertEquals(chart.score(user), 0)
+        self.assertEqual(chart.score(user), 0)
 
         resp.first_click = correct
         resp.save()
-        self.assertEquals(chart.score(user), 1)
+        self.assertEqual(chart.score(user), 1)
 
     def test_add_form(self):
         add_form = CalendarChartFactory().add_form()
@@ -616,9 +616,9 @@ class TestCalendarChart(TestCase):
                   'correct_date': 10,
                   'month': month.id}
         block = CalendarChart.create(r)
-        self.assertEquals(block.correct_date, 10)
-        self.assertEquals(block.description, 'description')
-        self.assertEquals(block.month, month)
+        self.assertEqual(block.correct_date, 10)
+        self.assertEqual(block.description, 'description')
+        self.assertEqual(block.month, month)
 
     def test_edit(self):
         month = MonthFactory()
@@ -626,22 +626,22 @@ class TestCalendarChart(TestCase):
         block.edit({'correct_date': 10,
                     'description': 'updated description',
                     'month': month.id}, None)
-        self.assertEquals(block.correct_date, 10)
-        self.assertEquals(block.description, 'updated description')
-        self.assertEquals(block.month, month)
+        self.assertEqual(block.correct_date, 10)
+        self.assertEqual(block.description, 'updated description')
+        self.assertEqual(block.month, month)
 
     def test_as_dict(self):
         day = CorrectDayFactory()
         chart = CalendarChartFactory(month=day.calendar)
 
         d = chart.as_dict()
-        self.assertEquals(chart.description, d['description'])
-        self.assertEquals(chart.correct_date, d['correct_date'])
-        self.assertEquals(chart.month.display_name, d['month']['display_name'])
-        self.assertEquals(1, len(d['month']['days']))
-        self.assertEquals(day.number, d['month']['days'][0]['number'])
-        self.assertEquals(day.explanation,
-                          d['month']['days'][0]['explanation'])
+        self.assertEqual(chart.description, d['description'])
+        self.assertEqual(chart.correct_date, d['correct_date'])
+        self.assertEqual(chart.month.display_name, d['month']['display_name'])
+        self.assertEqual(1, len(d['month']['days']))
+        self.assertEqual(day.number, d['month']['days'][0]['number'])
+        self.assertEqual(day.explanation,
+                         d['month']['days'][0]['explanation'])
 
     def test_create_from_dict(self):
         day = CorrectDayFactory()
@@ -649,15 +649,15 @@ class TestCalendarChart(TestCase):
         d = original.as_dict()
 
         duplicate = CalendarChart.create_from_dict(d)
-        self.assertEquals(original.description, duplicate.description)
-        self.assertEquals(original.correct_date, duplicate.correct_date)
-        self.assertEquals(original.month.display_name,
-                          duplicate.month.display_name)
-        self.assertEquals(duplicate.month.day_set.count(), 1)
+        self.assertEqual(original.description, duplicate.description)
+        self.assertEqual(original.correct_date, duplicate.correct_date)
+        self.assertEqual(original.month.display_name,
+                         duplicate.month.display_name)
+        self.assertEqual(duplicate.month.day_set.count(), 1)
 
         day2 = duplicate.month.day_set.first()
-        self.assertEquals(day.number, day2.number)
-        self.assertEquals(day.explanation, day2.explanation)
+        self.assertEqual(day.number, day2.number)
+        self.assertEqual(day.explanation, day2.explanation)
 
 
 class TestImageInteractive(TestCase):
@@ -689,23 +689,23 @@ class TestImageInteractive(TestCase):
         r = FakeReq()
         r.POST = {'intro_text': 'intro_text info here'}
         img_int = ImageInteractive.create(r)
-        self.assertEquals(img_int.intro_text, 'intro_text info here')
-        self.assertEquals(img_int.display_name, "Image Interactive")
+        self.assertEqual(img_int.intro_text, 'intro_text info here')
+        self.assertEqual(img_int.display_name, "Image Interactive")
 
     def test_img_int_edit(self):
         img_int = ImageInteractiveFactory()
         img_int.edit({'intro_text': 'updated text'}, None)
-        self.assertEquals(img_int.intro_text, 'updated text')
+        self.assertEqual(img_int.intro_text, 'updated text')
 
     def test_as_dict(self):
         block = ImageInteractiveFactory()
         d = block.as_dict()
-        self.assertEquals(block.intro_text, d['intro_text'])
+        self.assertEqual(block.intro_text, d['intro_text'])
 
     def test_create_from_dict(self):
         d = ImageInteractiveFactory().as_dict()
         block = ImageInteractive.create_from_dict(d)
-        self.assertEquals(d['intro_text'], block.intro_text)
+        self.assertEqual(d['intro_text'], block.intro_text)
 
 
 class TestARTCard(TestCase):
@@ -736,24 +736,24 @@ class TestARTCard(TestCase):
     def test_artcard_edit(self):
         block = ARTCardFactory()
         block.edit({'intro_text': 'updated text'}, None)
-        self.assertEquals(block.intro_text, 'updated text')
+        self.assertEqual(block.intro_text, 'updated text')
 
     def test_artcard_create(self):
         r = FakeReq()
         r.POST = {'intro_text': 'intro_text info here'}
         artcard = ARTCard.create(r)
-        self.assertEquals(artcard.intro_text, 'intro_text info here')
-        self.assertEquals(artcard.display_name, "ART Card")
+        self.assertEqual(artcard.intro_text, 'intro_text info here')
+        self.assertEqual(artcard.display_name, "ART Card")
 
     def test_as_dict(self):
         block = ARTCardFactory()
         d = block.as_dict()
-        self.assertEquals(block.intro_text, d['intro_text'])
+        self.assertEqual(block.intro_text, d['intro_text'])
 
     def test_create_from_dict(self):
         d = ARTCardFactory().as_dict()
         block = ARTCard.create_from_dict(d)
-        self.assertEquals(d['intro_text'], block.intro_text)
+        self.assertEqual(d['intro_text'], block.intro_text)
 
 
 class TestAdherenceCard(TestCase):
@@ -785,20 +785,20 @@ class TestAdherenceCard(TestCase):
         r = FakeReq()
         r.POST = {'quiz_class': 'quiz class info here'}
         adcard = AdherenceCard.create(r)
-        self.assertEquals(adcard.quiz_class, 'quiz class info here')
-        self.assertEquals(adcard.display_name, "Adherence Card")
+        self.assertEqual(adcard.quiz_class, 'quiz class info here')
+        self.assertEqual(adcard.display_name, "Adherence Card")
 
     def test_adcard_edit(self):
         adcard = AdherenceCardFactory()
         adcard.edit({'quiz_class': 'updated class'}, None)
-        self.assertEquals(adcard.quiz_class, 'updated class')
+        self.assertEqual(adcard.quiz_class, 'updated class')
 
     def test_as_dict(self):
         block = AdherenceCardFactory()
         d = block.as_dict()
-        self.assertEquals(block.quiz_class, d['quiz_class'])
+        self.assertEqual(block.quiz_class, d['quiz_class'])
 
     def test_create_from_dict(self):
         d = AdherenceCardFactory().as_dict()
         block = AdherenceCard.create_from_dict(d)
-        self.assertEquals(d['quiz_class'], block.quiz_class)
+        self.assertEqual(d['quiz_class'], block.quiz_class)
