@@ -29,9 +29,9 @@ class TestCountry(TestCase):
 
         choices = Country.choices()
 
-        self.assertEquals(len(choices), 2)
-        self.assertEquals(choices[0], (country2.name, country2.display_name))
-        self.assertEquals(choices[1], (country1.name, country1.display_name))
+        self.assertEqual(len(choices), 2)
+        self.assertEqual(choices[0], (country2.name, country2.display_name))
+        self.assertEqual(choices[1], (country1.name, country1.display_name))
 
 
 class TestGroup(TestCase):
@@ -44,8 +44,8 @@ class TestGroup(TestCase):
         end = date(2007, 12, 25)
         grp = SchoolGroupFactory(start_date=start, end_date=end)
 
-        self.assertEquals(grp.formatted_start_date(), "01/05/2007")
-        self.assertEquals(grp.formatted_end_date(), "12/25/2007")
+        self.assertEqual(grp.formatted_start_date(), "01/05/2007")
+        self.assertEqual(grp.formatted_end_date(), "12/25/2007")
 
     def test_is_active(self):
         start = date(2007, 1, 5)
@@ -77,7 +77,7 @@ class TestGroup(TestCase):
         teacher.group.add(grp)
         student.group.add(grp)
 
-        self.assertEquals(grp.students().count(), 1)
+        self.assertEqual(grp.students().count(), 1)
 
 
 class TestUserProfile(TestCase):
@@ -92,11 +92,11 @@ class TestUserProfile(TestCase):
         self.hierarchy = Hierarchy.objects.get(name='optionb-en')
 
     def test_user_profile_unis(self):
-        self.assertEquals(smart_text(self.student), self.student.username)
+        self.assertEqual(smart_text(self.student), self.student.username)
 
     def test_display_name(self):
-        self.assertEquals(self.student.profile.display_name(),
-                          self.student.username)
+        self.assertEqual(self.student.profile.display_name(),
+                         self.student.username)
 
     def test_user_profile_roles(self):
         self.assertTrue(self.student.profile.is_student())
@@ -131,10 +131,10 @@ class TestUserProfile(TestCase):
         self.assertFalse(self.country_admin.profile.is_icap())
         self.assertTrue(self.icap.profile.is_icap())
 
-        self.assertEquals(self.student.profile.role(), 'student')
-        self.assertEquals(self.teacher.profile.role(), 'faculty')
-        self.assertEquals(self.country_admin.profile.role(), 'country')
-        self.assertEquals(self.icap.profile.role(), 'icap')
+        self.assertEqual(self.student.profile.role(), 'student')
+        self.assertEqual(self.teacher.profile.role(), 'faculty')
+        self.assertEqual(self.country_admin.profile.role(), 'country')
+        self.assertEqual(self.icap.profile.role(), 'icap')
 
     def test_last_location(self):
         ModuleFactory("optionb-fr", "/")
@@ -142,17 +142,17 @@ class TestUserProfile(TestCase):
         section = Section.objects.get(slug='two', hierarchy=alt_hierarchy)
         UserPageVisit.objects.create(user=self.student, section=section)
 
-        self.assertEquals(self.student.profile.last_location(self.hierarchy),
-                          self.hierarchy.get_root())
+        self.assertEqual(self.student.profile.last_location(self.hierarchy),
+                         self.hierarchy.get_root())
 
         section = Section.objects.get(slug='two', hierarchy=self.hierarchy)
         UserPageVisit.objects.create(user=self.student, section=section)
-        self.assertEquals(self.student.profile.last_location(self.hierarchy),
-                          section)
+        self.assertEqual(self.student.profile.last_location(self.hierarchy),
+                         section)
 
     def test_percent_complete(self):
         root = self.hierarchy.get_root()
-        self.assertEquals(self.student.profile.percent_complete(root), 0)
+        self.assertEqual(self.student.profile.percent_complete(root), 0)
 
         # visit section one & child one
         section_one = Section.objects.get(slug='one')
@@ -161,7 +161,7 @@ class TestUserProfile(TestCase):
             user=self.student, section=section_one, status="complete")
         UserPageVisit.objects.create(
             user=self.student, section=child_one, status="complete")
-        self.assertEquals(self.student.profile.percent_complete(root), 50)
+        self.assertEqual(self.student.profile.percent_complete(root), 50)
 
     def test_completed(self):
         pretest = Quiz.objects.create()
@@ -206,33 +206,33 @@ class TestUserProfile(TestCase):
         child_one = Section.objects.get(slug='introduction')
 
         pct = self.student.profile.percent_complete(section_one)
-        self.assertEquals(pct, 0)
-        self.assertEquals(self.student.profile.percent_complete(root), 0)
+        self.assertEqual(pct, 0)
+        self.assertEqual(self.student.profile.percent_complete(root), 0)
 
         UserPageVisit.objects.create(
             user=self.student, section=section_one, status="complete")
         pct = self.student.profile.percent_complete(section_one)
-        self.assertEquals(pct, 0)
-        self.assertEquals(self.student.profile.percent_complete(root), 25)
+        self.assertEqual(pct, 0)
+        self.assertEqual(self.student.profile.percent_complete(root), 25)
 
         UserPageVisit.objects.create(
             user=self.student, section=child_one, status="complete")
         pct = self.student.profile.percent_complete(section_one)
-        self.assertEquals(pct, 100)
-        self.assertEquals(self.student.profile.percent_complete(root), 50)
+        self.assertEqual(pct, 100)
+        self.assertEqual(self.student.profile.percent_complete(root), 50)
 
     def test_sessions_completed(self):
         section_one = Section.objects.get(slug='one')
         child_one = Section.objects.get(slug='introduction')
 
-        self.assertEquals(self.student.profile.sessions_completed(
+        self.assertEqual(self.student.profile.sessions_completed(
             self.hierarchy), 2)
 
         UserPageVisit.objects.create(
             user=self.student, section=section_one, status="complete")
         UserPageVisit.objects.create(
             user=self.student, section=child_one, status="complete")
-        self.assertEquals(
+        self.assertEqual(
             self.student.profile.sessions_completed(self.hierarchy), 3)
 
     def test_completion_date(self):
@@ -248,23 +248,23 @@ class TestUserProfile(TestCase):
                                                       status="complete")
 
         dt = self.student.profile.completion_date(self.hierarchy)
-        self.assertEquals(dt, last_visit.first_visit)
+        self.assertEqual(dt, last_visit.first_visit)
 
     def test_joined_groups(self):
         group = SchoolGroupFactory()
 
-        self.assertEquals(self.student.profile.joined_groups().count(), 0)
+        self.assertEqual(self.student.profile.joined_groups().count(), 0)
         grp = self.student.profile.get_groups_by_hierarchy(self.hierarchy.name)
-        self.assertEquals(len(grp), 0)
+        self.assertEqual(len(grp), 0)
 
         self.student.profile.group.add(group)
-        self.assertEquals(self.student.profile.joined_groups().count(), 1)
+        self.assertEqual(self.student.profile.joined_groups().count(), 1)
         grp = self.student.profile.get_groups_by_hierarchy(self.hierarchy.name)
-        self.assertEquals(len(grp), 0)
+        self.assertEqual(len(grp), 0)
 
         group.archived = True
         group.save()
-        self.assertEquals(self.student.profile.joined_groups().count(), 0)
+        self.assertEqual(self.student.profile.joined_groups().count(), 0)
 
     def test_managed_groups(self):
         teacher = TeacherProfileFactory().user
@@ -289,26 +289,26 @@ class TestUserProfile(TestCase):
         icap_grp = SchoolGroupFactory()
 
         groups = self.student.profile.get_managed_groups()
-        self.assertEquals(groups.count(), 0)
+        self.assertEqual(groups.count(), 0)
 
         groups = teacher.profile.get_managed_groups()
-        self.assertEquals(groups[0], teacher_grp)
+        self.assertEqual(groups[0], teacher_grp)
 
         groups = school.profile.get_managed_groups()
-        self.assertEquals(groups.count(), 3)
+        self.assertEqual(groups.count(), 3)
         self.assertTrue(alt_teacher_grp in groups)
         self.assertTrue(teacher_grp in groups)
         self.assertTrue(school_grp in groups)
 
         groups = country.profile.get_managed_groups()
-        self.assertEquals(groups.count(), 4)
+        self.assertEqual(groups.count(), 4)
         self.assertTrue(alt_teacher_grp in groups)
         self.assertTrue(teacher_grp in groups)
         self.assertTrue(school_grp in groups)
         self.assertTrue(country_grp in groups)
 
         groups = icap.profile.get_managed_groups()
-        self.assertEquals(groups.count(), 5)
+        self.assertEqual(groups.count(), 5)
         self.assertTrue(alt_teacher_grp in groups)
         self.assertTrue(teacher_grp in groups)
         self.assertTrue(school_grp in groups)
@@ -317,9 +317,9 @@ class TestUserProfile(TestCase):
 
     def test_time_spent_in_system(self):
         delta = self.student.profile.time_spent(self.hierarchy)
-        self.assertEquals(delta, "00:00:00")
+        self.assertEqual(delta, "00:00:00")
         delta = self.student.profile.time_elapsed(self.hierarchy)
-        self.assertEquals(delta, "00:00:00")
+        self.assertEqual(delta, "00:00:00")
 
         now = datetime.datetime.now()
         now = timezone.make_aware(now, timezone.get_current_timezone())
@@ -362,10 +362,10 @@ class TestUserProfile(TestCase):
             last_visit=visit.first_visit)  # force last_visit time
 
         delta = self.student.profile.time_spent(self.hierarchy)
-        self.assertEquals(delta, "00:15:00")
+        self.assertEqual(delta, "00:15:00")
 
-        self.assertEquals(self.student.profile.time_elapsed(self.hierarchy),
-                          '03:05:00')
+        self.assertEqual(self.student.profile.time_elapsed(self.hierarchy),
+                         '03:05:00')
 
 
 class TestPendingTeachers(TestCase):
@@ -376,7 +376,7 @@ class TestPendingTeachers(TestCase):
                                                  school=school)
 
         label = "%s - %s" % (student, school)
-        self.assertEquals(label, smart_text(teacher))
+        self.assertEqual(label, smart_text(teacher))
 
 
 class TestAggregateQuizScore(TestCase):

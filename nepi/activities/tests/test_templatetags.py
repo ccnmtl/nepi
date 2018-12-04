@@ -36,7 +36,7 @@ class TestDosageStateNode(TestCase):
         node = DosageStateNode('block', 'the_response')
         context = dict(request=self.request, block=self.block)
         node.render(context)
-        self.assertEquals(context['the_response'], state)
+        self.assertEqual(context['the_response'], state)
 
 
 class TestConversationStateNode(TestCase):
@@ -52,7 +52,7 @@ class TestConversationStateNode(TestCase):
         node = ConversationStateNode('block', 'the_response')
         context = dict(request=self.request, block=self.block)
         node.render(context)
-        self.assertEquals(context['the_response'], 0)
+        self.assertEqual(context['the_response'], 0)
 
     def test_get_response_with_state(self):
         ConversationResponse.objects.create(user=self.user,
@@ -60,7 +60,7 @@ class TestConversationStateNode(TestCase):
         node = ConversationStateNode('block', 'the_response')
         context = dict(request=self.request, block=self.block)
         node.render(context)
-        self.assertEquals(context['the_response'], 0)
+        self.assertEqual(context['the_response'], 0)
 
 
 class TestAdherenceStateNode(TestCase):
@@ -103,7 +103,7 @@ class TestAdherenceStateNode(TestCase):
         node = GetUserResponse('adherence', 'the_response')
         context = dict(request=request, section=self.section)
         node.render(context)
-        self.assertEquals(context['the_response'], 'a')
+        self.assertEqual(context['the_response'], 'a')
 
     def test_get_response_multiple_submissions(self):
         user = UserFactory()
@@ -116,4 +116,4 @@ class TestAdherenceStateNode(TestCase):
         node = GetUserResponse('adherence', 'the_response')
         context = dict(request=request, section=self.section)
         node.render(context)
-        self.assertEquals(context['the_response'], 'a')
+        self.assertEqual(context['the_response'], 'a')
