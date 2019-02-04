@@ -118,9 +118,9 @@ class LastResponse(View, JSONResponseMixin):
                      cresp.third_click.conversation.scenario_type})
             elif (cresp.first_click is not None and
                   cresp.second_click is None):
-                    return self.render_to_json_response(
-                        {'success': True,
-                         'last_conv':
+                return self.render_to_json_response(
+                    {'success': True,
+                     'last_conv':
                          cresp.first_click.conversation.scenario_type})
 
         except ConversationResponse.DoesNotExist:
