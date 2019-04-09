@@ -86,7 +86,7 @@ django-pagetree==1.4.1
 django-pageblocks==1.2.0  # pyup: <2.0.0
 django-quizblock==1.2.3
 django-markwhat==1.6.1
-django-simple-captcha==0.5.10
+django-simple-captcha==0.5.11
 gunicorn==19.9.0
 boto==2.49.0
 python-dateutil==2.8.0
