@@ -42,7 +42,7 @@ certifi==2019.3.9
 asn1crypto==0.24.0  # cryptography
 cryptography==2.6.1
 
-requests==2.21.0
+requests==2.22.0
 logilab-common==1.4.2
 logilab-astng==0.24.3
 editdistance==0.5.3
