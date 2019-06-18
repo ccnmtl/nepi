@@ -3,7 +3,7 @@ httplib2==0.13.0
 feedparser==5.2.1
 Markdown==2.6.11 # pyup: < 3
 smartypants==2.0.1
-psycopg2==2.8.2
+psycopg2==2.8.3
 olefile==0.46
 Pillow==6.0.0
 versiontools==1.9.1
