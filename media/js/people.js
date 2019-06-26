@@ -25,7 +25,7 @@
                 context.page = (this.offset / this.limit) + 1;
             }
 
-            if (this.hasOwnProperty('country')) {
+            if (Object.prototype.hasOwnProperty.call(this, 'country')) {
                 context.country = this.country;
             } else {
                 context.country = '';
@@ -52,13 +52,13 @@
         },
         url: function() {
             var url = this.urlRoot + '?offset=' + this.offset;
-            if (this.hasOwnProperty('country')) {
+            if (Object.prototype.hasOwnProperty.call(this, 'country')) {
                 url += '&country=' + this.country;
             }
-            if (this.hasOwnProperty('role')) {
+            if (Object.prototype.hasOwnProperty.call(this, 'role')) {
                 url += '&role=' + this.role;
             }
-            if (this.hasOwnProperty('school')) {
+            if (Object.prototype.hasOwnProperty.call(this, 'school')) {
                 url += '&school=' + this.school;
             }
             return url;
