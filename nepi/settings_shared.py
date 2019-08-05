@@ -4,6 +4,14 @@ import os
 import sys
 from ccnmtlsettings.shared import common
 from django.utils.translation import ugettext_lazy as _
+import urllib3.contrib.pyopenssl
+
+# Tell urllib3 to use pyOpenSSL. Needed by python < 2.7.9
+# to resolve an SNIMissingWarning.
+# See:
+#   https://urllib3.readthedocs.io/en/latest/user-guide.html#ssl-py2
+#   https://urllib3.readthedocs.io/en/latest/advanced-usage.html#ssl-warnings
+urllib3.contrib.pyopenssl.inject_into_urllib3()
 
 project = 'nepi'
 base = os.path.dirname(__file__)
