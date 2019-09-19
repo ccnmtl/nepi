@@ -1,6 +1,6 @@
 # flake8: noqa
 import os
-from settings_shared import *
+from nepi.settings_shared import *
 from ccnmtlsettings.production import common
 
 locals().update(
@@ -12,6 +12,6 @@ locals().update(
     ))
 
 try:
-    from local_settings import *
+    from nepi.local_settings import *
 except ImportError:
     pass
