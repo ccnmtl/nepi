@@ -16,7 +16,7 @@
     "url": "https://github.com/ccnmtl/nepi/issues"
   },
   "devDependencies": {
-    "eslint": "~6.4.0",
+    "eslint": "~6.5.0",
     "eslint-config-scanjs": "^1.0.0-beta4",
     "eslint-plugin-no-unsafe-innerhtml": "^1.0.16",
     "eslint-plugin-security": "^1.4.0"
