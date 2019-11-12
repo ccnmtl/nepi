@@ -35,8 +35,8 @@ ndg-httpsclient==0.5.1
 
 chardet==3.0.4
 idna==2.8
-urllib3==1.25.6
-certifi==2019.9.11
+urllib3==1.25.6  # sentry-sdk
+certifi==2019.9.11  # sentry-sdk
 
 asn1crypto==1.2.0  # cryptography
 cryptography==2.8
@@ -66,6 +66,7 @@ django-appconf==1.0.3
 django-compressor==2.3
 django-statsd-mozilla==0.4.0
 raven==6.10.0
+sentry-sdk==0.13.2
 django-bootstrap-form==3.4
 django-bootstrap3==11.1.0
 
