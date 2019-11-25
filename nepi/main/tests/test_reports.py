@@ -4,9 +4,9 @@ from datetime import date
 import datetime
 
 from django.core.cache import cache
-from django.core.urlresolvers import reverse
 from django.test.client import RequestFactory
 from django.test.testcases import TestCase
+from django.urls.base import reverse
 from pagetree.models import Hierarchy, UserPageVisit, Section
 from pagetree.tests.factories import ModuleFactory
 from quizblock.models import Quiz, Question, Answer, Submission, Response

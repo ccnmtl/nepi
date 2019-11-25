@@ -1,12 +1,13 @@
 from __future__ import unicode_literals
 
 from decimal import Decimal
+
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.query_utils import Q
+from django.urls.base import reverse
 from django.utils.encoding import python_2_unicode_compatible, smart_text
 from pagetree.models import PageBlock
 from pagetree.reports import ReportableInterface, ReportColumnInterface
@@ -70,9 +71,11 @@ class ConversationScenario(models.Model):
     exportable = False
     importable = False
     good_conversation = models.ForeignKey(Conversation, null=True, blank=True,
-                                          related_name='good_conversation')
+                                          related_name='good_conversation',
+                                          on_delete=models.CASCADE)
     bad_conversation = models.ForeignKey(Conversation, null=True, blank=True,
-                                         related_name='bad_conversation')
+                                         related_name='bad_conversation',
+                                         on_delete=models.CASCADE)
 
     def pageblock(self):
         return self.pageblocks.all()[0]
@@ -251,7 +254,8 @@ class ConversationScenarioForm(forms.ModelForm):
 @python_2_unicode_compatible
 class ConvClick(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    conversation = models.ForeignKey(Conversation, null=True, blank=True)
+    conversation = models.ForeignKey(
+        Conversation, null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return "%s Click" % self.conversation.scenario_type
@@ -259,14 +263,19 @@ class ConvClick(models.Model):
 
 @python_2_unicode_compatible
 class ConversationResponse(models.Model):
-    conv_scen = models.ForeignKey(ConversationScenario, null=True, blank=True)
-    user = models.ForeignKey(User, null=True, blank=True)
-    first_click = models.ForeignKey(ConvClick, related_name="first_click",
-                                    null=True, blank=True)
-    second_click = models.ForeignKey(ConvClick, related_name="second_click",
-                                     null=True, blank=True)
-    third_click = models.ForeignKey(ConvClick, related_name="third_click",
-                                    null=True, blank=True)
+    conv_scen = models.ForeignKey(
+        ConversationScenario, null=True, blank=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.CASCADE)
+    first_click = models.ForeignKey(
+        ConvClick, related_name="first_click", null=True, blank=True,
+        on_delete=models.CASCADE)
+    second_click = models.ForeignKey(
+        ConvClick, related_name="second_click", null=True, blank=True,
+        on_delete=models.CASCADE)
+    third_click = models.ForeignKey(
+        ConvClick, related_name="third_click",
+        null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return "Response to %s" % self.conv_scen
@@ -510,26 +519,29 @@ class RetentionClick(models.Model):
 
 @python_2_unicode_compatible
 class RetentionResponse(models.Model):
-    retentionrate = models.ForeignKey(RetentionRateCard, null=True, blank=True)
-    user = models.ForeignKey(User, null=True, blank=True)
-    cohort_click = models.ForeignKey(RetentionClick,
-                                     related_name="retention_cohort_click",
-                                     null=True, blank=True)
+    retentionrate = models.ForeignKey(
+        RetentionRateCard, null=True, blank=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.CASCADE)
+    cohort_click = models.ForeignKey(
+        RetentionClick, related_name="retention_cohort_click",
+        null=True, blank=True, on_delete=models.CASCADE)
     start_date_click = models.ForeignKey(
         RetentionClick,
         related_name="retention_start_date_click",
-        null=True, blank=True)
-    eligible_click = models.ForeignKey(RetentionClick,
-                                       related_name="retention_eligible_click",
-                                       null=True, blank=True)
+        null=True, blank=True, on_delete=models.CASCADE)
+    eligible_click = models.ForeignKey(
+        RetentionClick,
+        related_name="retention_eligible_click",
+        null=True, blank=True, on_delete=models.CASCADE)
     delivery_date_click = models.ForeignKey(
         RetentionClick,
         related_name="retention_delivery_date_click",
-        null=True, blank=True)
+        null=True, blank=True, on_delete=models.CASCADE)
     follow_up_click = models.ForeignKey(
         RetentionClick,
         related_name="retention_follow_up_click",
-        null=True, blank=True)
+        null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return("Response to " + str(self.retentionrate))
@@ -568,7 +580,7 @@ class Month(models.Model):
 
 @python_2_unicode_compatible
 class Day(models.Model):
-    calendar = models.ForeignKey(Month)
+    calendar = models.ForeignKey(Month, on_delete=models.CASCADE)
     number = models.IntegerField(default=1)
     explanation = models.TextField(default="")
 
@@ -600,7 +612,7 @@ class CalendarChart(models.Model):
     js_template_file = "activities/calendarchart_js.html"
     css_template_file = "activities/calendarchart_css.html"
     display_name = "Calendar Chart"
-    month = models.ForeignKey(Month)
+    month = models.ForeignKey(Month, on_delete=models.CASCADE)
     description = models.TextField(default='')
     correct_date = models.IntegerField(default=1)
 
@@ -719,12 +731,16 @@ class CalendarChartForm(forms.ModelForm):
 
 
 class CalendarResponse(models.Model):
-    calendar_activity = models.ForeignKey(CalendarChart, null=True, blank=True)
-    user = models.ForeignKey(User, null=True, blank=True)
-    first_click = models.ForeignKey(Day, null=True, blank=True,
-                                    related_name="first_click")
-    correct_click = models.ForeignKey(Day, null=True, blank=True,
-                                      related_name="correct_click")
+    calendar_activity = models.ForeignKey(
+        CalendarChart, null=True, blank=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.CASCADE)
+    first_click = models.ForeignKey(
+        Day, null=True, blank=True,
+        related_name="first_click", on_delete=models.CASCADE)
+    correct_click = models.ForeignKey(
+        Day, null=True, blank=True,
+        related_name="correct_click", on_delete=models.CASCADE)
 
 
 @python_2_unicode_compatible
@@ -881,10 +897,11 @@ class DosageActivityForm(forms.ModelForm):
 
 
 class DosageActivityResponse(models.Model):
-    dosage_activity = models.ForeignKey(DosageActivity,
-                                        null=True, blank=True,
-                                        related_name='dosage_resp')
-    user = models.ForeignKey(User, null=True, blank=True)
+    dosage_activity = models.ForeignKey(
+        DosageActivity, null=True, blank=True,
+        related_name='dosage_resp', on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, null=True, blank=True, on_delete=models.CASCADE)
     ml_nvp = models.DecimalField(default=0.0, max_digits=4, decimal_places=2)
     times_day = models.IntegerField()
     weeks = models.IntegerField()

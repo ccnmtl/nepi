@@ -8,18 +8,18 @@ from django.conf import settings
 from django.contrib.auth.models import User, AnonymousUser
 from django.core import mail
 from django.core.cache import cache
-from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
+from django.urls.base import reverse
 from django.utils.translation import get_language, LANGUAGE_SESSION_KEY
 from pagetree.models import UserPageVisit, Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
 
+from nepi.main.forms import ContactForm
+from nepi.main.models import Country, School, Group, PendingTeachers
 from nepi.main.tests.factories import (
     UserFactory, UserProfileFactory, ICAPProfileFactory
 )
-from nepi.main.forms import ContactForm
-from nepi.main.models import Country, School, Group, PendingTeachers
 from nepi.main.tests.factories import SchoolFactory, CountryFactory, \
     SchoolGroupFactory, StudentProfileFactory, \
     CountryAdministratorProfileFactory, \

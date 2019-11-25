@@ -102,7 +102,7 @@ class Country(models.Model):
 class School(models.Model):
     '''Some of the countries have fairly long names,
     assuming the schools may also have long names.'''
-    country = models.ForeignKey(Country)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
     name = models.CharField(max_length=1024)
 
     class Meta:
@@ -116,12 +116,15 @@ class School(models.Model):
 @python_2_unicode_compatible
 class Group(models.Model):
     '''Allow association of group with module.'''
-    school = models.ForeignKey(School)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
     start_date = models.DateField()
     end_date = models.DateField()
     name = models.CharField(max_length=50)
-    creator = models.ForeignKey(User, related_name="created_by")
-    module = models.ForeignKey(Hierarchy, null=True, default=None, blank=True)
+    creator = models.ForeignKey(
+        User, related_name="created_by", on_delete=models.CASCADE)
+    module = models.ForeignKey(
+        Hierarchy, null=True, default=None, blank=True,
+        on_delete=models.CASCADE)
     archived = models.BooleanField(default=False)
 
     def __str__(self):
@@ -160,11 +163,13 @@ class UserProfile(models.Model):
     '''UserProfile adds extra information to a user,
     and associates the user with a group, school,
     and country.'''
-    user = models.OneToOneField(User, related_name="profile")
+    user = models.OneToOneField(
+        User, related_name="profile", on_delete=models.CASCADE)
     profile_type = models.CharField(max_length=2, choices=PROFILE_CHOICES)
-    country = models.ForeignKey(Country)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
     icap_affil = models.BooleanField(default=False)
-    school = models.ForeignKey(School, null=True, default=None, blank=True)
+    school = models.ForeignKey(
+        School, null=True, default=None, blank=True, on_delete=models.CASCADE)
     group = models.ManyToManyField(
         Group, default=None, blank=True)
     language = models.CharField(max_length=2,
@@ -325,8 +330,9 @@ class UserProfile(models.Model):
 @python_2_unicode_compatible
 class PendingTeachers(models.Model):
     user_profile = models.ForeignKey(UserProfile,
-                                     related_name="pending_teachers")
-    school = models.ForeignKey(School)
+                                     related_name="pending_teachers",
+                                     on_delete=models.CASCADE)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
 
     def __str__(self):
         return "%s - %s" % (self.user_profile, self.school)

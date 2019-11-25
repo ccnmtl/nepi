@@ -23,6 +23,7 @@ PROJECT_APPS = [
 ALLOWED_HOSTS = [
     'localhost',
     '.ccnmtl.columbia.edu',
+    '.ctl.columbia.edu',
     'elearning.icap.columbia.edu',
 ]
 

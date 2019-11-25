@@ -6,12 +6,12 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.signals import user_logged_in
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
 from django.http import HttpResponseRedirect
 from django.http.response import HttpResponseForbidden, StreamingHttpResponse
 from django.shortcuts import get_object_or_404
 from django.template import loader
+from django.urls.base import reverse
 from django.utils import translation
 from django.utils.translation import LANGUAGE_SESSION_KEY
 from django.views.generic import View

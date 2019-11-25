@@ -1,7 +1,7 @@
-Django==1.11.26 # pyup: <2.0
+Django==2.2.7
 httplib2==0.14.0
 feedparser==5.2.1
-Markdown==2.6.11 # pyup: < 3
+Markdown==3.1.1
 smartypants==2.0.1
 psycopg2==2.8.4
 olefile==0.46
@@ -14,7 +14,7 @@ mccabe==0.6.1
 pycodestyle==2.5.0
 configparser==4.0.2
 flake8==3.7.9
-tornado==4.5.3 # pyup: <5.0
+tornado==6.0.3
 cssselect==1.1.0
 lxml==4.4.1
 fuzzywuzzy==0.17.0
@@ -26,7 +26,7 @@ ptyprocess==0.6.0
 pexpect==4.7.0
 pickleshare==0.7.5
 simplegeneric==0.8.1
-ipython==5.8.0 # pyup: <6.0.0
+ipython==7.9.0
 ipdb==0.12.2
 coverage==4.5.4
 pyasn1==0.4.8
@@ -71,7 +71,7 @@ django-bootstrap-form==3.4
 django-bootstrap3==11.1.0
 
 sqlparse==0.3.0
-django-debug-toolbar==1.11 # pyup: <2.0
+django-debug-toolbar==2.1
 
 django-waffle==0.18.0
 django-jenkins==0.110.0
