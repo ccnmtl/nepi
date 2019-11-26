@@ -1,14 +1,13 @@
-import django.contrib.auth.views
-import djangowind.views
 import os.path
-import debug_toolbar
 
+import debug_toolbar
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth.views import (
-    password_change, password_change_done, password_reset_done,
-    password_reset_confirm, password_reset_complete)
+    PasswordChangeView, PasswordChangeDoneView,
+    PasswordResetConfirmView, PasswordResetView, PasswordResetDoneView)
+import django.contrib.auth.views
 from django.views.generic import TemplateView
 import django.views.static
 
@@ -28,21 +27,10 @@ admin.autodiscover()
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
-redirect_after_logout = getattr(settings, 'LOGOUT_REDIRECT_URL', None)
 auth_urls = url(r'^accounts/', include('django.contrib.auth.urls'))
-logout_page = url(r'^accounts/logout/$', django.contrib.auth.views.logout,
-                  {'next_page': redirect_after_logout})
-admin_logout_page = url(r'^accounts/logout/$',
-                        django.contrib.auth.views.logout,
-                        {'next_page': '/admin/'})
-
 if hasattr(settings, 'CAS_BASE'):
     auth_urls = url(r'^accounts/', include('djangowind.urls'))
-    logout_page = url(r'^accounts/logout/$', djangowind.views.logout,
-                      {'next_page': '/'})
-    admin_logout_page = url(r'^admin/logout/$',
-                            djangowind.views.logout,
-                            {'next_page': redirect_after_logout})
+
 
 urlpatterns = [
     url(r'^account_created/',
@@ -50,15 +38,9 @@ urlpatterns = [
     url(r'^email_sent/', TemplateView.as_view(
         template_name="flatpages/contact_email_sent.html")),
 
-    url(r'^accounts/reset/(?P<uidb36>[0-9A-Za-z]{1,13})'
-        '-(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-        django.contrib.auth.views.password_reset_confirm,
-        name='password_reset_confirm'),
-    admin_logout_page,
-    logout_page,
     auth_urls,
     url(r'^$', HomeView.as_view(), name="home"),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
 
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
@@ -70,18 +52,18 @@ urlpatterns = [
 
     url(r'^register/$', RegistrationView.as_view(), name='register'),
     # password change & reset. overriding to gate them.
-    url(r'^accounts/password_change/$', password_change,
+    url(r'^accounts/password_change/$', PasswordChangeView.as_view(),
         name='password_change'),
     url(r'^accounts/password_change/done/$',
-        password_change_done,
+        PasswordChangeDoneView.as_view(),
         name='password_change_done'),
-    url(r'^password/reset/done/$', password_reset_done,
+    url(r'^password/reset/done/$', PasswordResetView.as_view(),
         name='password_reset_done'),
     url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
-        password_reset_confirm,
+        PasswordResetConfirmView.as_view(),
         name='password_reset_confirm'),
     url(r'^password/reset/complete/$',
-        password_reset_complete, name='password_reset_complete'),
+        PasswordResetDoneView.as_view(), name='password_reset_complete'),
 
     # confirm language choice
     url(r'^confirm-language/$',

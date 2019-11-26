@@ -44,8 +44,8 @@ class Migration(migrations.Migration):
                 ('end_date', models.DateField()),
                 ('name', models.CharField(max_length=50)),
                 ('archived', models.BooleanField(default=False)),
-                ('creator', models.ForeignKey(related_name='created_by', to=settings.AUTH_USER_MODEL)),
-                ('module', models.ForeignKey(default=None, blank=True, to='pagetree.Hierarchy', null=True)),
+                ('creator', models.ForeignKey(related_name='created_by', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
+                ('module', models.ForeignKey(default=None, blank=True, to='pagetree.Hierarchy', null=True, on_delete=models.CASCADE)),
             ],
             options={
             },
@@ -65,7 +65,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=1024)),
-                ('country', models.ForeignKey(to='main.Country')),
+                ('country', models.ForeignKey(to='main.Country', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['name'],
@@ -78,10 +78,10 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('profile_type', models.CharField(max_length=2, choices=[(b'ST', b'Student'), (b'TE', b'Teacher'), (b'IN', b'Institution'), (b'CA', b'Country Administrator'), (b'IC', b'ICAP')])),
                 ('icap_affil', models.BooleanField(default=False)),
-                ('country', models.ForeignKey(to='main.Country')),
+                ('country', models.ForeignKey(to='main.Country', on_delete=models.CASCADE)),
                 ('group', models.ManyToManyField(default=None, to='main.Group', null=True, blank=True)),
-                ('school', models.ForeignKey(default=None, blank=True, to='main.School', null=True)),
-                ('user', models.OneToOneField(related_name='profile', to=settings.AUTH_USER_MODEL)),
+                ('school', models.ForeignKey(default=None, blank=True, to='main.School', null=True, on_delete=models.CASCADE)),
+                ('user', models.OneToOneField(related_name='profile', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['user'],
@@ -95,19 +95,19 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='pendingteachers',
             name='school',
-            field=models.ForeignKey(to='main.School'),
+            field=models.ForeignKey(to='main.School', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='pendingteachers',
             name='user_profile',
-            field=models.ForeignKey(related_name='pending_teachers', to='main.UserProfile'),
+            field=models.ForeignKey(related_name='pending_teachers', to='main.UserProfile', on_delete=models.CASCADE),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='group',
             name='school',
-            field=models.ForeignKey(to='main.School'),
+            field=models.ForeignKey(to='main.School', on_delete=models.CASCADE),
             preserve_default=True,
         ),
     ]

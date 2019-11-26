@@ -1,9 +1,9 @@
 from json import loads
 import json
 
-from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
+from django.urls.base import reverse
 from pagetree.models import Hierarchy, UserPageVisit
 from pagetree.tests.factories import ModuleFactory
 
