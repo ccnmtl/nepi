@@ -26,7 +26,7 @@ ptyprocess==0.6.0
 pexpect==4.7.0
 pickleshare==0.7.5
 simplegeneric==0.8.1
-ipython==7.9.0
+ipython==7.10.0
 ipdb==0.12.2
 coverage==4.5.4
 pyasn1==0.4.8
