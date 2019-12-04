@@ -42,7 +42,7 @@ asn1crypto==1.2.0  # cryptography
 cryptography==2.8
 
 requests==2.22.0
-logilab-common==1.5.1
+logilab-common==1.5.2
 logilab-astng==0.24.3
 editdistance==0.5.3
 pylint==2.4.4
