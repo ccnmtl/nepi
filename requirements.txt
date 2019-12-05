@@ -27,7 +27,7 @@ pexpect==4.7.0
 pickleshare==0.7.5
 simplegeneric==0.8.1
 ipython==7.9.0
-ipdb==0.12.2
+ipdb==0.12.3
 coverage==4.5.4
 pyasn1==0.4.8
 pyOpenSSL==19.1.0
