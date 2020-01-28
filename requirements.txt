@@ -65,7 +65,7 @@ sqlparse==0.3.0
 django-debug-toolbar==2.1
 
 django-waffle==0.19.0
-django-jenkins==0.110.0
+
 django-smoketest==1.1.0
 django-extensions==2.2.6
 
@@ -91,7 +91,7 @@ django-storages==1.8
 django-cacheds3storage==0.2.1
 django-smtp-ssl==1.0
 
-ccnmtlsettings==1.7.0
+ccnmtlsettings==1.8.0
 pytz==2019.2
 
 pbr==5.4.4
