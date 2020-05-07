@@ -75,7 +75,7 @@ django-ga-context==0.1.0
 django-impersonate==1.5
 django-treebeard==4.3.1
 django-pagetree==1.4.1
-django-pageblocks==1.2.0  # pyup: <2.0.0
+django-pageblocks==2.0.0  # pyup: <2.0.0
 django-quizblock==1.2.5
 django-markwhat==1.6.2
 django-simple-captcha==0.5.12
