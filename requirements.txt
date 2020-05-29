@@ -89,11 +89,11 @@ botocore>=1.15.0,<1.17.0
 boto3>=1.12.0,<1.14.0
 
 python-dateutil==2.8.1
-django-storages==1.8 # pyup: <1.9
+django-storages==1.9.1
 django-cacheds3storage==0.2.1
 django-smtp-ssl==1.0
 
-ccnmtlsettings==1.8.0
+ccnmtlsettings==1.8.2
 pytz==2020.1
 
 pbr==5.4.5
