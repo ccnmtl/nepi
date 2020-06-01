@@ -93,7 +93,7 @@ django-storages==1.9.1
 django-cacheds3storage==0.2.1
 django-smtp-ssl==1.0
 
-ccnmtlsettings==1.8.2
+ccnmtlsettings==1.8.3
 pytz==2020.1
 
 pbr==5.4.5
