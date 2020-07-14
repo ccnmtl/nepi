@@ -21,7 +21,7 @@ cssselect==1.1.0
 lxml==4.5.1
 fuzzywuzzy==0.18.0
 sure==1.4.11
-coverage==5.1
+coverage==5.2
 pyasn1==0.4.8
 pyOpenSSL==19.1.0
 ndg-httpsclient==0.5.1
