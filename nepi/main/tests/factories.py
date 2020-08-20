@@ -7,7 +7,7 @@ import random
 import string
 
 
-class UserFactory(factory.DjangoModelFactory):
+class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
     username = factory.Sequence(lambda n: "user%d" % n)
@@ -26,7 +26,7 @@ def country_choice(n):
     return cc
 
 
-class CountryFactory(factory.DjangoModelFactory):
+class CountryFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Country
 
@@ -34,14 +34,14 @@ class CountryFactory(factory.DjangoModelFactory):
     display_name = factory.Sequence(lambda n: "country %d" % n)
 
 
-class SchoolFactory(factory.DjangoModelFactory):
+class SchoolFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = School
     country = factory.SubFactory(CountryFactory)
     name = factory.Sequence(lambda n: "school %d" % n)
 
 
-class SchoolGroupFactory(factory.DjangoModelFactory):
+class SchoolGroupFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Group
     school = factory.SubFactory(SchoolFactory)
@@ -51,7 +51,7 @@ class SchoolGroupFactory(factory.DjangoModelFactory):
     end_date = datetime.date.today()
 
 
-class UserProfileFactory(factory.DjangoModelFactory):
+class UserProfileFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = UserProfile
     user = factory.SubFactory(UserFactory)
@@ -81,7 +81,7 @@ class CountryAdministratorProfileFactory(UserProfileFactory):
     profile_type = 'CA'
 
 
-class PendingTeacherFactory(factory.DjangoModelFactory):
+class PendingTeacherFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = PendingTeachers
     user_profile = factory.SubFactory(StudentProfileFactory)
