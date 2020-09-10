@@ -3,7 +3,7 @@ httplib2==0.18.1
 feedparser==5.2.1
 Markdown==3.2.2
 smartypants==2.0.1
-psycopg2==2.8.5
+psycopg2==2.8.6
 olefile==0.46
 Pillow==7.2.0
 versiontools==1.9.1
@@ -32,19 +32,19 @@ urllib3==1.25.10  # sentry-sdk
 certifi==2020.6.20  # sentry-sdk
 
 asn1crypto==1.4.0  # cryptography
-cryptography==3.0
+cryptography==3.1
 
 requests==2.24.0
-logilab-common==1.7.2
+logilab-common==1.7.3
 astroid==2.4.2
 editdistance==0.5.3
-pylint==2.5.3
+pylint==2.6.0
 six==1.15.0
 ipaddress==1.0.23
 text-unidecode==1.3  # for faker
 Faker==4.1.2
 factory_boy==3.0.1
-ldap3==2.8
+ldap3==2.8.1
 contextlib2==0.6.0.post1
 rcssmin==1.0.6
 rjsmin==1.1.0
@@ -59,17 +59,17 @@ django-appconf==1.0.4
 django-compressor==2.4
 django-statsd-mozilla==0.4.0
 raven==6.10.0
-sentry-sdk==0.16.3
+sentry-sdk==0.17.4
 django-bootstrap-form==3.4
 django-bootstrap3==14.1.0
 
 sqlparse==0.3.1
 django-debug-toolbar==2.2
 
-django-waffle==1.0.0
+django-waffle==2.0.0
 
 django-smoketest==1.1.2
-django-extensions==3.0.5
+django-extensions==3.0.8
 
 
 django-stagingcontext==0.1.0
@@ -89,14 +89,14 @@ botocore>=1.15.0,<1.18.0
 boto3>=1.12.0,<1.15.0
 
 python-dateutil==2.8.1
-django-storages==1.9.1
+django-storages==1.10
 django-cacheds3storage==0.2.2
 django-smtp-ssl==1.0
 
 ccnmtlsettings==1.8.4
 pytz==2020.1
 
-pbr==5.4.5
+pbr==5.5.0
 PyYAML>=3.10.0 # MIT
 stevedore>=1.20.0 # Apache-2.0
 bandit==1.6.2
