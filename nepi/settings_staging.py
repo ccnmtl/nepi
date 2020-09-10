@@ -13,6 +13,13 @@ locals().update(
         INSTALLED_APPS=INSTALLED_APPS,  # noqa: F405
     ))
 
+
+# Update the django-storages parameter
+AWS_S3_OBJECT_PARAMETERS = {
+    'ACL': 'public-read',
+}
+
+
 try:
     from nepi.local_settings import *  # noqa: F403
 except ImportError:
