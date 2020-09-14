@@ -6,7 +6,7 @@ from nepi.activities.models import ConversationScenario, \
     ImageInteractive, ARTCard, AdherenceCard
 
 
-class GoodConversationFactory(factory.DjangoModelFactory):
+class GoodConversationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Conversation
     text_one = "We assume text one is the starting text"
@@ -18,7 +18,7 @@ class GoodConversationFactory(factory.DjangoModelFactory):
         " that is displayed when the user selects the starting text"
 
 
-class BadConversationFactory(factory.DjangoModelFactory):
+class BadConversationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Conversation
     text_one = "We assume text one is the starting text"
@@ -30,7 +30,7 @@ class BadConversationFactory(factory.DjangoModelFactory):
         " that is displayed when the user selects the starting text"
 
 
-class ConversationScenarioFactory(factory.DjangoModelFactory):
+class ConversationScenarioFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ConversationScenario
     description = "Description for the Conversation Scenario"
@@ -40,31 +40,31 @@ class ConversationScenarioFactory(factory.DjangoModelFactory):
     bad_conversation = factory.SubFactory(BadConversationFactory)
 
 
-class ConvClickFactory(factory.DjangoModelFactory):
+class ConvClickFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ConvClick
     conversation = factory.SubFactory(GoodConversationFactory)
 
 
-class RetentionRateCardFactory(factory.DjangoModelFactory):
+class RetentionRateCardFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = RetentionRateCard
     intro_text = "intro text"
 
 
-class RetentionClickFactory(factory.DjangoModelFactory):
+class RetentionClickFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = RetentionClick
     click_string = "cohort_click"
 
 
-class MonthFactory(factory.DjangoModelFactory):
+class MonthFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Month
     display_name = "January 2015"
 
 
-class CalendarChartFactory(factory.DjangoModelFactory):
+class CalendarChartFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CalendarChart
     month = factory.SubFactory(MonthFactory)
@@ -72,7 +72,7 @@ class CalendarChartFactory(factory.DjangoModelFactory):
     description = 'description'
 
 
-class IncorrectDayOneFactory(factory.DjangoModelFactory):
+class IncorrectDayOneFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Day
     calendar = factory.SubFactory(MonthFactory)
@@ -80,7 +80,7 @@ class IncorrectDayOneFactory(factory.DjangoModelFactory):
     explanation = "This is the wrong day"
 
 
-class IncorrectDayTwoFactory(factory.DjangoModelFactory):
+class IncorrectDayTwoFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Day
     calendar = factory.SubFactory(MonthFactory)
@@ -88,7 +88,7 @@ class IncorrectDayTwoFactory(factory.DjangoModelFactory):
     explanation = "This is the wrong day"
 
 
-class CorrectDayFactory(factory.DjangoModelFactory):
+class CorrectDayFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Day
     calendar = factory.SubFactory(MonthFactory)
@@ -96,25 +96,25 @@ class CorrectDayFactory(factory.DjangoModelFactory):
     explanation = "This is the correct day"
 
 
-class ImageInteractiveFactory(factory.DjangoModelFactory):
+class ImageInteractiveFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ImageInteractive
     intro_text = "intro text"
 
 
-class ARTCardFactory(factory.DjangoModelFactory):
+class ARTCardFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ARTCard
     intro_text = "intro text"
 
 
-class AdherenceCardFactory(factory.DjangoModelFactory):
+class AdherenceCardFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = AdherenceCard
     quiz_class = "quiz class"
 
 
-class DosageActivityFactory(factory.DjangoModelFactory):
+class DosageActivityFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = DosageActivity
     explanation = 'the explanation'
