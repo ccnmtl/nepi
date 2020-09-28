@@ -64,7 +64,7 @@ django-bootstrap-form==3.4
 django-bootstrap3==14.1.0
 
 sqlparse==0.3.1
-django-debug-toolbar==3.1
+django-debug-toolbar==3.1.1
 
 django-waffle==2.0.0
 
