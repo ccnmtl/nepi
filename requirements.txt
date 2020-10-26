@@ -80,7 +80,7 @@ django-pagetree==1.4.2
 django-pageblocks==1.2.0  # pyup: <2.0.0
 django-quizblock==1.2.6
 django-markwhat==1.6.2
-django-simple-captcha==0.5.12
+django-simple-captcha==0.5.13
 gunicorn==20.0.4
 s3transfer==0.3.3
 jmespath==0.10.0
