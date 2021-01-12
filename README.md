@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/ccnmtl/nepi/workflows/build-and-test/badge.svg)](https://github.com/ccnmtl/nepi/actions)
+
 ICAP Nursing eLearning
 ==========
 
