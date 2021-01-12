@@ -32,6 +32,7 @@ USE_I18N = True
 
 MIDDLEWARE += [
     'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware'
 ]
 
 TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa

@@ -249,8 +249,8 @@
   
  <form action="{% url 'edit-pageblock' block.id %}" method="post"
   class=""
-  {% if block.edit_form.is_multipart %}enctype="multipart/form-data"{% endif %}>
- 
+  {% if block.edit_form.is_multipart %}enctype="multipart/form-data"{% endif %}>{% csrf_token %}
+    
   {{ block.default_edit_form|bootstrap }}
  {% with block.edit_form as ef %}
   {{ ef|bootstrap }}
@@ -308,7 +308,7 @@
  <h1>Add Child</h1>
   <form action="{% url 'add-child-section' section.id %}" method="post"
              class="form-inline" >
-  
+    {% csrf_token %}  
 {{ section.add_child_section_form|bootstrap }}
   
   <input type="submit" value="add child section" class="btn btn-primary"
@@ -335,7 +335,7 @@
  {% if blocktype.add_form.is_multipart %}
  enctype="multipart/form-data"
  {% endif %}
- method="post">
+ method="post">{% csrf_token %}
  
 
    <div class="modal-header">
@@ -368,8 +368,7 @@
   <div id="edit-page-tab" class="tab-pane">
  
   <form action="{% url 'edit-section' section.id %}" method="post"
-              class="form-horizontal">
- {% csrf_token %}
+              class="form-horizontal">{% csrf_token %}
   <fieldset><legend>Edit Page</legend>
   
   {{ section.edit_form|bootstrap }}
@@ -379,7 +378,7 @@
   </form>
   
   
-  <form action="{% url 'delete-section' section.id %}" method="post">
+  <form action="{% url 'delete-section' section.id %}" method="post">{% csrf_token %}
   <input type="submit" value="delete this page" class="btn btn-danger"/>
   </form>
   

@@ -35,7 +35,7 @@
                                 <td class="actions">
                                     <a class="btn btn-default btn-small" href="{% url 'group-details' group.id %}">Progress</a>
                                     <a class="btn btn-default btn-small" href="{% url 'roster-details' group.id %}">Roster</a>
-                                    <form action='/archive_group/' method='post'>
+                                    <form action='/archive_group/' method='post'>{% csrf_token %}
                                         <input type='hidden' name='group' value='{{group.id}}' />
                                         <button class="btn btn-default btn-small archive-group">Archive</button>
                                     </form>                                    
@@ -45,7 +45,7 @@
                                             <i class="icon-pencil"></i>
                                     </button>
                                     {% if group.userprofile_set.count == 0 %}
-                                        <form action='/delete_group/' method='post'>
+                                        <form action='/delete_group/' method='post'>{% csrf_token %}
                                             <input type='hidden' name='group' value='{{group.id}}' />
                                             <button class="btn btn-default btn-small delete-group"><i class="icon-trash"></i></button>
                                         </form>
@@ -91,7 +91,7 @@
                                 <a href="{{user_profile|module_last_location_url:module_name}}" class="btn btn-default btn-small">
                                     Continue
                                 </a>&nbsp;&nbsp;
-                                <form action='/leave_group/' method='post'>
+                                <form action='/leave_group/' method='post'>{% csrf_token %}
                                     <input type='hidden' name='group' value='{{group.id}}' />
                                     <button class="btn btn-default btn-small leave-group">Leave</button>
                                 </form>

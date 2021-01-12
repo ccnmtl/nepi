@@ -106,7 +106,7 @@
     </ul>
 
     <div class="dashboard tab-content people">
-        <form id="report-selector" class="action-container" method="post">
+        <form id="report-selector" class="action-container" method="post">{% csrf_token %}
             <div class="fieldWrapper control-group role pull-left">
                 <div class="controls">
                     <select name="role">

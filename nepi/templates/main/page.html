@@ -114,7 +114,7 @@
     {% if needs_submit %}
         {% if is_submitted %}
         {% else %}
-        <form action="." method="post">
+        <form action="." method="post">{% csrf_token %}
         {% endif %}
     {% endif %}
 
@@ -131,12 +131,12 @@
             {% else %}    
                 {% if is_submitted %}
                     {% if allow_redo %}
-                        <form action="." method="post">
+                        <form action="." method="post">{% csrf_token %}
                             <input type="hidden" name="action" value="reset" />
                             <input type="submit" value="{% trans 'Try again' %}" class="btn btn-default" />
                         </form>
                     {% else %}{% if user.is_staff %}
-                        <form action="." method="post">
+                        <form action="." method="post">{% csrf_token %}
                             <div>
                                 <input type="hidden" name="action" value="reset" />
                                 <input type="submit" id="generic-reset" value="Clear Responses (staff only)" class="btn btn-default" />
