@@ -96,7 +96,7 @@
                         View Progress
                     </a>
 
-                    <form action="{% url 'remove-student' %}" method='post' style="display: inline">
+                    <form action="{% url 'remove-student' %}" method='post' style="display: inline">{% csrf_token %}
                         <input type='hidden' name='group' value='{{group.id}}' />
                         <input type='hidden' name='student' value='{{s.id}}' />
                         <button class="btn btn-default btn-small remove-student">Remove Student</button>
@@ -118,7 +118,7 @@
         <div class="user-profile-form bulk-add-user">
             <h5>Add Users</h5>
             As an administrator, you can add additional users by pasting their usernames in the box below. One username per line.<br /><br />
-            <form action="{% url 'add-to-group' %}" method="post">
+            <form action="{% url 'add-to-group' %}" method="post">{% csrf_token %}
                 <input type="hidden" name="group" value="{{group.id}}" />
                 <div><textarea name="usernames" class="form-control"></textarea></div><br />
                 <input type="submit" value="Add Users" class="btn btn-primary pull-right" />
