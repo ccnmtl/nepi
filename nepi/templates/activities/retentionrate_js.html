@@ -4,73 +4,58 @@
 
     function maybeActivateNextButton() {
         if (is_unlocked) {
-                jQuery("li.next a").removeClass("disabled");
-           } else {
-                jQuery("li.next a").addClass("disabled");
-           }
+            jQuery("li.next a").removeClass("disabled");
+        } else {
+            jQuery("li.next a").addClass("disabled");
+        }
     }
-    
-    
-    function send_click(click_string)
-    {
+
+    function send_click(click_string) {
         var retention_id = jQuery("#retention input[name='retention_id']").val();
 
-        jQuery.ajax(
-        {
+        jQuery.ajax({
             url: "/activities/retention_click/",
             type: "POST",
             data: {'click_string' : click_string, 'retention_id' : retention_id},
-            success: function (data) 
-            {
-            	console.log(data)
-            	is_unlocked = data.done
-            	maybeActivateNextButton()
-                //alert("success!");
+            beforeSend: function(xhr) {
+                var token = $('meta[name="csrf-token"]').attr('content');
+                xhr.setRequestHeader('X-CSRFToken', token);
             },
-
-            error: function(data) 
-            {
+            success: function (data) {
+                is_unlocked = data.done
+                maybeActivateNextButton()
+            },
+            error: function(data) {
                 alert("There was an error submitting your form.");
             }
-        });//end of ajax
-
+        }); //end of ajax
     }
 
 jQuery(document).ready(function() {
     jQuery("#page-submit").hide();
     var exp = jQuery('#explanation_box');
 
-    jQuery(".artregister").on("click",
-
-        function() {
-
-            if (jQuery(this).data().part == "cohort")
-            {
-                exp.html(jQuery("#cohort").html());
-                send_click("cohort_click");
-            }
-            if (jQuery(this).data().part == "startdate")
-            {
-                exp.html(jQuery("#startdate").html());
-                send_click("start_date_click");
-            }
-            if (jQuery(this).data().part == "eligible")
-            {
-                exp.html(jQuery("#eligible").html());
-                send_click("eligible_click");
-            }
-            if (jQuery(this).data().part == "delivery-date")
-            {
-                exp.html(jQuery("#delivery-date").html());
-                send_click("delivery_date_click");
-            }
-            if (jQuery(this).data().part == "follow-up")
-            {
-                exp.html(jQuery("#follow-up").html());
-                send_click("follow_up_click");
-            }
-
-   });
-
+    jQuery(".artregister").on("click", function() {
+        if (jQuery(this).data().part == "cohort") {
+            exp.html(jQuery("#cohort").html());
+            send_click("cohort_click");
+        }
+        if (jQuery(this).data().part == "startdate") {
+            exp.html(jQuery("#startdate").html());
+            send_click("start_date_click");
+        }
+        if (jQuery(this).data().part == "eligible") {
+            exp.html(jQuery("#eligible").html());
+            send_click("eligible_click");
+        }
+        if (jQuery(this).data().part == "delivery-date") {
+            exp.html(jQuery("#delivery-date").html());
+            send_click("delivery_date_click");
+        }
+        if (jQuery(this).data().part == "follow-up") {
+            exp.html(jQuery("#follow-up").html());
+            send_click("follow_up_click");
+        }
+    });
 });
 </script>
