@@ -6,47 +6,36 @@ jQuery(document).ready(function() {
     var calendar = jQuery("#calendar_id").data().calendar;
     var check_val = jQuery("#check_val").data().check;
 
+    jQuery(".day").on("click", function() {
+        jQuery(this).addClass("visited" );
+        var day = jQuery(this).data().day;
+        var date = jQuery(this).data().date;
+        var explanation = jQuery(this).data().explanation;
+        jQuery('#myModal').on('show', function () {
+            jQuery('.modal-body p').replaceWith("<p>" + explanation + "</p>");
+            jQuery('.modal-header span.selected-day').html(date);
+            if (date === check_val) {
+                jQuery('.modal-body button').html("Continue");
+            } else {
+                jQuery('.modal-body button').html("Try again");
+            }
+        });
 
-    jQuery(".day").on("click",
-    
-    function() {
-            jQuery(this).addClass("visited" );
-        
-            var day = jQuery(this).data().day;
-            var date = jQuery(this).data().date;
-            var explanation = jQuery(this).data().explanation;
-            jQuery('#myModal').on('show', function ()
-            {
-
-                jQuery('.modal-body p').replaceWith("<p>" + explanation + "</p>");
-                jQuery('.modal-header span.selected-day').html(date);
+        jQuery.ajax({
+            url: "/activities/calendar_click/",
+            type: "POST",
+            data: {'calendar' : calendar, 'day' : day },
+            beforeSend: function(xhr) {
+                var token = $('meta[name="csrf-token"]').attr('content');
+                xhr.setRequestHeader('X-CSRFToken', token);
+            },
+            success: function (data) {
                 if (date === check_val) {
-                    jQuery('.modal-body button').html("Continue");
-                } else {
-                    jQuery('.modal-body button').html("Try again");
+                    jQuery("li.next a").removeClass("disabled");
                 }
-             });
-            
-            jQuery.ajax(
-            {  
-                url: "/activities/calendar_click/",
-                type: "POST",
-                data: {'calendar' : calendar, 'day' : day },
-                success: function (data)
-                {
-                
-                    if (date === check_val) 
-                     {
-                         jQuery("li.next a").removeClass("disabled");
-                         
-                     }
-                }
-            });//end of ajax
-            
-    });//end of function
-            
-            
-  
+            }
+        }); //end of ajax
+    }); //end of function
 });
 
 </script>
