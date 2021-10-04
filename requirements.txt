@@ -96,7 +96,7 @@ django-cacheds3storage==0.2.2
 django-smtp-ssl==1.0
 
 ccnmtlsettings==1.9.0
-pytz==2021.1
+pytz==2021.3
 
 pbr==5.6.0
 PyYAML>=3.10.0 # MIT
