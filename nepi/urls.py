@@ -8,9 +8,10 @@ from django.contrib.auth.views import (
     PasswordChangeView, PasswordChangeDoneView,
     PasswordResetConfirmView, PasswordResetView, PasswordResetDoneView)
 import django.contrib.auth.views
+from django.urls import path
 from django.views.generic import TemplateView
 import django.views.static
-
+from django_cas_ng import views as cas_views
 from nepi.main.views import (
     CreateGroupView, UpdateGroupView, DeleteGroupView, CreateSchoolView,
     UpdateSchoolView, ContactView, RegistrationView, JoinGroup, HomeView,
@@ -27,18 +28,18 @@ admin.autodiscover()
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
-auth_urls = url(r'^accounts/', include('django.contrib.auth.urls'))
-if hasattr(settings, 'CAS_BASE'):
-    auth_urls = url(r'^accounts/', include('djangowind.urls'))
-
-
 urlpatterns = [
     url(r'^account_created/',
         TemplateView.as_view(template_name="flatpages/account_created.html")),
     url(r'^email_sent/', TemplateView.as_view(
         template_name="flatpages/contact_email_sent.html")),
 
-    auth_urls,
+    url(r'^accounts/', include('django.contrib.auth.urls')),
+    path('cas/login', cas_views.LoginView.as_view(),
+         name='cas_ng_login'),
+    path('cas/logout', cas_views.LogoutView.as_view(),
+         name='cas_ng_logout'),
+
     url(r'^$', HomeView.as_view(), name="home"),
     url(r'^admin/', admin.site.urls),
 
