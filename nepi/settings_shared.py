@@ -32,18 +32,16 @@ USE_I18N = True
 
 MIDDLEWARE += [
     'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware'
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django_cas_ng.middleware.CASMiddleware',
 ]
-
-TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
-    'nepi.main.views.context_processor'
-)
 
 INSTALLED_APPS += [  # noqa
     'sorl.thumbnail',
     'bootstrap3',
     'bootstrapform',
     'django_extensions',
+    'django_cas_ng',
     'nepi.main',
     'pagetree',
     'pageblocks',
@@ -51,6 +49,8 @@ INSTALLED_APPS += [  # noqa
     'captcha',
     'nepi.activities',
 ]
+
+INSTALLED_APPS.remove('djangowind') # noqa
 
 PAGEBLOCKS = [
     'pageblocks.HTMLBlockWYSIWYG',
@@ -65,6 +65,11 @@ PAGEBLOCKS = [
     'activities.ARTCard',
     'activities.RetentionRateCard',
     'activities.AdherenceCard',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'django_cas_ng.backends.CASBackend'
 ]
 
 AUTH_PROFILE_MODULE = 'nepi.main.UserProfile'
@@ -85,3 +90,34 @@ LANGUAGES = (
 )
 
 DEFAULT_LANGUAGE = 'en'
+
+CAS_SERVER_URL = 'https://cas.columbia.edu/cas/'
+CAS_VERSION = '3'
+CAS_ADMIN_REDIRECT = False
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(base, "templates"),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+                # list if you haven't customized them:
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.template.context_processors.request',
+                'django.contrib.messages.context_processors.messages',
+                'stagingcontext.staging_processor',
+                'gacontext.ga_processor',
+                'django.template.context_processors.csrf',
+                'nepi.main.views.context_processor'
+            ],
+        },
+    },
+]
