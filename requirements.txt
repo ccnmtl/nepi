@@ -35,7 +35,7 @@ certifi==2021.10.8  # sentry-sdk
 asn1crypto==1.4.0  # cryptography
 cryptography==36.0.1
 
-requests==2.27.0
+requests==2.27.1
 logilab-common==1.8.2
 astroid==2.9.2
 editdistance==0.6.0
