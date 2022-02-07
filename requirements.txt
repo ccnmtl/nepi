@@ -100,7 +100,7 @@ django-smtp-ssl==1.0
 ccnmtlsettings==1.9.0
 pytz==2021.3
 
-pbr==5.8.0
+pbr==5.8.1
 PyYAML>=3.10.0 # MIT
 stevedore>=1.20.0 # Apache-2.0
 bandit==1.7.1
