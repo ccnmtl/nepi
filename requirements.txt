@@ -32,7 +32,7 @@ idna==3.3
 urllib3==1.26.9  # sentry-sdk
 certifi==2021.10.8  # sentry-sdk
 
-asn1crypto==1.5.0  # cryptography
+asn1crypto==1.5.1  # cryptography
 cryptography==36.0.1
 
 requests==2.27.1
