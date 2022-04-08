@@ -8,7 +8,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.db.models.query_utils import Q
 from django.urls.base import reverse
-from django.utils.encoding import python_2_unicode_compatible, smart_text
+from django.utils.encoding import smart_text
 from pagetree.models import PageBlock
 from pagetree.reports import ReportableInterface, ReportColumnInterface
 
@@ -19,7 +19,6 @@ CONV_CHOICES = (
 )
 
 
-@python_2_unicode_compatible
 class Conversation(models.Model):
     scenario_type = models.CharField(max_length=1, choices=CONV_CHOICES,
                                      default='G')
@@ -60,7 +59,6 @@ class Conversation(models.Model):
             return self.bad_conversation.first()
 
 
-@python_2_unicode_compatible
 class ConversationScenario(models.Model):
     pageblocks = GenericRelation(PageBlock)
     description = models.TextField(blank=True)
@@ -251,7 +249,6 @@ class ConversationScenarioForm(forms.ModelForm):
         exclude = ('good_conversation', 'bad_conversation',)
 
 
-@python_2_unicode_compatible
 class ConvClick(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     conversation = models.ForeignKey(
@@ -261,7 +258,6 @@ class ConvClick(models.Model):
         return "%s Click" % self.conversation.scenario_type
 
 
-@python_2_unicode_compatible
 class ConversationResponse(models.Model):
     conv_scen = models.ForeignKey(
         ConversationScenario, null=True, blank=True, on_delete=models.CASCADE)
@@ -281,7 +277,6 @@ class ConversationResponse(models.Model):
         return "Response to %s" % self.conv_scen
 
 
-@python_2_unicode_compatible
 class ImageInteractive(models.Model):
     pageblocks = GenericRelation(PageBlock)
     template_file = "activities/imagemapchart.html"
@@ -333,7 +328,6 @@ class ImageInteractiveForm(forms.ModelForm):
         exclude = []
 
 
-@python_2_unicode_compatible
 class ARTCard(models.Model):
     pageblocks = GenericRelation(PageBlock)
     template_file = "activities/artcard.html"
@@ -385,7 +379,6 @@ class ARTCardForm(forms.ModelForm):
         exclude = []
 
 
-@python_2_unicode_compatible
 class AdherenceCard(models.Model):
     pageblocks = GenericRelation(PageBlock)
     template_file = "activities/adherencecard.html"
@@ -435,7 +428,6 @@ class AdherenceCardForm(forms.ModelForm):
         exclude = []
 
 
-@python_2_unicode_compatible
 class RetentionRateCard(models.Model):
     pageblocks = GenericRelation(PageBlock)
     template_file = "activities/retentionrate.html"
@@ -508,7 +500,6 @@ class RetentionRateCardForm(forms.ModelForm):
         exclude = []
 
 
-@python_2_unicode_compatible
 class RetentionClick(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     click_string = models.CharField(max_length=50)
@@ -517,7 +508,6 @@ class RetentionClick(models.Model):
         return smart_text(self.click_string)
 
 
-@python_2_unicode_compatible
 class RetentionResponse(models.Model):
     retentionrate = models.ForeignKey(
         RetentionRateCard, null=True, blank=True, on_delete=models.CASCADE)
@@ -547,7 +537,6 @@ class RetentionResponse(models.Model):
         return("Response to " + str(self.retentionrate))
 
 
-@python_2_unicode_compatible
 class Month(models.Model):
     display_name = models.CharField(max_length=255, default="")
 
@@ -578,7 +567,6 @@ class Month(models.Model):
         return d
 
 
-@python_2_unicode_compatible
 class Day(models.Model):
     calendar = models.ForeignKey(Month, on_delete=models.CASCADE)
     number = models.IntegerField(default=1)
@@ -605,7 +593,6 @@ class Day(models.Model):
         )
 
 
-@python_2_unicode_compatible
 class CalendarChart(models.Model):
     pageblocks = GenericRelation(PageBlock)
     template_file = "activities/calendarchart.html"
@@ -743,7 +730,6 @@ class CalendarResponse(models.Model):
         related_name="correct_click", on_delete=models.CASCADE)
 
 
-@python_2_unicode_compatible
 class DosageActivity(models.Model):
     pageblocks = GenericRelation(PageBlock)
     template_file = "activities/dosageactivity.html"
