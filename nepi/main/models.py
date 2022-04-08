@@ -15,7 +15,7 @@ from django.db import models
 from django.db.models.aggregates import Min, Max
 from django.db.models.query_utils import Q
 from django.utils.encoding import (
-    python_2_unicode_compatible, smart_text, smart_bytes
+    smart_text, smart_bytes
 )
 from django.utils.translation import get_language_info
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
@@ -79,7 +79,6 @@ class HierarchyCache(object):
         return ids
 
 
-@python_2_unicode_compatible
 class Country(models.Model):
     '''Users can select counties from drop down menu,
     countries are stored by their official 2 letter codes.'''
@@ -98,7 +97,6 @@ class Country(models.Model):
                 for c in Country.objects.all().order_by('display_name')]
 
 
-@python_2_unicode_compatible
 class School(models.Model):
     '''Some of the countries have fairly long names,
     assuming the schools may also have long names.'''
@@ -113,7 +111,6 @@ class School(models.Model):
         return '%s - %s' % (self.country.display_name, self.name)
 
 
-@python_2_unicode_compatible
 class Group(models.Model):
     '''Allow association of group with module.'''
     school = models.ForeignKey(School, on_delete=models.CASCADE)
@@ -158,7 +155,6 @@ class Group(models.Model):
         return LearningModule.get_module_name(self.module)
 
 
-@python_2_unicode_compatible
 class UserProfile(models.Model):
     '''UserProfile adds extra information to a user,
     and associates the user with a group, school,
@@ -327,7 +323,6 @@ class UserProfile(models.Model):
         return li['name']
 
 
-@python_2_unicode_compatible
 class PendingTeachers(models.Model):
     user_profile = models.ForeignKey(UserProfile,
                                      related_name="pending_teachers",
@@ -338,7 +333,6 @@ class PendingTeachers(models.Model):
         return "%s - %s" % (self.user_profile, self.school)
 
 
-@python_2_unicode_compatible
 class AggregateQuizScore(models.Model):
     pageblocks = GenericRelation(
         PageBlock, related_query_name="aggregate_quiz_score")
