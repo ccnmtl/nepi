@@ -1,4 +1,4 @@
-Django==3.2.12
+Django==3.2.13
 httplib2==0.20.4
 feedparser==6.0.8
 Markdown==3.3.6
