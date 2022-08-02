@@ -534,7 +534,7 @@ class RetentionResponse(models.Model):
         null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return("Response to " + str(self.retentionrate))
+        return ("Response to " + str(self.retentionrate))
 
 
 class Month(models.Model):

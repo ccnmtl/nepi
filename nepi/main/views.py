@@ -83,7 +83,7 @@ class NepiPageView(LoggedInMixin, InitializeHierarchyMixin, PageView):
                 'url': section.get_absolute_url(),
                 'label': section.label,
                 'depth': section.depth,
-                'disabled': not(previous_unlocked or section.id in visit_ids)
+                'disabled': not (previous_unlocked or section.id in visit_ids)
             }
             menu.append(item)
             previous_unlocked = unlocked
