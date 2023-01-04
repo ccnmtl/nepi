@@ -79,7 +79,7 @@ django-extensions==3.2.1
 django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==1.8.2
-django-treebeard==4.5.1
+django-treebeard==4.6.0
 django-pagetree==1.4.3
 django-pageblocks==1.2.0  # pyup: <2.0.0
 django-quizblock==1.2.8
