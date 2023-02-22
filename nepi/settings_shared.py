@@ -48,6 +48,7 @@ INSTALLED_APPS += [  # noqa
     'quizblock',
     'captcha',
     'nepi.activities',
+    'waffle',
 ]
 
 INSTALLED_APPS.remove('djangowind') # noqa
