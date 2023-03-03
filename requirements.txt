@@ -33,7 +33,7 @@ urllib3==1.26.14  # sentry-sdk
 certifi==2022.12.7  # sentry-sdk
 
 asn1crypto==1.5.1  # cryptography
-cryptography==39.0.1
+cryptography==39.0.2
 
 requests==2.28.2
 logilab-common==1.9.8
