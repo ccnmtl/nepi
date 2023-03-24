@@ -24,7 +24,7 @@ fuzzywuzzy==0.18.0
 sure==2.0.1
 coverage==7.2.2
 pyasn1==0.4.8
-pyOpenSSL==23.0.0
+pyOpenSSL==23.1.0
 ndg-httpsclient==0.5.1
 
 chardet==5.1.0
