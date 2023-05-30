@@ -109,4 +109,4 @@ bandit==1.7.5
 django-ranged-response==0.2.0
 
 entrypoints==0.4
-asgiref==3.7.1
+asgiref==3.7.2
