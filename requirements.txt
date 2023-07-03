@@ -5,7 +5,7 @@ Markdown==3.4.3
 smartypants==2.0.1
 psycopg2==2.9.6
 olefile==0.46
-Pillow==9.5.0
+Pillow==10.0.0
 versiontools==1.9.1
 statsd==4.0.1
 pep8==1.7.1
