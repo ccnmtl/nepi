@@ -19,7 +19,7 @@ zipp==3.15.0  # for flake8
 flake8==6.0.0
 tornado==6.3.2
 cssselect==1.2.0
-lxml==4.9.2
+lxml==4.9.3
 fuzzywuzzy==0.18.0
 sure==2.0.1
 coverage==7.2.7
@@ -64,7 +64,7 @@ django-appconf==1.0.5
 django-compressor>=3.1,<5.0
 django-statsd-mozilla==0.4.0
 raven==6.10.0
-sentry-sdk==1.26.0
+sentry-sdk==1.27.0
 django-bootstrap-form==3.4
 django-bootstrap3==23.4
 
@@ -85,12 +85,12 @@ django-pagetree==1.4.3
 django-pageblocks==1.2.0  # pyup: <2.0.0
 django-quizblock==1.2.8
 django-markwhat==1.6.2
-django-simple-captcha==0.5.17
+django-simple-captcha==0.5.18
 gunicorn==20.1.0
 s3transfer==0.6.1
 jmespath==1.0.1
 
-botocore>=1.15.0,<1.30.0
+botocore>=1.15.0,<1.31.0
 boto3>=1.12.0,<1.28.0
 
 python-dateutil==2.8.2
