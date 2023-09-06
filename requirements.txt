@@ -53,7 +53,7 @@ rcssmin==1.1.1
 rjsmin==1.2.1
 
 python-cas==1.6.0
-django-cas-ng==4.3.0
+django-cas-ng==5.0.0
 
 requirements/src/sorl-3.2ctl-py2.py3-none-any.whl
 django-staticmedia==0.2.2
