@@ -41,7 +41,7 @@ logilab-common==1.10.0
 astroid==2.15.7
 editdistance==0.6.2
 
-pylint==2.17.5
+pylint==2.17.6
 six==1.16.0
 ipaddress==1.0.23
 text-unidecode==1.3  # for faker
