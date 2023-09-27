@@ -94,7 +94,7 @@ botocore>=1.15.0,<1.32.0
 boto3>=1.12.0,<1.29.0
 
 python-dateutil==2.8.2
-django-storages==1.14
+django-storages==1.13.2
 django-cacheds3storage==0.3.0
 django-smtp-ssl==1.0
 
