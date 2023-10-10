@@ -2,7 +2,7 @@
 # Django settings for nepi project.
 import os
 import sys
-from ccnmtlsettings.shared import common
+from ctlsettings.shared import common
 from django.utils.translation import ugettext_lazy as _
 
 project = 'nepi'
@@ -41,7 +41,6 @@ INSTALLED_APPS += [  # noqa
     'bootstrap3',
     'bootstrapform',
     'django_extensions',
-    'django_cas_ng',
     'nepi.main',
     'pagetree',
     'pageblocks',
@@ -50,8 +49,6 @@ INSTALLED_APPS += [  # noqa
     'nepi.activities',
     'waffle',
 ]
-
-INSTALLED_APPS.remove('djangowind') # noqa
 
 PAGEBLOCKS = [
     'pageblocks.HTMLBlockWYSIWYG',
@@ -66,11 +63,6 @@ PAGEBLOCKS = [
     'activities.ARTCard',
     'activities.RetentionRateCard',
     'activities.AdherenceCard',
-]
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'django_cas_ng.backends.CASBackend'
 ]
 
 AUTH_PROFILE_MODULE = 'nepi.main.UserProfile'
@@ -91,10 +83,6 @@ LANGUAGES = (
 )
 
 DEFAULT_LANGUAGE = 'en'
-
-CAS_SERVER_URL = 'https://cas.columbia.edu/cas/'
-CAS_VERSION = '3'
-CAS_ADMIN_REDIRECT = False
 
 # Translate CUIT's CAS user attributes to the Django user model.
 # https://cuit.columbia.edu/content/cas-3-ticket-validation-response
