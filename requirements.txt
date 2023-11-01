@@ -1,7 +1,7 @@
 Django>=3.2.14,<4
 httplib2==0.22.0
 feedparser==6.0.10
-Markdown==3.5
+Markdown==3.5.1
 smartypants==2.0.1
 psycopg2==2.9.9
 olefile==0.46
