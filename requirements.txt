@@ -37,7 +37,7 @@ cffi==1.16.0  # cryptography
 cryptography==41.0.7
 
 requests==2.31.0
-logilab-common==1.11.0
+logilab-common==2.0.0
 astroid==3.0.1
 editdistance==0.6.2
 
