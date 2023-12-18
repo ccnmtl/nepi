@@ -17,6 +17,6 @@
   },
   "devDependencies": {
     "eslint": "~8.56.0",
-    "eslint-plugin-security": "^1.4.0"
+    "eslint-plugin-security": "^2.1.0"
   }
 }
