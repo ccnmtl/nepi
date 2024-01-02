@@ -19,7 +19,7 @@ zipp==3.17.0  # for flake8
 flake8==6.1.0
 tornado==6.4
 cssselect==1.2.0
-lxml==4.9.4
+lxml==5.0.0
 fuzzywuzzy==0.18.0
 sure==2.0.1
 coverage==7.4.0
