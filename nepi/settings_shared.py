@@ -20,7 +20,7 @@ PROJECT_APPS = [
     'nepi.activities',
 ]
 
-ALLOWED_HOSTS = [
+ALLOWED_HOSTS += [
     'localhost',
     '.ccnmtl.columbia.edu',
     '.ctl.columbia.edu',
