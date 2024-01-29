@@ -95,7 +95,7 @@ django-storages==1.14.2
 django-smtp-ssl==1.0
 
 ctlsettings==0.3.1
-pytz==2023.3.post1
+pytz==2023.4
 
 pbr==6.0.0
 PyYAML>=3.10.0 # MIT
