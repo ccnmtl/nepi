@@ -23,7 +23,7 @@ lxml==5.1.0
 fuzzywuzzy==0.18.0
 sure==2.0.1
 coverage==7.4.4
-pyasn1==0.5.1
+pyasn1==0.6.0
 pyOpenSSL==24.1.0
 ndg-httpsclient==0.5.1
 
