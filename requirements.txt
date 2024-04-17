@@ -83,7 +83,7 @@ django-pageblocks==1.2.0  # pyup: <2.0.0
 django-quizblock==1.2.8
 django-markwhat==1.6.2
 django-simple-captcha==0.5.20
-gunicorn==21.2.0
+gunicorn==22.0.0
 s3transfer==0.10.1
 jmespath==1.0.1
 
