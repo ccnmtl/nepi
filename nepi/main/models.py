@@ -15,7 +15,7 @@ from django.db import models
 from django.db.models.aggregates import Min, Max
 from django.db.models.query_utils import Q
 from django.utils.encoding import (
-    smart_text, smart_bytes
+    smart_str, smart_bytes
 )
 from django.utils.translation import get_language_info
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
@@ -344,7 +344,7 @@ class AggregateQuizScore(models.Model):
         return self.pageblocks.all()[0]
 
     def __str__(self):
-        return "%s -- %s" % (smart_text(self.pageblock()), self.quiz_category)
+        return "%s -- %s" % (smart_str(self.pageblock()), self.quiz_category)
 
     @classmethod
     def add_form(self):
@@ -377,7 +377,7 @@ class AggregateQuizScoreForm(forms.ModelForm):
 
 
 def random_user(username):
-    username = smart_text(username)
+    username = smart_str(username)
     digest = hmac.new(smart_bytes(settings.PARTICIPANT_SECRET),
                       msg=smart_bytes(username),
                       digestmod=hashlib.sha256).digest()
@@ -407,7 +407,7 @@ class DetailedReport(PagetreeReport):
             StandaloneReportColumn(
                 'country', 'profile', 'string',
                 'affiliated country',
-                lambda x: smart_text(x.profile.country.display_name)),
+                lambda x: smart_str(x.profile.country.display_name)),
             StandaloneReportColumn(
                 'group', 'profile', 'list',
                 'Groups',

@@ -10,9 +10,9 @@
                        value="{{answer.value}}" type="radio"
                        {% if response %}
                        disabled="disabled"
-                       {% ifequal response.value answer.value %}
+                       {% if response.value == answer.value %}
                        checked="checked"
-                       {% endifequal %}
+                       {% endif %}
                        {% endif %} />
                 &nbsp;{{answer.label|safe}}
             </label>

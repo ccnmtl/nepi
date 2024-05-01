@@ -11,7 +11,7 @@ from django.core.cache import cache
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
 from django.urls.base import reverse
-from django.utils.translation import get_language, LANGUAGE_SESSION_KEY
+from django.utils.translation import get_language
 from pagetree.models import UserPageVisit, Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
 
@@ -163,13 +163,13 @@ class TestStudentLoggedInViews(TestCase):
         self.assertEqual(self.student.profile.language,
                          settings.DEFAULT_LANGUAGE)
         self.assertEqual(get_language(), 'en')
-        self.assertEqual(self.client.session[LANGUAGE_SESSION_KEY], 'en')
+        self.assertEqual(self.client.session['_language'], 'en')
 
         self.update_user_language(u'pt')
         student = User.objects.get(id=self.student.id)
         self.assertEqual(student.profile.language, 'pt')
         self.assertEqual(get_language(), 'pt')
-        self.assertEqual(self.client.session[LANGUAGE_SESSION_KEY], 'pt')
+        self.assertEqual(self.client.session['_language'], 'pt')
 
 
 class TestTeacherLoggedInViews(TestCase):

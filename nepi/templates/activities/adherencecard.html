@@ -9,27 +9,27 @@
 {% get_response_for adherence_six as adherence_six %}
 
 <div class="document-adherence">
-    <div class="adherence-response one {% ifequal block.quiz_class 'adherence_one' %}current{% endifequal %}">
+    <div class="adherence-response one {% if block.quiz_class == 'adherence_one' %}current{% endif %}">
         {% if adherence_one %}<div class="adherence-one">{{adherence_one}}</div>{% endif %}
     </div>
     
-    <div class="adherence-response two {% ifequal block.quiz_class 'adherence_two' %}current{% endifequal %}">
+    <div class="adherence-response two {% if block.quiz_class == 'adherence_two' %}current{% endif %}">
         {% if adherence_two %}<div class="adherence-two">{{adherence_two}}</div>{% endif %}
     </div>
 
-    <div class="adherence-response three {% ifequal block.quiz_class 'adherence_three' %}current{% endifequal %}">
+    <div class="adherence-response three {% if block.quiz_class == 'adherence_three' %}current{% endif %}">
         {% if adherence_three %}<div class="adherence-three">{{adherence_three}}</div>{% endif %}
     </div>
 
-    <div class="adherence-response four {% ifequal block.quiz_class 'adherence_four' %}current{% endifequal %}">
+    <div class="adherence-response four {% if block.quiz_class == 'adherence_four' %}current{% endif %}">
         {% if adherence_four %}<div class="adherence-four">{{adherence_four}}</div>{% endif %}
     </div>
     
-    <div class="adherence-response five {% ifequal block.quiz_class 'adherence_five' %}current{% endifequal %}">
+    <div class="adherence-response five {% if block.quiz_class == 'adherence_five' %}current{% endif %}">
         {% if adherence_five %}<div class="adherence-five">{{adherence_five}}</div>{% endif %}
     </div>   
      
-    <div class="adherence-response six {% ifequal block.quiz_class 'adherence_six' %}current{% endifequal %}">
+    <div class="adherence-response six {% if block.quiz_class == 'adherence_six' %}current{% endif %}">
         {% if adherence_six %}<div class="adherence-six">{{adherence_six}}</div>{% endif %}
     </div>   
 </div>

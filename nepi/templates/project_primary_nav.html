@@ -8,7 +8,7 @@
             {% for s in menu %}
                 <li>
                 <a href="{{s.url}}" data-id="{{s.id}}"
-                   class="primary-menu-{{s.depth}}{% ifequal s.id section.id %} current{% endifequal %}{% if s.disabled %} disabled{% endif %}">{{s.label}}</a>
+                   class="primary-menu-{{s.depth}}{% if s.id == section.id %} current{% endif %}{% if s.disabled %} disabled{% endif %}">{{s.label}}</a>
                 </li>
             {% endfor %}
             </ul>

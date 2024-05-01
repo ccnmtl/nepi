@@ -47,7 +47,7 @@
                         value="{{dosager.ml_nvp}}" readonly="readonly" />
                         <b>{% trans 'ml' %}</b>
                     
-                    {% ifequal dosager.ml_nvp block.ml_nvp %} 
+                    {% if dosager.ml_nvp == block.ml_nvp %} 
                         <span class='alert alert-success'>
                             <b>{% trans 'Correct' %}</b>
                         </span>
@@ -55,7 +55,7 @@
                         <span class='alert alert-error'>
                             <b>{% trans 'Incorrect' %}</b>
                         </span>
-                    {% endifequal %}
+                    {% endif %}
                 </div>
             {% else %}
                 <input type="text"
@@ -77,7 +77,7 @@
                         value="{{dosager.times_day}}" readonly="readonly"> 
                         <b>{% trans 'x per day' %}</b>
                    
-                    {% ifequal dosager.times_day block.times_day %} 
+                    {% if dosager.times_day == block.times_day %} 
                         <span class='alert alert-success'>
                             <b>{% trans 'Correct' %}</b>
                         </span>
@@ -85,7 +85,7 @@
                         <span class='alert alert-error'>
                             <b>{% trans 'Incorrect' %}</b>
                         </span>
-                    {% endifequal %}
+                    {% endif %}
                 </div>
             {% else %}
                 <input type="text" id="times_day_input"
@@ -106,7 +106,7 @@
                         name="pageblock-{{block.pageblock.id}}-weeks"
                         value="{{dosager.weeks}}" readonly="readonly"> 
                         <b>{% trans 'weeks' %}</b>
-                    {% ifequal dosager.weeks block.weeks %} 
+                    {% if dosager.weeks == block.weeks %} 
                         <span class='alert alert-success'>
                             <b>{% trans 'Correct' %}</b>
                         </span>
@@ -114,7 +114,7 @@
                         <span class='alert alert-error'>
                             <b>{% trans 'Incorrect' %}</b>
                         </span>
-                    {% endifequal %}
+                    {% endif %}
                 </div>            
             {% else %}
                 <input type="text" id="week_input"

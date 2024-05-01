@@ -8,9 +8,13 @@ from django.utils.decorators import method_decorator
 from nepi.main.models import LearningModule
 
 
+def is_ajax(request):
+    return request.headers.get('x-requested-with') == 'XMLHttpRequest'
+
+
 class JSONResponseMixin(object):
     def dispatch(self, *args, **kwargs):
-        if not self.request.is_ajax():
+        if not is_ajax(self.request):
             return HttpResponseNotAllowed(self._allowed_methods())
 
         return super(JSONResponseMixin, self).dispatch(*args, **kwargs)
