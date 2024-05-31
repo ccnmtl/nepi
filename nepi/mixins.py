@@ -1,17 +1,21 @@
 import json
 
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http.response import HttpResponseNotAllowed, HttpResponse, \
-    HttpResponseForbidden
+from django.http.response import HttpResponse, HttpResponseForbidden, \
+    HttpResponseNotAllowed
 from django.utils.decorators import method_decorator
 
 from nepi.main.models import LearningModule
 
 
+def is_ajax(request):
+    return request.headers.get('x-requested-with') == 'XMLHttpRequest'
+
+
 class JSONResponseMixin(object):
     def dispatch(self, *args, **kwargs):
-        if not self.request.is_ajax():
-            return HttpResponseNotAllowed(self._allowed_methods())
+        if not is_ajax(self.request):
+            return HttpResponseNotAllowed("")
 
         return super(JSONResponseMixin, self).dispatch(*args, **kwargs)
 

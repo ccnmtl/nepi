@@ -3,7 +3,7 @@
 import os
 import sys
 from ctlsettings.shared import common
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 project = 'nepi'
 base = os.path.dirname(__file__)

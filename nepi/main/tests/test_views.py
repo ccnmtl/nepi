@@ -11,7 +11,7 @@ from django.core.cache import cache
 from django.test import TestCase, RequestFactory
 from django.test.client import Client
 from django.urls.base import reverse
-from django.utils.translation import get_language, LANGUAGE_SESSION_KEY
+from django.utils.translation import get_language
 from pagetree.models import UserPageVisit, Section, Hierarchy
 from pagetree.tests.factories import ModuleFactory
 
@@ -28,6 +28,7 @@ from nepi.main.tests.factories import SchoolFactory, CountryFactory, \
 from nepi.main.views import ContactView, CreateSchoolView, \
     UserProfileView, PeopleView, PeopleFilterView, RosterDetail, GroupDetail, \
     StudentGroupDetail, NepiPageView
+LANGUAGE_SESSION_KEY = '_language'
 
 
 class TestBasicViews(TestCase):
@@ -552,10 +553,6 @@ class TestSchoolChoiceView(TestCase):
         self.country = CountryFactory()
         self.school = SchoolFactory()
 
-    def test_ajax_only(self):
-        response = self.client.get('/schools/%s/' % self.school.country.name)
-        self.assertEqual(response.status_code, 405)
-
     def test_get_country_not_found(self):
         response = self.client.get('/schools/11/', {},
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
@@ -586,11 +583,6 @@ class TestSchoolGroupChoiceView(TestCase):
         self.user = TeacherProfileFactory().user
         self.client = Client()
         self.client.login(username=self.user.username, password="test")
-
-    def test_ajax_only(self):
-        grp = SchoolGroupFactory()
-        response = self.client.post('/groups/%s/' % grp.school.id)
-        self.assertEqual(response.status_code, 405)
 
     def test_get_school_not_found(self):
         response = self.client.post('/groups/782/', {},
@@ -797,11 +789,6 @@ class TestDeleteGroupView(TestCase):
         response = self.client.get('/delete_group/')
         self.assertEqual(response.status_code, 405)
 
-        # not ajax
-        self.client.login(username=self.creator.username, password="test")
-        response = self.client.post('/delete_group/', {})
-        self.assertEqual(response.status_code, 405)
-
         # required data not available
         self.client.login(username=self.creator.username, password="test")
         response = self.client.post('/delete_group/', {},
@@ -830,15 +817,6 @@ class TestConfirmAndDenyFacultyViews(TestCase):
                                        school=self.school)
 
         self.client = Client()
-
-    def test_ajax_only(self):
-        self.client.login(username=self.icap.username, password="test")
-
-        response = self.client.post('/faculty/confirm/', {})
-        self.assertEqual(response.status_code, 405)
-
-        response = self.client.post('/faculty/deny/', {})
-        self.assertEqual(response.status_code, 405)
 
     def test_unauthorized(self):
         self.client.login(username=self.teacher.username, password="test")

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from decimal import Decimal
 
 from django.test import TestCase
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from pagetree.tests.factories import HierarchyFactory
 from quizblock.tests.test_models import FakeReq
 
@@ -57,7 +57,7 @@ class TestConversationScenario(TestCase):
             'test', '', self.scenario)
 
     def test_basics(self):
-        self.assertTrue(smart_text(self.scenario).startswith('Root'))
+        self.assertTrue(smart_str(self.scenario).startswith('Root'))
         self.assertIsNotNone(self.scenario.pageblock())
         self.assertFalse(self.scenario.redirect_to_self_on_submit())
         self.assertTrue(self.scenario.needs_submit())
@@ -213,7 +213,7 @@ class TestConversationScenario(TestCase):
                                                 conv_scen=self.scenario,
                                                 first_click=self.bad,
                                                 second_click=self.good)
-        self.assertTrue(smart_text(r).startswith('Response to Root'))
+        self.assertTrue(smart_str(r).startswith('Response to Root'))
 
 
 class TestLRConversationScenario(TestCase):
@@ -298,7 +298,7 @@ class TestDosageActivity(TestCase):
         block = DosageActivityFactory()
         HierarchyFactory().get_root().append_pageblock('test', '', block)
 
-        self.assertTrue(smart_text(block).startswith('Root'))
+        self.assertTrue(smart_str(block).startswith('Root'))
         self.assertIsNotNone(block.pageblock())
         self.assertTrue(block.needs_submit())
         self.assertTrue(block.redirect_to_self_on_submit())
@@ -415,8 +415,9 @@ class TestDosageActivity(TestCase):
 
 class TestDayAndMonthObjects(TestCase):
     def setUp(self):
-        self.m = Month(display_name="June")
-        self.d = Day(calendar=self.m, number=1, explanation="Your wrong!")
+        self.m = Month.objects.create(display_name="June")
+        self.d = Day.objects.create(calendar=self.m, number=1,
+                                    explanation="Your wrong!")
 
     def test_unicode(self):
         self.assertEqual(str(self.m), "June in None")
@@ -429,18 +430,18 @@ class TestRetentionRate(TestCase):
         block = RetentionRateCardFactory()
         HierarchyFactory().get_root().append_pageblock('test', '', block)
 
-        self.assertTrue(smart_text(block).startswith('Root'))
+        self.assertTrue(smart_str(block).startswith('Root'))
         self.assertIsNotNone(block.pageblock())
         self.assertTrue(block.needs_submit())
         self.assertTrue(block.redirect_to_self_on_submit())
 
         response = RetentionResponse.objects.create(user=UserFactory(),
                                                     retentionrate=block)
-        self.assertTrue(smart_text(response).startswith('Response to Root'))
+        self.assertTrue(smart_str(response).startswith('Response to Root'))
 
     def test_retention_click(self):
         retention_click = RetentionClick(click_string="eligible_click")
-        self.assertEqual(smart_text(retention_click),
+        self.assertEqual(smart_str(retention_click),
                          "eligible_click")
 
     def test_unlocked(self):
@@ -532,7 +533,7 @@ class TestCalendarChart(TestCase):
         block = CalendarChartFactory()
         HierarchyFactory().get_root().append_pageblock('test', '', block)
 
-        self.assertTrue(smart_text(block).startswith('Root'))
+        self.assertTrue(smart_str(block).startswith('Root'))
         self.assertIsNotNone(block.pageblock())
         self.assertTrue(block.needs_submit())
         self.assertTrue(block.redirect_to_self_on_submit())
@@ -665,7 +666,7 @@ class TestImageInteractive(TestCase):
         img_int = ImageInteractiveFactory()
         HierarchyFactory().get_root().append_pageblock('test', '', img_int)
 
-        self.assertTrue(smart_text(img_int).startswith('Root'))
+        self.assertTrue(smart_str(img_int).startswith('Root'))
         self.assertIsNotNone(img_int.pageblock())
 
     def test_img_int_need_submit(self):
@@ -713,7 +714,7 @@ class TestARTCard(TestCase):
         artcard = ARTCardFactory()
         HierarchyFactory().get_root().append_pageblock('test', '', artcard)
 
-        self.assertTrue(smart_text(artcard).startswith('Root'))
+        self.assertTrue(smart_str(artcard).startswith('Root'))
         self.assertIsNotNone(artcard.pageblock())
 
     def test_artcard_need_submit(self):
@@ -761,7 +762,7 @@ class TestAdherenceCard(TestCase):
         adcard = AdherenceCardFactory()
         HierarchyFactory().get_root().append_pageblock('test', '', adcard)
 
-        self.assertTrue(smart_text(adcard).startswith('Root'))
+        self.assertTrue(smart_str(adcard).startswith('Root'))
         self.assertIsNotNone(adcard.pageblock())
 
     def test_adcard_need_submit(self):

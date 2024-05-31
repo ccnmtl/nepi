@@ -58,7 +58,7 @@
     </div>
 
     {% if optionb_progress_report %}
-        {% ifnotequal user_profile|percent_complete:optionb '0.00' %}
+        {% if user_profile|percent_complete:optionb != '0.00' %}
             {% with progress_report=optionb_progress_report %}
                 {% if progress_report %}
                     <h4>{% trans 'Progress Report' %}</h4>
@@ -122,6 +122,6 @@
                     </div>
                 {% endif %}
             {% endwith %}
-        {% endifnotequal %}
+        {% endif %}
     {% endif %}
 </div>

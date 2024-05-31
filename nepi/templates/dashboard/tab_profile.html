@@ -91,11 +91,11 @@
                 <select name="language">
                     {% for choice in profile_form.fields.language.choices %}
                         <option value="{{choice.0}}" 
-                        {% ifequal profile_form.data.language choice.0 %}
+                        {% if profile_form.data.language == choice.0 %}
                             selected="selected"
-                        {% else %}{% ifequal user.profile.language choice.0 %}
+                        {% else %}{% if user.profile.language == choice.0 %}
                             selected="selected"
-                        {% endifequal %}{% endifequal %}>{{choice.1}}</option>
+                        {% endif %}{% endif %}>{{choice.1}}</option>
                     {% endfor %}
                 </select>
                 {% if profile_form.language.errors %}
@@ -153,7 +153,7 @@
                 <div class="fieldWrapper control-group faculty-access disabled">
                     <label class="checkbox">
                         <input id="id_profile_type" name="profile_type" type="checkbox"
-                         {% ifequal profile_form.data.profile_type 'on' %} checked='checked' {% endifequal %}
+                         {% if profile_form.data.profile_type == 'on' %} checked='checked' {% endif %}
                          disabled="disabled">
                         <b>I am requesting faculty-level access</b>
                     </label>

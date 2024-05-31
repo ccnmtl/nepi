@@ -1,26 +1,26 @@
 <ul>
 {% for s in module.get_descendants %}
-{% ifequal s.id module.id %}
+{% if s.id == module.id %}
     
 {% else %}
 <li class="menu-{{s.depth}}">
-  {% ifnotequal s.id section.id %}
+  {% if s.id != section.id %}
      <a href="{{menu_base}}{{s.get_absolute_url}}">
   {% else %}
      <b>
-  {% endifnotequal %}
+  {% endif %}
   {{s.label}}
-  {% ifnotequal s.id section.id %}
+  {% if s.id != section.id %}
     </a>
   {% else %}
     </b>
-  {% endifnotequal %}
+  {% endif %}
 
   {% if s.get_children %}<ul>{% else %}
   {% if s.is_last_child %}</ul>{% endif %}{% endif %}
 
 </li>
-{% endifequal %}
+{% endif %}
 
 {% endfor %}
 </ul>
