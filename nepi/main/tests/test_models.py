@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.test import TestCase
 from django.utils import timezone
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 
 from pagetree.models import Hierarchy, Section, UserPageVisit
 from pagetree.tests.factories import HierarchyFactory, ModuleFactory
@@ -92,7 +92,7 @@ class TestUserProfile(TestCase):
         self.hierarchy = Hierarchy.objects.get(name='optionb-en')
 
     def test_user_profile_unis(self):
-        self.assertEqual(smart_text(self.student), self.student.username)
+        self.assertEqual(smart_str(self.student), self.student.username)
 
     def test_display_name(self):
         self.assertEqual(self.student.profile.display_name(),
@@ -376,7 +376,7 @@ class TestPendingTeachers(TestCase):
                                                  school=school)
 
         label = "%s - %s" % (student, school)
-        self.assertEqual(label, smart_text(teacher))
+        self.assertEqual(label, smart_str(teacher))
 
 
 class TestAggregateQuizScore(TestCase):

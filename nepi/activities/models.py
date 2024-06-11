@@ -8,7 +8,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.db.models.query_utils import Q
 from django.urls.base import reverse
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from pagetree.models import PageBlock
 from pagetree.reports import ReportableInterface, ReportColumnInterface
 
@@ -29,7 +29,7 @@ class Conversation(models.Model):
     complete_dialog = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return smart_text(self.scenario_type)
+        return smart_str(self.scenario_type)
 
     def as_dict(self):
         return dict(
@@ -79,7 +79,7 @@ class ConversationScenario(models.Model):
         return self.pageblocks.all()[0]
 
     def __str__(self):
-        return smart_text(self.pageblock())
+        return smart_str(self.pageblock())
 
     def needs_submit(self):
         '''Pageblock will see that block has needs
@@ -289,7 +289,7 @@ class ImageInteractive(models.Model):
         return self.pageblocks.all()[0]
 
     def __str__(self):
-        return smart_text(self.pageblock())
+        return smart_str(self.pageblock())
 
     def needs_submit(self):
         return False
@@ -340,7 +340,7 @@ class ARTCard(models.Model):
         return self.pageblocks.all()[0]
 
     def __str__(self):
-        return smart_text(self.pageblock())
+        return smart_str(self.pageblock())
 
     def needs_submit(self):
         return False
@@ -389,7 +389,7 @@ class AdherenceCard(models.Model):
         return self.pageblocks.all()[0]
 
     def __str__(self):
-        return smart_text(self.pageblock())
+        return smart_str(self.pageblock())
 
     def needs_submit(self):
         return False
@@ -440,7 +440,7 @@ class RetentionRateCard(models.Model):
         return self.pageblocks.all()[0]
 
     def __str__(self):
-        return smart_text(self.pageblock())
+        return smart_str(self.pageblock())
 
     def needs_submit(self):
         return True
@@ -505,7 +505,7 @@ class RetentionClick(models.Model):
     click_string = models.CharField(max_length=50)
 
     def __str__(self):
-        return smart_text(self.click_string)
+        return smart_str(self.click_string)
 
 
 class RetentionResponse(models.Model):
@@ -607,7 +607,7 @@ class CalendarChart(models.Model):
         return self.pageblocks.all()[0]
 
     def __str__(self):
-        return smart_text(self.pageblock())
+        return smart_str(self.pageblock())
 
     def needs_submit(self):
         return True
@@ -746,7 +746,7 @@ class DosageActivity(models.Model):
         return self.pageblocks.all()[0]
 
     def __str__(self):
-        return smart_text(self.pageblock())
+        return smart_str(self.pageblock())
 
     def needs_submit(self):
         return True

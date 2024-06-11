@@ -186,9 +186,9 @@
                         &nbsp;&nbsp;
                         <a href="{{s.get_edit_url}}">
                             {{s.label}}
-                            {% ifequal s section %} 
+                            {% if s == section %} 
                                 <i class="icon-hand-left"></i>
-                            {% endifequal %}
+                            {% endif %}
                         </a>
                     </div>
                 {% endfor %}

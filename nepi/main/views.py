@@ -13,7 +13,6 @@ from django.shortcuts import get_object_or_404
 from django.template import loader
 from django.urls.base import reverse
 from django.utils import translation
-from django.utils.translation import LANGUAGE_SESSION_KEY
 from django.views.generic import View
 from django.views.generic.base import TemplateView, RedirectView
 from django.views.generic.detail import DetailView
@@ -32,6 +31,7 @@ from nepi.main.templatetags.progressreport import get_progress_report, \
 from nepi.mixins import (
     LoggedInMixin, JSONResponseMixin, AdministrationOnlyMixin,
     IcapAdministrationOnlyMixin, InitializeHierarchyMixin, LoggedInMixinStaff)
+LANGUAGE_SESSION_KEY = '_language'
 
 
 # Set the user's language on login & profile update
