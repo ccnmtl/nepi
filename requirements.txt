@@ -65,7 +65,7 @@ sentry-sdk==2.10.0
 django-bootstrap-form==3.4
 django-bootstrap3==24.2
 
-sqlparse==0.5.0
+sqlparse==0.5.1
 django-debug-toolbar==4.4.6
 
 django-waffle==4.1.0
