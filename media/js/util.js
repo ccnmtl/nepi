@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* exported showAnswer, is_form_complete, validate_numeric_input */
 
 function showAnswer(questionId) {
