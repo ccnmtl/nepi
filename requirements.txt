@@ -33,7 +33,7 @@ urllib3==2.2.2  # sentry-sdk
 certifi==2024.8.30  # sentry-sdk
 
 asn1crypto==1.5.1  # cryptography
-cffi==1.17.0  # cryptography
+cffi==1.17.1  # cryptography
 cryptography==43.0.1
 
 requests==2.32.3
