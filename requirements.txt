@@ -68,7 +68,7 @@ django-bootstrap3==24.3
 sqlparse==0.5.2
 django-debug-toolbar==4.4.6
 
-django-waffle==4.1.0
+django-waffle==4.2.0
 
 django-smoketest==1.2.1
 django-extensions==3.2.3
