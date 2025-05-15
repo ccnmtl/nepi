@@ -8,5 +8,7 @@ jobs:
           python-version: [3.12]
     steps:
       - uses: actions/checkout@v4
-      - name: Build with Makefile
-        run: make
+      - name: Flake8
+        run: make flake8
+      - name: Test
+        run: make test
