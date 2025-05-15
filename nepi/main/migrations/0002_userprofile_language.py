@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='userprofile',
             name='language',
-            field=models.CharField(default=b'en', max_length=2,
+            field=models.CharField(default=b'en', max_length=255,
                                    choices=[(b'en', 'English'),
                                             (b'fr', 'French'),
                                             (b'pt', 'Portuguese')]),
