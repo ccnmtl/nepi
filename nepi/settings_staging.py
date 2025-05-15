@@ -1,4 +1,3 @@
-from django.conf import settings
 from nepi.settings_shared import (
     project, base, STATIC_ROOT, INSTALLED_APPS
 )
@@ -21,6 +20,7 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 
 
+from django.conf import settings  # noqa: E402
 try:
     from nepi.local_settings import *  # noqa: F403 F401
 except ImportError:

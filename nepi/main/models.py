@@ -168,7 +168,7 @@ class UserProfile(models.Model):
         School, null=True, default=None, blank=True, on_delete=models.CASCADE)
     group = models.ManyToManyField(
         Group, default=None, blank=True)
-    language = models.CharField(max_length=2,
+    language = models.CharField(max_length=255,
                                 choices=settings.LANGUAGES,
                                 default=settings.DEFAULT_LANGUAGE)
 
