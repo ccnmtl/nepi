@@ -20,12 +20,11 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 
 
-from django.conf import settings  # noqa: E402
 try:
     from nepi.local_settings import *  # noqa: F403 F401
 except ImportError:
     pass
 
 
-if hasattr(settings, 'SENTRY_DSN'):
+if hasattr(settings, 'SENTRY_DSN'):  # noqa F405
     init_sentry(SENTRY_DSN)  # noqa F405
