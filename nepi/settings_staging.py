@@ -1,5 +1,6 @@
+from django.conf import settings
 from nepi.settings_shared import (
-    settings, project, base, STATIC_ROOT, INSTALLED_APPS
+    project, base, STATIC_ROOT, INSTALLED_APPS
 )
 from ctlsettings.staging import common, init_sentry
 
