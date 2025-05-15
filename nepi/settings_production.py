@@ -1,5 +1,7 @@
-from nepi.settings_shared import *  # noqa: F403
-from ctlsettings.production import common
+from nepi.settings_shared import (
+    settings, project, base, STATIC_ROOT, INSTALLED_APPS
+)
+from ctlsettings.production import common, init_sentry
 
 
 locals().update(
@@ -22,3 +24,7 @@ try:
     from nepi.local_settings import *  # noqa: F403 F401
 except ImportError:
     pass
+
+
+if hasattr(settings, 'SENTRY_DSN'):
+    init_sentry(SENTRY_DSN)  # noqa F405
