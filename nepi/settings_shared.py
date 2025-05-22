@@ -67,8 +67,8 @@ PAGEBLOCKS = [
 
 AUTH_PROFILE_MODULE = 'nepi.main.UserProfile'
 
-ICAP_MAILING_LIST = 'ccnmtl-icap@mail.ctl.columbia.edu'
-NEPI_MAILING_LIST = 'ccnmtl-nepi@mail.ctl.columbia.edu'
+ICAP_MAILING_LIST = 'ctl-dev@columbia.edu'
+NEPI_MAILING_LIST = 'ctl-dev@columbia.edu'
 
 CAPTCHA_FONT_SIZE = 34
 
