@@ -36,7 +36,7 @@ asn1crypto==1.5.1  # cryptography
 cffi==1.17.1  # cryptography
 cryptography==45.0.3
 
-requests==2.32.3
+requests==2.32.4
 logilab-common==2.1.0
 astroid==3.3.10
 editdistance==0.8.1
