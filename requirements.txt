@@ -105,7 +105,7 @@ bandit==1.8.6
 django-ranged-response==0.2.0
 
 entrypoints==0.4
-asgiref==3.8.1
+asgiref==3.9.1
 
 backports.zoneinfo;python_version<"3.9"
 webencodings==0.5.1 # django-markdownify
