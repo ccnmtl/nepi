@@ -1,5 +1,3 @@
-{% load markup %}
-
 {% if response %}
 <textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
     {% if not block.allow_redo %}disabled='disabled'{% endif %}>{{response.value}}</textarea>
