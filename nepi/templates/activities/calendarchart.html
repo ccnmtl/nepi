@@ -1,4 +1,4 @@
-{% load markup %}
+{% load markdownify %}
 {% load i18n %}
 
 {% if block.label %}<div id="month_title"><h3>{{block.label}}</h3></div>{% endif %}
@@ -17,7 +17,7 @@
 
 {% if block.description %}
 <div id="description">
-{{block.description|markdown}}
+{{block.description|markdownify}}
 </div>
 
 {% endif %}

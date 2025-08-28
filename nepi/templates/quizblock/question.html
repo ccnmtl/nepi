@@ -1,11 +1,11 @@
-{% load markup %}
+{% load markdownify %}
 {% load i18n %}
 {% load getresponse progressreport %}
 
 {% getquestionresponse question as response %}
 
 <div class="cases">
-    {{question.intro_text|markdown}}
+    {{question.intro_text|markdownify}}
 
     <div class="casecontent">
         <div class="casequestion">

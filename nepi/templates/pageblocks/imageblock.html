@@ -1,4 +1,4 @@
-{% load markup %}
+{% load markdownify %}
 
 {% if block.lightbox %}
 <div class="modal hide" id="image-lightbox-{{block.id}}">
@@ -10,7 +10,7 @@
   <div class="modal-body">
 		<img alt="{{block.alt}}" src="{{MEDIA_URL}}{{block.image.name}}" />
 		<div class="caption">
-			{{block.caption|markdown}}
+			{{block.caption|markdownify}}
 		</div>
   </div>
 </div>
@@ -23,7 +23,7 @@
 				 src="{{MEDIA_URL}}{{block.image.name}}" />
 			</a>
 			<div class="caption">
-				{{block.caption|markdown}}
+				{{block.caption|markdownify}}
 			</div>
 		</div>
 	</li>
@@ -31,5 +31,5 @@
 
 {% else %}
     <img alt="{{block.alt}}" src="{{MEDIA_URL}}{{block.image.name}}" />
-    <div class="caption">{{block.caption|markdown}}</div>
+    <div class="caption">{{block.caption|markdownify}}</div>
 {% endif %}

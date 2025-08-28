@@ -1,10 +1,10 @@
-{% load markup %}
+{% load markdownify %}
 <ul class="thumbnails">
 <li class="span6">
 <div class="thumbnail">
 <img alt="{{block.alt}}" src="{% if img_src %}{{img_src}}{% else %}{{MEDIA_URL}}{{block.image.name}}{% endif %}" /><br />
 <div class="caption">
-{{block.caption|markdown}}
+{{block.caption|markdownify}}
 </div>
 </div>
 </li>

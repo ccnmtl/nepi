@@ -48,6 +48,7 @@ INSTALLED_APPS += [  # noqa
     'captcha',
     'nepi.activities',
     'waffle',
+    'markdownify.apps.MarkdownifyConfig',
 ]
 
 PAGEBLOCKS = [
