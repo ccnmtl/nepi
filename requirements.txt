@@ -1,5 +1,5 @@
 Django>=4.2.14,<6
-httplib2==0.22.0
+httplib2==0.30.0
 feedparser==6.0.11
 Markdown==3.8.2
 smartypants==2.0.2
