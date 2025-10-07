@@ -38,7 +38,7 @@ cryptography==46.0.2
 
 requests==2.32.5
 logilab-common==2.1.0
-astroid==3.3.11
+astroid==4.0.0
 editdistance==0.8.1
 
 pylint==3.3.9
