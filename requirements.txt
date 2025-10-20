@@ -3,7 +3,7 @@ httplib2==0.31.0
 feedparser==6.0.12
 Markdown==3.9
 smartypants==2.0.2
-psycopg==3.2.10
+psycopg==3.2.11
 olefile==0.47
 Pillow==12.0.0
 versiontools==1.9.1
