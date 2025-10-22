@@ -3,7 +3,6 @@
 *.pyc
 ve
 **/.DS_Store
-.coverage
 media/CACHE
 reports
 local_settings.py
