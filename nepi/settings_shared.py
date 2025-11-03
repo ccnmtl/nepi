@@ -34,11 +34,13 @@ MIDDLEWARE += [
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django_cas_ng.middleware.CASMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 INSTALLED_APPS += [  # noqa
     'sorl.thumbnail',
     'bootstrap3',
+    'debug_toolbar',
     'bootstrapform',
     'django_extensions',
     'nepi.main',
