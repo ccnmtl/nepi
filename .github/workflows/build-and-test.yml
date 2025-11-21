@@ -7,7 +7,7 @@ jobs:
       matrix:
           python-version: [3.12]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Flake8
         run: make flake8
       - name: Test
