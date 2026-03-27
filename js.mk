@@ -26,16 +26,16 @@ ESLINT ?= $(NODE_MODULES)/.bin/eslint
 NPM_OPTS = --include=dev
 
 ifeq ($(ENVIRONMENT),production)
-	NPM_OPTS = --only=prod
+	NPM_OPTS = --omit=dev
 endif
 ifeq ($(ENVIRONMENT),staging)
-	NPM_OPTS = --only=prod
+	NPM_OPTS = --omit=dev
 endif
 
 $(JS_SENTINAL): package.json
 	rm -rf $(NODE_MODULES)
 	npm install $(NPM_OPTS)
-	touch $(JS_SENTINAL)
+	[ -d $(NODE_MODULES) ] && touch $(JS_SENTINAL)
 
 eslint: $(JS_SENTINAL)
 	$(ESLINT) $(JS_FILES)
