@@ -17,29 +17,32 @@
     {% block css %}
     {% endblock %}
 
-        <script src="{{STATIC_URL}}js/jquery-1.10.1.min.js"
-                crossorigin="anonymous"></script>
+    {% include "ctlsettings/sentry_js.html" %}
+
+    <script src="{{STATIC_URL}}js/jquery-1.10.1.min.js"
+            crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="https://search.sites.columbia.edu/cu-privacy-notice/cu-privacy-notice.css" />
     <script src="https://search.sites.columbia.edu/cu-privacy-notice/cu-privacy-notice.js"></script>
 </head>
 <body>
     <div class="container" id="outer-container">
-        {% block masthead %}        
+        {% block masthead %}
             <div id="titlebar">
                 <div class="title-left">
                     <a href="/" title="ICAP Nursing E-Learning">
                     <img src="{{STATIC_URL}}img/icap-nursing-elearning.png" title="ICAP Nursing E-Learning"></a>
                 </div>
                 <div class="title-right">
-            		{% block usernav %}
+                    {% block usernav %}
                         <ul class="title-user">
                             {% if not request.user.is_anonymous %}
-                  		        <li>{% trans 'Hello' %}, {{request.user.first_name}} {{request.user.last_name}}</li>
+                                <li>{% trans 'Hello' %}, {{request.user.first_name}} {{request.user.last_name}}</li>
                                 {% if user.has_usable_password %}
                                     <li><a href="/accounts/password_change/">{% trans 'Change Password' %}</a></li>
                                 {% endif %}
-                                
-                                
+
+
                                 <li>{% block usernav_extra %}{% endblock %}</li>
                                 {% if request.user.is_staff %}
                                 <li>
@@ -64,10 +67,10 @@
                                 </li>
                                 {% endif %}
 
-                  		        <li><a href="/accounts/logout/?next=/" class="btn btn-inverse">{% trans "Log Out" %}</a></li>
-                  		    {% endif %}
+                                <li><a href="/accounts/logout/?next=/" class="btn btn-inverse">{% trans "Log Out" %}</a></li>
+                            {% endif %}
                         </ul>
-            		{% endblock %}
+                    {% endblock %}
                     <div class="clearfix"></div>
                     <ul class="title-logos">
                         <li><a href="http://icap.columbia.edu" target="_blank" title="ICAP"><img src="{{STATIC_URL}}img/icap-full.png" alt="ICAP" class="header-logo icap-logo"></a></li>
@@ -78,13 +81,13 @@
                     {% endblock %}
                 </div>
             </div>
-    
-        	{% block primarynav %}
+
+            {% block primarynav %}
             {% endblock %}
         {% endblock %}
-    
+
         {% block toc %}{% endblock %}
-        
+
         <div class="container" id="content">
             <div class="row-fluid">
                 <div class="span12">
@@ -117,7 +120,7 @@
     {% block js %}
     {% endblock %}
 
-    <script type="text/javascript">     
+    <script type="text/javascript">
          // setup some ajax progress indicator
          jQuery(document).ajaxStart(function() {
              jQuery('html').addClass("busy");
@@ -126,7 +129,7 @@
              jQuery('html').removeClass("busy");
          });
      </script>
-    
+
 
     {% if STAGING_ENV %}
         <div class="alert alert-error" style="position: fixed; bottom: 0px;">
@@ -135,7 +138,7 @@
             <p>This site was last updated on: <b>{{STAGING_DEPLOY_TIME}}</b></p>
         </div>
     {% endif %}
-    
+
     {% if request.user.is_impersonate %}
         <div class="alert alert-error" style="position: fixed; left: 0px; top: 75px">
         You are impersonating.<br />
@@ -155,4 +158,3 @@
     {% endif %}
 </body>
 </html>
-
