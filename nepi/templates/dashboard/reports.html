@@ -3,10 +3,10 @@
 {% block title %}Reports{% endblock %}
 
 {% block js %}
-    <script src="{{STATIC_URL}}js/jquery-ui-1.10.3.min.js"></script>
-    <script src="{{STATIC_URL}}js/underscore-min.js"></script>
+    <script crossorigin="anonymous" src="{{STATIC_URL}}js/jquery-ui-1.10.3.min.js"></script>
+    <script crossorigin="anonymous" src="{{STATIC_URL}}js/underscore-min.js"></script>
     
-    <script type="text/javascript">
+    <script>
         var profile_attributes = {
             'role': "{{user.profile.role}}",
             {% if user.profile.school %}
@@ -17,7 +17,7 @@
             {% endif %}
         }
     </script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/dashboard.js"></script>
+    <script crossorigin="anonymous" src="{{STATIC_URL}}js/dashboard.js"></script>
 {% endblock %}
 
 {% block content %}
