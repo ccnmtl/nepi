@@ -5,13 +5,13 @@
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript" src="{{STATIC_URL}}js/json2.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/util.js"></script>
+    <script crossorigin="anonymous" src="{{STATIC_URL}}js/json2.js"></script>
+    <script crossorigin="anonymous" src="{{STATIC_URL}}js/util.js"></script>
     {% for block in section.pageblock_set.all %}
         {% renderjs block %}
     {% endfor %}
     
-    <script type="text/javascript">
+    <script>
         jQuery(document).ready(function () {
             var initialSection = jQuery("a[data-id='{{section.id}}']")[0];
             

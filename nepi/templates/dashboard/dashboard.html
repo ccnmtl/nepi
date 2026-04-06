@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% block js %}
-    <script src="{{STATIC_URL}}js/jquery-ui-1.10.3.min.js"></script>
-    <script type="text/javascript">
+<script src="{{STATIC_URL}}js/jquery-ui-1.10.3.min.js"
+        crossorigin="anonymous"></script>
+    <script>
         var profile_attributes = {
             'role': "{{user.profile.role}}",
             {% if user.profile.school %}
@@ -10,8 +11,8 @@
             'country': "{{user.profile.country.name}}"
         }
     </script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/dashboard.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/profile.js"></script>    
+    <script crossorigin="anonymous" src="{{STATIC_URL}}js/dashboard.js"></script>
+    <script crossorigin="anonymous" src="{{STATIC_URL}}js/profile.js"></script>    
 {% endblock %}
 
 {% block title %}Dashboard{% endblock %}
