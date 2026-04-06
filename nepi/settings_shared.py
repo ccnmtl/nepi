@@ -117,7 +117,8 @@ TEMPLATES = [
                 'stagingcontext.staging_processor',
                 'gacontext.ga_processor',
                 'django.template.context_processors.csrf',
-                'nepi.main.views.context_processor'
+                'ctlsettings.context_processors.env',
+                'nepi.main.views.context_processor',
             ],
         },
     },
