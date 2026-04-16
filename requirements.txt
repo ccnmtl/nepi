@@ -21,7 +21,6 @@ tornado==6.5.5
 cssselect==1.4.0
 lxml==6.0.4
 fuzzywuzzy==0.18.0
-sure==2.0.1
 pyasn1==0.6.3
 pyOpenSSL==26.0.0
 ndg-httpsclient==0.5.1
