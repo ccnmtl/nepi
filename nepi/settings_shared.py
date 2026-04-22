@@ -68,8 +68,6 @@ PAGEBLOCKS = [
     'activities.AdherenceCard',
 ]
 
-AUTH_PROFILE_MODULE = 'nepi.main.UserProfile'
-
 ICAP_MAILING_LIST = 'ctl-dev@columbia.edu'
 NEPI_MAILING_LIST = 'ctl-dev@columbia.edu'
 
