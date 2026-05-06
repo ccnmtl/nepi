@@ -48,7 +48,7 @@ factory_boy==3.3.3
 ldap3==2.9.1
 contextlib2==21.6.0
 
-python-cas==1.7.1
+python-cas==1.7.2
 django-cas-ng==5.1.0
 
 requirements/src/sorl-3.4-py3-none-any.whl
