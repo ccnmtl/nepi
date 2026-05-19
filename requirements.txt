@@ -96,7 +96,7 @@ pytz==2026.2
 
 pbr==7.0.3
 PyYAML==6.0.3 # MIT
-stevedore>=5.7.0 # Apache-2.0
+stevedore>=5.8.0 # Apache-2.0
 rich==15.0.0 # bandit
 bandit==1.9.4
 django-ranged-response==0.2.0
