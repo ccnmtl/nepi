@@ -26,7 +26,7 @@ pyOpenSSL==26.2.0
 ndg-httpsclient==0.5.1
 
 chardet==7.4.3
-idna==3.17
+idna==3.18
 urllib3==2.7.0  # sentry-sdk
 certifi==2026.5.20  # sentry-sdk
 
