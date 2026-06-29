@@ -16,7 +16,7 @@
     "url": "https://github.com/ccnmtl/nepi/issues"
   },
   "devDependencies": {
-    "eslint": "~10.5.0",
+    "eslint": "~10.6.0",
     "eslint-plugin-security": "^4.0.0",
     "globals": "^17.0.0"
   }
