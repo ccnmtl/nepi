@@ -61,7 +61,7 @@ django-statsd-mozilla==0.4.0
 raven==6.10.0
 sentry-sdk==2.66.1
 django-bootstrap-form==3.4
-django-bootstrap3==26.1
+django-bootstrap3==26.2
 
 sqlparse==0.5.5
 django-debug-toolbar==7.0.0
