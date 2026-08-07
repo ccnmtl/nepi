@@ -11,6 +11,7 @@ from django.urls import include, path, re_path
 from django.views.generic import TemplateView
 import django.views.static
 from django_cas_ng import views as cas_views
+from ctlsettings import views as ctl_views
 from nepi.main.views import (
     CreateGroupView, UpdateGroupView, DeleteGroupView, CreateSchoolView,
     UpdateSchoolView, ContactView, RegistrationView, JoinGroup, HomeView,
@@ -28,6 +29,7 @@ admin.autodiscover()
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
 urlpatterns = [
+    path('accounts/login', ctl_views.LoginAPIView.as_view()),
     re_path(r'^account_created/',
             TemplateView.as_view(
                 template_name="flatpages/account_created.html")),

@@ -7,6 +7,19 @@
     {% include "main/languageswitcher.html" %}
 {% endblock %}
 
+{% block extrahead %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async
+        defer></script>
+{% endblock %}
+
+{% block js %}
+    <script>
+        function enableSubmit() {
+            document.getElementById("guest-login").disabled = false;
+        }
+    </script>
+{% endblock %}
+
 {% block content %}
 <div>
     <div class="login-welcome">
@@ -65,7 +78,7 @@
         </div>
         {% endif %}
 
-        <form method="post" action=".">
+        <form method="post" action="." class="mb-4">
             {% csrf_token %}
             <div class="login-form-div">
                 <table class="login-form-table">
@@ -83,7 +96,7 @@
                     </tr>
                 </table>
                 <div class="login-form-submit">
-                    <input class="btn pull-right" type="submit" value="{% trans 'Log In' %}"></input>
+                    <input id="guest-login" class="btn pull-right" type="submit" value="{% trans 'Log In' %}" disabled></input>
                 </div>
                 <div class="text-right">
                     <a href="/accounts/password_reset/">{% trans 'Forgotten your password or username?' %}</a>
@@ -94,6 +107,7 @@
             </div>
             <input type="hidden" name="next" value="{{ next }}"></input>
         </form>
+        <div class="cf-turnstile" data-sitekey="{{ TURNSTILE_SITE_KEY }}" data-callback="enableSubmit" ></div>
     </div>
 </div>
 {% endblock %}
