@@ -51,6 +51,7 @@ INSTALLED_APPS += [  # noqa
     'nepi.activities',
     'waffle',
     'markdownify.apps.MarkdownifyConfig',
+    'rest_framework',
 ]
 
 PAGEBLOCKS = [
