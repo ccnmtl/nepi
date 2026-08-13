@@ -68,7 +68,13 @@
                                 </li>
                                 {% endif %}
 
-                                <li><a href="/accounts/logout/?next=/" class="btn btn-inverse">{% trans "Log Out" %}</a></li>
+                                <li>
+                                    <form action="{% url 'logout' %}" method="post" class="logout-form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="/">
+                                        <button type="submit" class="btn btn-inverse">{% trans "Log Out" %}</button>
+                                    </form>
+                                </li>
                             {% endif %}
                         </ul>
                     {% endblock %}
