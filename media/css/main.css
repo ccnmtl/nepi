@@ -582,6 +582,10 @@ ul.title-user .btn {
     margin-left: 8px;
 }
 
+.logout-form {
+    display: inline;
+    margin: 0;
+}
 
 ul.title-logos {
     padding: 0;
