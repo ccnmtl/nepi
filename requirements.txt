@@ -19,7 +19,7 @@ zipp==4.1.0  # for flake8
 flake8==7.3.0
 tornado==6.5.8
 cssselect==1.5.0
-lxml==6.1.1
+lxml==6.1.2
 fuzzywuzzy==0.18.0
 pyasn1==0.6.4
 pyOpenSSL==26.4.0
