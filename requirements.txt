@@ -89,7 +89,7 @@ django-storages==1.14.6
 django-smtp-ssl==1.0
 
 pytz==2026.3.post1
-djangorestframework==3.18.0
+djangorestframework==3.18.1
 ctlsettings==0.4.9
 
 pbr==7.0.3
