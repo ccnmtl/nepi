@@ -88,7 +88,7 @@ python-dateutil==2.9.0.post0
 django-storages==1.14.6
 django-smtp-ssl==1.0
 
-pytz==2026.3.post1
+pytz==2026.4
 djangorestframework==3.18.1
 ctlsettings==0.4.9
 
