@@ -13,7 +13,7 @@ pyflakes==4.0.3
 mccabe==0.7.0
 pycodestyle==2.15.0
 configparser==7.2.0
-importlib-metadata<9.1 # for flake8
+importlib-metadata<9.2 # for flake8
 typing_extensions==4.16.0
 zipp==4.1.1  # for flake8
 flake8==7.4.1
